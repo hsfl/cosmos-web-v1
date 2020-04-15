@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import {
-  Upload, Icon, Button, message,
+  Upload, Button, message,
 } from 'antd';
+import { UploadOutlined } from "@ant-design/icons";
 
 import { socket } from '../../socket';
 import BaseComponent from '../BaseComponent';
@@ -111,7 +112,7 @@ function UploadFile({
         }}
         customRequest={(request) => checkUpload(request)}
       >
-        <Icon type="upload" />
+        <UploadOutlined />
         &nbsp;
         Select Files
       </Upload.Dragger>

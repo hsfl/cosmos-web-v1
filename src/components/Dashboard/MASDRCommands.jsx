@@ -4,8 +4,9 @@ import React, {
 import PropTypes from 'prop-types';
 
 import {
-  Input, Select, Tooltip, message, Button, Icon,
+  Input, Select, Tooltip, message, Button,
 } from 'antd';
+import { CloseOutlined } from '@ant-design/icons';
 
 import { Context } from '../../store/neutron1';
 import BaseComponent from '../BaseComponent';
@@ -329,7 +330,7 @@ const Commands = React.memo(({
           commandHistory.map((command, i) => (<div key={i}>{ command }</div>))
         }
         {
-          autocompletions.length > 1 ? <Icon onClick={() => setAutocompletions([])} className="text-red-500" type="close" /> : ''
+          autocompletions.length > 1 ? <CloseOutlined onClick={() => setAutocompletions([])} className="text-red-500" /> : ''
         }
         {
           autocompletions.map((autocompletion) => (

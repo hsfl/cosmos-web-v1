@@ -26,7 +26,7 @@ function Subsystem({
           </div>
           <div className="flex-col pl-3 pt-2">
             <div>
-              <Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a" />
+              {/* <Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a" /> */}
               &nbsp;Nominal.
             </div>
           </div>

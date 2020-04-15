@@ -4,8 +4,9 @@ import React, {
 import PropTypes from 'prop-types';
 
 import {
-  Input, Select, Tooltip, Icon, message,
+  Input, Select, Tooltip, message,
 } from 'antd';
+import { SelectOutlined, CloseOutlined } from '@ant-design/icons';
 
 import Search from 'antd/lib/input/Search';
 
@@ -224,7 +225,7 @@ const Commands = React.memo(({
           <Search
             placeholder="Select node:process"
             onSearch={(value) => setSelectedAgent(value.split(':'))}
-            enterButton={<Icon type="select" />}
+            enterButton={<SelectOutlined />}
           />
         </div>
       </div>
@@ -237,7 +238,7 @@ const Commands = React.memo(({
           commandHistory.map((command, i) => (<div key={i}>{ command }</div>))
         }
         {
-          autocompletions.length > 1 ? <Icon onClick={() => setAutocompletions([])} className="text-red-500" type="close" /> : ''
+          autocompletions.length > 1 ? <CloseOutlined onClick={() => setAutocompletions([])} className="text-red-500" /> : ''
         }
         {
           autocompletions.map((autocompletion) => (

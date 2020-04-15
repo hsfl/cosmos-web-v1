@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import {
   message,
   Button,
-  Icon,
   Popover,
   Form,
   Select,
@@ -10,6 +9,7 @@ import {
   Table,
   Popconfirm,
 } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
@@ -83,7 +83,7 @@ function LayoutManager() {
           <Button
             type="link"
           >
-            <Icon type="close" />
+            <CloseOutlined />
           </Button>
         </Popconfirm>
       ),
@@ -417,7 +417,7 @@ function LayoutManager() {
                   </div>
                 )}
               >
-                <Icon className="text-blue-500 cursor-pointer" type="question-circle" />
+                <QuestionCircleOutlined className="text-blue-500 cursor-pointer" />
               </Popover>
             </div>
           )}

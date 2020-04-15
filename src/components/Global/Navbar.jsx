@@ -23,9 +23,9 @@ function Navbar() {
               <Menu.SubMenu
                 title={(
                   <span>
-                    {
+                    {/* {
                       route.icon ? <Icon type={route.icon} /> : null
-                    }
+                    } */}
                     {route.name}
                   </span>
                 )}
@@ -43,9 +43,9 @@ function Navbar() {
                         <Link
                           to={`/${route.path.split('/')[1]}${child.path}`}
                         >
-                          {
+                          {/* {
                             child.icon ? <Icon type={child.icon} /> : null
-                          }
+                          } */}
                           {child.name}
                         </Link>
                       </Menu.Item>
@@ -62,7 +62,7 @@ function Navbar() {
               className={route.rightAlign ? 'float-right' : null}
             >
               <Link to={route.path}>
-                <Icon type={route.icon} />
+                {/* <Icon type={route.icon} /> */}
                 {route.name}
               </Link>
             </Menu.Item>

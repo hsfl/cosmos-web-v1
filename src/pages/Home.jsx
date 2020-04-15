@@ -1,7 +1,8 @@
 import React from 'react';
 import {
-  Card, Icon,
+  Card,
 } from 'antd';
+import { SyncOutlined, SwapRightOutlined, LineChartOutlined } from '@ant-design/icons';
 
 const Home = () => (
   <div>
@@ -11,17 +12,17 @@ const Home = () => (
     </div>
     <br />
     <div className="flex justify-center">
-      <Card title={<Icon type="sync" />} bordered={false}>
+      <Card title={<SyncOutlined />} bordered={false}>
         <p>
           With Orbit, you can view the live or historical orbit of any satellite.
         </p>
       </Card>
-      <Card title={<Icon type="swap-right" />} bordered={false}>
+      <Card title={<SwapRightOutlined />} bordered={false}>
         <p>
           With Attitude, you can view the live or historical attitude of any satellite.
         </p>
       </Card>
-      <Card title={<Icon type="line-chart" />} bordered={false}>
+      <Card title={<LineChartOutlined />} bordered={false}>
         <p>
           With Plot, you can view the live or historical data of any satellite.
         </p>

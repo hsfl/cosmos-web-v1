@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Modal, Form } from 'antd';
 
@@ -54,6 +54,6 @@ ComponentSettings.defaultProps = {
   children: [],
 };
 
-const SettingsForm = Form.create({ name: 'horizontal_login' })(ComponentSettings);
+// const SettingsForm = Form.create({ name: 'horizontal_login' })(ComponentSettings);
 
-export default SettingsForm;
+export default ComponentSettings;

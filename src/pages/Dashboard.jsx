@@ -149,13 +149,13 @@ function Dashboard({
                 socketStatus === 'success'
                   ? (
                     <span>
-                      <Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a" />
+                      {/* <Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a" /> */}
                       &nbsp;Connected and operational.
                     </span>
                   )
                   : (
                     <span>
-                      <Icon type="close-circle" theme="twoTone" twoToneColor="#d80000" />
+                      {/* <Icon type="close-circle" theme="twoTone" twoToneColor="#d80000" /> */}
                       &nbsp;&nbsp;No connection available. Attempting to reconnect.
                     </span>
                   )
