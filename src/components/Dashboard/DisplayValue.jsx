@@ -61,6 +61,14 @@ function DisplayValue({
     });
   }, [state]);
 
+  const onFieldsChangeAll = (changed) => {
+    console.log(changed);
+  };
+
+  const onFieldsChange = (changed) => {
+    console.log(changed);
+  };
+
   return (
     <BaseComponent
       name={nameState}
@@ -74,9 +82,7 @@ function DisplayValue({
             layout="vertical"
             form={form}
             name="displayValue"
-            onFieldsChange={(c, a) => {
-              console.log(c, a)
-            }}
+            onFieldsChange={onFieldsChangeAll}
           >
             <Form.Item
               name="Name"
@@ -121,9 +127,7 @@ function DisplayValue({
                 >
                   <Form
                     layout="vertical"
-                    onFieldsChange={(c, a) => {
-                      console.log(c, a)
-                    }}
+                    onFieldsChange={onFieldsChange}
                   >
                     <Form.Item
                       name="Name"
