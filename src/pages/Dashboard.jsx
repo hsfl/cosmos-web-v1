@@ -218,7 +218,7 @@ function Dashboard({
       // Store the layout based on the name given
       localStorage.setItem(route, JSON.stringify({
         ...JSON.parse(localStorage.getItem(route)),
-        [dashname]: layouts,
+        [dashname]: layouts, // modLayout,
       }));
 
       setUpdateLayoutSelector(false);
@@ -300,6 +300,47 @@ function Dashboard({
   const addToLayout = (elemParams) => {
     try {
       const add = JSON.parse(componentEditor);
+
+      let split;
+      if (add.component.name === 'Chart') {
+        split = add.component.props.processXDataKey.split(' => ');
+        // eslint-disable-next-line no-new-func
+        add.component.props.processXDataKey = new Function(`${split[0][1]}`, `return ${split[1]}`);
+
+        const plots = [];
+        add.component.props.plots.forEach((label) => {
+          if (label.processYDataKey) {
+            split = label.processYDataKey.split(' => ');
+            plots.push({
+              x: label.x,
+              y: label.y,
+              type: label.type,
+              marker: label.marker,
+              name: label.name,
+              YDataKey: label.YDataKey,
+              // eslint-disable-next-line no-new-func
+              processYDataKey: new Function(`${split[0][1]}`, `return ${split[1]}`),
+              nodeProcess: label.nodeProcess,
+              live: label.live,
+            });
+          }
+        });
+        add.component.props.plots = plots;
+      } else if (add.component.name === 'DisplayValue') {
+        const displayValues = [];
+        add.component.props.displayValues.forEach((label) => {
+          split = label.processDataKey.split(' => ');
+          displayValues.push({
+            name: label.name,
+            nodeProcess: label.nodeProcess,
+            dataKey: label.dataKey,
+            unit: label.unit,
+            // eslint-disable-next-line no-new-func
+            processDataKey: new Function(`${split[0][1]}`, `return ${split[1]}`),
+          });
+        });
+        add.component.props.displayValues = displayValues;
+      }
 
       if (elemParams) {
         add.x = elemParams.x;

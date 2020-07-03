@@ -32,7 +32,7 @@ export default [
     props: {
       name: '',
       XDataKey: '',
-      processXDataKey: '',
+      processXDataKey: '(x) => moment.unix((((x + 2400000.5) - 2440587.5) * 86400.0)).format(\'YYYY-MM-DDTHH:mm:ss\')',
       plots: [
         {
           x: [],
@@ -43,7 +43,7 @@ export default [
           },
           name: '1',
           YDataKey: '',
-          processYDataKey: 'function(x){return x;}',
+          processYDataKey: '(x) => x',
           nodeProcess: '',
           live: true,
         },
@@ -63,7 +63,7 @@ export default [
           nodeProcess: '',
           dataKey: '',
           unit: '',
-          processDataKey: 'function(x){return x.toFixed(2);}',
+          processDataKey: '(x) => x.toFixed(2)',
         },
       ],
     },

@@ -53,7 +53,8 @@ function DisplayValue({
   useEffect(() => {
     let accumulate = {};
 
-    let check = displayValues[0].nodeProcess;
+    let check = (displayValues != null && displayValues.length !== 0)
+      ? displayValues[0].nodeProcess : null;
 
     // Initialize form values for each value
     displayValues.forEach(({
