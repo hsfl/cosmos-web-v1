@@ -390,7 +390,10 @@ function Commands({
             <Select
               className="ml-2 w-32"
               showSearch
-              onChange={(value) => setGlobalNode(value)}
+              onChange={(value) => {
+                setGlobalNode(value);
+                setSelected(null);
+              }}
               onBlur={() => queryCommands()}
               placeholder="Select target node"
               defaultValue={globalNode}
@@ -471,6 +474,7 @@ function Commands({
                 placeholder="Select command to delete"
                 className="w-full mb-4"
                 onChange={(value) => setSelected(value)}
+                value={selected}
               >
                 {deleteList.map((com) => (
                   <Select.Option

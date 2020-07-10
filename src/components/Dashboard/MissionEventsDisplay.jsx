@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 
 import {
-  Select, message, Table,
+  Select, message, Table, Button,
 } from 'antd';
 
 import dayjs from 'dayjs';
@@ -37,7 +37,7 @@ function MissionEventsDisplay({
     },
   ]);
 
-  const queryEventLog = async () => {
+  const queryEventLog = async (notif = null) => {
     try {
       const { data } = await axios.post(`/query/${process.env.MONGODB_COLLECTION}/${node}:executed`, {
         multiple: true,
@@ -46,7 +46,7 @@ function MissionEventsDisplay({
       const modify = data.map((el, i) => {
         const newObj = el;
         // eslint-disable-next-line no-underscore-dangle
-        delete newObj._id;
+        delete newObj._id; delete newObj.event_utc; delete newObj.event_name;
         return {
           key: i,
           time: mjdToString(el.event_utc),
@@ -56,6 +56,10 @@ function MissionEventsDisplay({
         };
       });
       setInfo(modify);
+
+      if (notif === 'message') {
+        message.success('Successfully retrieved event logs.');
+      }
     } catch {
       message.error(`Error retrieving event logs for ${node}`);
     }
@@ -86,7 +90,7 @@ function MissionEventsDisplay({
           <Select
             defaultValue={node}
             style={{ width: 120 }}
-            onBlur={() => queryEventLog()}
+            onBlur={() => queryEventLog('message')}
             onChange={(val) => setNode(val)}
           >
             {
@@ -99,6 +103,12 @@ function MissionEventsDisplay({
               ))
             }
           </Select>
+          <Button
+            className="ml-2"
+            onClick={() => queryEventLog('message')}
+          >
+            Update Display
+          </Button>
         </>
       )}
     >
