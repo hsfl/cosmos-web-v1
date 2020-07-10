@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Activity from './Dashboard/Activity';
 import Attitude from './Dashboard/Attitude';
 import Chart from './Dashboard/Chart';
+import Contact from './Dashboard/Contact';
 import Commands from './Dashboard/Commands';
 import DisplayValue from './Dashboard/DisplayValue';
 import Events from './Dashboard/Events';
@@ -27,6 +28,7 @@ export const components = {
   Activity,
   Attitude,
   Chart,
+  Contact,
   Commands,
   DisplayValue,
   Events,
