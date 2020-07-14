@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { Badge } from 'antd';
+import { Badge, Switch } from 'antd';
 import dayjs from 'dayjs';
 
 import BaseComponent from '../BaseComponent';
@@ -14,9 +14,10 @@ function Activity({
 }) {
   /** Get agent list state from the Context */
   const activities = useSelector((s) => s.activity);
-  const lastDate = useSelector((s) => s.lastDate);
 
   const [color, setColor] = useState('red');
+  const [toggle, setToggle] = useState(true);
+  const [elapsedTime, setElapsedTime] = useState(null);
 
   const timerYellow = useRef(null);
   const timerRed = useRef(null);
@@ -25,9 +26,10 @@ function Activity({
   // Compare. If <2 min, green, <5min, yellow, < 10min, red
 
   useEffect(() => {
-    if (lastDate) {
-      const minuteDifference = lastDate.diff(dayjs(), 'minute');
+    if (activities && activities.length !== 0) {
+      const minuteDifference = activities[0].time.diff(dayjs(), 'minute');
       if (-minuteDifference <= 2) {
+        setElapsedTime(dayjs().diff(activities[0].time, 'second'));
         setColor('green');
 
         if (timerYellow.current != null && timerRed.current != null) {
@@ -43,7 +45,15 @@ function Activity({
         }, 600000);
       }
     }
-  }, [lastDate]);
+  }, [activities]);
+
+  useEffect(() => {
+    if (elapsedTime != null && elapsedTime < 86400) {
+      setTimeout(() => setElapsedTime(elapsedTime + 1), 1000);
+    } else {
+      setElapsedTime(null);
+    }
+  }, [elapsedTime]);
 
   return (
     <BaseComponent
@@ -63,6 +73,12 @@ function Activity({
             <Badge status="error" />
             {'> 10 min'}
           </span>
+          <Switch
+            checked={toggle}
+            onClick={() => setToggle(!toggle)}
+            checkedChildren="Visible"
+            unCheckedChildren="Invisible"
+          />
         </>
       )}
       height={height}
@@ -77,9 +93,10 @@ function Activity({
         }
       </style>
       <div className={`bg-${color}-200 transition ease-in duration-500 rounded p-3 activity overflow-auto`}>
-        <table>
-          <tbody>
-            {
+        {toggle ? (
+          <table>
+            <tbody>
+              {
               // eslint-disable-next-line camelcase
               activities ? activities.map(({
                 status, summary, scope, time,
@@ -91,21 +108,37 @@ function Activity({
                   </td>
                   <td className="pr-4 text-gray-600">
                     {
-                      time
+                      time.utc().format('HH:mm:ss')
                     }
                   </td>
                   <td>
                     {summary}
-                    &nbsp;
+                      &nbsp;
                     <span className="text-gray-600">
                       {scope}
                     </span>
                   </td>
+                  <td>
+                    {
+                      dayjs().diff(time, 'day') < 1
+                        ? `${dayjs().hour() - time.hour()}:${dayjs().minute() - time.minute()}:${dayjs().second() - time.second()}:`
+                        : dayjs().from(time)
+                    }
+                  </td>
                 </tr>
               )) : 'No activity.'
             }
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        )
+          : (
+            <div className="mt-10 text-center text-5xl">
+              {
+                elapsedTime != null && elapsedTime < 86400
+                  ? `${Math.floor(elapsedTime / 3600)}:${Math.floor(elapsedTime / 60)}:${elapsedTime % 60}` : 'Time elapsed >24 hours!'
+              }
+            </div>
+          )}
       </div>
     </BaseComponent>
   );

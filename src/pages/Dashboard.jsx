@@ -133,8 +133,6 @@ function Dashboard({
         if (json.node_type === 'list') {
           dispatch(set('list', json));
         } else if (realms[id].includes(node) && process !== 'soh') {
-          dispatch(set('lastDate', dayjs()));
-
           // Store in realm object
           dispatch(setData(id, json));
 
@@ -142,7 +140,7 @@ function Dashboard({
             status: 'success',
             summary: 'Data received',
             scope: `from ${json.node_type}`,
-            time: dayjs().utc().format('HH:mm:ss'),
+            time: dayjs(),
           }));
         }
       } catch (error) {
