@@ -17,7 +17,6 @@ import {
   Col,
   Row,
   InputNumber,
-  DatePicker,
   Menu,
 } from 'antd';
 import { Responsive, WidthProvider } from 'react-grid-layout';
@@ -42,8 +41,8 @@ import AsyncComponent, { components } from '../components/AsyncComponent';
 import LayoutSelector from '../components/LayoutSelector';
 import Clock from '../components/Clock';
 import SocketStatus from '../components/SocketStatus';
+import GetHistoricalData from '../components/GetHistoricalData';
 
-const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
@@ -114,8 +113,6 @@ function Dashboard({
   const [updateLayoutSelector, setUpdateLayoutSelector] = useState(false);
 
   const [socketStatus, setSocketStatus] = useState('error');
-
-  const [globalHistoricalDate, setGlobalHistoricalDate] = useState(null);
 
   /** Get socket data from the agent */
   useEffect(() => {
@@ -348,6 +345,9 @@ function Dashboard({
 
   useEffect(() => {
     setJsonEdit(JSON.stringify(layouts.lg, null, 2));
+
+    dispatch(set('globalQueue', layouts.lg.filter((el) => el.component.name === 'Chart').length));
+    dispatch(set('globalHistoricalDate', [dayjs().subtract(1, 'hour'), dayjs()]));
   }, [layouts]);
 
   const retrieveInfo = (e) => {
@@ -416,24 +416,10 @@ function Dashboard({
               status={socketStatus}
             />
           </div>
-          <div className="pt-2">
-            <RangePicker
-              className="mr-3"
-              showTime
-              format="YYYY-MM-DD HH:mm:ss"
-              onChange={(m) => setGlobalHistoricalDate(m)}
-              value={globalHistoricalDate}
+          <div className="pt-4">
+            <GetHistoricalData
+              amountOfComponents={layouts.lg.filter((el) => el.component.name === 'Chart').length}
             />
-            <Button
-              disabled={!globalHistoricalDate}
-              onClick={() => {
-                const num = layouts.lg.filter((el) => el.component.name === 'Chart').length;
-                dispatch(set('globalQueue', num));
-                dispatch(set('globalHistoricalDate', globalHistoricalDate));
-              }}
-            >
-              Set Global Historical Date
-            </Button>
           </div>
         </div>
         <Menu mode="horizontal">
@@ -442,7 +428,14 @@ function Dashboard({
           </Menu.Item>
           {
             Object.keys(tabs).map((tab) => (
-              <Menu.Item key={tab} onClick={() => setLayouts(tabs[tab])}>{tab}</Menu.Item>
+              <Menu.Item
+                key={tab}
+                onClick={() => {
+                  setLayouts(tabs[tab]);
+                }}
+              >
+                {tab}
+              </Menu.Item>
             ))
           }
           <Menu.Item className="float-right">

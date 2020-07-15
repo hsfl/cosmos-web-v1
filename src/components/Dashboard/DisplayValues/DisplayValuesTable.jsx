@@ -14,19 +14,25 @@ function DisplayValuesTable({
           {
             displayValues.map((
               {
-                name, dataKey, timeDataKey, processDataKey, value, unit, time,
+                name,
+                dataKey,
+                dataKeyLowerThreshold,
+                dataKeyUpperThreshold,
+                timeDataKey,
+                processDataKey,
+                value,
+                unit,
+                time,
               },
             ) => (
               <tr key={name + dataKey + timeDataKey + processDataKey.toString() + time}>
                 <td className="pr-2 text-gray-500 text-right">
                   { name }
                 </td>
-                <td className="pr-2">
+                <td className={`pr-2 ${(dataKeyLowerThreshold || dataKeyUpperThreshold) && ((value <= dataKeyLowerThreshold) || (value >= dataKeyUpperThreshold)) ? 'text-red-700' : ''}`}>
                   {
                     value !== undefined
-                      ? `${processDataKey
-                        ? processDataKey(value)
-                        : value}${unit}` : '-'
+                      ? `${value}${unit}` : '-'
                   }
                 </td>
                 <td className="text-gray-500">

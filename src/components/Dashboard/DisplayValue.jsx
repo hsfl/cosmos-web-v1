@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   Form, Input, Collapse, Button,
 } from 'antd';
+import dayjs from 'dayjs';
 
 import BaseComponent from '../BaseComponent';
 import DisplayValuesTable from './DisplayValues/DisplayValuesTable';
 
+import { setActivity } from '../../store/actions';
 import { mjdToString } from '../../utility/time';
 
 const { Panel } = Collapse;
@@ -28,6 +30,8 @@ function DisplayValue({
   displayValues,
   height,
 }) {
+  const dispatch = useDispatch();
+
   /** Accessing the neutron1 messages from the socket */
   const state = useSelector((s) => s.data);
   const realm = useSelector((s) => s.realm);
@@ -59,13 +63,22 @@ function DisplayValue({
 
     // Initialize form values for each value
     displayValues.forEach(({
-      name: nameVal, nodeProcess, dataKey, timeDataKey, processDataKey, unit,
+      name: nameVal,
+      nodeProcess,
+      dataKey,
+      dataKeyUpperThreshold,
+      dataKeyLowerThreshold,
+      timeDataKey,
+      processDataKey,
+      unit,
     }, i) => {
       accumulate = {
         ...accumulate,
         [`name_${i}`]: nameVal,
         [`nodeProcess_${i}`]: nodeProcess,
         [`dataKey_${i}`]: dataKey,
+        [`dataKeyUpperThreshold_${i}`]: dataKeyUpperThreshold,
+        [`dataKeyLowerThreshold_${i}`]: dataKeyLowerThreshold,
         [`timeDataKey_${i}`]: timeDataKey || 'node_utc',
         [`processDataKey_${i}`]: processDataKey
           ? processDataKey.toString().replace(/^(.+\s?=>\s?)/, 'return ').replace(/^(\s*function\s*.*\([\s\S]*\)\s*{)([\s\S]*)(})/, '$2').trim()
@@ -98,9 +111,33 @@ function DisplayValue({
         && state[realm][v.dataKey] !== undefined
         && state[realm][v.timeDataKey]
       ) {
+        const value = v.processDataKey(state[realm][v.dataKey]);
+
         // If it does, change the value
-        displayValuesState[i].value = state[realm][v.dataKey];
+        displayValuesState[i].value = value;
         displayValuesState[i].time = mjdToString(state[realm][v.timeDataKey]);
+
+        if (v.dataKeyLowerThreshold
+           && value <= v.dataKeyLowerThreshold
+        ) {
+          dispatch(setActivity({
+            status: 'error',
+            summary: `${value} ≤ ${v.dataKeyLowerThreshold} ${v.unit}`,
+            scope: `for ${v.name}`,
+            time: dayjs().utc().format('HH:mm:ss'),
+          }));
+        }
+
+        if (v.dataKeyUpperThreshold
+          && value >= v.dataKeyUpperThreshold
+        ) {
+          dispatch(setActivity({
+            status: 'error',
+            summary: `${value} ≥ ${v.dataKeyUpperThreshold} ${v.unit}`,
+            scope: `for ${v.name}`,
+            time: dayjs().utc().format('HH:mm:ss'),
+          }));
+        }
       }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -155,6 +192,7 @@ function DisplayValue({
     name: nameVal,
     nodeProcess,
     dataKey,
+    dataKeyThreshold,
     processDataKey,
     unit,
   }) => {
@@ -179,6 +217,7 @@ function DisplayValue({
     editForm.setFieldsValue({
       [`name_${newIndex}`]: nameVal,
       [`nodeProcess_${newIndex}`]: nodeProcess,
+      [`dataKeyThreshold_${newIndex}`]: dataKeyThreshold,
       [`dataKey_${newIndex}`]: dataKey,
       [`processDataKey_${newIndex}`]: processDataKey.replace(/^(.+\s?=>\s?)/, 'return ').replace(/^(\s*function\s*.*\([\s\S]*\)\s*{)([\s\S]*)(})/, '$2').trim(),
       [`unit_${newIndex}`]: unit,

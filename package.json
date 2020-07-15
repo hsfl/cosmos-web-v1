@@ -1,7 +1,7 @@
 {
   "name": "cosmos-web",
   "description": "A web application to visualize data from the COSMOS ecosystem.",
-  "version": "0.7.1",
+  "version": "0.9.0",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
