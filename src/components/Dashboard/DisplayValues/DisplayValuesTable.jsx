@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const powerMode = ['Off', 'Low Power', 'Standard Power', 'Standard ADCS', 'Standard Telecomm', 'Neutron Mission'];
-
 function DisplayValuesTable({
   displayValues,
 }) {
@@ -34,7 +32,7 @@ function DisplayValuesTable({
                 <td className={`pr-2 ${(dataKeyLowerThreshold || dataKeyUpperThreshold) && ((value <= dataKeyLowerThreshold) || (value >= dataKeyUpperThreshold)) ? 'text-red-700' : ''}`}>
                   {
                     value !== undefined
-                      ? `${dataKey !== 'node_powmode' ? value : powerMode[value]}${unit}` : '-'
+                      ? `${value}${unit}` : '-'
                   }
                 </td>
                 <td className="text-gray-500">
