@@ -39,7 +39,7 @@ export default {
             name: 'CPU',
             displayValues: [
               {
-                name: 'CPU Load 000',
+                name: 'BBB CPU Load',
                 nodeProcess: 'any',
                 dataKey: 'device_cpu_load_000',
                 dataKeyUpperThreshold: 1,
@@ -48,7 +48,7 @@ export default {
                 processDataKey: (x) => x.toFixed(2),
               },
               {
-                name: 'CPU Load 001',
+                name: 'OBC CPU Load',
                 nodeProcess: 'any',
                 dataKey: 'device_cpu_load_001',
                 dataKeyUpperThreshold: 1,
