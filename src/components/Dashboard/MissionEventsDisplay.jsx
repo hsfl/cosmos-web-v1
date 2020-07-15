@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 
 import {
-  Select, message, Table,
+  Select, message, Table, Button,
 } from 'antd';
 
 import dayjs from 'dayjs';
@@ -101,6 +101,12 @@ function MissionEventsDisplay({
               ))
             }
           </Select>
+          <Button
+            type="dashed"
+            onClick={() => queryEventLog()}
+          >
+            Requery
+          </Button>
         </>
       )}
     >
