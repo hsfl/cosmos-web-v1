@@ -349,8 +349,8 @@ function Chart({
       // Reset state to null to allow for detection of future plot history requests
       setRetrievePlotHistory(null);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [globalHistoricalDate, globalQueue]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [globalHistoricalDate]);
 
   /** Process edit value form */
   const processForm = (id) => {
