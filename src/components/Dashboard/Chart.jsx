@@ -22,11 +22,12 @@ import {
 } from '@ant-design/icons';
 import Plot from 'react-plotly.js';
 import { saveAs } from 'file-saver';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { set } from '../../store/actions';
 
 import BaseComponent from '../BaseComponent';
 import ChartValues from './Chart/ChartValues';
+
 import { axios } from '../../api';
 import { mjdToString, dateToMJD } from '../../utility/time';
 
@@ -48,6 +49,8 @@ function Chart({
   children,
   height,
 }) {
+  const dispatch = useDispatch();
+
   /** Accessing the neutron1 node process context and drilling down */
   const state = useSelector((s) => s.data);
   const globalHistoricalDate = useSelector((s) => s.globalHistoricalDate);
@@ -341,7 +344,7 @@ function Chart({
         );
       });
 
-      set('globalQueue', globalQueue - 1);
+      dispatch(set('globalQueue', globalQueue - 1));
 
       // Reset state to null to allow for detection of future plot history requests
       setRetrievePlotHistory(null);
