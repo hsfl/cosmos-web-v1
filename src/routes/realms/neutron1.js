@@ -1103,7 +1103,7 @@ export default {
                   timeDataKey: 'node_utc',
                   dataKey: 'node_powmode',
                   unit: '',
-                  processDataKey: (x) => x.toFixed(2),
+                  processDataKey: (x) => { const powerMode = ['Off', 'Low Power', 'Standard Power', 'Standard ADCS', 'Standard Telecomm', 'Neutron Mission']; return powerMode[x]; },
                 },
                 {
                   name: 'Battery Temperature',
