@@ -191,13 +191,13 @@ function Dashboard({
       if (route.path === path && route.children) {
         route.children.forEach((child) => {
           // Get page layout from route config and save it into the state
-          if (child.path.split('/')[1] === id && child.defaultLayout) {
+          if (child.name === id && child.defaultLayout) {
             layout = child.defaultLayout;
             setDefaultPageLayout(child.defaultLayout);
           }
 
           // Get page layout simple from route config and save it into the state
-          if (child.path.split('/')[1] === id && child.tabs) {
+          if (child.name === id && child.tabs) {
             setTabs(child.tabs);
           }
         });

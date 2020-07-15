@@ -2,7 +2,6 @@ import { mjdToString } from '../../utility/time';
 
 export default {
   name: 'neutron1',
-  path: '/neutron1',
   icon: 'qrcode',
   nodes: ['neutron1', 'beagle1'],
   defaultLayout: {
