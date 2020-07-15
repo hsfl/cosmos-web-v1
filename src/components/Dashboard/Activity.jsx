@@ -18,18 +18,46 @@ function Activity({
   const [color, setColor] = useState('red');
   const [toggle, setToggle] = useState(true);
   const [elapsedTime, setElapsedTime] = useState(null);
+  const [data, setData] = useState([]);
 
   const timerYellow = useRef(null);
   const timerRed = useRef(null);
+  const timer = useRef(null);
 
   // Get lastDate (last retrieved date) and compare with current time)
   // Compare. If <2 min, green, <5min, yellow, < 10min, red
 
+  const getDiff = (date) => {
+    if (dayjs().diff(date, 'day') < 1) {
+      const hour = dayjs().hour() - date.hour();
+      const minute = dayjs().minute() - date.minute();
+      const second = dayjs().second() - date.second();
+      return dayjs().set('hour', hour).set('minute', minute).set('second', second);
+    }
+    return 0;
+  };
+
   useEffect(() => {
     if (activities && activities.length !== 0) {
+      setData([
+        {
+          status: activities[0].status,
+          summary: activities[0].summary,
+          scope: activities[0].scope,
+          time: activities[0].time,
+          elapsed: getDiff(activities[0].time),
+        },
+        ...data,
+      ]);
+
       const minuteDifference = activities[0].time.diff(dayjs(), 'minute');
       if (-minuteDifference <= 2) {
-        setElapsedTime(dayjs().diff(activities[0].time, 'second'));
+        setElapsedTime(getDiff(activities[0].time));
+
+        if (timer.current != null) {
+          clearTimeout(timer.current);
+        }
+
         setColor('green');
 
         if (timerYellow.current != null && timerRed.current != null) {
@@ -48,11 +76,22 @@ function Activity({
   }, [activities]);
 
   useEffect(() => {
-    if (elapsedTime != null && elapsedTime < 86400) {
-      setTimeout(() => setElapsedTime(elapsedTime + 1), 1000);
-    } else {
-      setElapsedTime(null);
+    if (elapsedTime != null) {
+      timer.current = setTimeout(() => {
+        setElapsedTime(elapsedTime.add(1, 'second'));
+        setData(data.map((point) => ({
+          status: point.status,
+          summary: point.summary,
+          scope: point.scope,
+          time: point.time,
+          elapsed: typeof point.elapsed === 'string'
+            || point.elapsed.add(1, 'second').hour() === 24
+            ? 'more than a day ago' : point.elapsed.add(1, 'second'),
+        })));
+      }, 1000);
     }
+
+    return () => clearTimeout(timer.current);
   }, [elapsedTime]);
 
   return (
@@ -94,48 +133,54 @@ function Activity({
       </style>
       <div className={`bg-${color}-200 transition ease-in duration-500 rounded p-3 activity overflow-auto`}>
         {toggle ? (
-          <table>
-            <tbody>
+          <>
+            <div className="text-center text-2xl">
               {
-              // eslint-disable-next-line camelcase
-              activities ? activities.map(({
-                status, summary, scope, time,
-              }) => (
+                elapsedTime && elapsedTime.hour() < 24
+                  ? elapsedTime.format('HH:mm:ss') : 'Time elapsed >24 hours!'
+              }
+            </div>
+            <table>
+              <tbody>
+                {
                 // eslint-disable-next-line camelcase
-                <tr className="truncate ..." key={summary + time + scope}>
-                  <td>
-                    <Badge status={status} />
-                  </td>
-                  <td className="pr-4 text-gray-600">
-                    {
-                      time.utc().format('HH:mm:ss')
-                    }
-                  </td>
-                  <td>
-                    {summary}
-                      &nbsp;
-                    <span className="text-gray-600">
-                      {scope}
-                    </span>
-                  </td>
-                  <td>
-                    {
-                      dayjs().diff(time, 'day') < 1
-                        ? `${dayjs().hour() - time.hour()}:${dayjs().minute() - time.minute()}:${dayjs().second() - time.second()}:`
-                        : dayjs().from(time)
-                    }
-                  </td>
-                </tr>
-              )) : 'No activity.'
-            }
-            </tbody>
-          </table>
+                data ? data.map(({
+                  status, summary, scope, time, elapsed,
+                }) => (
+                  // eslint-disable-next-line camelcase
+                  <tr className="truncate ..." key={summary + time + scope}>
+                    <td>
+                      <Badge status={status} />
+                    </td>
+                    <td className="pr-4 text-gray-600">
+                      {
+                        time.utc().format('HH:mm:ss')
+                      }
+                    </td>
+                    <td>
+                      {summary}
+                        &nbsp;
+                      <span className="text-gray-600">
+                        {scope}
+                      </span>
+                    </td>
+                    <td>
+                      {
+                        elapsed
+                      }
+                    </td>
+                  </tr>
+                )) : 'No activity.'
+              }
+              </tbody>
+            </table>
+          </>
         )
           : (
             <div className="mt-10 text-center text-5xl">
               {
-                elapsedTime != null && elapsedTime < 86400
-                  ? `${Math.floor(elapsedTime / 3600)}:${Math.floor(elapsedTime / 60)}:${elapsedTime % 60}` : 'Time elapsed >24 hours!'
+                elapsedTime && elapsedTime.hour() < 24
+                  ? elapsedTime.format('HH:mm:ss') : 'Time elapsed >24 hours!'
               }
             </div>
           )}
