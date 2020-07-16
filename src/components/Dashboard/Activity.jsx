@@ -17,7 +17,7 @@ function Activity({
 
   const [color, setColor] = useState('red');
   const [toggle, setToggle] = useState(true);
-  const [elapsedTime, setElapsedTime] = useState(null);
+  const [elapsedTime, setElapsedTime] = useState('Over a day ago');
   const [data, setData] = useState([]);
 
   const timerYellow = useRef(null);
@@ -28,13 +28,13 @@ function Activity({
   // Compare. If <2 min, green, <5min, yellow, < 10min, red
 
   const getDiff = (date) => {
-    if (dayjs().diff(date, 'day') < 1) {
-      const hour = dayjs().hour() - date.hour();
-      const minute = dayjs().minute() - date.minute();
-      const second = dayjs().second() - date.second();
+    if (typeof date !== 'string' && dayjs().diff(date, 'day') < 1) {
+      const hour = dayjs().diff(date, 'hour');
+      const minute = dayjs().diff(date, 'minute') % 60;
+      const second = dayjs().diff(date, 'second') % 60;
       return dayjs().set('hour', hour).set('minute', minute).set('second', second);
     }
-    return 0;
+    return 'Over a day ago';
   };
 
   useEffect(() => {
@@ -52,7 +52,9 @@ function Activity({
 
       const minuteDifference = activities[0].time.diff(dayjs(), 'minute');
       if (-minuteDifference <= 2) {
-        setElapsedTime(getDiff(activities[0].time));
+        if (data.length !== 0) {
+          setElapsedTime(data[0].elapsed);
+        }
 
         if (timer.current != null) {
           clearTimeout(timer.current);
@@ -78,16 +80,14 @@ function Activity({
   useEffect(() => {
     if (elapsedTime != null) {
       timer.current = setTimeout(() => {
-        setElapsedTime(elapsedTime.add(1, 'second'));
         setData(data.map((point) => ({
           status: point.status,
           summary: point.summary,
           scope: point.scope,
           time: point.time,
-          elapsed: typeof point.elapsed === 'string'
-            || point.elapsed.add(1, 'second').hour() === 24
-            ? 'more than a day ago' : point.elapsed.add(1, 'second'),
+          elapsed: getDiff(point.time),
         })));
+        setElapsedTime(data[0].elapsed);
       }, 1000);
     }
 
@@ -136,8 +136,8 @@ function Activity({
           <>
             <div className="text-center text-2xl">
               {
-                elapsedTime && elapsedTime.hour() < 24
-                  ? elapsedTime.format('HH:mm:ss') : 'Time elapsed >24 hours!'
+                elapsedTime && typeof elapsedTime !== 'string'
+                  ? elapsedTime.format('HH:mm:ss') : elapsedTime
               }
             </div>
             <table>
@@ -152,21 +152,21 @@ function Activity({
                     <td>
                       <Badge status={status} />
                     </td>
-                    <td className="pr-4 text-gray-600">
+                    <td className="pr-2 text-gray-600">
                       {
                         time.utc().format('HH:mm:ss')
                       }
                     </td>
-                    <td>
+                    <td className="pr-2">
                       {summary}
                         &nbsp;
                       <span className="text-gray-600">
                         {scope}
                       </span>
                     </td>
-                    <td>
+                    <td className="text-gray-600">
                       {
-                        elapsed
+                        elapsed.format('HH:mm:ss')
                       }
                     </td>
                   </tr>
@@ -179,8 +179,8 @@ function Activity({
           : (
             <div className="mt-10 text-center text-5xl">
               {
-                elapsedTime && elapsedTime.hour() < 24
-                  ? elapsedTime.format('HH:mm:ss') : 'Time elapsed >24 hours!'
+                elapsedTime && typeof elapsedTime !== 'string'
+                  ? elapsedTime.add(1, 'second').format('HH:mm:ss') : elapsedTime
               }
             </div>
           )}
