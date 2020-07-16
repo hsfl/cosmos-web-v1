@@ -7,11 +7,25 @@ export default {
   defaultLayout: {
     lg: [
       {
-        i: 'satellite-neutron1-a',
+        i: 'satellite-neutron1-aa',
         x: 0,
         y: 0,
         w: 3,
         h: 14,
+        component: {
+          name: 'Image',
+          props: {
+            node: 'neutron1',
+            name: 'Overview',
+          },
+        },
+      },
+      {
+        i: 'satellite-neutron1-a',
+        x: 3,
+        y: 0,
+        w: 3,
+        h: 7,
         component: {
           name: 'AgentList',
         },
@@ -19,9 +33,9 @@ export default {
       {
         i: 'satellite-neutron1-b',
         x: 3,
-        y: 0,
+        y: 7,
         w: 3,
-        h: 14,
+        h: 7,
         component: {
           name: 'Activity',
         },
@@ -875,11 +889,25 @@ export default {
     BBB: {
       lg: [
         {
-          i: 'satellite-neutron1-bbb-a',
+          i: 'satellite-neutron1-bbb-aa',
           x: 0,
           y: 0,
-          w: 4,
-          h: 7,
+          w: 3,
+          h: 12,
+          component: {
+            name: 'Image',
+            props: {
+              node: 'neutron1',
+              name: 'BBB',
+            },
+          },
+        },
+        {
+          i: 'satellite-neutron1-bbb-a',
+          x: 3,
+          y: 0,
+          w: 3,
+          h: 12,
           component: {
             name: 'AgentList',
             props: {
@@ -889,10 +917,10 @@ export default {
         },
         {
           i: 'satellite-neutron1-bbb-b',
-          x: 4,
+          x: 6,
           y: 0,
-          w: 4,
-          h: 7,
+          w: 3,
+          h: 12,
           component: {
             name: 'DisplayValue',
             props: {
@@ -928,10 +956,10 @@ export default {
         },
         {
           i: 'satellite-neutron1-bbb-c',
-          x: 8,
+          x: 9,
           y: 0,
-          w: 4,
-          h: 7,
+          w: 3,
+          h: 12,
           component: {
             name: 'DisplayValue',
             props: {
@@ -1021,31 +1049,71 @@ export default {
     },
     'ISIS Radio': {
       lg: [
-
+        {
+          i: 'satellite-neutron1-isis-a',
+          x: 0,
+          y: 0,
+          w: 3,
+          h: 12,
+          component: {
+            name: 'Image',
+            props: {
+              node: 'neutron1',
+              name: 'ISIS-Radio',
+            },
+          },
+        },
       ],
     },
     'Duplex Radio': {
       lg: [
-
+        {
+          i: 'satellite-neutron1-duplex-a',
+          x: 0,
+          y: 0,
+          w: 3,
+          h: 12,
+          component: {
+            name: 'Image',
+            props: {
+              node: 'neutron1',
+              name: 'Duplex-Radio',
+            },
+          },
+        },
       ],
     },
     Payload: {
       lg: [
         {
-          i: 'satellite-neutron1-payload-a',
+          i: 'satellite-neutron1-payload-d',
           x: 0,
           y: 0,
+          w: 3,
+          h: 14,
+          component: {
+            name: 'Image',
+            props: {
+              node: 'neutron1',
+              name: 'ASU-Payload',
+            },
+          },
+        },
+        {
+          i: 'satellite-neutron1-payload-a',
+          x: 3,
+          y: 0,
           w: 4,
-          h: 7,
+          h: 14,
           component: {
             name: 'Replacement',
           },
         },
         {
           i: 'satellite-neutron1-payload-b',
-          x: 4,
+          x: 8,
           y: 0,
-          w: 4,
+          w: 5,
           h: 7,
           component: {
             name: 'DisplayValue',
@@ -1068,7 +1136,7 @@ export default {
           i: 'satellite-neutron1-payload-c',
           x: 8,
           y: 0,
-          w: 4,
+          w: 5,
           h: 7,
           component: {
             name: 'DisplayValue',
@@ -1092,10 +1160,24 @@ export default {
     'EPS Battery': {
       lg: [
         {
-          i: 'satellite-neutron1-epsbatt-a',
+          i: 'satellite-neutron1-epsbattaa',
           x: 0,
           y: 0,
-          w: 4,
+          w: 3,
+          h: 10,
+          component: {
+            name: 'Image',
+            props: {
+              node: 'neutron1',
+              name: 'EPS-Battery',
+            },
+          },
+        },
+        {
+          i: 'satellite-neutron1-epsbatt-a',
+          x: 3,
+          y: 0,
+          w: 3,
           h: 10,
           component: {
             name: 'DisplayValue',
@@ -1173,9 +1255,9 @@ export default {
         },
         {
           i: 'satellite-neutron1-epsbatt-b',
-          x: 4,
+          x: 6,
           y: 0,
-          w: 4,
+          w: 3,
           h: 10,
           component: {
             name: 'DisplayValue',
@@ -1233,9 +1315,9 @@ export default {
         },
         {
           i: 'satellite-neutron1-epsbatt-bc',
-          x: 8,
+          x: 9,
           y: 0,
-          w: 4,
+          w: 3,
           h: 10,
           component: {
             name: 'DisplayValue',
@@ -1431,10 +1513,122 @@ export default {
     'EPS Solar Panel': {
       lg: [
         {
-          i: 'satellite-neutron1-epssp-a',
+          i: 'satellite-neutron1-espsp-z',
           x: 0,
           y: 0,
           w: 3,
+          h: 12,
+          component: {
+            name: 'Image',
+            props: {
+              node: 'neutron1',
+              name: 'Orientation-1',
+            },
+          },
+        },
+        {
+          i: 'satellite-neutron1-espsp-az',
+          x: 3,
+          y: 0,
+          w: 3,
+          h: 12,
+          component: {
+            name: 'Image',
+            props: {
+              node: 'neutron1',
+              name: 'Orientation-2',
+            },
+          },
+        },
+        {
+          i: 'satellite-neutron1-espsp-bz',
+          x: 6,
+          y: 0,
+          w: 3,
+          h: 12,
+          component: {
+            name: 'Image',
+            props: {
+              node: 'neutron1',
+              name: 'Orientation-3',
+            },
+          },
+        },
+        {
+          i: 'satellite-neutron1-espsp-cz',
+          x: 9,
+          y: 0,
+          w: 3,
+          h: 12,
+          component: {
+            name: 'Image',
+            props: {
+              node: 'neutron1',
+              name: 'Orientation-4',
+            },
+          },
+        },
+        {
+          i: 'satellite-neutron1-espsp-x',
+          x: 0,
+          y: 1,
+          w: 1,
+          h: 13,
+          component: {
+            name: 'Image',
+            props: {
+              node: 'neutron1',
+              name: 'Solar-Panel-1',
+            },
+          },
+        },
+        {
+          i: 'satellite-neutron1-espsp-ax',
+          x: 1,
+          y: 1,
+          w: 1,
+          h: 13,
+          component: {
+            name: 'Image',
+            props: {
+              node: 'neutron1',
+              name: 'Solar-Panel-2',
+            },
+          },
+        },
+        {
+          i: 'satellite-neutron1-espsp-bx',
+          x: 2,
+          y: 1,
+          w: 1,
+          h: 13,
+          component: {
+            name: 'Image',
+            props: {
+              node: 'neutron1',
+              name: 'Solar-Panel-3',
+            },
+          },
+        },
+        {
+          i: 'satellite-neutron1-espsp-cx',
+          x: 3,
+          y: 1,
+          w: 1,
+          h: 13,
+          component: {
+            name: 'Image',
+            props: {
+              node: 'neutron1',
+              name: 'Solar-Panel-4',
+            },
+          },
+        },
+        {
+          i: 'satellite-neutron1-epssp-a',
+          x: 4,
+          y: 1,
+          w: 4,
           h: 6,
           component: {
             name: 'DisplayValue',
@@ -1483,9 +1677,9 @@ export default {
         },
         {
           i: 'satellite-neutron1-epssp-b',
-          x: 3,
-          y: 0,
-          w: 3,
+          x: 8,
+          y: 1,
+          w: 4,
           h: 6,
           component: {
             name: 'DisplayValue',
@@ -1534,10 +1728,10 @@ export default {
         },
         {
           i: 'satellite-neutron1-epssp-c',
-          x: 6,
-          y: 0,
-          w: 3,
-          h: 6,
+          x: 4,
+          y: 2,
+          w: 4,
+          h: 7,
           component: {
             name: 'DisplayValue',
             props: {
@@ -1585,10 +1779,10 @@ export default {
         },
         {
           i: 'satellite-neutron1-epssp-d',
-          x: 9,
-          y: 0,
-          w: 3,
-          h: 6,
+          x: 8,
+          y: 2,
+          w: 4,
+          h: 7,
           component: {
             name: 'DisplayValue',
             props: {
@@ -1637,7 +1831,7 @@ export default {
         {
           i: 'satellite-neutron1-epssp-e',
           x: 0,
-          y: 1,
+          y: 3,
           w: 6,
           h: 18,
           component: {
@@ -1708,7 +1902,7 @@ export default {
         {
           i: 'satellite-neutron1-epssp-f',
           x: 6,
-          y: 1,
+          y: 3,
           w: 6,
           h: 18,
           component: {
@@ -1781,7 +1975,7 @@ export default {
         {
           i: 'satellite-neutron1-epssp-g',
           x: 0,
-          y: 2,
+          y: 4,
           w: 6,
           h: 18,
           component: {
@@ -1854,7 +2048,7 @@ export default {
         {
           i: 'satellite-neutron1-epssp-h',
           x: 6,
-          y: 1,
+          y: 3,
           w: 6,
           h: 18,
           component: {
@@ -1927,11 +2121,25 @@ export default {
     'EPS Range': {
       lg: [
         {
-          i: 'satellite-neutron1-epsr-a',
+          i: 'satellite-neutron1-epsr-aa',
           x: 0,
           y: 0,
           w: 2,
-          h: 6,
+          h: 9,
+          component: {
+            name: 'Image',
+            props: {
+              node: 'neutron1',
+              name: 'EPS-Range',
+            },
+          },
+        },
+        {
+          i: 'satellite-neutron1-epsr-a',
+          x: 2,
+          y: 0,
+          w: 2,
+          h: 9,
           component: {
             name: 'DisplayValue',
             props: {
@@ -1952,10 +2160,10 @@ export default {
         },
         {
           i: 'satellite-neutron1-epsr-abc',
-          x: 2,
+          x: 4,
           y: 0,
           w: 2,
-          h: 6,
+          h: 9,
           component: {
             name: 'DisplayValue',
             props: {
@@ -1985,10 +2193,10 @@ export default {
         },
         {
           i: 'satellite-neutron1-epsr-b',
-          x: 4,
+          x: 6,
           y: 0,
           w: 2,
-          h: 6,
+          h: 9,
           component: {
             name: 'DisplayValue',
             props: {
@@ -2018,10 +2226,10 @@ export default {
         },
         {
           i: 'satellite-neutron1-epsr-c',
-          x: 6,
+          x: 8,
           y: 0,
-          w: 3,
-          h: 6,
+          w: 2,
+          h: 9,
           component: {
             name: 'DisplayValue',
             props: {
@@ -2051,10 +2259,10 @@ export default {
         },
         {
           i: 'satellite-neutron1-epsr-d',
-          x: 9,
+          x: 10,
           y: 0,
-          w: 3,
-          h: 6,
+          w: 2,
+          h: 9,
           component: {
             name: 'DisplayValue',
             props: {
@@ -2753,11 +2961,25 @@ export default {
     OBC: {
       lg: [
         {
-          i: 'satellite-neutron1-obc-a',
+          i: 'satellite-neutron1-obc-aa',
           x: 0,
           y: 0,
-          w: 4,
-          h: 7,
+          w: 3,
+          h: 14,
+          component: {
+            name: 'Image',
+            props: {
+              node: 'neutron1',
+              name: 'ASU-Payload',
+            },
+          },
+        },
+        {
+          i: 'satellite-neutron1-obc-a',
+          x: 3,
+          y: 0,
+          w: 3,
+          h: 14,
           component: {
             name: 'AgentList',
             props: {
@@ -2767,9 +2989,9 @@ export default {
         },
         {
           i: 'satellite-neutron1-obc-b',
-          x: 4,
+          x: 6,
           y: 0,
-          w: 4,
+          w: 6,
           h: 7,
           component: {
             name: 'DisplayValue',
@@ -2806,9 +3028,9 @@ export default {
         },
         {
           i: 'satellite-neutron1-obc-c',
-          x: 8,
-          y: 0,
-          w: 4,
+          x: 6,
+          y: 1,
+          w: 6,
           h: 7,
           component: {
             name: 'DisplayValue',
@@ -2838,7 +3060,7 @@ export default {
         {
           i: 'satellite-neutron1-obc-d',
           x: 0,
-          y: 7,
+          y: 2,
           w: 6,
           h: 18,
           component: {
@@ -2869,7 +3091,7 @@ export default {
         {
           i: 'satellite-neutron1-obc-e',
           x: 6,
-          y: 8,
+          y: 2,
           w: 6,
           h: 18,
           component: {
@@ -2904,7 +3126,7 @@ export default {
           i: 'satellite-neutron1-adcs-a',
           x: 0,
           y: 0,
-          w: 4,
+          w: 2,
           h: 7,
           component: {
             name: 'DisplayValue',
@@ -2981,9 +3203,9 @@ export default {
         },
         {
           i: 'satellite-neutron1-adcs-b',
-          x: 4,
+          x: 2,
           y: 0,
-          w: 4,
+          w: 2,
           h: 7,
           component: {
             name: 'DisplayValue',
@@ -3044,9 +3266,9 @@ export default {
         },
         {
           i: 'satellite-neutron1-adcs-bb',
-          x: 8,
+          x: 4,
           y: 0,
-          w: 4,
+          w: 2,
           h: 7,
           component: {
             name: 'DisplayValue',
@@ -3082,10 +3304,38 @@ export default {
           },
         },
         {
+          i: 'satellite-neutron1-adcs-aaa',
+          x: 6,
+          y: 0,
+          w: 3,
+          h: 14,
+          component: {
+            name: 'Image',
+            props: {
+              node: 'neutron1',
+              name: 'ADCS-1',
+            },
+          },
+        },
+        {
+          i: 'satellite-neutron1-adcs-aa',
+          x: 9,
+          y: 0,
+          w: 3,
+          h: 14,
+          component: {
+            name: 'Image',
+            props: {
+              node: 'neutron1',
+              name: 'ADCS-2',
+            },
+          },
+        },
+        {
           i: 'satellite-neutron1-adcs-c',
           x: 0,
-          y: 7,
-          w: 4,
+          y: 1,
+          w: 2,
           h: 7,
           component: {
             name: 'DisplayValue',
@@ -3130,9 +3380,9 @@ export default {
         },
         {
           i: 'satellite-neutron1-adcs-d',
-          x: 4,
-          y: 7,
-          w: 4,
+          x: 2,
+          y: 1,
+          w: 2,
           h: 7,
           component: {
             name: 'DisplayValue',
@@ -3177,9 +3427,9 @@ export default {
         },
         {
           i: 'satellite-neutron1-adcs-e',
-          x: 8,
-          y: 7,
-          w: 4,
+          x: 4,
+          y: 1,
+          w: 2,
           h: 7,
           component: {
             name: 'DisplayValue',
@@ -3225,7 +3475,7 @@ export default {
         {
           i: 'satellite-neutron1-adcs-f',
           x: 6,
-          y: 14,
+          y: 2,
           w: 6,
           h: 21,
           component: {
@@ -3254,7 +3504,7 @@ export default {
         {
           i: 'satellite-neutron1-adcs-g',
           x: 0,
-          y: 14,
+          y: 2,
           w: 6,
           h: 21,
           component: {
@@ -3472,8 +3722,8 @@ export default {
           i: 'satellite-neutron1-gps-a',
           x: 0,
           y: 0,
-          w: 6,
-          h: 6,
+          w: 4,
+          h: 12,
           component: {
             name: 'DisplayValue',
             props: {
@@ -3530,10 +3780,10 @@ export default {
         },
         {
           i: 'satellite-neutron1-gps-b',
-          x: 6,
+          x: 4,
           y: 0,
-          w: 6,
-          h: 6,
+          w: 5,
+          h: 12,
           component: {
             name: 'DisplayValue',
             props: {
@@ -3585,6 +3835,20 @@ export default {
                   live: true,
                 },
               ],
+            },
+          },
+        },
+        {
+          i: 'satellite-neutron-gps-aa',
+          x: 9,
+          y: 0,
+          w: 3,
+          h: 12,
+          component: {
+            name: 'Image',
+            props: {
+              node: 'neutron1',
+              name: 'GPS',
             },
           },
         },
