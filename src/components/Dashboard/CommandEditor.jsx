@@ -10,6 +10,7 @@ import {
   message,
   Button,
   Table,
+  Tooltip,
   Popconfirm,
 } from 'antd';
 import {
@@ -184,7 +185,9 @@ function CommandEditor({
                             name="name"
                             rules={[{ required: true, message: 'Please type a name.' }]}
                           >
-                            <Input placeholder="Name" />
+                            <Tooltip placement="right" title="Enter name of the event">
+                              <Input placeholder="Name" />
+                            </Tooltip>
                           </Form.Item>
                         </td>
                         <td rowSpan={2}>
@@ -193,7 +196,9 @@ function CommandEditor({
                             name="type"
                             rules={[{ required: true, message: 'Please choose a type.' }]}
                           >
-                            <InputNumber placeholder="#" />
+                            <Tooltip placement="right" title="ex: 8192">
+                              <InputNumber placeholder="#" />
+                            </Tooltip>
                           </Form.Item>
                         </td>
                         <td>
@@ -202,7 +207,9 @@ function CommandEditor({
                             name="flag"
                             rules={[{ required: true, message: 'Please choose a flag.' }]}
                           >
-                            <InputNumber placeholder="#" />
+                            <Tooltip placement="right" title="ex: 32768">
+                              <InputNumber placeholder="#" />
+                            </Tooltip>
                           </Form.Item>
                         </td>
                       </tr>
@@ -213,7 +220,9 @@ function CommandEditor({
                     name="command"
                     rules={[{ required: true, message: 'Please type a command.' }]}
                   >
-                    <Input placeholder="ex: ls, /bin/systemctl stop agent_cpu" prefix="➜" />
+                    <Tooltip placement="bottomLeft" title="ex: ls">
+                      <Input placeholder="Linux command" prefix="➜" />
+                    </Tooltip>
                   </Form.Item>
                   <Form.Item className="mb-0">
                     <Button htmlType="submit" type="primary">
