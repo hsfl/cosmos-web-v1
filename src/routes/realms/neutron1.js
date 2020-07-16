@@ -1912,7 +1912,7 @@ export default {
           },
         },
         {
-          i: 'satellite-neutron1-epsr-ab',
+          i: 'satellite-neutron1-epsr-abc',
           x: 2,
           y: 0,
           w: 2,
