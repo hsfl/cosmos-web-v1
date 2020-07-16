@@ -80,7 +80,7 @@ export default {
         x: 9,
         y: 0,
         w: 3,
-        h: 14,
+        h: 7,
         component: {
           name: 'DisplayValue',
           props: {
@@ -231,6 +231,45 @@ export default {
                 dataKey: 'node_powmode',
                 unit: '',
                 processDataKey: (x) => { const powerMode = ['Off', 'Low Power', 'Standard Power', 'Standard ADCS', 'Standard Telecomm', 'Neutron Mission']; return powerMode[x]; },
+              },
+            ],
+          },
+        },
+      },
+      {
+        i: 'satellite-neutron1-ee',
+        x: 9,
+        y: 7,
+        w: 3,
+        h: 7,
+        component: {
+          name: 'DisplayValue',
+          props: {
+            name: 'Sun Sensor Telemetry',
+            displayValues: [
+              {
+                name: 'Primary Magnetometer Temp',
+                nodeProcess: 'any',
+                dataKey: 'placeholder',
+                timeDataKey: 'placeholder',
+                unit: 'C',
+                processDataKey: (x) => (x - 272.15).toFixed(2),
+              },
+              {
+                name: 'Redundant Mag Temp',
+                nodeProcess: 'any',
+                dataKey: 'placeholder',
+                timeDataKey: 'placeholder',
+                unit: 'C',
+                processDataKey: (x) => (x - 272.15).toFixed(2),
+              },
+              {
+                name: 'Magnetometer',
+                nodeProcess: 'any',
+                dataKey: 'placeholder',
+                timeDataKey: 'placeholder',
+                unit: 'B',
+                processDataKey: (x) => x.toFixed(2),
               },
             ],
           },
@@ -2865,7 +2904,7 @@ export default {
           i: 'satellite-neutron1-adcs-a',
           x: 0,
           y: 0,
-          w: 6,
+          w: 4,
           h: 7,
           component: {
             name: 'DisplayValue',
@@ -2942,9 +2981,9 @@ export default {
         },
         {
           i: 'satellite-neutron1-adcs-b',
-          x: 6,
+          x: 4,
           y: 0,
-          w: 6,
+          w: 4,
           h: 7,
           component: {
             name: 'DisplayValue',
@@ -2997,6 +3036,45 @@ export default {
                   dataKey: 'device_cpu_boot_count_002',
                   timeDataKey: 'device_cpu_utc_002',
                   unit: '',
+                  processDataKey: (x) => x.toFixed(2),
+                },
+              ],
+            },
+          },
+        },
+        {
+          i: 'satellite-neutron1-adcs-bb',
+          x: 8,
+          y: 0,
+          w: 4,
+          h: 7,
+          component: {
+            name: 'DisplayValue',
+            props: {
+              name: 'Sun Sensor Telemetry',
+              displayValues: [
+                {
+                  name: 'Fine Sun Sensor',
+                  nodeProcess: 'any',
+                  dataKey: 'placeholder',
+                  timeDataKey: 'placeholder',
+                  unit: '',
+                  processDataKey: (x) => x.toFixed(2),
+                },
+                {
+                  name: 'Course Sun Sensor',
+                  nodeProcess: 'any',
+                  dataKey: 'placeholder',
+                  timeDataKey: 'placeholder',
+                  unit: 'C',
+                  processDataKey: (x) => x.toFixed(2),
+                },
+                {
+                  name: 'Magnetometer',
+                  nodeProcess: 'any',
+                  dataKey: 'placeholder',
+                  timeDataKey: 'placeholder',
+                  unit: 'B',
                   processDataKey: (x) => x.toFixed(2),
                 },
               ],
@@ -3249,6 +3327,33 @@ export default {
                   processDataKey: (x) => JSON.stringify(x),
                   live: true,
                 },
+                {
+                  name: 'Longitude',
+                  nodeProcess: 'any',
+                  dataKey: 'placeholder',
+                  timeDataKey: 'placeholder',
+                  unit: 'degrees',
+                  processDataKey: (x) => x.toFixed(2),
+                  live: true,
+                },
+                {
+                  name: 'Latitude',
+                  nodeProcess: 'any',
+                  dataKey: 'placeholder',
+                  timeDataKey: 'placeholder',
+                  unit: 'degrees',
+                  processDataKey: (x) => x.toFixed(2),
+                  live: true,
+                },
+                {
+                  name: 'Altitude',
+                  nodeProcess: 'any',
+                  dataKey: 'placeholder',
+                  timeDataKey: 'placeholder',
+                  unit: 'degrees',
+                  processDataKey: (x) => x.toFixed(2),
+                  live: true,
+                },
               ],
             },
           },
@@ -3283,9 +3388,18 @@ export default {
                   live: true,
                 },
                 {
-                  name: 'GPS Status',
+                  name: 'GPS Position Lock Status',
                   nodeProcess: 'any',
                   dataKey: 'device_gps_solution_status_000',
+                  timeDataKey: 'device_gps_utc_000',
+                  unit: '',
+                  processDataKey: (x) => x,
+                  live: true,
+                },
+                {
+                  name: 'GPS Time Status',
+                  nodeProcess: 'any',
+                  dataKey: 'device_gps_time_status_000',
                   timeDataKey: 'device_gps_utc_000',
                   unit: '',
                   processDataKey: (x) => x,
@@ -3308,6 +3422,63 @@ export default {
           i: 'satellite-neutron1-gps-e',
           x: 0,
           y: 1,
+          w: 12,
+          h: 18,
+          component: {
+            name: 'Chart',
+            props: {
+              name: 'Ground Position',
+              plots: [
+                {
+                  x: [],
+                  y: [],
+                  type: 'scatter',
+                  marker: {
+                    color: 'red',
+                  },
+                  name: 'Longitude',
+                  YDataKey: 'placeholder',
+                  timeDataKey: 'placeholder',
+                  processYDataKey: (x) => x,
+                  nodeProcess: 'any',
+                  live: true,
+                },
+                {
+                  x: [],
+                  y: [],
+                  type: 'scatter',
+                  marker: {
+                    color: 'orange',
+                  },
+                  name: 'Latitude',
+                  YDataKey: 'placeholder',
+                  timeDataKey: 'placeholder',
+                  processYDataKey: (x) => x,
+                  nodeProcess: 'any',
+                  live: true,
+                },
+                {
+                  x: [],
+                  y: [],
+                  type: 'scatter',
+                  marker: {
+                    color: 'blue',
+                  },
+                  name: 'Altitude',
+                  YDataKey: 'placeholder',
+                  timeDataKey: 'placeholder',
+                  processYDataKey: (x) => x,
+                  nodeProcess: 'any',
+                  live: true,
+                },
+              ],
+            },
+          },
+        },
+        {
+          i: 'satellite-neutron1-gps-f',
+          x: 0,
+          y: 2,
           w: 6,
           h: 18,
           component: {
@@ -3362,9 +3533,9 @@ export default {
           },
         },
         {
-          i: 'satellite-neutron1-gps-f',
+          i: 'satellite-neutron1-gps-g',
           x: 6,
-          y: 1,
+          y: 2,
           w: 6,
           h: 18,
           component: {
@@ -3419,15 +3590,15 @@ export default {
           },
         },
         {
-          i: 'satellite-neutron1-gps-g',
+          i: 'satellite-neutron1-gps-h',
           x: 0,
-          y: 2,
+          y: 3,
           w: 6,
           h: 18,
           component: {
             name: 'Chart',
             props: {
-              name: 'GPS Status',
+              name: 'GPS Position Lock Status',
               plots: [
                 {
                   x: [],
@@ -3436,7 +3607,7 @@ export default {
                   marker: {
                     color: 'red',
                   },
-                  name: 'GPS Status',
+                  name: 'GPS Position Lock Status',
                   YDataKey: 'device_gps_solution_status_000',
                   timeDataKey: 'device_gps_utc_000',
                   processYDataKey: (x) => x,
@@ -3448,9 +3619,9 @@ export default {
           },
         },
         {
-          i: 'satellite-neutron1-gps-h',
+          i: 'satellite-neutron1-gps-i',
           x: 6,
-          y: 2,
+          y: 3,
           w: 6,
           h: 18,
           component: {
@@ -3477,9 +3648,9 @@ export default {
           },
         },
         {
-          i: 'satellite-neutron1-gps-z',
+          i: 'satellite-neutron1-gps-j',
           x: 0,
-          y: 5,
+          y: 4,
           w: 12,
           h: 21,
           component: {
