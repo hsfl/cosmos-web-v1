@@ -347,9 +347,6 @@ function Dashboard({
 
   useEffect(() => {
     setJsonEdit(JSON.stringify(layouts.lg, null, 2));
-
-    dispatch(set('globalQueue', layouts.lg.filter((el) => el.component.name === 'Chart').length));
-    dispatch(set('globalHistoricalDate', [dayjs().subtract(1, 'hour'), dayjs()]));
   }, [layouts]);
 
   const retrieveInfo = (e) => {
