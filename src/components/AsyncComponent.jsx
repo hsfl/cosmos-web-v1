@@ -8,6 +8,7 @@ import Commands from './Dashboard/Commands';
 import Contact from './Dashboard/Contact';
 import DisplayValue from './Dashboard/DisplayValue';
 import Events from './Dashboard/Events';
+import Image from './Dashboard/Image';
 import Globe from './Dashboard/Globe';
 import Macro from './Dashboard/Macro';
 import MissionEventsDisplay from './Dashboard/MissionEventsDisplay';
@@ -34,6 +35,7 @@ export const components = {
   Contact,
   DisplayValue,
   Events,
+  Image,
   Globe,
   Macro,
   MissionEventsDisplay,
