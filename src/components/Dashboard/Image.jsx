@@ -9,19 +9,20 @@ import BaseComponent from '../BaseComponent';
 function Image({
   node,
   name,
+  file,
   height,
 }) {
   return (
     <BaseComponent
-      name={name[0].toUpperCase() + name.slice(1, name.length)}
+      name={name}
       liveOnly
       height={height}
       showStatus={false}
     >
       <img
         className="mx-auto w-full"
-        src={`/${node}/${name}.png`}
-        alt={name}
+        src={`/${node}/${file}`}
+        alt={file}
       />
     </BaseComponent>
   );
@@ -30,6 +31,7 @@ function Image({
 Image.propTypes = {
   node: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
+  file: PropTypes.string.isRequired,
   height: PropTypes.number.isRequired,
 };
 
