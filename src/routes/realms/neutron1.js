@@ -17,6 +17,7 @@ export default {
           props: {
             node: 'neutron1',
             name: 'Overview',
+            file: 'Overview.png',
           },
         },
       },
@@ -1169,7 +1170,8 @@ export default {
             name: 'Image',
             props: {
               node: 'neutron1',
-              name: 'EPS-Battery',
+              file: 'EPS Battery',
+              name: 'EPS-Battery.png',
             },
           },
         },
@@ -1327,10 +1329,10 @@ export default {
                 {
                   name: '3V Current Draw',
                   nodeProcess: 'any',
-                  dataKey: 'device_bus_volt_000',
+                  dataKey: 'device_bus_amp_000',
                   timeDataKey: 'device_bus_utc_000',
                   unit: 'A',
-                  processDataKey: (x) => x.toFixed(2),
+                  processDataKey: (x) => x.toFixed(4),
                   live: true,
                 },
                 {
@@ -1345,10 +1347,10 @@ export default {
                 {
                   name: '3V Current Draw',
                   nodeProcess: 'any',
-                  dataKey: 'device_bus_volt_001',
+                  dataKey: 'device_bus_amp_001',
                   timeDataKey: 'device_bus_utc_001',
                   unit: 'A',
-                  processDataKey: (x) => x.toFixed(2),
+                  processDataKey: (x) => x.toFixed(4),
                   live: true,
                 },
                 {
@@ -1513,72 +1515,17 @@ export default {
     'EPS Solar Panel': {
       lg: [
         {
-          i: 'satellite-neutron1-espsp-z',
-          x: 0,
-          y: 0,
-          w: 3,
-          h: 12,
-          component: {
-            name: 'Image',
-            props: {
-              node: 'neutron1',
-              name: 'Orientation-1',
-            },
-          },
-        },
-        {
-          i: 'satellite-neutron1-espsp-az',
-          x: 3,
-          y: 0,
-          w: 3,
-          h: 12,
-          component: {
-            name: 'Image',
-            props: {
-              node: 'neutron1',
-              name: 'Orientation-2',
-            },
-          },
-        },
-        {
-          i: 'satellite-neutron1-espsp-bz',
-          x: 6,
-          y: 0,
-          w: 3,
-          h: 12,
-          component: {
-            name: 'Image',
-            props: {
-              node: 'neutron1',
-              name: 'Orientation-3',
-            },
-          },
-        },
-        {
-          i: 'satellite-neutron1-espsp-cz',
-          x: 9,
-          y: 0,
-          w: 3,
-          h: 12,
-          component: {
-            name: 'Image',
-            props: {
-              node: 'neutron1',
-              name: 'Orientation-4',
-            },
-          },
-        },
-        {
           i: 'satellite-neutron1-espsp-x',
           x: 0,
           y: 1,
           w: 1,
-          h: 13,
+          h: 14,
           component: {
             name: 'Image',
             props: {
               node: 'neutron1',
-              name: 'Solar-Panel-1',
+              name: 'Solar Panel Z- (BCR0)',
+              file: 'Solar-Panel--Z.png',
             },
           },
         },
@@ -1587,53 +1534,26 @@ export default {
           x: 1,
           y: 1,
           w: 1,
-          h: 13,
+          h: 14,
           component: {
             name: 'Image',
             props: {
               node: 'neutron1',
-              name: 'Solar-Panel-2',
-            },
-          },
-        },
-        {
-          i: 'satellite-neutron1-espsp-bx',
-          x: 2,
-          y: 1,
-          w: 1,
-          h: 13,
-          component: {
-            name: 'Image',
-            props: {
-              node: 'neutron1',
-              name: 'Solar-Panel-3',
-            },
-          },
-        },
-        {
-          i: 'satellite-neutron1-espsp-cx',
-          x: 3,
-          y: 1,
-          w: 1,
-          h: 13,
-          component: {
-            name: 'Image',
-            props: {
-              node: 'neutron1',
-              name: 'Solar-Panel-4',
+              name: 'Solar Panel Z+ (BCR1)',
+              file: 'Solar-Panel-+Z.png',
             },
           },
         },
         {
           i: 'satellite-neutron1-epssp-a',
-          x: 4,
+          x: 2,
           y: 1,
           w: 4,
-          h: 6,
+          h: 7,
           component: {
             name: 'DisplayValue',
             props: {
-              name: 'Solar Panel 1',
+              name: 'Solar Panel Z- (BCR0)',
               displayValues: [
                 {
                   name: 'Current',
@@ -1677,14 +1597,14 @@ export default {
         },
         {
           i: 'satellite-neutron1-epssp-b',
-          x: 8,
+          x: 2,
           y: 1,
           w: 4,
-          h: 6,
+          h: 7,
           component: {
             name: 'DisplayValue',
             props: {
-              name: 'Solar Panel 2',
+              name: 'Solar Panel Z+ (BCR1)',
               displayValues: [
                 {
                   name: 'Current',
@@ -1727,15 +1647,45 @@ export default {
           },
         },
         {
+          i: 'satellite-neutron1-espsp-bx',
+          x: 6,
+          y: 1,
+          w: 1,
+          h: 14,
+          component: {
+            name: 'Image',
+            props: {
+              node: 'neutron1',
+              name: 'Solar Panel Y- (BCR2)',
+              file: 'Solar-Panel--Y.png',
+            },
+          },
+        },
+        {
+          i: 'satellite-neutron1-espsp-cx',
+          x: 7,
+          y: 1,
+          w: 1,
+          h: 14,
+          component: {
+            name: 'Image',
+            props: {
+              node: 'neutron1',
+              name: 'Solar Panel Y+ (BCR3)',
+              file: 'Solar-Panel-+Y.png',
+            },
+          },
+        },
+        {
           i: 'satellite-neutron1-epssp-c',
-          x: 4,
+          x: 8,
           y: 2,
           w: 4,
           h: 7,
           component: {
             name: 'DisplayValue',
             props: {
-              name: 'Solar Panel 3',
+              name: 'Solar Panel Y- (BCR2)',
               displayValues: [
                 {
                   name: 'Current',
@@ -1786,7 +1736,7 @@ export default {
           component: {
             name: 'DisplayValue',
             props: {
-              name: 'Solar Panel 4',
+              name: 'Solar Panel Y+ (BCR3)',
               displayValues: [
                 {
                   name: 'Current',
@@ -2131,6 +2081,7 @@ export default {
             props: {
               node: 'neutron1',
               name: 'EPS-Range',
+              file: 'EPS-Range.png',
             },
           },
         },
@@ -2175,7 +2126,7 @@ export default {
                   dataKey: 'device_bus_amp_000',
                   timeDataKey: 'device_bus_utc_000',
                   unit: 'A',
-                  processDataKey: (x) => x.toFixed(2),
+                  processDataKey: (x) => x.toFixed(4),
                   live: true,
                 },
                 {
@@ -2208,7 +2159,7 @@ export default {
                   dataKey: 'device_bus_amp_001',
                   timeDataKey: 'device_bus_utc_001',
                   unit: 'A',
-                  processDataKey: (x) => x.toFixed(2),
+                  processDataKey: (x) => x.toFixed(4),
                   live: true,
                 },
                 {
@@ -2241,7 +2192,7 @@ export default {
                   dataKey: 'device_bus_amp_002',
                   timeDataKey: 'device_bus_utc_002',
                   unit: 'A',
-                  processDataKey: (x) => x.toFixed(2),
+                  processDataKey: (x) => x.toFixed(4),
                   live: true,
                 },
                 {
@@ -2274,7 +2225,7 @@ export default {
                   dataKey: 'device_bus_amp_003',
                   timeDataKey: 'device_bus_utc_003',
                   unit: 'A',
-                  processDataKey: (x) => x.toFixed(2),
+                  processDataKey: (x) => x.toFixed(4),
                   live: true,
                 },
                 {
@@ -3273,30 +3224,14 @@ export default {
           component: {
             name: 'DisplayValue',
             props: {
-              name: 'Sun Sensor Telemetry',
+              name: 'Magnetometer',
               displayValues: [
-                {
-                  name: 'Fine Sun Sensor',
-                  nodeProcess: 'any',
-                  dataKey: 'placeholder',
-                  timeDataKey: 'placeholder',
-                  unit: '',
-                  processDataKey: (x) => x.toFixed(2),
-                },
-                {
-                  name: 'Course Sun Sensor',
-                  nodeProcess: 'any',
-                  dataKey: 'placeholder',
-                  timeDataKey: 'placeholder',
-                  unit: 'C',
-                  processDataKey: (x) => x.toFixed(2),
-                },
                 {
                   name: 'Magnetometer',
                   nodeProcess: 'any',
                   dataKey: 'placeholder',
                   timeDataKey: 'placeholder',
-                  unit: 'B',
+                  unit: 'T',
                   processDataKey: (x) => x.toFixed(2),
                 },
               ],
@@ -3313,6 +3248,7 @@ export default {
             name: 'Image',
             props: {
               node: 'neutron1',
+              file: 'ADCS-1.png',
               name: 'ADCS-1',
             },
           },
@@ -3327,7 +3263,246 @@ export default {
             name: 'Image',
             props: {
               node: 'neutron1',
+              file: 'ADCS-2.png',
               name: 'ADCS-2',
+            },
+          },
+        },
+        {
+          i: 'satellite-neutron1-adcs-bbdd',
+          x: 0,
+          y: 2,
+          w: 3,
+          h: 7,
+          component: {
+            name: 'DisplayValue',
+            props: {
+              name: 'Fine Sun Sensor',
+              displayValues: [
+                {
+                  name: 'Position',
+                  nodeProcess: 'any',
+                  dataKey: 'placeholder',
+                  timeDataKey: 'placeholder',
+                  unit: 'm',
+                  processDataKey: (x) => JSON.parse(x),
+                },
+                {
+                  name: 'Detection Result',
+                  nodeProcess: 'any',
+                  dataKey: 'placeholder',
+                  timeDataKey: 'placeholder',
+                  unit: '',
+                  processDataKey: (x) => JSON.parse(x),
+                },
+                {
+                  name: 'FSS 0',
+                  nodeProcess: 'any',
+                  dataKey: 'placeholder',
+                  timeDataKey: 'placeholder',
+                  unit: '',
+                  processDataKey: (x) => x,
+                },
+                {
+                  name: 'FSS 1',
+                  nodeProcess: 'any',
+                  dataKey: 'placeholder',
+                  timeDataKey: 'placeholder',
+                  unit: '',
+                  processDataKey: (x) => x,
+                },
+                {
+                  name: 'FSS 2',
+                  nodeProcess: 'any',
+                  dataKey: 'placeholder',
+                  timeDataKey: 'placeholder',
+                  unit: '',
+                  processDataKey: (x) => x,
+                },
+                {
+                  name: 'FSS 3',
+                  nodeProcess: 'any',
+                  dataKey: 'placeholder',
+                  timeDataKey: 'placeholder',
+                  unit: '',
+                  processDataKey: (x) => x,
+                },
+                {
+                  name: 'FSS 4',
+                  nodeProcess: 'any',
+                  dataKey: 'placeholder',
+                  timeDataKey: 'placeholder',
+                  unit: '',
+                  processDataKey: (x) => x,
+                },
+                {
+                  name: 'FSS 5',
+                  nodeProcess: 'any',
+                  dataKey: 'placeholder',
+                  timeDataKey: 'placeholder',
+                  unit: '',
+                  processDataKey: (x) => x,
+                },
+                {
+                  name: 'FSS 6',
+                  nodeProcess: 'any',
+                  dataKey: 'placeholder',
+                  timeDataKey: 'placeholder',
+                  unit: '',
+                  processDataKey: (x) => x,
+                },
+                {
+                  name: 'FSS 7',
+                  nodeProcess: 'any',
+                  dataKey: 'placeholder',
+                  timeDataKey: 'placeholder',
+                  unit: '',
+                  processDataKey: (x) => x,
+                },
+                {
+                  name: 'FSS 8',
+                  nodeProcess: 'any',
+                  dataKey: 'placeholder',
+                  timeDataKey: 'placeholder',
+                  unit: '',
+                  processDataKey: (x) => x,
+                },
+                {
+                  name: 'FSS 9',
+                  nodeProcess: 'any',
+                  dataKey: 'placeholder',
+                  timeDataKey: 'placeholder',
+                  unit: '',
+                  processDataKey: (x) => x,
+                },
+                {
+                  name: 'FSS 10',
+                  nodeProcess: 'any',
+                  dataKey: 'placeholder',
+                  timeDataKey: 'placeholder',
+                  unit: '',
+                  processDataKey: (x) => x,
+                },
+              ],
+            },
+          },
+        },
+        {
+          i: 'satellite-neutron1-adcs-bbee',
+          x: 3,
+          y: 2,
+          w: 3,
+          h: 7,
+          component: {
+            name: 'DisplayValue',
+            props: {
+              name: 'Coarse Sun Sensor',
+              displayValues: [
+                {
+                  name: 'Position',
+                  nodeProcess: 'any',
+                  dataKey: 'placeholder',
+                  timeDataKey: 'placeholder',
+                  unit: 'm',
+                  processDataKey: (x) => JSON.parse(x),
+                },
+                {
+                  name: 'Detection Result',
+                  nodeProcess: 'any',
+                  dataKey: 'placeholder',
+                  timeDataKey: 'placeholder',
+                  unit: '',
+                  processDataKey: (x) => JSON.parse(x),
+                },
+                {
+                  name: 'CSS 0',
+                  nodeProcess: 'any',
+                  dataKey: 'placeholder',
+                  timeDataKey: 'placeholder',
+                  unit: '',
+                  processDataKey: (x) => x,
+                },
+                {
+                  name: 'CSS 1',
+                  nodeProcess: 'any',
+                  dataKey: 'placeholder',
+                  timeDataKey: 'placeholder',
+                  unit: '',
+                  processDataKey: (x) => x,
+                },
+                {
+                  name: 'CSS 2',
+                  nodeProcess: 'any',
+                  dataKey: 'placeholder',
+                  timeDataKey: 'placeholder',
+                  unit: '',
+                  processDataKey: (x) => x,
+                },
+                {
+                  name: 'CSS 3',
+                  nodeProcess: 'any',
+                  dataKey: 'placeholder',
+                  timeDataKey: 'placeholder',
+                  unit: '',
+                  processDataKey: (x) => x,
+                },
+                {
+                  name: 'CSS 4',
+                  nodeProcess: 'any',
+                  dataKey: 'placeholder',
+                  timeDataKey: 'placeholder',
+                  unit: '',
+                  processDataKey: (x) => x,
+                },
+                {
+                  name: 'CSS 5',
+                  nodeProcess: 'any',
+                  dataKey: 'placeholder',
+                  timeDataKey: 'placeholder',
+                  unit: '',
+                  processDataKey: (x) => x,
+                },
+                {
+                  name: 'CSS 6',
+                  nodeProcess: 'any',
+                  dataKey: 'placeholder',
+                  timeDataKey: 'placeholder',
+                  unit: '',
+                  processDataKey: (x) => x,
+                },
+                {
+                  name: 'CSS 7',
+                  nodeProcess: 'any',
+                  dataKey: 'placeholder',
+                  timeDataKey: 'placeholder',
+                  unit: '',
+                  processDataKey: (x) => x,
+                },
+                {
+                  name: 'CSS 8',
+                  nodeProcess: 'any',
+                  dataKey: 'placeholder',
+                  timeDataKey: 'placeholder',
+                  unit: '',
+                  processDataKey: (x) => x,
+                },
+                {
+                  name: 'CSS 9',
+                  nodeProcess: 'any',
+                  dataKey: 'placeholder',
+                  timeDataKey: 'placeholder',
+                  unit: '',
+                  processDataKey: (x) => x,
+                },
+                {
+                  name: 'CSS 10',
+                  nodeProcess: 'any',
+                  dataKey: 'placeholder',
+                  timeDataKey: 'placeholder',
+                  unit: '',
+                  processDataKey: (x) => x,
+                },
+              ],
             },
           },
         },
@@ -3475,7 +3650,7 @@ export default {
         {
           i: 'satellite-neutron1-adcs-f',
           x: 6,
-          y: 2,
+          y: 3,
           w: 6,
           h: 21,
           component: {
@@ -3504,7 +3679,7 @@ export default {
         {
           i: 'satellite-neutron1-adcs-g',
           x: 0,
-          y: 2,
+          y: 3,
           w: 6,
           h: 21,
           component: {
