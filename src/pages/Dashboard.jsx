@@ -132,8 +132,26 @@ function Dashboard({
         } else if (realms[id].includes(node) && process !== 'soh') {
           dispatch(set('lastDate', dayjs()));
 
+          const aliases = {
+            device_bcreg_power_000: json.device_bcreg_volt_000 && json.device_bcreg_volt_000
+              ? json.device_bcreg_volt_000 * json.device_bcreg_volt_000 : undefined,
+            device_bcreg_power_001: json.device_bcreg_volt_001 && json.device_bcreg_volt_001
+              ? json.device_bcreg_volt_001 * json.device_bcreg_volt_001 : undefined,
+            device_bcreg_power_002: json.device_bcreg_volt_002 && json.device_bcreg_volt_002
+              ? json.device_bcreg_volt_002 * json.device_bcreg_volt_002 : undefined,
+            device_bcreg_power_003: json.device_bcreg_volt_003 && json.device_bcreg_volt_003
+              ? json.device_bcreg_volt_003 * json.device_bcreg_volt_003 : undefined,
+            device_bcreg_power_004: json.device_bcreg_volt_004 && json.device_bcreg_volt_004
+              ? json.device_bcreg_volt_004 * json.device_bcreg_volt_004 : undefined,
+            device_bcreg_power_005: json.device_bcreg_volt_005 && json.device_bcreg_volt_005
+              ? json.device_bcreg_volt_005 * json.device_bcreg_volt_005 : undefined,
+          };
+
           // Store in realm object
-          dispatch(setData(id, json));
+          dispatch(setData(id, {
+            ...json,
+            ...aliases,
+          }));
 
           dispatch(setActivity({
             status: 'success',
