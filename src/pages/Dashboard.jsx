@@ -132,8 +132,26 @@ function Dashboard({
         } else if (realms[id].includes(node) && process !== 'soh') {
           dispatch(set('lastDate', dayjs()));
 
+          const aliases = {
+            device_bcreg_power_000: json.device_bcreg_volt_000 && json.device_bcreg_amp_000
+              ? json.device_bcreg_volt_000 * json.device_bcreg_amp_000 : undefined,
+            device_bcreg_power_001: json.device_bcreg_volt_001 && json.device_bcreg_amp_001
+              ? json.device_bcreg_volt_001 * json.device_bcreg_amp_001 : undefined,
+            device_bcreg_power_002: json.device_bcreg_volt_002 && json.device_bcreg_amp_002
+              ? json.device_bcreg_volt_002 * json.device_bcreg_amp_002 : undefined,
+            device_bcreg_power_003: json.device_bcreg_volt_003 && json.device_bcreg_amp_003
+              ? json.device_bcreg_volt_003 * json.device_bcreg_amp_003 : undefined,
+            device_bcreg_power_004: json.device_bcreg_volt_004 && json.device_bcreg_amp_004
+              ? json.device_bcreg_volt_004 * json.device_bcreg_amp_004 : undefined,
+            device_bcreg_power_005: json.device_bcreg_volt_005 && json.device_bcreg_amp_005
+              ? json.device_bcreg_volt_005 * json.device_bcreg_amp_005 : undefined,
+          };
+
           // Store in realm object
-          dispatch(setData(id, json));
+          dispatch(setData(id, {
+            ...json,
+            ...aliases,
+          }));
 
           dispatch(setActivity({
             status: 'success',
@@ -191,13 +209,13 @@ function Dashboard({
       if (route.path === path && route.children) {
         route.children.forEach((child) => {
           // Get page layout from route config and save it into the state
-          if (child.path.split('/')[1] === id && child.defaultLayout) {
+          if (child.name === id && child.defaultLayout) {
             layout = child.defaultLayout;
             setDefaultPageLayout(child.defaultLayout);
           }
 
           // Get page layout simple from route config and save it into the state
-          if (child.path.split('/')[1] === id && child.tabs) {
+          if (child.name === id && child.tabs) {
             setTabs(child.tabs);
           }
         });
@@ -347,9 +365,6 @@ function Dashboard({
 
   useEffect(() => {
     setJsonEdit(JSON.stringify(layouts.lg, null, 2));
-
-    dispatch(set('globalQueue', layouts.lg.filter((el) => el.component.name === 'Chart').length));
-    dispatch(set('globalHistoricalDate', [dayjs().subtract(1, 'hour'), dayjs()]));
   }, [layouts]);
 
   const retrieveInfo = (e) => {

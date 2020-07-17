@@ -83,6 +83,13 @@ export default [
       ],
     },
   },
+  {
+    name: 'Image',
+    props: {
+      name: '',
+      node: '',
+    },
+  },
   /* {
     name: 'Events',
     props: {},

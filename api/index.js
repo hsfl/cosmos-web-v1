@@ -1,12 +1,13 @@
-var express = require('express');
-var app = express();
-var path = require('path');
+const express = require('express');
+
+const app = express();
+const path = require('path');
 
 // Serve static files
 app.use(express.static(path.join(__dirname, 'dist')));
 
 // Catch all route exposing compiled React app
-app.get('*', function(req, res) {
+app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist', '/index.html'));
 });
 

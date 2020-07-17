@@ -42,7 +42,7 @@ function Navbar() {
                         key={child.name}
                       >
                         <Link
-                          to={`/${route.path.split('/')[1]}${child.path}`}
+                          to={`/${route.path.split('/')[1]}/${child.name}`}
                         >
                           {
                             child.icon ? <Icon type={child.icon} /> : null

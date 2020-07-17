@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
+import { Switch } from 'antd';
+
 import BaseComponent from '../BaseComponent';
 import AgentListTable from './AgentList/AgentListTable';
 
@@ -16,6 +18,7 @@ function AgentList({
   /** Get agent list state from the Context */
   const list = useSelector((s) => s.list.agent_list);
   const [agentList, setAgentList] = useState([]);
+  const [active, setActive] = useState(false);
 
   useEffect(() => {
     setAgentList([]);
@@ -32,9 +35,19 @@ function AgentList({
       name="Agent List"
       movable
       height={height}
+      toolsSlot={(
+        <>
+          <Switch
+            checkedChildren="Active"
+            unCheckedChildren="All"
+            onClick={() => setActive(!active)}
+          />
+        </>
+      )}
     >
       <AgentListTable
-        list={agentList || []}
+        list={active ? agentList.filter((agent) => agent.utc >= 0) || []
+          : agentList || []}
         node={node}
       />
     </BaseComponent>

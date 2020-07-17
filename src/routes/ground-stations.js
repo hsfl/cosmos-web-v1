@@ -57,8 +57,7 @@ export default {
   },
   children: [
     {
-      name: 'KCC',
-      path: '/kcc',
+      name: 'kcc',
       icon: 'cloud',
       defaultLayout: {
         lg: [
@@ -468,8 +467,7 @@ export default {
       },
     },
     {
-      name: 'MC3',
-      path: '/mc3',
+      name: 'mc3',
       icon: 'cloud',
       defaultLayout: {
         lg: [
