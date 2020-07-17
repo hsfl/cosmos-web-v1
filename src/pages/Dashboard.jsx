@@ -70,6 +70,7 @@ function Dashboard({
     lg: [],
   });
 
+  /** List of tabs on the page */
   const [tabs, setTabs] = useState({
     lg: [],
   });
@@ -315,6 +316,7 @@ function Dashboard({
     message.success('Successfully changed layout.');
   };
 
+  /** Delete the component on click */
   const deleteComponent = (e) => {
     try {
       const key = e.currentTarget.getAttribute('layoutkey');
@@ -328,10 +330,12 @@ function Dashboard({
     }
   };
 
+  /** Add component to layout */
   const addToLayout = (elemParams) => {
     try {
       const add = JSON.parse(componentEditor);
 
+      /** If provided position via dropping */
       if (elemParams) {
         add.x = elemParams.x;
         add.y = elemParams.y;
@@ -340,13 +344,14 @@ function Dashboard({
       let rand;
       let newId;
 
+      /** Generate random id for the component */
       do {
         rand = Math.random()
           .toString(36)
           .substring(7);
         newId = `${path.split('/')[1]}-${id}-${rand}`;
         // eslint-disable-next-line no-loop-func
-      } while (layouts.lg.filter((object) => object.i === newId).length);
+      } while (layouts.lg.find((object) => object.i === newId) !== undefined);
 
       add.i = newId;
 
@@ -363,10 +368,12 @@ function Dashboard({
     }
   };
 
+  /** Update the JSON editor for the layout on layout change */
   useEffect(() => {
     setJsonEdit(JSON.stringify(layouts.lg, null, 2));
   }, [layouts]);
 
+  /** When choosing the component to add, retrieve component information and populate JSON editor */
   const retrieveInfo = (e) => {
     const compName = e.currentTarget.getAttribute('keyid');
     const retrieved = defaultComponent.find((el) => el.name === compName);
@@ -377,6 +384,7 @@ function Dashboard({
     setComponentEditor(JSON.stringify(modify, null, 2));
   };
 
+  /** Change the dimensions of the to-be-added component */
   const changeDimensions = (value, dim) => {
     const change = JSON.parse(componentEditor);
 
@@ -410,6 +418,7 @@ function Dashboard({
     }
   }); */
 
+  /** Check if the component JSON is valid */
   const checkComponentJson = () => {
     try {
       JSON.parse(componentEditor);
@@ -691,9 +700,13 @@ function Dashboard({
 }
 
 Dashboard.propTypes = {
+  /** Id of the dashboard */
   id: PropTypes.string.isRequired,
+  /** Path of the desired dashboard */
   path: PropTypes.string.isRequired,
+  /** The default layout for the path */
   defaultLayout: PropTypes.shape({}).isRequired,
+  /** The realm that the layout is in */
   realms: PropTypes.shape(PropTypes.arrayOf(PropTypes.string)),
 };
 

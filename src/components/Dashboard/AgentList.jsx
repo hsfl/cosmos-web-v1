@@ -17,18 +17,25 @@ function AgentList({
 }) {
   /** Get agent list state from the Context */
   const list = useSelector((s) => s.list.agent_list);
+
+  /** Store the list in an array */
   const [agentList, setAgentList] = useState([]);
+
+  /** Choose to display only active agents or not */
   const [active, setActive] = useState(false);
 
+  /** Update the agent list upon node change or incoming list change */
   useEffect(() => {
     setAgentList([]);
+
+    /** If there is a specified node, filter out those agents */
     if (node !== '' && list != null) {
       setAgentList(list.filter((item) => item.agent.split(':')[0] === node));
     } else if (list != null) {
+      /** Otherwise, show all agents */
       setAgentList(list);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [list]);
+  }, [list, node]);
 
   return (
     <BaseComponent
@@ -55,6 +62,7 @@ function AgentList({
 }
 
 AgentList.propTypes = {
+  /** Name of the node to display */
   node: PropTypes.string,
   height: PropTypes.number.isRequired,
 };
