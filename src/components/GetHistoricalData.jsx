@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { DatePicker, Button } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
+import dayjs from 'dayjs';
 
 import { set } from '../store/actions';
 
@@ -23,6 +24,11 @@ function GetHistoricalData({
     }
   }, [globalQueue]);
 
+  const getPastHourData = () => {
+    dispatch(set('globalQueue', amountOfComponents));
+    dispatch(set('globalHistoricalDate', [dayjs().subtract(1, 'hour'), dayjs()]));
+  };
+
   return (
     <>
       <RangePicker
@@ -42,6 +48,13 @@ function GetHistoricalData({
         }}
       >
         Get Historical Data
+      </Button>
+      &nbsp;
+      <Button
+        size="small"
+        onClick={() => getPastHourData()}
+      >
+        Past Hour
       </Button>
     </>
   );

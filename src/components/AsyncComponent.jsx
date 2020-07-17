@@ -7,6 +7,7 @@ import Chart from './Dashboard/Chart';
 import Commands from './Dashboard/Commands';
 import DisplayValue from './Dashboard/DisplayValue';
 import Events from './Dashboard/Events';
+import Image from './Dashboard/Image';
 import Globe from './Dashboard/Globe';
 import Macro from './Dashboard/Macro';
 import MissionEventsDisplay from './Dashboard/MissionEventsDisplay';
@@ -32,6 +33,7 @@ export const components = {
   Commands,
   DisplayValue,
   Events,
+  Image,
   Globe,
   Macro,
   MissionEventsDisplay,

@@ -61,8 +61,8 @@ class AttitudeThreeD extends Component {
     // Reusable satellite axis settings
     const satAxisSettings = {
       height: 50,
-      diameterTop: 0.01,
-      diameterBottom: 0.01,
+      diameterTop: 0.006,
+      diameterBottom: 0.006,
       tessellation: 10,
       position: 25,
     };
@@ -158,10 +158,10 @@ class AttitudeThreeD extends Component {
     const wireframe = new BABYLON.StandardMaterial('wireframe', scene);
 
     wireframe.wireframe = true;
-    wireframe.diffuseColor = new BABYLON.Color3(0.56, 0.83, 1);
+    wireframe.diffuseColor = new BABYLON.Color3(0.56, 0.12, 1);
 
     // Attitude sphere
-    const attitudeSphere = BABYLON.MeshBuilder.CreateSphere('attitudeSphere', { diameter: 1, diameterX: 1, updatable: true }, scene);
+    const attitudeSphere = BABYLON.Mesh.CreateSphere('attitudeSphere', 10, 1, scene);
 
     attitudeSphere.material = wireframe;
 

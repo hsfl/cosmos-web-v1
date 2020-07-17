@@ -2,7 +2,6 @@ import { mjdToString } from '../../utility/time';
 
 export default {
   name: 'hyti',
-  path: '/hyti',
   icon: 'camera',
   defaultLayout: {
     lg: [
