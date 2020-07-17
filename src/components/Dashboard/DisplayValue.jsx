@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  Form, Input, Collapse, Button,
+  Form, Input, Collapse, Button, InputNumber,
 } from 'antd';
 import dayjs from 'dayjs';
 
@@ -192,7 +192,9 @@ function DisplayValue({
     name: nameVal,
     nodeProcess,
     dataKey,
-    dataKeyThreshold,
+    dataKeyLowerThreshold,
+    dataKeyUpperThreshold,
+    timeDataKey,
     processDataKey,
     unit,
   }) => {
@@ -203,6 +205,9 @@ function DisplayValue({
         name: nameVal || '',
         nodeProcess,
         dataKey,
+        dataKeyLowerThreshold,
+        dataKeyUpperThreshold,
+        timeDataKey,
         processDataKey: processDataKey
           ? new Function('x', processDataKey) // eslint-disable-line no-new-func
           : (x) => x,
@@ -216,8 +221,10 @@ function DisplayValue({
     editForm.setFieldsValue({
       [`name_${newIndex}`]: nameVal,
       [`nodeProcess_${newIndex}`]: nodeProcess,
-      [`dataKeyThreshold_${newIndex}`]: dataKeyThreshold,
       [`dataKey_${newIndex}`]: dataKey,
+      [`dataKeyLowerThreshold_${newIndex}`]: dataKeyLowerThreshold,
+      [`dataKeyUpperThreshold_${newIndex}`]: dataKeyUpperThreshold,
+      [`timeDataKey_${newIndex}`]: timeDataKey,
       [`processDataKey_${newIndex}`]: processDataKey.replace(/^(.+\s?=>\s?)/, 'return ').replace(/^(\s*function\s*.*\([\s\S]*\)\s*{)([\s\S]*)(})/, '$2').trim(),
       [`unit_${newIndex}`]: unit,
     });
@@ -308,6 +315,14 @@ function DisplayValue({
                       <Input placeholder="Data Key" onBlur={({ target: { id } }) => processForm(id)} />
                     </Form.Item>
 
+                    <Form.Item label="Data Key Lower Threshold" name={`dataKeyLowerThreshold_${i}`} hasFeedback>
+                      <InputNumber placeholder="Data Key Lower Threshold" onBlur={({ target: { id } }) => processForm(id)} />
+                    </Form.Item>
+
+                    <Form.Item label="Data Key Upper Threshold" name={`dataKeyUpperThreshold_${i}`} hasFeedback>
+                      <InputNumber placeholder="Data Key Upper Threshold" onBlur={({ target: { id } }) => processForm(id)} />
+                    </Form.Item>
+
                     <Form.Item label="Time Data Key" name={`timeDataKey_${i}`} hasFeedback>
                       <Input placeholder="Time Data Key" onBlur={({ target: { id } }) => processForm(id)} />
                     </Form.Item>
@@ -352,7 +367,7 @@ function DisplayValue({
                     () => ({
                       validator(rule, value) {
                         if (!value.includes(':') && value !== 'any') {
-                          return Promise.reject('Must have the format node:process.'); // eslint-disable-line prefer-promise-reject-errors
+                          return Promise.reject('Must have the format node:process or any.'); // eslint-disable-line prefer-promise-reject-errors
                         }
                         return Promise.resolve();
                       },
@@ -380,10 +395,26 @@ function DisplayValue({
                 </Form.Item>
 
                 <Form.Item
+                  label="Data Key Lower Threshold"
+                  name="dataKeyLowerThreshold"
+                  hasFeedback
+                >
+                  <InputNumber placeholder="Data Key Lower Threshold" />
+                </Form.Item>
+
+                <Form.Item
+                  label="Data Key Upper Threshold"
+                  name="dataKeyUpperThreshold"
+                  hasFeedback
+                >
+                  <InputNumber placeholder="Data Key Upper Threshold" />
+                </Form.Item>
+
+                <Form.Item
                   rules={[
                     {
                       required: true,
-                      message: 'Data Key is required!',
+                      message: 'Time Data Key is required!',
                     },
                   ]}
                   label="Time Data Key"
