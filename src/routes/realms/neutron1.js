@@ -900,6 +900,7 @@ export default {
             props: {
               node: 'neutron1',
               name: 'BBB',
+              file: 'BBB.png',
             },
           },
         },
@@ -1060,7 +1061,8 @@ export default {
             name: 'Image',
             props: {
               node: 'neutron1',
-              name: 'ISIS-Radio',
+              name: 'ISIS Radio',
+              file: 'ISIS-Radio.png',
             },
           },
         },
@@ -1078,7 +1080,8 @@ export default {
             name: 'Image',
             props: {
               node: 'neutron1',
-              name: 'Duplex-Radio',
+              name: 'Duplex Radio',
+              file: 'Duplex-Radio.png',
             },
           },
         },
@@ -1096,7 +1099,8 @@ export default {
             name: 'Image',
             props: {
               node: 'neutron1',
-              name: 'ASU-Payload',
+              name: 'ASU Payload',
+              file: 'ASU-Payload.png',
             },
           },
         },
@@ -1170,8 +1174,8 @@ export default {
             name: 'Image',
             props: {
               node: 'neutron1',
-              file: 'EPS Battery',
-              name: 'EPS-Battery.png',
+              name: 'EPS Battery',
+              file: 'EPS-Battery.png',
             },
           },
         },
@@ -2292,7 +2296,7 @@ export default {
             name: 'Image',
             props: {
               node: 'neutron1',
-              name: 'EPS-Range',
+              name: 'EPS Range',
               file: 'EPS-Range.png',
             },
           },
@@ -3133,7 +3137,8 @@ export default {
             name: 'Image',
             props: {
               node: 'neutron1',
-              name: 'ASU-Payload',
+              name: 'OBC',
+              file: 'OBC.png',
             },
           },
         },
@@ -4236,6 +4241,7 @@ export default {
             props: {
               node: 'neutron1',
               name: 'GPS',
+              file: 'GPS.png',
             },
           },
         },
