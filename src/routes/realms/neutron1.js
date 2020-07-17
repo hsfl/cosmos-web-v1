@@ -826,7 +826,7 @@ export default {
               {
                 name: 'n1',
                 nodeProcess: 'any',
-                dataKey: 'node_loc_att_icrf',
+                dataKey: 'device_imu_theta_000',
                 quaternions: {
                   d: {
                     x: 0,
@@ -3873,7 +3873,7 @@ export default {
                 {
                   name: 'n1',
                   nodeProcess: 'any',
-                  dataKey: 'node_loc_att_icrf',
+                  dataKey: 'device_imu_theta_000',
                   quaternions: {
                     d: {
                       x: 0,
@@ -4000,7 +4000,7 @@ export default {
                 {
                   name: 'Cubestar',
                   nodeProcess: 'any',
-                  dataKey: 'node_loc_att_icrf',
+                  dataKey: 'device_imu_theta_000',
                   quaternions: {
                     d: {
                       x: 0,
