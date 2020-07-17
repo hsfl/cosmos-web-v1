@@ -35,6 +35,7 @@ function CommandEditor({
   /** The global node to create/delete commands from */
   const [globalNode, setGlobalNode] = useState(nodes[0]);
 
+  /** Get commands from the database, if query is a string, it deletes the command */
   const queryCommands = async (query = false) => {
     try {
       if (query) {
@@ -237,11 +238,8 @@ function CommandEditor({
                   </Form.Item>
                 </Form>
               </td>
-              <td>
-                <div className="border-l mr-1 h-40" />
-              </td>
               <Table
-                className="-m-2"
+                className="border-l pl-4"
                 columns={columns}
                 dataSource={commands}
                 size="small"
