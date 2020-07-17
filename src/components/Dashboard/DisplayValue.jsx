@@ -197,22 +197,21 @@ function DisplayValue({
     unit,
   }) => {
     // Append new value to array
-    const displayValuesCopy = displayValuesState;
-
-    displayValuesCopy.push({
-      name: nameVal || '',
-      nodeProcess,
-      dataKey,
-      processDataKey: processDataKey
-        ? new Function('x', processDataKey) // eslint-disable-line no-new-func
-        : (x) => x,
-      unit: unit || '',
-    });
-
-    setDisplayValuesState(displayValuesCopy);
+    setDisplayValuesState([
+      ...displayValuesState,
+      {
+        name: nameVal || '',
+        nodeProcess,
+        dataKey,
+        processDataKey: processDataKey
+          ? new Function('x', processDataKey) // eslint-disable-line no-new-func
+          : (x) => x,
+        unit: unit || '',
+      },
+    ]);
 
     // Set edit value default form values
-    const newIndex = displayValuesCopy.length - 1;
+    const newIndex = displayValuesState.length - 1;
 
     editForm.setFieldsValue({
       [`name_${newIndex}`]: nameVal,
@@ -352,7 +351,7 @@ function DisplayValue({
                     },
                     () => ({
                       validator(rule, value) {
-                        if (!value.includes(':')) {
+                        if (!value.includes(':') && value !== 'any') {
                           return Promise.reject('Must have the format node:process.'); // eslint-disable-line prefer-promise-reject-errors
                         }
                         return Promise.resolve();
