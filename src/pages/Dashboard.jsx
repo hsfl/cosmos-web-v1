@@ -70,6 +70,7 @@ function Dashboard({
     lg: [],
   });
 
+  /** List of tabs on the page */
   const [tabs, setTabs] = useState({
     lg: [],
   });
@@ -322,6 +323,7 @@ function Dashboard({
     message.success('Successfully changed layout.');
   };
 
+
   /** Remove component while in editor mode */
   const deleteComponent = (e) => {
     try {
@@ -336,13 +338,14 @@ function Dashboard({
     }
   };
 
+
   /** Add component using JSON layout editor */
   const addToLayout = (elemParams) => {
     try {
       // Convert JSON input to JS
       const add = JSON.parse(componentEditor);
 
-      // Add x,y positions
+      /** If provided position via dropping */
       if (elemParams) {
         add.x = elemParams.x;
         add.y = elemParams.y;
@@ -351,14 +354,14 @@ function Dashboard({
       let rand;
       let newId;
 
-      // Generate random, unique id for 'i' field
+      /** Generate random id for the component in 'i' field */
       do {
         rand = Math.random()
           .toString(36)
           .substring(7);
         newId = `${path.split('/')[1]}-${id}-${rand}`;
         // eslint-disable-next-line no-loop-func
-      } while (layouts.lg.filter((object) => object.i === newId).length);
+      } while (layouts.lg.find((object) => object.i === newId) !== undefined);
 
       // Add to object
       add.i = newId;
@@ -387,7 +390,7 @@ function Dashboard({
     setComponentEditor(JSON.stringify(modify, null, 2));
   };
 
-  /** JSON Layout Editor slider for component dimensions */
+  /** Change the dimensions of the to-be-added component */
   const changeDimensions = (value, dim) => {
     const change = JSON.parse(componentEditor);
 
@@ -421,6 +424,7 @@ function Dashboard({
     }
   }); */
 
+  /** Check if the component JSON is valid */
   const checkComponentJson = () => {
     try {
       JSON.parse(componentEditor);
@@ -718,9 +722,13 @@ function Dashboard({
 }
 
 Dashboard.propTypes = {
+  /** Id of the dashboard */
   id: PropTypes.string.isRequired,
+  /** Path of the desired dashboard */
   path: PropTypes.string.isRequired,
+  /** The default layout for the path */
   defaultLayout: PropTypes.shape({}).isRequired,
+  /** The realm that the layout is in */
   realms: PropTypes.shape(PropTypes.arrayOf(PropTypes.string)),
 };
 
