@@ -1647,23 +1647,8 @@ export default {
           },
         },
         {
-          i: 'satellite-neutron1-espsp-bx',
-          x: 6,
-          y: 1,
-          w: 1,
-          h: 14,
-          component: {
-            name: 'Image',
-            props: {
-              node: 'neutron1',
-              name: 'Solar Panel Y- (BCR2)',
-              file: 'Solar-Panel--Y.png',
-            },
-          },
-        },
-        {
           i: 'satellite-neutron1-espsp-cx',
-          x: 7,
+          x: 6,
           y: 1,
           w: 1,
           h: 14,
@@ -1677,6 +1662,21 @@ export default {
           },
         },
         {
+          i: 'satellite-neutron1-espsp-bx',
+          x: 7,
+          y: 1,
+          w: 1,
+          h: 14,
+          component: {
+            name: 'Image',
+            props: {
+              node: 'neutron1',
+              name: 'Solar Panel Y- (BCR2)',
+              file: 'Solar-Panel--Y.png',
+            },
+          },
+        },
+        {
           i: 'satellite-neutron1-epssp-c',
           x: 8,
           y: 2,
@@ -1685,7 +1685,7 @@ export default {
           component: {
             name: 'DisplayValue',
             props: {
-              name: 'Solar Panel Y- (BCR2)',
+              name: 'Solar Panel Y+ (BCR2)',
               displayValues: [
                 {
                   name: 'Current',
@@ -1736,7 +1736,7 @@ export default {
           component: {
             name: 'DisplayValue',
             props: {
-              name: 'Solar Panel Y+ (BCR3)',
+              name: 'Solar Panel Y- (BCR3)',
               displayValues: [
                 {
                   name: 'Current',
