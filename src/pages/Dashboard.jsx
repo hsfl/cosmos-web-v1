@@ -225,6 +225,9 @@ function Dashboard({
     // Set timeout to let the grid initialize; won't work otherwise.
     setTimeout(() => {
       setLayouts(layout);
+
+      // Initialize JSON editor
+      setJsonEdit(JSON.stringify(layout.lg, null, 2));
     }, 100);
   }, [defaultLayout, id, path]);
 
@@ -304,17 +307,22 @@ function Dashboard({
   const selectLayout = (layout) => {
     if (layout === 'defaultRouteLayout') {
       setLayouts(defaultLayout);
+
+      setJsonEdit(JSON.stringify(defaultLayout, null, 2));
     } else if (layout === 'defaultPageLayout') {
       setLayouts(defaultPageLayout);
-    } else if (layout === 'defaultPageLayoutSimple') {
-      // setLayouts(defaultPageLayoutSimple);
+
+      setJsonEdit(JSON.stringify(defaultPageLayout, null, 2));
     } else {
       setLayouts(layout);
+
+      setJsonEdit(JSON.stringify(layout, null, 2));
     }
 
     message.success('Successfully changed layout.');
   };
 
+  /** Remove component while in editor mode */
   const deleteComponent = (e) => {
     try {
       const key = e.currentTarget.getAttribute('layoutkey');
@@ -328,10 +336,13 @@ function Dashboard({
     }
   };
 
+  /** Add component using JSON layout editor */
   const addToLayout = (elemParams) => {
     try {
+      // Convert JSON input to JS
       const add = JSON.parse(componentEditor);
 
+      // Add x,y positions
       if (elemParams) {
         add.x = elemParams.x;
         add.y = elemParams.y;
@@ -340,6 +351,7 @@ function Dashboard({
       let rand;
       let newId;
 
+      // Generate random, unique id for 'i' field
       do {
         rand = Math.random()
           .toString(36)
@@ -348,8 +360,10 @@ function Dashboard({
         // eslint-disable-next-line no-loop-func
       } while (layouts.lg.filter((object) => object.i === newId).length);
 
+      // Add to object
       add.i = newId;
 
+      // Update layout with new component
       setLayouts({
         lg: [
           ...layouts.lg,
@@ -363,10 +377,6 @@ function Dashboard({
     }
   };
 
-  useEffect(() => {
-    setJsonEdit(JSON.stringify(layouts.lg, null, 2));
-  }, [layouts]);
-
   const retrieveInfo = (e) => {
     const compName = e.currentTarget.getAttribute('keyid');
     const retrieved = defaultComponent.find((el) => el.name === compName);
@@ -377,6 +387,7 @@ function Dashboard({
     setComponentEditor(JSON.stringify(modify, null, 2));
   };
 
+  /** JSON Layout Editor slider for component dimensions */
   const changeDimensions = (value, dim) => {
     const change = JSON.parse(componentEditor);
 
@@ -428,11 +439,13 @@ function Dashboard({
           <div>
             <Clock />
           </div>
+
           <div className="pt-4">
             <SocketStatus
               status={socketStatus}
             />
           </div>
+
           <div className="pt-4">
             <GetHistoricalData
               amountOfComponents={layouts.lg.filter((el) => el.component.name === 'Chart').length}
@@ -440,7 +453,7 @@ function Dashboard({
           </div>
         </div>
         <Menu mode="horizontal">
-          <Menu.Item onClick={() => setLayouts(defaultPageLayout)}>
+          <Menu.Item onClick={() => selectLayout('defaultPageLayout')}>
             Overview
           </Menu.Item>
           {
@@ -461,6 +474,7 @@ function Dashboard({
               updateLayout={updateLayoutSelector}
               selectLayout={(value) => selectLayout(value)}
             />
+
             <Button
               key="savelayout"
               className="ml-3"
@@ -469,6 +483,7 @@ function Dashboard({
             >
               Save Layout
             </Button>
+
             <Modal
               key="inputname"
               visible={formVisible}
@@ -570,16 +585,18 @@ function Dashboard({
           <Tabs defaultActiveKey="1">
             <TabPane tab="Add Components" key="1">
               <Divider orientation="left">1. Choose component</Divider>
-              { Object.keys(components).map((piece) => (
-                <Button
-                  key={piece}
-                  className="mr-1"
-                  keyid={piece}
-                  onClick={(e) => retrieveInfo(e)}
-                >
-                  {piece}
-                </Button>
-              ))}
+              {
+                Object.keys(components).map((piece) => (
+                  <Button
+                    key={piece}
+                    className="mr-1"
+                    keyid={piece}
+                    onClick={(e) => retrieveInfo(e)}
+                  >
+                    {piece}
+                  </Button>
+                ))
+              }
               <Divider orientation="left">
                 <Space>2. Edit component&apos;s properties</Space>
               </Divider>
@@ -615,6 +632,7 @@ function Dashboard({
                   </Row>
                   <br />
                   <div>Width</div>
+
                   <Row justify="center">
                     <Col span={12}>
                       <Slider
@@ -624,6 +642,7 @@ function Dashboard({
                         value={dimensions[0]}
                       />
                     </Col>
+
                     <Col span={4}>
                       <InputNumber
                         min={1}
@@ -633,26 +652,32 @@ function Dashboard({
                       />
                     </Col>
                   </Row>
+
                   <br />
+
                   <Button type="primary" onClick={() => addToLayout()}>Add Component to Layout</Button>
                 </div>
               </div>
+
               <Divider orientation="left">Preview</Divider>
-              {checkComponentJson() && JSON.parse(componentEditor).component.name
-                ? (
-                  <div
-                    className="shadow mt-5 mx-16 mb-16 overflow-y-scroll rounded component-color"
-                    style={{ width: `${(dimensions[0] / 12) * 100}%`, height: `${dimensions[1] * 30}px` }}
-                    draggable
-                  >
-                    <AsyncComponent
-                      component={JSON.parse(componentEditor).component.name}
-                      props={JSON.parse(componentEditor).component.props}
-                      height={JSON.parse(componentEditor).h}
-                    />
-                  </div>
-                )
-                : null}
+
+              {
+                checkComponentJson() && JSON.parse(componentEditor).component.name
+                  ? (
+                    <div
+                      className="shadow mt-5 mx-16 mb-16 overflow-y-scroll rounded component-color"
+                      style={{ width: `${(dimensions[0] / 12) * 100}%`, height: `${dimensions[1] * 30}px` }}
+                      draggable
+                    >
+                      <AsyncComponent
+                        component={JSON.parse(componentEditor).component.name}
+                        props={JSON.parse(componentEditor).component.props}
+                        height={JSON.parse(componentEditor).h}
+                      />
+                    </div>
+                  )
+                  : null
+              }
             </TabPane>
             <TabPane tab="JSON Editor" key="2">
               <Button
@@ -660,9 +685,11 @@ function Dashboard({
               >
                 Update Layout
               </Button>
+
               <span className="text-red-500 ml-3 mb-3">
                 {formError}
               </span>
+
               <pre
                 className="language-json mb-2 h-64 overflow-y-scroll overflow-x-scroll resize-y cursor-text text-white"
               >
