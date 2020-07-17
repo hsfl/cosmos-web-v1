@@ -86,6 +86,7 @@ function MissionEventsDisplay({
       toolsSlot={(
         <>
           <Select
+            className="pr-2"
             defaultValue={node}
             style={{ width: 120 }}
             onBlur={() => queryEventLog()}
