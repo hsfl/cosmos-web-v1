@@ -2135,7 +2135,7 @@ export default {
                   y: [],
                   type: 'scatter',
                   marker: {
-                    color: 'red',
+                    color: 'purple',
                   },
                   name: 'Power 003',
                   YDataKey: 'device_bcreg_power_003',
@@ -2149,7 +2149,7 @@ export default {
                   y: [],
                   type: 'scatter',
                   marker: {
-                    color: 'red',
+                    color: 'cyan',
                   },
                   name: 'Power 004',
                   YDataKey: 'device_bcreg_power_004',
@@ -2163,7 +2163,7 @@ export default {
                   y: [],
                   type: 'scatter',
                   marker: {
-                    color: 'red',
+                    color: 'green',
                   },
                   name: 'Power 005',
                   YDataKey: 'device_bcreg_power_005',
