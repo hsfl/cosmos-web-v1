@@ -238,12 +238,14 @@ function CommandEditor({
                   </Form.Item>
                 </Form>
               </td>
-              <Table
-                className="border-l pl-4"
-                columns={columns}
-                dataSource={commands}
-                size="small"
-              />
+              <td>
+                <Table
+                  className="border-l pl-4"
+                  columns={columns}
+                  dataSource={commands}
+                  size="small"
+                />
+              </td>
             </tr>
           </tbody>
         </table>
