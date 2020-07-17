@@ -39,7 +39,7 @@ function Activity({
 
   useEffect(() => {
     if (activities && activities.length !== 0) {
-      setData([
+      setData((d) => [
         {
           status: activities[0].status,
           summary: activities[0].summary,
@@ -47,15 +47,11 @@ function Activity({
           time: activities[0].time,
           elapsed: getDiff(activities[0].time),
         },
-        ...data,
+        ...d,
       ]);
 
       const minuteDifference = activities[0].time.diff(dayjs(), 'minute');
       if (-minuteDifference <= 2) {
-        if (data.length !== 0) {
-          setElapsedTime(data[0].elapsed);
-        }
-
         if (timer.current != null) {
           clearTimeout(timer.current);
         }
@@ -78,7 +74,7 @@ function Activity({
   }, [activities]);
 
   useEffect(() => {
-    if (elapsedTime != null) {
+    if (data != null) {
       timer.current = setTimeout(() => {
         setData(data.map((point) => ({
           status: point.status,
@@ -87,12 +83,11 @@ function Activity({
           time: point.time,
           elapsed: getDiff(point.time),
         })));
-        setElapsedTime(data[0].elapsed);
       }, 1000);
     }
 
     return () => clearTimeout(timer.current);
-  }, [elapsedTime]);
+  }, [data]);
 
   return (
     <BaseComponent
@@ -136,8 +131,8 @@ function Activity({
           <>
             <div className="text-center text-2xl">
               {
-                elapsedTime && typeof elapsedTime !== 'string'
-                  ? elapsedTime.format('HH:mm:ss') : elapsedTime
+                data && data.length !== 0 && typeof data[0].elapsed !== 'string'
+                  ? data[0].format('HH:mm:ss') : 'Over a day ago'
               }
             </div>
             <table>
@@ -179,8 +174,8 @@ function Activity({
           : (
             <div className="mt-10 text-center text-5xl">
               {
-                elapsedTime && typeof elapsedTime !== 'string'
-                  ? elapsedTime.add(1, 'second').format('HH:mm:ss') : elapsedTime
+                data && data.length !== 0 && typeof data[0].elapsed !== 'string'
+                  ? data[0].format('HH:mm:ss') : 'Over a day ago'
               }
             </div>
           )}
