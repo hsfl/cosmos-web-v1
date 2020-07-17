@@ -15,10 +15,16 @@ function MissionEventsDisplay({
   nodes,
   height,
 }) {
+  /** Retrieve data from the Context */
   const live = useSelector((s) => s.data);
 
+  /** The node whose events is displayed */
   const [node, setNode] = useState(nodes[0]);
+
+  /** The storage of information to be stored in the table */
   const [info, setInfo] = useState([]);
+
+  /** Columns in the table for the MED */
   const [columns] = useState([
     {
       title: 'UTC',
@@ -37,12 +43,18 @@ function MissionEventsDisplay({
     },
   ]);
 
+  /**
+   * Query the database (node:executed) for event logs.
+   */
   const queryEventLog = async () => {
     try {
+      /** Query database for event logs */
       const { data } = await axios.post(`/query/${process.env.MONGODB_COLLECTION}/${node}:executed`, {
         multiple: true,
         query: {},
       });
+
+      /** Remove the _id from the retrieved logs and modify data to display on table */
       const modify = data.map((el, i) => {
         const newObj = el;
         // eslint-disable-next-line no-underscore-dangle
@@ -61,12 +73,14 @@ function MissionEventsDisplay({
     }
   };
 
+  /** Initialize the mission event log, queries events on the current day */
   useEffect(() => {
     const date = [dayjs().startOf('day'), dayjs().endOf('day')];
     queryEventLog(date);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  /** Update MED with incoming info */
   useEffect(() => {
     if (Object.keys(live).length !== 0) {
       const executed = Object.keys(live).find((item) => item.split(':')[1] === 'executed');
@@ -106,7 +120,7 @@ function MissionEventsDisplay({
             type="dashed"
             onClick={() => queryEventLog()}
           >
-            Requery
+            Re-query
           </Button>
         </>
       )}

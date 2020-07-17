@@ -4,8 +4,6 @@ import React, {
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import {
-  Tabs,
-  Form,
   Input,
   InputNumber,
   Select,
@@ -16,7 +14,7 @@ import {
   DatePicker,
 } from 'antd';
 import {
-  CloseOutlined, ExclamationCircleOutlined, SendOutlined, RetweetOutlined,
+  CloseOutlined, SendOutlined, RetweetOutlined,
 } from '@ant-design/icons';
 import dayjs from 'dayjs';
 
@@ -25,8 +23,6 @@ import { axios } from '../../api';
 import { dateToMJD } from '../../utility/time';
 
 import BaseComponent from '../BaseComponent';
-
-const { TabPane } = Tabs;
 
 const minWidth = {
   minWidth: '5em',
@@ -79,14 +75,6 @@ function Commands({
   const [timeSend, setTimeSend] = useState(null);
   /** Time to send command */
   const [elapsedTime, setElapsedTime] = useState(0);
-  /** Form to create a new command */
-  const [commandForm] = Form.useForm();
-  /** The command selected to be deleted */
-  const [selected, setSelected] = useState(null);
-  /** The global node to create/delete commands from */
-  const [globalNode, setGlobalNode] = useState(commandNode);
-  /** List of commands from the global node selected */
-  const [deleteList, setDeleteList] = useState([]);
 
   /** DOM Element selector for history log */
   const cliEl = useRef(null);
@@ -96,86 +84,35 @@ function Commands({
   const commandHistoryEl = useRef(null);
   commandHistoryEl.current = commandHistory;
 
-  const queryCommands = async (query = null, timeToSend = null) => {
+  const queryCommands = async (query = false, timeToSend = null) => {
     try {
-      let data;
-      switch (query) {
-        case 'send':
-          try {
-            await axios.post(`/exec/${commandNode}`, {
-              event: {
-                event_data: sending.event_data,
-                event_utc: timeToSend != null ? dateToMJD(dayjs()) : timeToSend,
-                event_type: sending.event_type,
-                event_flag: sending.event_flag,
-                event_name: sending.event_name,
-              },
-            });
-            setCommandHistory([
-              ...commandHistoryEl.current,
-              `➜ ${dayjs.utc().format()} ${commandNode} ${sending.event_data}`,
-            ]);
-            message.success(`Command '${sending.event_name}' has been sent to ${commandNode}!`);
-          } catch {
-            message.error(`Error executing ${macroCommand} on ${commandNode}.`);
-          }
-          break;
-        case 'delete':
-          try {
-            data = await axios.delete(`/commands/${globalNode}`, {
-              data: {
-                event_name: selected,
-              },
-            });
-            message.success(`${selected} deleted successfully.`);
-            setSelected(null);
-          } catch (err) {
-            message.error(`Error deleting ${selected}.`);
-          }
-          break;
-        default:
-          break;
+      if (query) {
+        try {
+          await axios.post(`/exec/${commandNode}`, {
+            event: {
+              event_data: sending.event_data,
+              event_utc: timeToSend != null ? dateToMJD(dayjs()) : timeToSend,
+              event_type: sending.event_type,
+              event_flag: sending.event_flag,
+              event_name: sending.event_name,
+            },
+          });
+          setCommandHistory([
+            ...commandHistoryEl.current,
+            `➜ ${dayjs.utc().format()} ${commandNode} ${sending.event_data}`,
+          ]);
+          message.success(`Command '${sending.event_name}' has been sent to ${commandNode}!`);
+        } catch {
+          message.error(`Error executing ${macroCommand} on ${commandNode}.`);
+        }
       }
 
-      data = await axios.get(`/commands/${commandNode}`);
+      const { data } = await axios.get(`/commands/${commandNode}`);
 
-      setCommands(data.data);
-      if (commandNode === globalNode) {
-        setDeleteList(data.data);
-      } else {
-        data = await axios.get(`/commands/${globalNode}`);
-        setDeleteList(data.data);
-      }
+      setCommands(data);
     } catch (error) {
       message.error('Could not query commands from database.');
     }
-  };
-
-  /** Generate commands in database */
-  const createCommand = async () => {
-    const form = commandForm.getFieldsValue();
-
-    if (deleteList.find((command) => command.event_name === form.name)) {
-      message.error('Duplicate command cannot be created.');
-    } else {
-      try {
-        await axios.post(`/commands/${globalNode}`, {
-          command: {
-            event_name: form.name,
-            event_type: form.type,
-            event_flag: form.flag,
-            event_data: form.command,
-          },
-        });
-        message.success(`Successfully created ${form.name}!`);
-      } catch {
-        message.error(`Error creating ${form.name}`);
-      }
-
-      commandForm.resetFields();
-    }
-
-    queryCommands();
   };
 
   useEffect(() => {
@@ -384,124 +321,6 @@ function Commands({
       liveOnly
       height={height}
       showStatus={false}
-      formItems={(
-        <>
-          <div>
-            Target Node:
-            <Select
-              className="ml-2 w-32"
-              showSearch
-              onChange={(value) => setGlobalNode(value)}
-              onBlur={() => queryCommands()}
-              placeholder="Select target node"
-              defaultValue={globalNode}
-              value={globalNode}
-            >
-              {
-                nodes.map((n) => (
-                  <Select.Option
-                    key={n}
-                  >
-                    {n}
-                  </Select.Option>
-                ))
-              }
-            </Select>
-          </div>
-          <Tabs defaultActiveKey="1">
-            <TabPane tab="Create Command" key="1">
-              <Form
-                form={commandForm}
-                layout="vertical"
-                name="commandForm"
-                onFinish={() => createCommand()}
-              >
-                <table className="w-full">
-                  <tbody>
-                    <tr>
-                      <th>
-                        <Form.Item
-                          className="font-light w-4/5"
-                          label="Event Name"
-                          name="name"
-                          rules={[{ required: true, message: 'Please type a name.' }]}
-                        >
-                          <Input placeholder="Name" />
-                        </Form.Item>
-                      </th>
-                      <th rowSpan={2}>
-                        <Form.Item
-                          className="font-light"
-                          label="Type"
-                          name="type"
-                          rules={[{ required: true, message: 'Please choose a type.' }]}
-                        >
-                          <InputNumber placeholder="#" />
-                        </Form.Item>
-                      </th>
-                      <th>
-                        <Form.Item
-                          className="font-light"
-                          label="Flag"
-                          name="flag"
-                          rules={[{ required: true, message: 'Please choose a flag.' }]}
-                        >
-                          <InputNumber placeholder="#" />
-                        </Form.Item>
-                      </th>
-                    </tr>
-                  </tbody>
-                </table>
-                <Form.Item
-                  label="Command"
-                  name="command"
-                  rules={[{ required: true, message: 'Please type a command.' }]}
-                >
-                  <Input placeholder="ex: ls, /bin/systemctl stop agent_cpu" prefix="➜" />
-                </Form.Item>
-                <hr className="mb-6" />
-                <Form.Item>
-                  <Button htmlType="submit" type="primary">
-                    Create
-                  </Button>
-                </Form.Item>
-              </Form>
-            </TabPane>
-            <TabPane tab="Delete Command" key="2">
-              <Select
-                placeholder="Select command to delete"
-                className="w-full mb-4"
-                onChange={(value) => setSelected(value)}
-              >
-                {deleteList.map((com) => (
-                  <Select.Option
-                    key={com.event_name}
-                  >
-                    {com.event_name}
-                  </Select.Option>
-                ))}
-              </Select>
-              <hr className="mb-5" />
-              <Popconfirm
-                placement="right"
-                title={`Are you sure you want to delete '${selected}' for ${globalNode}?`}
-                onConfirm={() => queryCommands('delete')}
-                okText="Yes"
-                cancelText="No"
-                icon={<ExclamationCircleOutlined style={{ color: 'red' }} />}
-              >
-                <Button
-                  type="primary"
-                  disabled={!selected}
-                  danger
-                >
-                  Delete
-                </Button>
-              </Popconfirm>
-            </TabPane>
-          </Tabs>
-        </>
-      )}
     >
       <div className="flex flex-wrap">
         <div
@@ -528,11 +347,7 @@ function Commands({
               showSearch
               className="mr-2 w-32"
               onChange={(value) => setCommandNode(value)}
-              onBlur={() => {
-                // Change target node when changing command node
-                setGlobalNode(commandNode);
-                queryCommands();
-              }}
+              onBlur={() => queryCommands()}
               placeholder="Select node"
               defaultValue={commandNode}
               value={commandNode}

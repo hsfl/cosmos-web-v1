@@ -58,8 +58,6 @@ function LayoutSelector({
       selectLayout('defaultRouteLayout');
     } else if (form.layout.value === 'defaultPageLayout') {
       selectLayout('defaultPageLayout');
-    } else if (form.layout.value === 'defaultPageLayoutSimple') {
-      selectLayout('defaultPageLayoutSimple');
     } else {
       // If not, send the saved layout object to dashboard
       selectLayout(layouts[form.layout.value]);

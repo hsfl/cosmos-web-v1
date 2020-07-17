@@ -3,7 +3,6 @@ import { mjdToString } from '../../utility/time';
 export default {
   name: 'neutron1',
   icon: 'qrcode',
-  nodes: ['neutron1', 'beagle1'],
   defaultLayout: {
     lg: [
       {
@@ -4521,6 +4520,19 @@ export default {
     },
     Commands: {
       lg: [
+        {
+          i: 'satellite-neutron1-commands-c',
+          x: 0,
+          y: 0,
+          w: 12,
+          h: 10,
+          component: {
+            name: 'CommandEditor',
+            props: {
+              nodes: ['neutron1', 'beagle1'],
+            },
+          },
+        },
         {
           i: 'satellite-neutron1-commands-a',
           x: 0,
