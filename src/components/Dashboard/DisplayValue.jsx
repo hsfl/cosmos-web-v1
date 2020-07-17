@@ -211,7 +211,7 @@ function DisplayValue({
     ]);
 
     // Set edit value default form values
-    const newIndex = displayValuesState.length - 1;
+    const newIndex = displayValuesState.length;
 
     editForm.setFieldsValue({
       [`name_${newIndex}`]: nameVal,
