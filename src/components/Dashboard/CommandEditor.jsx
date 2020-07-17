@@ -17,7 +17,6 @@ import {
   CloseOutlined,
 } from '@ant-design/icons';
 
-// import Search from 'antd/lib/input/Search';
 import { axios } from '../../api';
 
 import BaseComponent from '../BaseComponent';
@@ -101,24 +100,27 @@ function CommandEditor({
   ]);
 
   /** Generate commands in database */
-  const createCommand = async () => {
-    const form = commandForm.getFieldsValue();
-
-    if (commands.find((command) => command.event_name === form.name)) {
+  const onFinish = async ({
+    name,
+    type,
+    flag,
+    command,
+  }) => {
+    if (commands.find((comm) => comm.event_name === name)) {
       message.error('Duplicate command cannot be created.');
     } else {
       try {
         await axios.post(`/commands/${globalNode}`, {
           command: {
-            event_name: form.name,
-            event_type: form.type,
-            event_flag: form.flag,
-            event_data: form.command,
+            event_name: name,
+            event_type: type,
+            event_flag: flag,
+            event_data: command,
           },
         });
-        message.success(`Successfully created ${form.name}!`);
+        message.success(`Successfully created ${name}!`);
       } catch {
-        message.error(`Error creating ${form.name}`);
+        message.error(`Error creating ${name}`);
       }
 
       commandForm.resetFields();
@@ -173,57 +175,61 @@ function CommandEditor({
                   form={commandForm}
                   layout="vertical"
                   name="commandForm"
-                  onFinish={() => createCommand()}
+                  onFinish={onFinish}
                 >
                   <table className="w-full">
                     <tbody>
                       <tr>
                         <td>
-                          <Form.Item
-                            className="w-4/5"
-                            label="Event Name"
-                            name="name"
-                            rules={[{ required: true, message: 'Please type a name.' }]}
-                          >
-                            <Tooltip placement="right" title="Enter name of the event">
+                          <Tooltip placement="bottomLeft" title="Name of the command.">
+                            <Form.Item
+                              className="w-4/5"
+                              label="Event Name"
+                              name="name"
+                              hasFeedback
+                              rules={[{ required: true, message: 'Please type a name.' }]}
+                            >
                               <Input placeholder="Name" />
-                            </Tooltip>
-                          </Form.Item>
+                            </Form.Item>
+                          </Tooltip>
                         </td>
                         <td rowSpan={2}>
-                          <Form.Item
-                            label="Type"
-                            name="type"
-                            rules={[{ required: true, message: 'Please choose a type.' }]}
-                          >
-                            <Tooltip placement="right" title="ex: 8192">
+                          <Tooltip placement="bottomLeft" title="ex: 8192.">
+                            <Form.Item
+                              label="Type"
+                              name="type"
+                              hasFeedback
+                              rules={[{ required: true, message: 'Please choose a type.' }]}
+                            >
                               <InputNumber placeholder="#" />
-                            </Tooltip>
-                          </Form.Item>
+                            </Form.Item>
+                          </Tooltip>
                         </td>
                         <td>
-                          <Form.Item
-                            label="Flag"
-                            name="flag"
-                            rules={[{ required: true, message: 'Please choose a flag.' }]}
-                          >
-                            <Tooltip placement="right" title="ex: 32768">
+                          <Tooltip placement="bottomLeft" title="ex: 32768.">
+                            <Form.Item
+                              label="Flag"
+                              name="flag"
+                              hasFeedback
+                              rules={[{ required: true, message: 'Please choose a flag.' }]}
+                            >
                               <InputNumber placeholder="#" />
-                            </Tooltip>
-                          </Form.Item>
+                            </Form.Item>
+                          </Tooltip>
                         </td>
                       </tr>
                     </tbody>
                   </table>
-                  <Form.Item
-                    label="Command"
-                    name="command"
-                    rules={[{ required: true, message: 'Please type a command.' }]}
-                  >
-                    <Tooltip placement="bottomLeft" title="ex: ls">
+                  <Tooltip placement="top" title="ex: ls">
+                    <Form.Item
+                      label="Command"
+                      name="command"
+                      hasFeedback
+                      rules={[{ required: true, message: 'Please type a command.' }]}
+                    >
                       <Input placeholder="Linux command" prefix="➜" />
-                    </Tooltip>
-                  </Form.Item>
+                    </Form.Item>
+                  </Tooltip>
                   <Form.Item className="mb-0">
                     <Button htmlType="submit" type="primary">
                       Create
@@ -249,6 +255,7 @@ function CommandEditor({
 }
 
 CommandEditor.propTypes = {
+  /** List of nodes */
   nodes: PropTypes.arrayOf(PropTypes.string).isRequired,
   height: PropTypes.number.isRequired,
 };
