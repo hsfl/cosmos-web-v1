@@ -15,17 +15,15 @@ function DisplayValuesTable({
             displayValues.map((
               {
                 name,
-                dataKey,
                 dataKeyLowerThreshold,
                 dataKeyUpperThreshold,
-                timeDataKey,
-                processDataKey,
                 value,
                 unit,
                 time,
               },
+              i,
             ) => (
-              <tr key={name + dataKey + timeDataKey + processDataKey.toString() + time}>
+              <tr key={JSON.stringify(displayValues[i])}>
                 <td className="pr-2 text-gray-500 text-right">
                   { name }
                 </td>
@@ -48,7 +46,11 @@ function DisplayValuesTable({
 }
 
 DisplayValuesTable.propTypes = {
-  displayValues: PropTypes.arrayOf(PropTypes.shape).isRequired,
+  displayValues: PropTypes.arrayOf(PropTypes.shape),
+};
+
+DisplayValuesTable.defaultProps = {
+  displayValues: [],
 };
 
 export default DisplayValuesTable;
