@@ -156,7 +156,7 @@ function Activity({
             <div className="text-center text-2xl">
               {
                 data && data.length !== 0 && typeof data[0].elapsed !== 'string'
-                  ? data[0].format('HH:mm:ss') : 'Over a day ago'
+                  ? data[0].elapsed.format('HH:mm:ss') : 'Over a day ago'
               }
             </div>
             <table>
@@ -197,7 +197,7 @@ function Activity({
             <div className="mt-10 text-center text-5xl">
               {
                 data && data.length !== 0 && typeof data[0].elapsed !== 'string'
-                  ? data[0].format('HH:mm:ss') : 'Over a day ago'
+                  ? data[0].elapsed.format('HH:mm:ss') : 'Over a day ago'
               }
             </div>
           )}
