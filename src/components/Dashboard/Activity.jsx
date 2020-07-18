@@ -1,40 +1,89 @@
 import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { Badge } from 'antd';
+import { Badge, Switch } from 'antd';
 import dayjs from 'dayjs';
 
 import BaseComponent from '../BaseComponent';
 
 /**
- * Retrieves data from a web socket. Displays an event along with the timestamp in a table.
+ * Shows the incoming activity from the web socket and displays time elapsed
+ * from the last data retrieval.
  */
 function Activity({
   height,
 }) {
   /** Get agent list state from the Context */
   const activities = useSelector((s) => s.activity);
-  const lastDate = useSelector((s) => s.lastDate);
 
+  /** Color of the indicator, initial state is red */
   const [color, setColor] = useState('red');
 
+  /** Keeps track of whether to show all agents (active & inactive) or just active ones */
+  const [toggle, setToggle] = useState(true);
+
+  /** The modified information coming in from the state activities, includes time elapsed */
+  const [data, setData] = useState([]);
+
+  /** Reference to the timer that changes the indicator to yellow */
   const timerYellow = useRef(null);
+
+  /** Reference to the timer that changes the indicator to red */
   const timerRed = useRef(null);
 
-  // Get lastDate (last retrieved date) and compare with current time)
-  // Compare. If <2 min, green, <5min, yellow, < 10min, red
+  /** Reference to the timer that increments all elapsed times after 1 second */
+  const timer = useRef(null);
 
+  /**
+   * Calculate the difference between the current time and the date provided, returning
+   * the difference as a dayjs object. If the difference is over a day, then a string is returned.
+   * @param {dayjs object} date
+   */
+  const getDiff = (date) => {
+    if (typeof date !== 'string' && dayjs().diff(date, 'day') < 1) {
+      const hour = dayjs().diff(date, 'hour');
+      const minute = dayjs().diff(date, 'minute') % 60;
+      const second = dayjs().diff(date, 'second') % 60;
+      return dayjs().set('hour', hour).set('minute', minute).set('second', second);
+    }
+    return 'Over a day ago';
+  };
+
+  /**
+   * Store the incoming activity in data with the elapsed field and calculate the difference.
+   * Start the timers for the indicator color change.
+   */
   useEffect(() => {
-    if (lastDate) {
-      const minuteDifference = lastDate.diff(dayjs(), 'minute');
+    if (activities && activities.length !== 0) {
+      /** Store incoming activity in a new array with the elapsed field */
+      setData((d) => [
+        {
+          status: activities[0].status,
+          summary: activities[0].summary,
+          scope: activities[0].scope,
+          time: activities[0].time,
+          elapsed: getDiff(activities[0].time),
+        },
+        ...d,
+      ]);
+
+      /** Calculate difference in times */
+      const minuteDifference = activities[0].time.diff(dayjs(), 'minute');
       if (-minuteDifference <= 2) {
+        /** Reset 1 second timer */
+        if (timer.current != null) {
+          clearTimeout(timer.current);
+        }
+
         setColor('green');
 
+        /** Reset timers */
         if (timerYellow.current != null && timerRed.current != null) {
           clearTimeout(timerYellow.current);
           clearTimeout(timerRed.current);
         }
 
+        /** Start timers */
         timerYellow.current = setTimeout(() => {
           setColor('orange');
         }, 300000);
@@ -43,7 +92,26 @@ function Activity({
         }, 600000);
       }
     }
-  }, [lastDate]);
+  }, [activities]);
+
+  /** Increments the timers for all data points */
+  useEffect(() => {
+    if (data != null) {
+      /** Set the 1 second timer */
+      timer.current = setTimeout(() => {
+        setData(data.map((point) => ({
+          status: point.status,
+          summary: point.summary,
+          scope: point.scope,
+          time: point.time,
+          elapsed: getDiff(point.time),
+        })));
+      }, 1000);
+    }
+
+    /** Clear timer on unmount */
+    return () => clearTimeout(timer.current);
+  }, [data]);
 
   return (
     <BaseComponent
@@ -63,6 +131,12 @@ function Activity({
             <Badge status="error" />
             {'> 10 min'}
           </span>
+          <Switch
+            checked={toggle}
+            onClick={() => setToggle(!toggle)}
+            checkedChildren="Visible"
+            unCheckedChildren="Invisible"
+          />
         </>
       )}
       height={height}
@@ -77,35 +151,56 @@ function Activity({
         }
       </style>
       <div className={`bg-${color}-200 transition ease-in duration-500 rounded p-3 activity overflow-auto`}>
-        <table>
-          <tbody>
-            {
-              // eslint-disable-next-line camelcase
-              activities ? activities.map(({
-                status, summary, scope, time,
-              }) => (
-                // eslint-disable-next-line camelcase
-                <tr className="truncate ..." key={summary + time + scope}>
-                  <td>
-                    <Badge status={status} />
-                  </td>
-                  <td className="pr-4 text-gray-600">
-                    {
-                      time
-                    }
-                  </td>
-                  <td>
-                    {summary}
-                    &nbsp;
-                    <span className="text-gray-600">
-                      {scope}
-                    </span>
-                  </td>
-                </tr>
-              )) : 'No activity.'
-            }
-          </tbody>
-        </table>
+        {toggle ? (
+          <>
+            <div className="text-center text-2xl">
+              {
+                data && data.length !== 0 && typeof data[0].elapsed !== 'string'
+                  ? data[0].elapsed.format('HH:mm:ss') : 'Over a day ago'
+              }
+            </div>
+            <table>
+              <tbody>
+                {
+                data ? data.map(({
+                  status, summary, scope, time, elapsed,
+                }) => (
+                  <tr className="truncate ..." key={summary + time + scope}>
+                    <td>
+                      <Badge status={status} />
+                    </td>
+                    <td className="pr-2 text-gray-600">
+                      {
+                        time.utc().format('HH:mm:ss')
+                      }
+                    </td>
+                    <td className="pr-2">
+                      {summary}
+                        &nbsp;
+                      <span className="text-gray-600">
+                        {scope}
+                      </span>
+                    </td>
+                    <td className="text-gray-600">
+                      {
+                        elapsed.format('HH:mm:ss')
+                      }
+                    </td>
+                  </tr>
+                )) : 'No activity.'
+              }
+              </tbody>
+            </table>
+          </>
+        )
+          : (
+            <div className="mt-10 text-center text-5xl">
+              {
+                data && data.length !== 0 && typeof data[0].elapsed !== 'string'
+                  ? data[0].elapsed.format('HH:mm:ss') : 'Over a day ago'
+              }
+            </div>
+          )}
       </div>
     </BaseComponent>
   );

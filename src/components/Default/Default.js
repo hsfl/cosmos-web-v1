@@ -63,6 +63,12 @@ export default [
     },
   },
   {
+    name: 'CommandEditor',
+    props: {
+      nodes: [],
+    },
+  },
+  {
     name: 'DisplayValue',
     props: {
       name: '',

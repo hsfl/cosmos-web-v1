@@ -5,7 +5,7 @@ import Activity from './Dashboard/Activity';
 import Attitude from './Dashboard/Attitude';
 import Chart from './Dashboard/Chart';
 import Commands from './Dashboard/Commands';
-import Contact from './Dashboard/Contact';
+import CommandEditor from './Dashboard/CommandEditor';
 import DisplayValue from './Dashboard/DisplayValue';
 import Events from './Dashboard/Events';
 import Image from './Dashboard/Image';
@@ -32,7 +32,7 @@ export const components = {
   AgentList,
   Chart,
   Commands,
-  Contact,
+  CommandEditor,
   DisplayValue,
   Events,
   Image,

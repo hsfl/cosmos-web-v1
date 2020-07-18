@@ -158,7 +158,7 @@ function Dashboard({
             status: 'success',
             summary: 'Data received',
             scope: `from ${json.node_type}`,
-            time: dayjs().utc().format('HH:mm:ss'),
+            time: dayjs(),
           }));
         }
       } catch (error) {
@@ -323,7 +323,6 @@ function Dashboard({
     message.success('Successfully changed layout.');
   };
 
-
   /** Remove component while in editor mode */
   const deleteComponent = (e) => {
     try {
@@ -337,7 +336,6 @@ function Dashboard({
       message.error(err);
     }
   };
-
 
   /** Add component using JSON layout editor */
   const addToLayout = (elemParams) => {

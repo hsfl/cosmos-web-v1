@@ -22,6 +22,7 @@ function GetHistoricalData({
 
       setGlobalHistoricalDate(null);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [globalQueue]);
 
   const getPastHourData = () => {

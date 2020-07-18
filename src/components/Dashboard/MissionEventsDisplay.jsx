@@ -120,7 +120,7 @@ function MissionEventsDisplay({
             type="dashed"
             onClick={() => queryEventLog()}
           >
-            Requery
+            Re-query
           </Button>
         </>
       )}
