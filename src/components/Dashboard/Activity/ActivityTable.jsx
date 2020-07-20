@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { CheckCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons';
 import ActivityTimer from './ActivityTimer';
 
 /**
@@ -25,20 +25,23 @@ function ActivityTable({
                 data ? data.map(({
                   status, summary, scope, time,
                 }) => (
-                  <tr className="truncate ..." key={summary + time + scope}>
+                  <tr className="truncate ..." key={summary + time + scope + status}>
                     <td>
-                      {status === 'success' ? <CheckCircleOutlined /> : <ExclamationCircleOutlined />}
+                      {
+                        status === 'success' ? <CheckCircleTwoTone twoToneColor="#52c41a" /> : <CloseCircleTwoTone twoToneColor="#d80000" />
+                      }
+                      &nbsp;
                     </td>
                     <td className="pr-2 text-gray-600">
                       {
-                          time.utc().format('HH:mm:ss')
-                        }
+                        time.utc().format('HH:mm:ss')
+                      }
                     </td>
                     <td className="pr-2">
-                      {summary}
+                      { summary }
                       &nbsp;
                       <span className="text-gray-600">
-                        {scope}
+                        { scope }
                       </span>
                     </td>
                   </tr>
