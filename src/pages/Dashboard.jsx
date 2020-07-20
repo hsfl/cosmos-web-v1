@@ -36,6 +36,7 @@ import { axios, socket } from '../api';
 import routes from '../routes';
 import defaultComponent from '../components/Default/Default';
 import { set, setData, setActivity } from '../store/actions';
+import { dateToMJD } from '../utility/time';
 
 import AsyncComponent, { components } from '../components/AsyncComponent';
 import LayoutSelector from '../components/LayoutSelector';
@@ -146,6 +147,7 @@ function Dashboard({
               ? json.device_bcreg_volt_004 * json.device_bcreg_amp_004 : undefined,
             device_bcreg_power_005: json.device_bcreg_volt_005 && json.device_bcreg_amp_005
               ? json.device_bcreg_volt_005 * json.device_bcreg_amp_005 : undefined,
+            recorded_time: dateToMJD(dayjs().utc()),
           };
 
           // Store in realm object
