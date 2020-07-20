@@ -124,7 +124,7 @@ function DisplayValue({
             status: 'error',
             summary: `${value} ≤ ${v.dataKeyLowerThreshold} ${v.unit}`,
             scope: `for ${v.name}`,
-            time: dayjs().utc().format('HH:mm:ss'),
+            time: dayjs(),
           }));
         }
 
@@ -135,7 +135,7 @@ function DisplayValue({
             status: 'error',
             summary: `${value} ≥ ${v.dataKeyUpperThreshold} ${v.unit}`,
             scope: `for ${v.name}`,
-            time: dayjs().utc().format('HH:mm:ss'),
+            time: dayjs(),
           }));
         }
       }
