@@ -88,6 +88,9 @@ function Chart({
       t: 20,
       b: 15,
     },
+    yaxis: {
+      fixedrange: true,
+    },
   });
   /** Store to detect whether the user wants to get historical data to plot */
   const [retrievePlotHistory, setRetrievePlotHistory] = useState(null);
@@ -934,6 +937,7 @@ function Chart({
           toImageButtonOptions: {
             filename: `${name.replace(/ /g, '-').toLowerCase()}-${new Date(Date.now()).toISOString()}`,
           },
+          showlegend: false,
         }}
         layout={layout}
         revision={dataRevision}
