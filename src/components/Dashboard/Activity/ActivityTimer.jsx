@@ -5,20 +5,20 @@ import PropTypes from 'prop-types';
  * from the last data retrieval.
  */
 function ActivityTimer({
-  data,
+  elapsed,
 }) {
   return (
     <>
       {
-        data && data.length !== 0 && typeof data[0].elapsed !== 'string'
-          ? data[0].elapsed.format('HH:mm:ss') : 'Over a day ago'
+        elapsed && typeof elapsed !== 'string'
+          ? elapsed.format('HH:mm:ss') : 'Over a day ago'
       }
     </>
   );
 }
 
 ActivityTimer.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.shape).isRequired,
+  elapsed: PropTypes.shape.isRequired,
 };
 
 export default ActivityTimer;
