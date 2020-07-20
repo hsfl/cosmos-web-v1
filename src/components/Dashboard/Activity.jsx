@@ -39,16 +39,12 @@ function Activity({
    * the difference as a dayjs object. If the difference is over a day, then a string is returned.
    * @param {dayjs object} date
    */
-  const getDiff = (date, calculated = false) => {
-    if (typeof date !== 'string' && dayjs().diff(date, 'day') < 1 && !calculated) {
+  const getDiff = (date) => {
+    if (typeof date !== 'string' && dayjs().diff(date, 'day') < 1) {
       const hour = dayjs().diff(date, 'hour');
       const minute = dayjs().diff(date, 'minute') % 60;
       const second = dayjs().diff(date, 'second') % 60;
       return dayjs().set('hour', hour).set('minute', minute).set('second', second);
-    }
-
-    if (calculated) {
-      return date.add(1, 'second');
     }
 
     return 'Over a day ago';
@@ -101,16 +97,10 @@ function Activity({
 
   /** Increments the timers for all data points */
   useEffect(() => {
-    if (data != null) {
+    if (data && data.length !== 0) {
       /** Set the 1 second timer */
       timer.current = setTimeout(() => {
-        setData(data.map((point) => ({
-          status: point.status,
-          summary: point.summary,
-          scope: point.scope,
-          time: point.time,
-          elapsed: getDiff(point.time, true),
-        })));
+        data[0].elapsed = getDiff(data[0].elapsed);
       }, 1000);
     }
 
