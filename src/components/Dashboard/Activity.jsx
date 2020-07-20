@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { Badge, Switch } from 'antd';
 import dayjs from 'dayjs';
-
+import ActivityTable from './Activity/ActivityTable';
 import BaseComponent from '../BaseComponent';
 
 /**
@@ -46,6 +46,7 @@ function Activity({
       const second = dayjs().diff(date, 'second') % 60;
       return dayjs().set('hour', hour).set('minute', minute).set('second', second);
     }
+
     return 'Over a day ago';
   };
 
@@ -96,16 +97,10 @@ function Activity({
 
   /** Increments the timers for all data points */
   useEffect(() => {
-    if (data != null) {
+    if (data && data.length !== 0) {
       /** Set the 1 second timer */
       timer.current = setTimeout(() => {
-        setData(data.map((point) => ({
-          status: point.status,
-          summary: point.summary,
-          scope: point.scope,
-          time: point.time,
-          elapsed: getDiff(point.time),
-        })));
+        data[0].elapsed = getDiff(data[0].elapsed);
       }, 1000);
     }
 
@@ -121,15 +116,15 @@ function Activity({
         <>
           <span className="mr-3">
             <Badge status="success" />
-            {'< 5 min'}
+            &#60;&nbsp;5min
           </span>
           <span className="mr-3">
             <Badge status="warning" />
-            {'< 10 min'}
+            &#60;&nbsp;10min
           </span>
           <span className="mr-3">
             <Badge status="error" />
-            {'> 10 min'}
+            &#62;&nbsp;10min
           </span>
           <Switch
             checked={toggle}
@@ -151,56 +146,7 @@ function Activity({
         }
       </style>
       <div className={`bg-${color}-200 transition ease-in duration-500 rounded p-3 activity overflow-auto`}>
-        {toggle ? (
-          <>
-            <div className="text-center text-2xl">
-              {
-                data && data.length !== 0 && typeof data[0].elapsed !== 'string'
-                  ? data[0].elapsed.format('HH:mm:ss') : 'Over a day ago'
-              }
-            </div>
-            <table>
-              <tbody>
-                {
-                data ? data.map(({
-                  status, summary, scope, time, elapsed,
-                }) => (
-                  <tr className="truncate ..." key={summary + time + scope}>
-                    <td>
-                      <Badge status={status} />
-                    </td>
-                    <td className="pr-2 text-gray-600">
-                      {
-                        time.utc().format('HH:mm:ss')
-                      }
-                    </td>
-                    <td className="pr-2">
-                      {summary}
-                        &nbsp;
-                      <span className="text-gray-600">
-                        {scope}
-                      </span>
-                    </td>
-                    <td className="text-gray-600">
-                      {
-                        elapsed.format('HH:mm:ss')
-                      }
-                    </td>
-                  </tr>
-                )) : 'No activity.'
-              }
-              </tbody>
-            </table>
-          </>
-        )
-          : (
-            <div className="mt-10 text-center text-5xl">
-              {
-                data && data.length !== 0 && typeof data[0].elapsed !== 'string'
-                  ? data[0].elapsed.format('HH:mm:ss') : 'Over a day ago'
-              }
-            </div>
-          )}
+        <ActivityTable data={data} toggle={toggle} />
       </div>
     </BaseComponent>
   );
