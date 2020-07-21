@@ -961,7 +961,7 @@ export default {
           x: 3,
           y: 0,
           w: 3,
-          h: 18,
+          h: 12,
           component: {
             name: 'DisplayValue',
             props: {
@@ -1134,7 +1134,7 @@ export default {
           x: 3,
           y: 0,
           w: 3,
-          h: 18,
+          h: 6,
           component: {
             name: 'DisplayValue',
             props: {
