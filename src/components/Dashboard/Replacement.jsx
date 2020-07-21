@@ -30,9 +30,9 @@ function Replacement({
         <tbody>
           {
             list && list.outgoing ? list.map(({
-              tx_id, agent, name, size, bytes,
+              tx_id: txId, agent, name, size, bytes,
             }) => (
-              <tr key={tx_id + name + agent + size}>
+              <tr key={txId + name + agent + size}>
                 <td>
                   <Badge status={bytes / size < 1 ? 'processing' : 'success'} />
                 </td>
