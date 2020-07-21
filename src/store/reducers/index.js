@@ -10,6 +10,7 @@ export default function reducer(state = {
   data: {},
   realm: null,
   activity: [],
+  debug: true,
 }, {
   type, key, payload,
 }) {

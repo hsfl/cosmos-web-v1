@@ -70,6 +70,7 @@ function CesiumGlobe({
   /** Accessing the neutron1 messages from the socket */
   const state = useSelector((s) => s.data);
   const realm = useSelector((s) => s.realm);
+  const debug = useSelector((s) => s.debug);
 
   /** Storage for global; form values */
   const [orbitsForm] = Form.useForm();
@@ -130,7 +131,7 @@ function CesiumGlobe({
       if (state && realm && state[realm]
         && state[realm][dataKey]
         && state[realm][dataKey].pos
-        && state[realm][timeDataKey]
+        && ((!debug && state[realm][timeDataKey]) || (debug && state[realm].recorded_time))
         && live
       ) {
         const tempOrbit = [...orbitsState];
