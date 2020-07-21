@@ -81,7 +81,7 @@ export default {
                 nodeProcess: 'any',
                 dataKey: 'device_cpu_load_003',
                 dataKeyUpperThreshold: 1,
-                timeDataKey: 'device_cpu_utc_000',
+                timeDataKey: 'device_cpu_utc_003',
                 unit: '',
                 processDataKey: (x) => x.toFixed(2),
               },
@@ -89,7 +89,7 @@ export default {
                 name: 'OBC CPU Uptime',
                 nodeProcess: 'any',
                 dataKey: 'device_cpu_uptime_003',
-                timeDataKey: 'device_cpu_utc_000',
+                timeDataKey: 'device_cpu_utc_003',
                 unit: 's',
                 processDataKey: (x) => x.toFixed(2),
               },
@@ -97,7 +97,7 @@ export default {
                 name: 'OBC CPU Boot Count',
                 nodeProcess: 'any',
                 dataKey: 'device_cpu_boot_count_003',
-                timeDataKey: 'device_cpu_utc_000',
+                timeDataKey: 'device_cpu_utc_003',
                 unit: '',
                 processDataKey: (x) => x,
               },
@@ -241,24 +241,24 @@ export default {
               {
                 name: 'Power Gen',
                 nodeProcess: 'any',
-                timeDataKey: 'node_utc',
                 dataKey: 'node_powgen',
+                timeDataKey: 'node_utc',
                 unit: 'W',
                 processDataKey: (x) => x.toFixed(2),
               },
               {
                 name: 'Power Use',
                 nodeProcess: 'any',
-                timeDataKey: 'node_utc',
                 dataKey: 'node_powuse',
+                timeDataKey: 'node_utc',
                 unit: 'W',
                 processDataKey: (x) => x.toFixed(2),
               },
               {
                 name: 'Power Mode',
                 nodeProcess: 'any',
-                timeDataKey: 'node_utc',
                 dataKey: 'node_powmode',
+                timeDataKey: 'node_utc',
                 unit: '',
                 processDataKey: (x) => { const powerMode = ['Off', 'Low Power', 'Standard Power', 'Standard ADCS', 'Standard Telecomm', 'Neutron Mission']; return powerMode[x]; },
               },
@@ -838,8 +838,6 @@ export default {
             name: 'Chart',
             props: {
               name: 'CPU',
-              XDataKey: 'device_cpu_utc_000',
-              processXDataKey: (x) => mjdToString(x),
               plots: [
                 {
                   x: [],
@@ -850,8 +848,9 @@ export default {
                   },
                   name: 'beagle1 Load',
                   YDataKey: 'device_cpu_load_000',
-                  processYDataKey: (x) => x,
+                  timeDataKey: 'device_cpu_utc_000',
                   nodeProcess: 'any',
+                  processYDataKey: (x) => x,
                   live: true,
                 },
               ],
@@ -898,8 +897,6 @@ export default {
             name: 'Chart',
             props: {
               name: 'Memory',
-              XDataKey: 'device_cpu_utc_000',
-              processXDataKey: (x) => mjdToString(x),
               plots: [
                 {
                   x: [],
@@ -910,6 +907,7 @@ export default {
                   },
                   name: 'beagle1 Storage',
                   YDataKey: 'device_cpu_gib_000',
+                  timeDataKey: 'device_cpu_utc_000',
                   processYDataKey: (x) => x,
                   nodeProcess: 'any',
                   live: true,
@@ -964,24 +962,24 @@ export default {
                 {
                   name: 'CPU Load',
                   nodeProcess: 'any',
-                  dataKey: 'device_cpu_load_001',
-                  timeDataKey: 'device_cpu_utc_001',
+                  dataKey: 'device_cpu_load_003',
+                  timeDataKey: 'device_cpu_utc_003',
                   unit: '',
                   processDataKey: (x) => x.toFixed(2),
                 },
                 {
                   name: 'CPU Uptime',
                   nodeProcess: 'any',
-                  dataKey: 'device_cpu_uptime_000',
-                  timeDataKey: 'device_cpu_utc_000',
+                  dataKey: 'device_cpu_uptime_003',
+                  timeDataKey: 'device_cpu_utc_003',
                   unit: 's',
                   processDataKey: (x) => x.toFixed(2),
                 },
                 {
                   name: 'CPU Bootcount',
                   nodeProcess: 'any',
-                  dataKey: 'device_cpu_boot_count_000',
-                  timeDataKey: 'device_cpu_utc_000',
+                  dataKey: 'device_cpu_boot_count_003',
+                  timeDataKey: 'device_cpu_utc_003',
                   unit: '',
                   processDataKey: (x) => x.toFixed(2),
                 },
@@ -1003,16 +1001,16 @@ export default {
                 {
                   name: 'CPU GiB',
                   nodeProcess: 'any',
-                  dataKey: 'device_cpu_gib_000',
-                  timeDataKey: 'device_cpu_utc_000',
+                  dataKey: 'device_cpu_gib_003',
+                  timeDataKey: 'device_cpu_utc_003',
                   unit: '',
                   processDataKey: (x) => x.toFixed(2),
                 },
                 {
                   name: 'CPU Max GiB',
                   nodeProcess: 'any',
-                  dataKey: 'device_cpu_maxgib_000',
-                  timeDataKey: 'device_cpu_utc_000',
+                  dataKey: 'device_cpu_maxgib_003',
+                  timeDataKey: 'device_cpu_utc_003',
                   unit: '',
                   processDataKey: (x) => x.toFixed(2),
                 },
@@ -1030,8 +1028,6 @@ export default {
             name: 'Chart',
             props: {
               name: 'CPU',
-              XDataKey: 'device_cpu_utc_000',
-              processXDataKey: (x) => mjdToString(x),
               plots: [
                 {
                   x: [],
@@ -1041,8 +1037,8 @@ export default {
                     color: 'red',
                   },
                   name: 'neutron1 Load',
-                  YDataKey: 'device_cpu_load_000',
-                  timeDataKey: 'device_cpu_utc_000',
+                  YDataKey: 'device_cpu_load_003',
+                  timeDataKey: 'device_cpu_utc_003',
                   processYDataKey: (x) => x,
                   nodeProcess: 'any',
                   live: true,
@@ -1061,7 +1057,6 @@ export default {
             name: 'Chart',
             props: {
               name: 'Memory',
-              XDataKey: 'device_cpu_utc_000',
               processXDataKey: (x) => mjdToString(x),
               plots: [
                 {
@@ -1072,7 +1067,8 @@ export default {
                     color: 'red',
                   },
                   name: 'neutron1 Storage',
-                  YDataKey: 'device_cpu_gib_000',
+                  YDataKey: 'device_cpu_gib_003',
+                  timeDataKey: 'device_cpu_utc_003',
                   processYDataKey: (x) => x,
                   nodeProcess: 'any',
                   live: true,
@@ -1091,8 +1087,6 @@ export default {
             name: 'Chart',
             props: {
               name: 'Boot Count',
-              XDataKey: 'device_cpu_utc_000',
-              processXDataKey: (x) => mjdToString(x),
               plots: [
                 {
                   x: [],
@@ -1104,6 +1098,7 @@ export default {
                   name: 'neutron1 Boot Count',
                   YDataKey: 'device_cpu_boot_count_000',
                   processYDataKey: (x) => x,
+                  XDataKey: 'timeDataKey',
                   nodeProcess: 'any',
                   live: true,
                 },
