@@ -23,7 +23,21 @@ module.exports = {
     output: 'api/dist',
   },
   use: [
-    airbnb(),
+    airbnb({
+      eslint: {
+        baseConfig: {
+          rules: {
+            'no-bitwise': 0,
+            'no-mixed-operators': 0,
+          },
+          settings: {
+            react: {
+              version: '16.5',
+            },
+          },
+        }
+      }
+    }),
     react({
       html: {
         title: 'COSMOS Web',
