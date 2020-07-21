@@ -989,7 +989,10 @@ export default {
                   dataKey: 'device_cpu_gib_000',
                   timeDataKey: 'recorded_time',
                   unit: '',
-                  processDataKey: (x) => x & 1,
+                  processDataKey: (x) => {
+                    const connected = ['Disonnected', 'Connected'];
+                    return connected[x & 1];
+                  },
                 },
                 {
                   name: 'Service Ready',
@@ -997,7 +1000,10 @@ export default {
                   dataKey: 'device_tcv_flag_000',
                   timeDataKey: 'recorded_time',
                   unit: '',
-                  processDataKey: (x) => x >> 1 & 1,
+                  processDataKey: (x) => {
+                    const ready = ['Not Ready', 'Ready'];
+                    return ready[x >> 1 & 1];
+                  },
                 },
                 {
                   name: 'Service Available',
@@ -1005,7 +1011,10 @@ export default {
                   dataKey: 'device_tcv_flag_000',
                   timeDataKey: 'recorded_time',
                   unit: '',
-                  processDataKey: (x) => x >> 2 & 1,
+                  processDataKey: (x) => {
+                    const service = ['Not Available', 'Available'];
+                    return service[x >> 2 & 1];
+                  },
                 },
                 {
                   name: 'Registration',
@@ -1013,7 +1022,10 @@ export default {
                   dataKey: 'device_tcv_flag_000',
                   timeDataKey: 'recorded_time',
                   unit: '',
-                  processDataKey: (x) => x >> 3 & 1,
+                  processDataKey: (x) => {
+                    const registered = ['Not Registered', 'Registered'];
+                    return registered[x >> 3 & 1];
+                  },
                 },
                 {
                   name: 'Roaming',
@@ -1021,7 +1033,10 @@ export default {
                   dataKey: 'device_tcv_flag_000',
                   timeDataKey: 'recorded_time',
                   unit: '',
-                  processDataKey: (x) => x >> 4 & 1,
+                  processDataKey: (x) => {
+                    const roaming = ['Not Roaming', 'Roaming'];
+                    return roaming[x >> 4 & 1];
+                  },
                 },
                 {
                   name: 'Signal Strength',
@@ -1029,7 +1044,7 @@ export default {
                   dataKey: 'device_tcv_flag_000',
                   timeDataKey: 'recorded_time',
                   unit: '',
-                  processDataKey: (x) => x.toFixed(2),
+                  processDataKey: (x) => x >> 5,
                 },
               ],
             },
