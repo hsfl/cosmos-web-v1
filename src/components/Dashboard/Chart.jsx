@@ -91,6 +91,9 @@ function Chart({
     yaxis: {
       fixedrange: true,
     },
+    xaxis: {
+      fixedrange: false,
+    },
   });
   /** Store to detect whether the user wants to get historical data to plot */
   const [retrievePlotHistory, setRetrievePlotHistory] = useState(null);
@@ -516,6 +519,23 @@ function Chart({
               </Tag>
             )
           }
+
+          <Switch
+            checkedChildren="Y Scroll"
+            unCheckedChildren="X Scroll"
+            checked={layout.yaxis.fixedrange}
+            onChange={(checked) => {
+              if (checked) {
+                layout.yaxis.fixedrange = true;
+                layout.xaxis.fixedrange = false;
+              } else {
+                layout.yaxis.fixedrange = false;
+                layout.xaxis.fixedrange = true;
+              }
+
+              setDataRevision(dataRevision + 1);
+            }}
+          />
 
           &nbsp;
 
