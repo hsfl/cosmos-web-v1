@@ -17,7 +17,6 @@ function ActivityTable({
 }) {
   /** Get agent list state from the Context */
   const activities = useSelector((s) => s.activity);
-  const state = useSelector((s) => s);
 
   /** Color of the indicator, initial state is red */
   const [color, setColor] = useState('red');
@@ -100,7 +99,6 @@ function ActivityTable({
 
   return (
     <div className={`bg-${color}-200 transition ease-in duration-500 rounded p-3 activity overflow-auto`}>
-      {console.log(state)}
       <div className="text-center text-2xl">
         <ActivityTimer elapsed={elapsed} />
       </div>
