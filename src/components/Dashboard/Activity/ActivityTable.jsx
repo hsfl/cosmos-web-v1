@@ -21,7 +21,8 @@ function ActivityTable({
   /** Color of the indicator, initial state is red */
   const [color, setColor] = useState('red');
 
-  const [elapsed, setElapsed] = useState(null);
+  /** Time elapsed */
+  const [elapsed, setElapsed] = useState('Over a day ago');
 
   /** Reference to the timer that changes the indicator to yellow */
   const timerYellow = useRef(null);
