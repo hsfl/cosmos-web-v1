@@ -29,26 +29,21 @@ function Replacement({
       <table>
         <tbody>
           {
-            list ? list.map(({
-              node, count, files,
+            list && list.outgoing ? list.map(({
+              tx_id, agent, name, size, bytes,
             }) => (
-              count > 0
-                ? files.map(({
-                  name, bytes, size,
-                }) => (
-                  <tr key={node + name + count + size}>
-                    <td>
-                      <Badge status={bytes / size < 1 ? 'processing' : 'success'} />
-                    </td>
-                    <td className="text-gray-500 pr-1">
-                      {Math.round((bytes / size) * 100) / 100}
-                      %
-                    </td>
-                    <td>
-                      {name}
-                    </td>
-                  </tr>
-                )) : null
+              <tr key={tx_id + name + agent + size}>
+                <td>
+                  <Badge status={bytes / size < 1 ? 'processing' : 'success'} />
+                </td>
+                <td className="text-gray-500 pr-1">
+                  {Math.round((bytes / size) * 100) / 100}
+                  %
+                </td>
+                <td>
+                  {name}
+                </td>
+              </tr>
             )) : null
           }
         </tbody>
