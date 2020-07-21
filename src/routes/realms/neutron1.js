@@ -831,7 +831,7 @@ export default {
         {
           i: 'satellite-neutron1-bbb-d',
           x: 0,
-          y: 8,
+          y: 1,
           w: 6,
           h: 18,
           component: {
@@ -860,8 +860,38 @@ export default {
         },
         {
           i: 'satellite-neutron1-bbb-e',
+          x: 0,
+          y: 2,
+          w: 12,
+          h: 18,
+          component: {
+            name: 'Chart',
+            props: {
+              name: 'Boot Count',
+              XDataKey: 'recorded_time',
+              processXDataKey: (x) => mjdToString(x),
+              plots: [
+                {
+                  x: [],
+                  y: [],
+                  type: 'scatter',
+                  marker: {
+                    color: 'red',
+                  },
+                  name: 'beagle1 Boot Count',
+                  YDataKey: 'device_cpu_boot_count_000',
+                  processYDataKey: (x) => x,
+                  nodeProcess: 'any',
+                  live: true,
+                },
+              ],
+            },
+          },
+        },
+        {
+          i: 'satellite-neutron1-bbb-f',
           x: 6,
-          y: 8,
+          y: 1,
           w: 6,
           h: 18,
           component: {
@@ -959,7 +989,7 @@ export default {
                   dataKey: 'device_cpu_gib_000',
                   timeDataKey: 'recorded_time',
                   unit: '',
-                  processDataKey: (x) => x | 1,
+                  processDataKey: (x) => x & 1,
                 },
                 {
                   name: 'Service Ready',
@@ -967,7 +997,7 @@ export default {
                   dataKey: 'device_tcv_flag_000',
                   timeDataKey: 'recorded_time',
                   unit: '',
-                  processDataKey: (x) => x | 1 << 1,
+                  processDataKey: (x) => x >> 1 & 1,
                 },
                 {
                   name: 'Service Available',
@@ -975,7 +1005,7 @@ export default {
                   dataKey: 'device_tcv_flag_000',
                   timeDataKey: 'recorded_time',
                   unit: '',
-                  processDataKey: (x) => x | 1 << 2,
+                  processDataKey: (x) => x >> 2 & 1,
                 },
                 {
                   name: 'Registration',
@@ -983,7 +1013,7 @@ export default {
                   dataKey: 'device_tcv_flag_000',
                   timeDataKey: 'recorded_time',
                   unit: '',
-                  processDataKey: (x) => x | 1 << 3,
+                  processDataKey: (x) => x >> 3 & 1,
                 },
                 {
                   name: 'Roaming',
@@ -991,7 +1021,7 @@ export default {
                   dataKey: 'device_tcv_flag_000',
                   timeDataKey: 'recorded_time',
                   unit: '',
-                  processDataKey: (x) => x | 1 << 4,
+                  processDataKey: (x) => x >> 4 & 1,
                 },
                 {
                   name: 'Signal Strength',
@@ -1349,7 +1379,7 @@ export default {
           i: 'satellite-neutron1-epsbatt-c',
           x: 0,
           y: 1,
-          w: 12,
+          w: 6,
           h: 18,
           component: {
             name: 'Chart',
@@ -1421,6 +1451,35 @@ export default {
                   },
                   name: 'Daughterboard 2 003',
                   YDataKey: 'device_tsen_temp_003',
+                  timeDataKey: 'recorded_time',
+                  processYDataKey: (x) => x,
+                  nodeProcess: 'any',
+                  live: true,
+                },
+              ],
+            },
+          },
+        },
+        {
+          i: 'satellite-neutron1-epsbatt-cc',
+          x: 6,
+          y: 1,
+          w: 6,
+          h: 18,
+          component: {
+            name: 'Chart',
+            props: {
+              name: 'Battery Percentage',
+              plots: [
+                {
+                  x: [],
+                  y: [],
+                  type: 'scatter',
+                  marker: {
+                    color: 'red',
+                  },
+                  name: 'Battery Percentage',
+                  YDataKey: 'device_batt_percentage_000',
                   timeDataKey: 'recorded_time',
                   processYDataKey: (x) => x,
                   nodeProcess: 'any',
@@ -3340,6 +3399,36 @@ export default {
                   },
                   name: 'neutron1 Storage',
                   YDataKey: 'device_cpu_gib_000',
+                  processYDataKey: (x) => x,
+                  nodeProcess: 'any',
+                  live: true,
+                },
+              ],
+            },
+          },
+        },
+        {
+          i: 'satellite-neutron1-obc-f',
+          x: 0,
+          y: 3,
+          w: 12,
+          h: 18,
+          component: {
+            name: 'Chart',
+            props: {
+              name: 'Boot Count',
+              XDataKey: 'recorded_time',
+              processXDataKey: (x) => mjdToString(x),
+              plots: [
+                {
+                  x: [],
+                  y: [],
+                  type: 'scatter',
+                  marker: {
+                    color: 'red',
+                  },
+                  name: 'neutron1 Boot Count',
+                  YDataKey: 'device_cpu_boot_count_000',
                   processYDataKey: (x) => x,
                   nodeProcess: 'any',
                   live: true,
