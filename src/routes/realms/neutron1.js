@@ -960,8 +960,8 @@ export default {
           i: 'satellite-neutron1-duplex-b',
           x: 3,
           y: 0,
-          w: 4,
-          h: 7,
+          w: 3,
+          h: 18,
           component: {
             name: 'DisplayValue',
             props: {
@@ -1037,10 +1037,10 @@ export default {
         },
         {
           i: 'satellite-neutron1-duplex-c',
-          x: 7,
-          y: 0,
-          w: 4,
-          h: 7,
+          x: 0,
+          y: 1,
+          w: 3,
+          h: 6,
           component: {
             name: 'DisplayValue',
             props: {
@@ -1085,6 +1085,49 @@ export default {
                   timeDataKey: 'recorded_time',
                   unit: '',
                   processDataKey: (x) => x,
+                },
+              ],
+            },
+          },
+        },
+        {
+          i: 'satellite-neutron1-n',
+          x: 6,
+          y: 0,
+          w: 6,
+          h: 18,
+          component: {
+            name: 'Globe',
+            props: {
+              name: 'Orbit',
+              orbits: [
+                {
+                  name: 'neutron1',
+                  modelFileName: 'cubesat1.glb',
+                  nodeProcess: 'any',
+                  dataKey: 'node_loc_pos_eci',
+                  timeDataKey: 'node_utc',
+                  live: true,
+                  position: [21.289373, 157.917480, 350000.0],
+                  orientation: {
+                    d: {
+                      x: 0,
+                      y: 0,
+                      z: 0,
+                    },
+                    w: 0,
+                  },
+                },
+              ],
+              overlays: [
+                {
+                  color: 'CRIMSON',
+                  geoJson: {
+                    type: 'Polygon',
+                    coordinates: [
+                      [[30, 10], [40, 40], [20, 40], [10, 20], [30, 10]],
+                    ],
+                  },
                 },
               ],
             },
