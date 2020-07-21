@@ -11,7 +11,7 @@ export default {
   props: {
     defaultLayout,
     realms: {
-      neutron1: ['neutron1', 'beagle1', 'virtualhost.hsfl.hawaii.edu'],
+      neutron1: ['neutron1', 'beagle1'],
       hiapo: [],
       hyti: [],
     },
