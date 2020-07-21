@@ -831,7 +831,7 @@ export default {
         {
           i: 'satellite-neutron1-bbb-d',
           x: 0,
-          y: 8,
+          y: 1,
           w: 6,
           h: 18,
           component: {
@@ -860,8 +860,38 @@ export default {
         },
         {
           i: 'satellite-neutron1-bbb-e',
+          x: 0,
+          y: 2,
+          w: 12,
+          h: 18,
+          component: {
+            name: 'Chart',
+            props: {
+              name: 'Boot Count',
+              XDataKey: 'recorded_time',
+              processXDataKey: (x) => mjdToString(x),
+              plots: [
+                {
+                  x: [],
+                  y: [],
+                  type: 'scatter',
+                  marker: {
+                    color: 'red',
+                  },
+                  name: 'beagle1 Boot Count',
+                  YDataKey: 'device_cpu_boot_count_000',
+                  processYDataKey: (x) => x,
+                  nodeProcess: 'any',
+                  live: true,
+                },
+              ],
+            },
+          },
+        },
+        {
+          i: 'satellite-neutron1-bbb-f',
           x: 6,
-          y: 8,
+          y: 1,
           w: 6,
           h: 18,
           component: {
@@ -930,8 +960,8 @@ export default {
           i: 'satellite-neutron1-duplex-b',
           x: 3,
           y: 0,
-          w: 4,
-          h: 7,
+          w: 3,
+          h: 12,
           component: {
             name: 'DisplayValue',
             props: {
@@ -959,7 +989,10 @@ export default {
                   dataKey: 'device_cpu_gib_000',
                   timeDataKey: 'recorded_time',
                   unit: '',
-                  processDataKey: (x) => x | 1,
+                  processDataKey: (x) => {
+                    const connected = ['Disonnected', 'Connected'];
+                    return connected[x & 1];
+                  },
                 },
                 {
                   name: 'Service Ready',
@@ -967,7 +1000,10 @@ export default {
                   dataKey: 'device_tcv_flag_000',
                   timeDataKey: 'recorded_time',
                   unit: '',
-                  processDataKey: (x) => x | 1 << 1,
+                  processDataKey: (x) => {
+                    const ready = ['Not Ready', 'Ready'];
+                    return ready[x >> 1 & 1];
+                  },
                 },
                 {
                   name: 'Service Available',
@@ -975,7 +1011,10 @@ export default {
                   dataKey: 'device_tcv_flag_000',
                   timeDataKey: 'recorded_time',
                   unit: '',
-                  processDataKey: (x) => x | 1 << 2,
+                  processDataKey: (x) => {
+                    const service = ['Not Available', 'Available'];
+                    return service[x >> 2 & 1];
+                  },
                 },
                 {
                   name: 'Registration',
@@ -983,7 +1022,10 @@ export default {
                   dataKey: 'device_tcv_flag_000',
                   timeDataKey: 'recorded_time',
                   unit: '',
-                  processDataKey: (x) => x | 1 << 3,
+                  processDataKey: (x) => {
+                    const registered = ['Not Registered', 'Registered'];
+                    return registered[x >> 3 & 1];
+                  },
                 },
                 {
                   name: 'Roaming',
@@ -991,15 +1033,42 @@ export default {
                   dataKey: 'device_tcv_flag_000',
                   timeDataKey: 'recorded_time',
                   unit: '',
-                  processDataKey: (x) => x | 1 << 4,
+                  processDataKey: (x) => {
+                    const roaming = ['Not Roaming', 'Roaming'];
+                    return roaming[x >> 4 & 1];
+                  },
                 },
                 {
                   name: 'Signal Strength',
                   nodeProcess: 'any',
-                  dataKey: 'device_tcv_flag_000',
+                  dataKey: 'place',
                   timeDataKey: 'recorded_time',
                   unit: '',
-                  processDataKey: (x) => x.toFixed(2),
+                  processDataKey: (x) => x >> 5,
+                },
+                {
+                  name: 'Provider',
+                  nodeProcess: 'any',
+                  dataKey: 'place',
+                  timeDataKey: 'recorded_time',
+                  unit: '',
+                  processDataKey: (x) => x >> 5,
+                },
+                {
+                  name: 'State',
+                  nodeProcess: 'any',
+                  dataKey: 'place',
+                  timeDataKey: 'recorded_time',
+                  unit: '',
+                  processDataKey: (x) => x >> 5,
+                },
+                {
+                  name: 'Call Duration',
+                  nodeProcess: 'any',
+                  dataKey: 'place',
+                  timeDataKey: 'recorded_time',
+                  unit: '',
+                  processDataKey: (x) => x >> 5,
                 },
               ],
             },
@@ -1007,10 +1076,10 @@ export default {
         },
         {
           i: 'satellite-neutron1-duplex-c',
-          x: 7,
-          y: 0,
-          w: 4,
-          h: 7,
+          x: 0,
+          y: 1,
+          w: 3,
+          h: 6,
           component: {
             name: 'DisplayValue',
             props: {
@@ -1055,6 +1124,88 @@ export default {
                   timeDataKey: 'recorded_time',
                   unit: '',
                   processDataKey: (x) => x,
+                },
+              ],
+            },
+          },
+        },
+        {
+          i: 'satellite-neutron1-duplex-d',
+          x: 3,
+          y: 0,
+          w: 3,
+          h: 6,
+          component: {
+            name: 'DisplayValue',
+            props: {
+              name: 'Position',
+              displayValues: [
+                {
+                  name: 'LLA',
+                  nodeProcess: 'any',
+                  dataKey: 'device_gps_geods_000',
+                  timeDataKey: 'recorded_time',
+                  unit: '',
+                  processDataKey: (x) => JSON.stringify(x),
+                },
+                {
+                  name: 'Time of Position',
+                  nodeProcess: 'any',
+                  dataKey: 'device_tcv_flag_000',
+                  timeDataKey: 'recorded_time',
+                  unit: '',
+                  processDataKey: (x) => x,
+                },
+                {
+                  name: 'Position Error',
+                  nodeProcess: 'any',
+                  dataKey: 'placeholder',
+                  timeDataKey: 'recorded_time',
+                  unit: '',
+                  processDataKey: (x) => mjdToString(x),
+                },
+              ],
+            },
+          },
+        },
+        {
+          i: 'satellite-neutron1-n',
+          x: 6,
+          y: 0,
+          w: 6,
+          h: 18,
+          component: {
+            name: 'Globe',
+            props: {
+              name: 'Orbit',
+              orbits: [
+                {
+                  name: 'neutron1',
+                  modelFileName: 'cubesat1.glb',
+                  nodeProcess: 'any',
+                  dataKey: 'device_gps_geocs_000',
+                  timeDataKey: 'recorded_time',
+                  live: true,
+                  position: [21.289373, 157.917480, 350000.0],
+                  orientation: {
+                    d: {
+                      x: 0,
+                      y: 0,
+                      z: 0,
+                    },
+                    w: 0,
+                  },
+                },
+              ],
+              overlays: [
+                {
+                  color: 'CRIMSON',
+                  geoJson: {
+                    type: 'Polygon',
+                    coordinates: [
+                      [[30, 10], [40, 40], [20, 40], [10, 20], [30, 10]],
+                    ],
+                  },
                 },
               ],
             },
@@ -1349,7 +1500,7 @@ export default {
           i: 'satellite-neutron1-epsbatt-c',
           x: 0,
           y: 1,
-          w: 12,
+          w: 6,
           h: 18,
           component: {
             name: 'Chart',
@@ -1421,6 +1572,35 @@ export default {
                   },
                   name: 'Daughterboard 2 003',
                   YDataKey: 'device_tsen_temp_003',
+                  timeDataKey: 'recorded_time',
+                  processYDataKey: (x) => x,
+                  nodeProcess: 'any',
+                  live: true,
+                },
+              ],
+            },
+          },
+        },
+        {
+          i: 'satellite-neutron1-epsbatt-cc',
+          x: 6,
+          y: 1,
+          w: 6,
+          h: 18,
+          component: {
+            name: 'Chart',
+            props: {
+              name: 'Battery Percentage',
+              plots: [
+                {
+                  x: [],
+                  y: [],
+                  type: 'scatter',
+                  marker: {
+                    color: 'red',
+                  },
+                  name: 'Battery Percentage',
+                  YDataKey: 'device_batt_percentage_000',
                   timeDataKey: 'recorded_time',
                   processYDataKey: (x) => x,
                   nodeProcess: 'any',
@@ -3340,6 +3520,36 @@ export default {
                   },
                   name: 'neutron1 Storage',
                   YDataKey: 'device_cpu_gib_000',
+                  processYDataKey: (x) => x,
+                  nodeProcess: 'any',
+                  live: true,
+                },
+              ],
+            },
+          },
+        },
+        {
+          i: 'satellite-neutron1-obc-f',
+          x: 0,
+          y: 3,
+          w: 12,
+          h: 18,
+          component: {
+            name: 'Chart',
+            props: {
+              name: 'Boot Count',
+              XDataKey: 'recorded_time',
+              processXDataKey: (x) => mjdToString(x),
+              plots: [
+                {
+                  x: [],
+                  y: [],
+                  type: 'scatter',
+                  marker: {
+                    color: 'red',
+                  },
+                  name: 'neutron1 Boot Count',
+                  YDataKey: 'device_cpu_boot_count_000',
                   processYDataKey: (x) => x,
                   nodeProcess: 'any',
                   live: true,
