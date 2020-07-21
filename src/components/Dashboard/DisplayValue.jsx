@@ -35,6 +35,7 @@ function DisplayValue({
   /** Accessing the neutron1 messages from the socket */
   const state = useSelector((s) => s.data);
   const realm = useSelector((s) => s.realm);
+  const debug = useSelector((s) => s.debug);
 
   /** Storage for global form values */
   const [displayValuesForm] = Form.useForm();
@@ -109,13 +110,19 @@ function DisplayValue({
       // by checking the node process and the key it is watching
       if (state && realm && state[realm]
         && state[realm][v.dataKey] !== undefined
-        && state[realm][v.timeDataKey]
+        && ((!debug && state[realm][v.timeDataKey]) || (debug && state[realm].recorded_time))
       ) {
         const value = v.processDataKey(state[realm][v.dataKey]);
 
         // If it does, change the value
         displayValuesState[i].value = value;
-        displayValuesState[i].time = mjdToString(state[realm][v.timeDataKey]);
+
+        // If in debug mode, use recorded_time to avoid chart jumping
+        if (debug && state[realm].recorded_time) {
+          displayValuesState[i].time = mjdToString(state[realm].recorded_time);
+        } else {
+          displayValuesState[i].time = mjdToString(state[realm][v.timeDataKey]);
+        }
 
         if (v.dataKeyLowerThreshold
            && value <= v.dataKeyLowerThreshold
