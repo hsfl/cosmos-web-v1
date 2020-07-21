@@ -5,6 +5,7 @@ import { SET_KEY, SET_DATA, SET_ACTIVITY } from '../actions';
  */
 export default function reducer(state = {
   namespace: {},
+  file_list: {},
   list: {},
   data: {},
   realm: null,
