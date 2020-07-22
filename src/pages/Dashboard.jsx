@@ -160,7 +160,6 @@ function Dashboard({
             status: 'success',
             summary: 'Data received',
             scope: `from ${json.node_type}`,
-            time: dayjs(),
           }));
         }
       } catch (error) {

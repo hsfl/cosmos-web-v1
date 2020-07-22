@@ -4,7 +4,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
   Form, Input, Collapse, Button, InputNumber,
 } from 'antd';
-import dayjs from 'dayjs';
 
 import BaseComponent from '../BaseComponent';
 import DisplayValuesTable from './DisplayValues/DisplayValuesTable';
@@ -131,7 +130,6 @@ function DisplayValue({
             status: 'error',
             summary: `${value} ≤ ${v.dataKeyLowerThreshold} ${v.unit}`,
             scope: `for ${v.name}`,
-            time: dayjs(),
           }));
         }
 
@@ -142,7 +140,6 @@ function DisplayValue({
             status: 'error',
             summary: `${value} ≥ ${v.dataKeyUpperThreshold} ${v.unit}`,
             scope: `for ${v.name}`,
-            time: dayjs(),
           }));
         }
       }
