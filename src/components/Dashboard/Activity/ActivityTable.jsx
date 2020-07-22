@@ -38,15 +38,12 @@ function ActivityTable({
    * the difference as a dayjs object. If the difference is over a day, then a string is returned.
    * @param {dayjs object} date
    */
-  const getDiff = (date, calculated = false) => {
+  const getDiff = (date) => {
     if (typeof date !== 'string' && dayjs().diff(date, 'day') < 1) {
-      if (!calculated) {
-        const hour = dayjs().diff(date, 'hour');
-        const minute = dayjs().diff(date, 'minute') % 60;
-        const second = dayjs().diff(date, 'second') % 60;
-        return dayjs().set('hour', hour).set('minute', minute).set('second', second);
-      }
-      return date.add(1, 'second');
+      const hour = dayjs().diff(date, 'hour');
+      const minute = dayjs().diff(date, 'minute') % 60;
+      const second = dayjs().diff(date, 'second') % 60;
+      return dayjs().set('hour', hour).set('minute', minute).set('second', second);
     }
 
     return 'Over a day ago';
@@ -91,11 +88,12 @@ function ActivityTable({
   useEffect(() => {
     /** Set the 1 second timer */
     timer.current = setTimeout(() => {
-      setElapsed(getDiff(elapsed, true));
+      setElapsed(getDiff(activities[0].time));
     }, 1000);
 
     /** Clear timer on unmount */
     return () => clearTimeout(timer.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [elapsed]);
 
   return (
