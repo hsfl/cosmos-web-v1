@@ -18,7 +18,7 @@ function ActivityTimer({
 }
 
 ActivityTimer.propTypes = {
-  elapsed: PropTypes.shape.isRequired,
+  elapsed: PropTypes.oneOfType([PropTypes.string, PropTypes.shape]).isRequired,
 };
 
 export default ActivityTimer;
