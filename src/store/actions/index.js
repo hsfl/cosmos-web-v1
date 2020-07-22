@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 export const SET_KEY = 'SET_KEY';
 export const SET_DATA = 'SET_DATA';
 export const SET_ACTIVITY = 'SET_ACTIVITY';
@@ -33,6 +35,9 @@ export function setData(realm, data) {
 export function setActivity(activity) {
   return {
     type: SET_ACTIVITY,
-    payload: activity,
+    payload: {
+      activity,
+      time: dayjs(),
+    },
   };
 }
