@@ -9,17 +9,17 @@ function ChartValues({
   const namespace = useSelector((s) => s.namespace);
 
   const findPiece = (dataKey) => {
-    if (namespace && namespace.beagle1) {
+    if (namespace && namespace.neutron1) {
       let piece;
       let pieceName = null;
 
-      Object.entries(namespace.beagle1.values).some(([k, v]) => {
+      Object.entries(namespace.neutron1.values).some(([k, v]) => {
         piece = Number(k);
 
         return v.includes(dataKey);
       });
 
-      Object.entries(namespace.beagle1.pieces).some(([k, v]) => {
+      Object.entries(namespace.neutron1.pieces).some(([k, v]) => {
         pieceName = k;
 
         return v === piece;

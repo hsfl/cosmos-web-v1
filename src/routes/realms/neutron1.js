@@ -1414,6 +1414,35 @@ export default {
             },
           },
         },
+        {
+          i: 'satellite-neutron1-dpr-c',
+          x: 0,
+          y: 2,
+          w: 12,
+          h: 18,
+          component: {
+            name: 'Chart',
+            props: {
+              name: 'RSSI Strength',
+              plots: [
+                {
+                  x: [],
+                  y: [],
+                  type: 'scatter',
+                  marker: {
+                    color: 'red',
+                  },
+                  name: 'Motherboard',
+                  YDataKey: 'device_tcv_rssi_000',
+                  timeDataKey: 'device_gps_utc_000',
+                  processYDataKey: (x) => x,
+                  nodeProcess: 'any',
+                  live: true,
+                },
+              ],
+            },
+          },
+        },
       ],
     },
     Payload: {
