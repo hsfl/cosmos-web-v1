@@ -17,6 +17,7 @@ import { MJDtoJavaScriptDate } from '../../utility/time';
 
 const { Panel } = Collapse;
 const { RangePicker } = DatePicker;
+const { TextArea } = Input;
 
 // Set Cesium Ion token only if it is defined in the .env file
 if (process.env.CESIUM_ION_TOKEN) {
@@ -107,13 +108,33 @@ function CesiumGlobe({
 
     // Initialize form values for each value
     orbits.forEach(({
-      name: nameVal, nodeProcess, dataKey: dataKeyVal, timeDataKey, live,
+      name: nameVal,
+      nodeProcess,
+      XDataKey,
+      YDataKey,
+      ZDataKey,
+      processXDataKey,
+      processYDataKey,
+      processZDataKey,
+      timeDataKey,
+      live,
     }, i) => {
       accumulate = {
         ...accumulate,
         [`name_${i}`]: nameVal,
         [`nodeProcess_${i}`]: nodeProcess,
-        [`dataKey_${i}`]: dataKeyVal,
+        [`XDataKey_${i}`]: XDataKey,
+        [`YDataKey_${i}`]: YDataKey,
+        [`ZDataKey_${i}`]: ZDataKey,
+        [`processXDataKey_${i}`]: processXDataKey
+          ? processXDataKey.toString().replace(/^(.+\s?=>\s?)/, 'return ').replace(/^(\s*function\s*.*\([\s\S]*\)\s*{)([\s\S]*)(})/, '$2').trim()
+          : 'return x',
+        [`processYDataKey_${i}`]: processYDataKey
+          ? processYDataKey.toString().replace(/^(.+\s?=>\s?)/, 'return ').replace(/^(\s*function\s*.*\([\s\S]*\)\s*{)([\s\S]*)(})/, '$2').trim()
+          : 'return x',
+        [`processZDataKey_${i}`]: processZDataKey
+          ? processZDataKey.toString().replace(/^(.+\s?=>\s?)/, 'return ').replace(/^(\s*function\s*.*\([\s\S]*\)\s*{)([\s\S]*)(})/, '$2').trim()
+          : 'return x',
         [`timeDataKey_${i}`]: timeDataKey || 'node_utc',
         [`live_${i}`]: live,
       };
@@ -126,11 +147,19 @@ function CesiumGlobe({
   /** Retrieve live orbit data */
   useEffect(() => {
     orbitsState.forEach(({
-      dataKey, timeDataKey, live,
+      XDataKey,
+      YDataKey,
+      ZDataKey,
+      processXDataKey,
+      processYDataKey,
+      processZDataKey,
+      timeDataKey,
+      live,
     }, i) => {
       if (state && realm && state[realm]
-        && state[realm][dataKey]
-        && state[realm][dataKey].pos
+        && state[realm][XDataKey]
+        && state[realm][YDataKey]
+        && state[realm][ZDataKey]
         && ((!debug && state[realm][timeDataKey]) || (debug && state[realm].recorded_time))
         && live
       ) {
@@ -140,38 +169,35 @@ function CesiumGlobe({
           tempOrbit[i].path = new Cesium.SampledPositionProperty();
         }
 
-        if (state[realm][timeDataKey]
-          && (state[realm][dataKey]
-          || state[realm].target_loc_pos_geod_s_lat)
-        ) {
-          const date = Cesium
-            .JulianDate
-            .fromDate(MJDtoJavaScriptDate(state[realm][timeDataKey]));
+        const date = Cesium
+          .JulianDate
+          .fromDate(MJDtoJavaScriptDate(state[realm][timeDataKey]));
 
-          let pos;
+        let pos;
+        const x = typeof processXDataKey === 'function' ? processXDataKey(state[realm][XDataKey]) : state[realm][XDataKey];
+        const y = typeof processYDataKey === 'function' ? processYDataKey(state[realm][YDataKey]) : state[realm][YDataKey];
+        const z = typeof processZDataKey === 'function' ? processZDataKey(state[realm][ZDataKey]) : state[realm][ZDataKey];
 
-          if (coordinateSystem === 'cartesian') {
-            pos = Cesium
-              .Cartesian3
-              .fromArray(
-                [
-                  state[realm][dataKey].pos[0],
-                  state[realm][dataKey].pos[1],
-                  state[realm][dataKey].pos[2],
-                ],
-              );
-            tempOrbit[i].path.addSample(date, pos);
-          }
-          // else if (coordinateSystem === 'geodetic') {
-          //   pos = Cesium.Cartesian3.fromDegrees(
-          //     state[realm].target_loc_pos_geod_s_lat * (180 / Math.PI),
-          //     state[realm].target_loc_pos_geod_s_lon * (180 / Math.PI),
-          //     state[realm].target_loc_pos_geod_s_h,
-          //   );
-          // }
+        if (coordinateSystem === 'cartesian') {
+          pos = Cesium
+            .Cartesian3
+            .fromArray(
+              [
+                x,
+                y,
+                z,
+              ],
+            );
+          tempOrbit[i].path.addSample(date, pos);
+          tempOrbit[i].position = [x, y, z];
         }
-
-        tempOrbit[i].position = state[realm][dataKey].pos;
+        // else if (coordinateSystem === 'geodetic') {
+        //   pos = Cesium.Cartesian3.fromDegrees(
+        //     state[realm].target_loc_pos_geod_s_lat * (180 / Math.PI),
+        //     state[realm].target_loc_pos_geod_s_lon * (180 / Math.PI),
+        //     state[realm].target_loc_pos_geod_s_h,
+        //   );
+        // }
 
         if (coordinateSystem === 'geodetic'
           && state[realm].target_loc_pos_geod_s_lat
@@ -321,14 +347,24 @@ function CesiumGlobe({
     dateRange,
     name: nameVal,
     nodeProcess,
-    dataKey,
+    XDataKey,
+    YDataKey,
+    ZDataKey,
+    processXDataKey,
+    processYDataKey,
+    processZDataKey,
     live,
   }) => {
     // Append new value to array
     orbitsState.push({
       name: nameVal || '',
       nodeProcess,
-      dataKey,
+      XDataKey,
+      YDataKey,
+      ZDataKey,
+      processXDataKey,
+      processYDataKey,
+      processZDataKey,
       position: [0, 0, 0],
     });
 
@@ -340,7 +376,18 @@ function CesiumGlobe({
     editForm.setFieldsValue({
       [`name_${newIndex}`]: nameVal,
       [`nodeProcess_${newIndex}`]: nodeProcess,
-      [`dataKey_${newIndex}`]: dataKey,
+      [`XDataKey_${newIndex}`]: XDataKey,
+      [`YDataKey_${newIndex}`]: YDataKey,
+      [`ZDataKey_${newIndex}`]: ZDataKey,
+      [`processXDataKey_${newIndex}`]: processXDataKey
+        ? processXDataKey.toString().replace(/^(.+\s?=>\s?)/, 'return ').replace(/^(\s*function\s*.*\([\s\S]*\)\s*{)([\s\S]*)(})/, '$2').trim()
+        : 'return x',
+      [`processYDataKey_${newIndex}`]: processYDataKey
+        ? processYDataKey.toString().replace(/^(.+\s?=>\s?)/, 'return ').replace(/^(\s*function\s*.*\([\s\S]*\)\s*{)([\s\S]*)(})/, '$2').trim()
+        : 'return x',
+      [`processZDataKey_${newIndex}`]: processZDataKey
+        ? processZDataKey.toString().replace(/^(.+\s?=>\s?)/, 'return ').replace(/^(\s*function\s*.*\([\s\S]*\)\s*{)([\s\S]*)(})/, '$2').trim()
+        : 'return x',
       [`live_${newIndex}`]: live,
       [`dateRange_${newIndex}`]: dateRange,
     });
@@ -398,7 +445,11 @@ function CesiumGlobe({
                         </strong>
                       &nbsp;
                         <span>
-                          {orbit.dataKey}
+                          {orbit.XDataKey}
+                          ,&nbsp;
+                          {orbit.YDataKey}
+                          ,&nbsp;
+                          {orbit.ZDataKey}
                         </span>
                       </span>
                     )}
@@ -467,8 +518,28 @@ function CesiumGlobe({
                       <Input placeholder="Node Process" onBlur={({ target: { id } }) => processForm(id)} />
                     </Form.Item>
 
-                    <Form.Item label="Data Key" name={`dataKey_${i}`} hasFeedback>
-                      <Input placeholder="Data Key" onBlur={({ target: { id } }) => processForm(id)} />
+                    <Form.Item label="X Data Key" name={`XDataKey_${i}`} hasFeedback>
+                      <Input placeholder="X Data Key" onBlur={({ target: { id } }) => processForm(id)} />
+                    </Form.Item>
+
+                    <Form.Item label="Y Data Key" name={`YDataKey_${i}`} hasFeedback>
+                      <Input placeholder="Y Data Key" onBlur={({ target: { id } }) => processForm(id)} />
+                    </Form.Item>
+
+                    <Form.Item label="Z Data Key" name={`ZDataKey_${i}`} hasFeedback>
+                      <Input placeholder="ZData Key" onBlur={({ target: { id } }) => processForm(id)} />
+                    </Form.Item>
+
+                    <Form.Item label="Process X Data Key" name={`processXDataKey_${i}`} hasFeedback>
+                      <TextArea placeholder="Process X Data Key" onBlur={({ target: { id } }) => processForm(id)} />
+                    </Form.Item>
+
+                    <Form.Item label="Process Y Data Key" name={`processYDataKey_${i}`} hasFeedback>
+                      <TextArea placeholder="Process Y Data Key" onBlur={({ target: { id } }) => processForm(id)} />
+                    </Form.Item>
+
+                    <Form.Item label="Process Z Data Key" name={`processZDataKey_${i}`} hasFeedback>
+                      <TextArea placeholder="Process Z Data Key" onBlur={({ target: { id } }) => processForm(id)} />
                     </Form.Item>
 
                     <Form.Item label="Time Data Key" name={`timeDataKey_${i}`} hasFeedback>
@@ -521,8 +592,28 @@ function CesiumGlobe({
                   <Input placeholder="Node Process" />
                 </Form.Item>
 
-                <Form.Item label="Data Key" name="dataKey" hasFeedback>
-                  <Input placeholder="Data Key" />
+                <Form.Item label="X Data Key" name="XdataKey" hasFeedback>
+                  <Input placeholder="XData Key" />
+                </Form.Item>
+
+                <Form.Item label="Y Data Key" name="YDataKey" hasFeedback>
+                  <Input placeholder="YData Key" />
+                </Form.Item>
+
+                <Form.Item label="Z Data Key" name="ZDataKey" hasFeedback>
+                  <Input placeholder="ZData Key" />
+                </Form.Item>
+
+                <Form.Item label="Process X Data Key" name="processXDataKey" hasFeedback help="Define the function body (in JavaScript) here to process the variable 'x'.">
+                  <TextArea placeholder="Process X Data Key" />
+                </Form.Item>
+
+                <Form.Item label="Process Y Data Key" name="processYDataKey" hasFeedback help="Define the function body (in JavaScript) here to process the variable 'x'.">
+                  <TextArea placeholder="Process Y Data Key" />
+                </Form.Item>
+
+                <Form.Item label="Process Z Data Key" name="processZDataKey" hasFeedback help="Define the function body (in JavaScript) here to process the variable 'x'.">
+                  <TextArea placeholder="Process Z Data Key" />
                 </Form.Item>
 
                 <Form.Item label="Time Data Key" name="timeDataKey" hasFeedback>
@@ -657,7 +748,12 @@ CesiumGlobe.propTypes = {
       name: PropTypes.string,
       modelFileName: PropTypes.string,
       nodeProcess: PropTypes.string,
-      dataKey: PropTypes.string,
+      XDataKey: PropTypes.string,
+      YDataKey: PropTypes.string,
+      ZDataKey: PropTypes.string,
+      processXDataKey: PropTypes.func,
+      processYDataKey: PropTypes.func,
+      processZDataKey: PropTypes.func,
       timeDataKey: PropTypes.string,
       processDataKey: PropTypes.func,
       live: PropTypes.bool,

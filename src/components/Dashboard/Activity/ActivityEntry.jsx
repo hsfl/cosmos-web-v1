@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons';
+import { CheckCircleTwoTone, ExclamationCircleTwoTone } from '@ant-design/icons';
 
 function ActivityEntry({
   status,
@@ -12,7 +12,7 @@ function ActivityEntry({
     <tr className="truncate ...">
       <td>
         {
-          status === 'success' ? <CheckCircleTwoTone twoToneColor="#52c41a" /> : <CloseCircleTwoTone twoToneColor="#d80000" />
+          status === 'success' ? <CheckCircleTwoTone twoToneColor="#52c41a" /> : <ExclamationCircleTwoTone twoToneColor="#bc6b1a" />
         }
         &nbsp;
       </td>
