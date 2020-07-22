@@ -88,7 +88,7 @@ function ActivityTable({
   useEffect(() => {
     /** Set the 1 second timer */
     timer.current = setTimeout(() => {
-      setElapsed(getDiff(activities[0].time, true));
+      setElapsed(getDiff(activities[0].time));
     }, 1000);
 
     /** Clear timer on unmount */
