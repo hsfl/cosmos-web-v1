@@ -36,7 +36,9 @@ ActivityEntry.propTypes = {
   status: PropTypes.string.isRequired,
   summary: PropTypes.string.isRequired,
   scope: PropTypes.string.isRequired,
-  time: PropTypes.string.isRequired,
+  time: PropTypes.shape({
+    utc: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 export default ActivityEntry;
