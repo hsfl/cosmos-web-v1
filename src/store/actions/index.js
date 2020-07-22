@@ -36,7 +36,7 @@ export function setActivity(activity) {
   return {
     type: SET_ACTIVITY,
     payload: {
-      activity,
+      ...activity,
       time: dayjs(),
     },
   };
