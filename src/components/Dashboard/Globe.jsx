@@ -71,7 +71,6 @@ function CesiumGlobe({
   /** Accessing the neutron1 messages from the socket */
   const state = useSelector((s) => s.data);
   const realm = useSelector((s) => s.realm);
-  const debug = useSelector((s) => s.debug);
 
   /** Storage for global; form values */
   const [orbitsForm] = Form.useForm();
@@ -160,7 +159,8 @@ function CesiumGlobe({
         && state[realm][XDataKey]
         && state[realm][YDataKey]
         && state[realm][ZDataKey]
-        && ((!debug && state[realm][timeDataKey]) || (debug && state[realm].recorded_time))
+        && ((!process.env.FLIGHT_MODE && state[realm].recorded_time)
+        || (process.env.FLIGHT_MODE && state[realm][timeDataKey]))
         && live
       ) {
         const tempOrbit = [...orbitsState];
@@ -169,9 +169,17 @@ function CesiumGlobe({
           tempOrbit[i].path = new Cesium.SampledPositionProperty();
         }
 
-        const date = Cesium
-          .JulianDate
-          .fromDate(MJDtoJavaScriptDate(state[realm][timeDataKey]));
+        let date;
+
+        if (process.env.FLIGHT_MODE && state[realm][timeDataKey]) {
+          date = Cesium
+            .JulianDate
+            .fromDate(MJDtoJavaScriptDate(state[realm][timeDataKey]));
+        } else {
+          date = Cesium
+            .JulianDate
+            .fromDate(MJDtoJavaScriptDate(state[realm].recorded_time));
+        }
 
         let pos;
         const x = typeof processXDataKey === 'function' ? processXDataKey(state[realm][XDataKey]) : state[realm][XDataKey];
