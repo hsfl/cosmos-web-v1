@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { DatePicker, Button, Switch } from 'antd';
+import { DatePicker, Button } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 
@@ -13,7 +13,6 @@ function GetHistoricalData({
 }) {
   const dispatch = useDispatch();
   const globalQueue = useSelector((s) => s.globalQueue);
-  const debug = useSelector((s) => s.debug);
 
   const [globalHistoricalDate, setGlobalHistoricalDate] = useState(null);
 
@@ -58,14 +57,6 @@ function GetHistoricalData({
       >
         Past Hour
       </Button>
-      &nbsp;
-      &nbsp;
-      <Switch
-        checked={debug}
-        onClick={(checked) => dispatch(set('debug', checked))}
-        checkedChildren="Debug"
-        unCheckedChildren="Flight"
-      />
     </>
   );
 }

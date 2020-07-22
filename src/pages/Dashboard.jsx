@@ -122,6 +122,7 @@ function Dashboard({
 
     // Set current realm
     dispatch(set('realm', id));
+    const flightMode = process.env.FLIGHT_MODE;
 
     /** Get latest data from neutron1_exec */
     live.onmessage = ({ data }) => {
@@ -131,7 +132,9 @@ function Dashboard({
 
         if (json.node_type === 'list') {
           dispatch(set('list', json));
-        } else if (realms[id].includes(node) && process !== 'soh') {
+        // Send data if allowed node AND if flight mode and soh, send,
+        // OW if not flight mode don't send soh
+        } else if (realms[id].includes(node) && ((flightMode) || (!flightMode && process !== 'soh'))) {
           dispatch(set('lastDate', dayjs()));
 
           const aliases = {

@@ -56,7 +56,6 @@ function Chart({
   const globalHistoricalDate = useSelector((s) => s.globalHistoricalDate);
   const globalQueue = useSelector((s) => s.globalQueue);
   const realm = useSelector((s) => s.realm);
-  const debug = useSelector((s) => s.debug);
 
   /** Storage for global form values */
   const [plotsForm] = Form.useForm();
@@ -205,7 +204,8 @@ function Chart({
     plotsState.forEach((p, i) => {
       // Upon context change, see if changes affect this chart's values
       if (state && realm && state[realm]
-        && ((!debug && state[realm][p.timeDataKey]) || (debug && state[realm].recorded_time))
+        && ((!process.env.FLIGHT_MODE && state[realm].recorded_time)
+        || (process.env.FLIGHT_MODE && state[realm][p.timeDataKey]))
         && state[realm][p.YDataKey]
         && p.live
       ) {
@@ -213,10 +213,10 @@ function Chart({
 
         // Check if polar or not
         if (polar) {
-          if (debug && state[realm].recorded_time) {
-            plotsState[i].r.push(mjdToString(state[realm].recorded_time));
-          } else {
+          if (process.env.FLIGHT_MODE && state[realm][p.timeDataKey]) {
             plotsState[i].r.push(mjdToString(state[realm][p.timeDataKey]));
+          } else {
+            plotsState[i].r.push(mjdToString(state[realm].recorded_time));
           }
 
           plotsState[i]
@@ -227,10 +227,10 @@ function Chart({
                 : state[realm][p.ThetaDataKey],
             );
         } else {
-          if (debug && state[realm].recorded_time) {
-            plotsState[i].x.push(mjdToString(state[realm].recorded_time));
-          } else {
+          if (process.env.FLIGHT_MODE && state[realm][p.timeDataKey]) {
             plotsState[i].x.push(mjdToString(state[realm][p.timeDataKey]));
+          } else {
+            plotsState[i].x.push(mjdToString(state[realm].recorded_time));
           }
 
           plotsState[i]
