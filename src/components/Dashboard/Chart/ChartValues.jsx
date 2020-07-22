@@ -14,15 +14,23 @@ function ChartValues({
       let pieceName = null;
 
       Object.entries(namespace.neutron1.values).some(([k, v]) => {
-        piece = Number(k);
+        const contains = v.includes(dataKey);
 
-        return v.includes(dataKey);
+        if (contains) {
+          piece = Number(k);
+        }
+
+        return contains;
       });
 
       Object.entries(namespace.neutron1.pieces).some(([k, v]) => {
-        pieceName = k;
+        const contains = v === piece;
 
-        return v === piece;
+        if (contains) {
+          pieceName = k;
+        }
+
+        return contains;
       });
 
       return pieceName;
