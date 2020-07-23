@@ -1150,63 +1150,11 @@ export default {
           },
         },
         {
-          i: 'satellite-neutron1-duplex-b',
+          i: 'satellite-neutron1-duplex-c',
           x: 3,
           y: 0,
           w: 3,
-          h: 5,
-          component: {
-            name: 'DisplayValue',
-            props: {
-              name: 'Duplex Status',
-              displayValues: [
-                {
-                  name: 'Power Mode',
-                  nodeProcess: 'any',
-                  dataKey: 'device_swch_volt_004',
-                  timeDataKey: 'device_gps_utc_000',
-                  unit: '',
-                  processDataKey: (x) => {
-                    if (x < 4) {
-                      return 'Off';
-                    }
-                    return 'On';
-                  },
-                },
-                {
-                  name: 'Phone Number',
-                  nodeProcess: 'any',
-                  dataKey: 'device_gps_geods_000',
-                  timeDataKey: 'device_gps_utc_000',
-                  unit: 'm',
-                  processDataKey: (x) => x.h,
-                },
-                {
-                  name: 'ESN',
-                  nodeProcess: 'any',
-                  dataKey: 'device_tcv_flag_000',
-                  timeDataKey: 'device_gps_utc_000',
-                  unit: '',
-                  processDataKey: (x) => x,
-                },
-                {
-                  name: 'Time of Day',
-                  nodeProcess: 'any',
-                  dataKey: 'device_gps_utc_000',
-                  timeDataKey: 'device_gps_utc_000',
-                  unit: '',
-                  processDataKey: (x) => mjdToString(x),
-                },
-              ],
-            },
-          },
-        },
-        {
-          i: 'satellite-neutron1-duplex-c',
-          x: 3,
-          y: 1,
-          w: 3,
-          h: 7,
+          h: 12,
           component: {
             name: 'DisplayValue',
             props: {
@@ -1265,132 +1213,11 @@ export default {
           },
         },
         {
-          i: 'satellite-neutron1-duplex-d',
-          x: 3,
-          y: 2,
-          w: 3,
-          h: 6,
-          component: {
-            name: 'DisplayValue',
-            props: {
-              name: 'Position Location Service',
-              displayValues: [
-                {
-                  name: 'Latitude',
-                  nodeProcess: 'any',
-                  dataKey: 'device_gps_geods_000',
-                  timeDataKey: 'device_gps_utc_000',
-                  unit: '°',
-                  processDataKey: (x) => (x.lat * (180 / Math.PI)).toFixed(5),
-                },
-                {
-                  name: 'Longitude',
-                  nodeProcess: 'any',
-                  dataKey: 'device_gps_geods_000',
-                  timeDataKey: 'device_gps_utc_000',
-                  unit: '°',
-                  processDataKey: (x) => (x.lon * (180 / Math.PI)).toFixed(5),
-                },
-                {
-                  name: 'Altitude',
-                  nodeProcess: 'any',
-                  dataKey: 'device_gps_geods_000',
-                  timeDataKey: 'device_gps_utc_000',
-                  unit: 'm',
-                  processDataKey: (x) => x.h,
-                },
-                {
-                  name: 'Time of Position',
-                  nodeProcess: 'any',
-                  dataKey: 'device_tcv_flag_000',
-                  timeDataKey: 'device_gps_utc_000',
-                  unit: '',
-                  processDataKey: (x) => x,
-                },
-                {
-                  name: 'Position Error',
-                  nodeProcess: 'any',
-                  dataKey: 'placeholder',
-                  timeDataKey: 'device_gps_utc_000',
-                  unit: '',
-                  processDataKey: (x) => mjdToString(x),
-                },
-              ],
-            },
-          },
-        },
-        {
-          i: 'satellite-neutron1-duplex-e',
+          i: 'satellite-neutron1-duplex-g',
           x: 6,
           y: 0,
-          w: 6,
-          h: 18,
-          component: {
-            name: 'Globe',
-            props: {
-              name: 'Orbit',
-              orbits: [
-                {
-                  name: 'neutron1',
-                  modelFileName: 'cubesat1.glb',
-                  nodeProcess: 'any',
-                  XDataKey: 'device_gps_geocs_000',
-                  YDataKey: 'device_gps_geocs_000',
-                  ZDataKey: 'device_gps_geocs_000',
-                  processXDataKey: (x) => x.h * Math.cos(x.lat) * Math.cos(x.lon),
-                  processYDataKey: (x) => x.h * Math.cos(x.lat) * Math.sin(x.lon),
-                  processZDataKey: (x) => x.h * Math.sin(x.lat),
-                  timeDataKey: 'device_gps_utc_000',
-                  live: true,
-                  position: [21.289373, 157.917480, 350000.0],
-                  orientation: {
-                    d: {
-                      x: 0,
-                      y: 0,
-                      z: 0,
-                    },
-                    w: 0,
-                  },
-                },
-              ],
-            },
-          },
-        },
-        {
-          i: 'satellite-neutron1-dpr-f',
-          x: 3,
-          y: 3,
-          w: 9,
-          h: 18,
-          component: {
-            name: 'Chart',
-            props: {
-              name: 'RSSI Strength',
-              plots: [
-                {
-                  x: [],
-                  y: [],
-                  type: 'scatter',
-                  marker: {
-                    color: 'red',
-                  },
-                  name: 'Motherboard',
-                  YDataKey: 'device_tcv_rssi_000',
-                  timeDataKey: 'device_gps_utc_000',
-                  processYDataKey: (x) => x,
-                  nodeProcess: 'any',
-                  live: true,
-                },
-              ],
-            },
-          },
-        },
-        {
-          i: 'satellite-neutron1-duplex-g',
-          x: 0,
-          y: 1,
           w: 3,
-          h: 14,
+          h: 12,
           component: {
             name: 'DisplayValue',
             props: {
@@ -1434,13 +1261,13 @@ export default {
                   unit: '',
                   processDataKey: (x) => {
                     const ready = ['Not Ready', 'Ready'];
-                    return ready[x >> 1 & 1];
+                    return ready[x >> 8 & 0x4];
                   },
                 },
                 {
                   name: 'Provider',
                   nodeProcess: 'any',
-                  dataKey: 'device_tcv_flag_000',
+                  dataKey: 'placeholder',
                   timeDataKey: 'device_gps_utc_000',
                   unit: '',
                   processDataKey: (x) => x,
@@ -1448,7 +1275,7 @@ export default {
                 {
                   name: 'Gateway',
                   nodeProcess: 'any',
-                  dataKey: 'device_tcv_flag_000',
+                  dataKey: 'placeholder',
                   timeDataKey: 'device_gps_utc_000',
                   unit: '',
                   processDataKey: (x) => x,
@@ -1460,17 +1287,6 @@ export default {
                   timeDataKey: 'device_gps_utc_000',
                   unit: '',
                   processDataKey: (x) => x,
-                },
-                {
-                  name: 'Service Ready',
-                  nodeProcess: 'any',
-                  dataKey: 'device_tcv_flag_000',
-                  timeDataKey: 'device_gps_utc_000',
-                  unit: '',
-                  processDataKey: (x) => {
-                    const ready = ['Not Ready', 'Ready'];
-                    return ready[x >> 1 & 1];
-                  },
                 },
                 {
                   name: 'Registration',
@@ -1502,7 +1318,7 @@ export default {
                   unit: '',
                   processDataKey: (x) => {
                     const roaming = ['NO', 'YES'];
-                    return roaming[x >> 4 & 1];
+                    return roaming[x >> 12 & 0x4];
                   },
                 },
                 {
@@ -1513,7 +1329,7 @@ export default {
                   unit: '',
                   processDataKey: (x) => {
                     const roaming = ['NO', 'YES'];
-                    return roaming[x >> 4 & 1];
+                    return roaming[x >> 16 & 0x3];
                   },
                 },
                 {
@@ -1531,6 +1347,283 @@ export default {
                   timeDataKey: 'device_gps_utc_000',
                   unit: '',
                   processDataKey: (x) => x,
+                },
+                {
+                  name: 'Service Ready',
+                  nodeProcess: 'any',
+                  dataKey: 'device_tcv_flag_000',
+                  timeDataKey: 'device_gps_utc_000',
+                  unit: '',
+                  processDataKey: (x) => {
+                    const ready = ['Not Ready', 'Ready'];
+                    return ready[x >> 1 & 1];
+                  },
+                },
+              ],
+            },
+          },
+        },
+        {
+          i: 'satellite-neutron1-duplex-b',
+          x: 9,
+          y: 0,
+          w: 3,
+          h: 6,
+          component: {
+            name: 'DisplayValue',
+            props: {
+              name: 'Duplex Status',
+              displayValues: [
+                {
+                  name: 'Power Mode',
+                  nodeProcess: 'any',
+                  dataKey: 'device_swch_volt_004',
+                  timeDataKey: 'device_gps_utc_000',
+                  unit: '',
+                  processDataKey: (x) => {
+                    if (x < 4) {
+                      return 'Off';
+                    }
+                    return 'On';
+                  },
+                },
+                {
+                  name: 'Uptime',
+                  nodeProcess: 'any',
+                  dataKey: 'device_gps_uptime_000',
+                  timeDataKey: 'device_gps_utc_000',
+                  unit: 'm',
+                  processDataKey: (x) => x.h,
+                },
+                {
+                  name: 'Phone Number',
+                  nodeProcess: 'any',
+                  dataKey: 'device_gps_geods_000',
+                  timeDataKey: 'device_gps_utc_000',
+                  unit: 'm',
+                  processDataKey: (x) => x.h,
+                },
+                {
+                  name: 'ESN',
+                  nodeProcess: 'any',
+                  dataKey: 'device_tcv_flag_000',
+                  timeDataKey: 'device_gps_utc_000',
+                  unit: '',
+                  processDataKey: (x) => x,
+                },
+                {
+                  name: 'Time of Day',
+                  nodeProcess: 'any',
+                  dataKey: 'device_gps_utc_000',
+                  timeDataKey: 'device_gps_utc_000',
+                  unit: '',
+                  processDataKey: (x) => mjdToString(x),
+                },
+              ],
+            },
+          },
+        },
+        {
+          i: 'satellite-neutron1-duplex-d',
+          x: 9,
+          y: 1,
+          w: 3,
+          h: 6,
+          component: {
+            name: 'DisplayValue',
+            props: {
+              name: 'Position Location Service',
+              displayValues: [
+                {
+                  name: 'Time of Position',
+                  nodeProcess: 'any',
+                  dataKey: 'device_gps_utc_000',
+                  timeDataKey: 'device_gps_utc_000',
+                  unit: '',
+                  processDataKey: (x) => mjdToString(x),
+                },
+                {
+                  name: 'Latitude',
+                  nodeProcess: 'any',
+                  dataKey: 'device_gps_geods_000',
+                  timeDataKey: 'device_gps_utc_000',
+                  unit: '°',
+                  processDataKey: (x) => (x.lat * (180 / Math.PI)).toFixed(5),
+                },
+                {
+                  name: 'Longitude',
+                  nodeProcess: 'any',
+                  dataKey: 'device_gps_geods_000',
+                  timeDataKey: 'device_gps_utc_000',
+                  unit: '°',
+                  processDataKey: (x) => (x.lon * (180 / Math.PI)).toFixed(5),
+                },
+                {
+                  name: 'Altitude',
+                  nodeProcess: 'any',
+                  dataKey: 'device_gps_geods_000',
+                  timeDataKey: 'device_gps_utc_000',
+                  unit: 'm',
+                  processDataKey: (x) => x.h,
+                },
+                {
+                  name: 'Position Error',
+                  nodeProcess: 'any',
+                  dataKey: 'placeholder',
+                  timeDataKey: 'device_gps_utc_000',
+                  unit: '',
+                  processDataKey: (x) => mjdToString(x),
+                },
+              ],
+            },
+          },
+        },
+        {
+          i: 'satellite-neutron1-duplex-e',
+          x: 0,
+          y: 3,
+          w: 6,
+          h: 18,
+          component: {
+            name: 'Globe',
+            props: {
+              name: 'Orbit',
+              orbits: [
+                {
+                  name: 'neutron1',
+                  modelFileName: 'cubesat1.glb',
+                  nodeProcess: 'any',
+                  XDataKey: 'device_gps_geods_000',
+                  YDataKey: 'device_gps_geods_000',
+                  ZDataKey: 'device_gps_geods_000',
+                  processXDataKey: (x) => x.h * Math.cos(x.lat) * Math.cos(x.lon),
+                  processYDataKey: (x) => x.h * Math.cos(x.lat) * Math.sin(x.lon),
+                  processZDataKey: (x) => x.h * Math.sin(x.lat),
+                  timeDataKey: 'device_gps_utc_000',
+                  live: true,
+                  position: [21.289373, 157.917480, 350000.0],
+                  orientation: {
+                    d: {
+                      x: 0,
+                      y: 0,
+                      z: 0,
+                    },
+                    w: 0,
+                  },
+                },
+              ],
+            },
+          },
+        },
+        {
+          i: 'satellite-neutron1-dpr-f',
+          x: 6,
+          y: 2,
+          w: 6,
+          h: 18,
+          component: {
+            name: 'Chart',
+            props: {
+              name: 'RSSI Strength',
+              plots: [
+                {
+                  x: [],
+                  y: [],
+                  type: 'scatter',
+                  marker: {
+                    color: 'red',
+                  },
+                  name: 'RSSI Strength',
+                  YDataKey: 'device_tcv_rssi_000',
+                  timeDataKey: 'device_gps_utc_000',
+                  processYDataKey: (x) => x,
+                  nodeProcess: 'any',
+                  live: true,
+                },
+              ],
+            },
+          },
+        },
+        {
+          i: 'satellite-neutron1-dpr-i',
+          x: 0,
+          y: 3,
+          w: 12,
+          h: 18,
+          component: {
+            name: 'Chart',
+            props: {
+              name: 'Service Statuses',
+              plots: [
+                {
+                  x: [],
+                  y: [],
+                  type: 'scatter',
+                  marker: {
+                    color: 'red',
+                  },
+                  name: 'Service Mode',
+                  YDataKey: 'device_tcv_flag_000',
+                  timeDataKey: 'device_gps_utc_000',
+                  processYDataKey: (x) => x >> 8 & 0x4,
+                  nodeProcess: 'any',
+                  live: true,
+                },
+                {
+                  x: [],
+                  y: [],
+                  type: 'scatter',
+                  marker: {
+                    color: 'red',
+                  },
+                  name: 'Registration',
+                  YDataKey: 'device_tcv_flag_000',
+                  timeDataKey: 'device_gps_utc_000',
+                  processYDataKey: (x) => x >> 3 & 1,
+                  nodeProcess: 'any',
+                  live: true,
+                },
+                {
+                  x: [],
+                  y: [],
+                  type: 'scatter',
+                  marker: {
+                    color: 'red',
+                  },
+                  name: 'Gateway',
+                  YDataKey: 'placeholder',
+                  timeDataKey: 'device_gps_utc_000',
+                  processYDataKey: (x) => x,
+                  nodeProcess: 'any',
+                  live: true,
+                },
+                {
+                  x: [],
+                  y: [],
+                  type: 'scatter',
+                  marker: {
+                    color: 'red',
+                  },
+                  name: 'Call State',
+                  YDataKey: 'device_tcv_flag_000',
+                  timeDataKey: 'device_gps_utc_000',
+                  processYDataKey: (x) => x >> 12 & 0x4,
+                  nodeProcess: 'any',
+                  live: true,
+                },
+                {
+                  x: [],
+                  y: [],
+                  type: 'scatter',
+                  marker: {
+                    color: 'red',
+                  },
+                  name: 'Service Ready',
+                  YDataKey: 'device_tcv_flag_000',
+                  timeDataKey: 'device_gps_utc_000',
+                  processYDataKey: (x) => x >> 1 & 1,
+                  nodeProcess: 'any',
+                  live: true,
                 },
               ],
             },
