@@ -29,14 +29,14 @@ function MissionEventsDisplay({
   /** Columns in the table for the MED */
   const [columns] = useState([
     {
-      title: 'UTC',
-      dataIndex: 'time',
-      key: 'time',
-    },
-    {
       title: 'Event Name',
       dataIndex: 'name',
       key: 'name',
+    },
+    {
+      title: 'Sent',
+      dataIndex: 'sent',
+      key: 'sent',
     },
     {
       title: 'Executed',
@@ -63,7 +63,7 @@ function MissionEventsDisplay({
         delete newObj._id;
         return {
           key: i,
-          time: mjdToString(el.event_utc),
+          sent: mjdToString(el.event_utc),
           name: el.event_name,
           exec: el.event_utcexec != null ? mjdToString(el.event_utcexec) : 'Pending...',
           log: newObj,
@@ -87,7 +87,7 @@ function MissionEventsDisplay({
     if (Object.keys(live).length !== 0) {
       const executed = Object.keys(live).find((item) => item.split(':')[1] === 'executed');
       if (live[executed] != null) {
-        const idx = info.findIndex((event) => event.time === live[executed].event_utc);
+        const idx = info.findIndex((event) => event.sent === live[executed].event_utc);
         info[idx].exec = live[executed].utcexec;
         info[idx].log = live[executed];
       }
