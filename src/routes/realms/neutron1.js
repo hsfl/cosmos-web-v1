@@ -260,7 +260,7 @@ export default {
                 dataKey: 'node_powmode',
                 timeDataKey: 'node_utc',
                 unit: '',
-                processDataKey: (x) => { const powerMode = ['Off', 'Low Power', 'Standard Power', 'Standard ADCS', 'Standard Telecomm', 'Neutron Mission']; return powerMode[x]; },
+                processDataKey: (x) => { const powerMode = ['Off', 'Low Power', 'Standard Power', 'Standard ADCS', 'Standard Telecomm', 'Neutron Mission']; return `${powerMode[x]} (${x})`; },
               },
             ],
           },
