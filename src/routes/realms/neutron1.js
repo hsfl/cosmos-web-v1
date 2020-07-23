@@ -5232,7 +5232,7 @@ export default {
           x: 0,
           y: 10,
           w: 12,
-          h: 10,
+          h: 15,
           component: {
             name: 'Commands',
             props: {

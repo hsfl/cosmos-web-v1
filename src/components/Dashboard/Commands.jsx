@@ -147,51 +147,49 @@ function Commands({
         },
       });
 
-      try {
-        const json = JSON.parse(data);
+      // json checking for json.output, json.error
+      if (data && data.output && data.output.requests) {
+        const sortedRequests = [];
+        const requests = {};
 
-        // json checking for json.output, json.error
-        if (json && json.output && json.output.requests) {
-          const sortedRequests = [];
-          const requests = {};
+        // Clear agent requests for new agent
+        data.output.requests.forEach((request) => {
+          sortedRequests.push(
+            request.token,
+          );
 
-          // Clear agent requests for new agent
-          json.output.requests.forEach((request) => {
-            sortedRequests.push(
-              request.token,
-            );
+          // Make commands mapped into an object
+          requests[request.token] = {
+            ...request,
+          };
+        });
 
-            // Make commands mapped into an object
-            requests[request.token] = {
-              ...request,
-            };
-          });
+        // Alphabetical order
+        sortedRequests.sort();
 
-          // Alphabetical order
-          sortedRequests.sort();
+        // Set agent requests
+        setAgentRequests(requests);
+        setSortedAgentRequests(sortedRequests);
 
-          // Set agent requests
-          setAgentRequests(requests);
-          setSortedAgentRequests(sortedRequests);
-
-          message.destroy();
-          message.success('Retrieved agent requests.');
-        } else if (json && json.output) {
-          // agent node proc cmd
-          setCommandHistory([
-            ...commandHistoryEl.current,
-            `${dayjs.utc().format()} ${data.output}`,
-          ]);
-
-          message.destroy();
-        } else if (json && json.error) {
-          throw new Error(json.error);
-        } else {
-          throw new Error();
-        }
-      } catch (error) {
+        message.destroy();
+        message.success('Retrieved agent requests.');
+      } else if (data && data.output) {
+        // agent node proc cmd
+        setCommandHistory([
+          ...commandHistoryEl.current,
+          `${dayjs.utc().format()} ${data.output}`,
+        ]);
+        message.destroy();
+      } else if (data && data.error) {
+        throw new Error(data.error);
+      } else if (data && typeof data === 'object') {
         message.destroy();
         // non-json
+        setCommandHistory([
+          ...commandHistoryEl.current,
+          `${dayjs.utc().format()} ${JSON.stringify(data, null, 2)}`,
+        ]);
+      } else {
         setCommandHistory([
           ...commandHistoryEl.current,
           `${dayjs.utc().format()} ${data}`,
@@ -307,9 +305,11 @@ function Commands({
           ]
         </span>
         &nbsp;
-        {
-          allCommands.join(' ')
-        }
+        <pre className="text-xs">
+          {
+            allCommands.join(' ')
+          }
+        </pre>
       </div>
     );
   };
@@ -454,7 +454,7 @@ function Commands({
         </div> */}
       </div>
       <div
-        className="border border-gray-300 rounded mb-2 p-4 bg-white font-mono h-32 max-h-full resize-y overflow-y-auto"
+        className="border border-gray-300 rounded mb-2 p-4 bg-white font-mono h-64 max-h-full resize-y overflow-y-auto"
         ref={cliEl}
       >
         {
