@@ -25,9 +25,9 @@ function GetHistoricalData({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [globalQueue]);
 
-  const getPastHourData = () => {
+  const getPastHourData = (hour) => {
     dispatch(set('globalQueue', amountOfComponents));
-    dispatch(set('globalHistoricalDate', [dayjs().subtract(1, 'hour'), dayjs()]));
+    dispatch(set('globalHistoricalDate', [dayjs().subtract(hour, 'hour'), dayjs()]));
   };
 
   return (
@@ -53,9 +53,16 @@ function GetHistoricalData({
       &nbsp;
       <Button
         size="small"
-        onClick={() => getPastHourData()}
+        onClick={() => getPastHourData(1)}
       >
         Past Hour
+      </Button>
+      &nbsp;
+      <Button
+        size="small"
+        onClick={() => getPastHourData(6)}
+      >
+        Past 6 Hours
       </Button>
     </>
   );
