@@ -1289,17 +1289,6 @@ export default {
                   processDataKey: (x) => x,
                 },
                 {
-                  name: 'Service Ready',
-                  nodeProcess: 'any',
-                  dataKey: 'device_tcv_flag_000',
-                  timeDataKey: 'device_gps_utc_000',
-                  unit: '',
-                  processDataKey: (x) => {
-                    const ready = ['Not Ready', 'Ready'];
-                    return ready[x >> 1 & 1];
-                  },
-                },
-                {
                   name: 'Registration',
                   nodeProcess: 'any',
                   dataKey: 'device_tcv_flag_000',
@@ -1359,6 +1348,17 @@ export default {
                   unit: '',
                   processDataKey: (x) => x,
                 },
+                {
+                  name: 'Service Ready',
+                  nodeProcess: 'any',
+                  dataKey: 'device_tcv_flag_000',
+                  timeDataKey: 'device_gps_utc_000',
+                  unit: '',
+                  processDataKey: (x) => {
+                    const ready = ['Not Ready', 'Ready'];
+                    return ready[x >> 1 & 1];
+                  },
+                },
               ],
             },
           },
@@ -1386,6 +1386,14 @@ export default {
                     }
                     return 'On';
                   },
+                },
+                {
+                  name: 'Uptime',
+                  nodeProcess: 'any',
+                  dataKey: 'device_gps_uptime_000',
+                  timeDataKey: 'device_gps_utc_000',
+                  unit: 'm',
+                  processDataKey: (x) => x.h,
                 },
                 {
                   name: 'Phone Number',
@@ -1427,6 +1435,14 @@ export default {
               name: 'Position Location Service',
               displayValues: [
                 {
+                  name: 'Time of Position',
+                  nodeProcess: 'any',
+                  dataKey: 'device_tcv_flag_000',
+                  timeDataKey: 'device_gps_utc_000',
+                  unit: '',
+                  processDataKey: (x) => x,
+                },
+                {
                   name: 'Latitude',
                   nodeProcess: 'any',
                   dataKey: 'device_gps_geods_000',
@@ -1449,14 +1465,6 @@ export default {
                   timeDataKey: 'device_gps_utc_000',
                   unit: 'm',
                   processDataKey: (x) => x.h,
-                },
-                {
-                  name: 'Time of Position',
-                  nodeProcess: 'any',
-                  dataKey: 'device_tcv_flag_000',
-                  timeDataKey: 'device_gps_utc_000',
-                  unit: '',
-                  processDataKey: (x) => x,
                 },
                 {
                   name: 'Position Error',
