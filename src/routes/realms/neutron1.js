@@ -1261,13 +1261,13 @@ export default {
                   unit: '',
                   processDataKey: (x) => {
                     const ready = ['Not Ready', 'Ready'];
-                    return ready[x >> 1 & 1];
+                    return ready[x >> 8 & 0x4];
                   },
                 },
                 {
                   name: 'Provider',
                   nodeProcess: 'any',
-                  dataKey: 'device_tcv_flag_000',
+                  dataKey: 'placeholder',
                   timeDataKey: 'device_gps_utc_000',
                   unit: '',
                   processDataKey: (x) => x,
@@ -1275,7 +1275,7 @@ export default {
                 {
                   name: 'Gateway',
                   nodeProcess: 'any',
-                  dataKey: 'device_tcv_flag_000',
+                  dataKey: 'placeholder',
                   timeDataKey: 'device_gps_utc_000',
                   unit: '',
                   processDataKey: (x) => x,
@@ -1318,7 +1318,7 @@ export default {
                   unit: '',
                   processDataKey: (x) => {
                     const roaming = ['NO', 'YES'];
-                    return roaming[x >> 4 & 1];
+                    return roaming[x >> 12 & 0x4];
                   },
                 },
                 {
@@ -1329,7 +1329,7 @@ export default {
                   unit: '',
                   processDataKey: (x) => {
                     const roaming = ['NO', 'YES'];
-                    return roaming[x >> 4 & 1];
+                    return roaming[x >> 16 & 0x3];
                   },
                 },
                 {
@@ -1437,10 +1437,10 @@ export default {
                 {
                   name: 'Time of Position',
                   nodeProcess: 'any',
-                  dataKey: 'device_tcv_flag_000',
+                  dataKey: 'device_gps_utc_000',
                   timeDataKey: 'device_gps_utc_000',
                   unit: '',
-                  processDataKey: (x) => x,
+                  processDataKey: (x) => mjdToString(x),
                 },
                 {
                   name: 'Latitude',
@@ -1493,9 +1493,9 @@ export default {
                   name: 'neutron1',
                   modelFileName: 'cubesat1.glb',
                   nodeProcess: 'any',
-                  XDataKey: 'device_gps_geocs_000',
-                  YDataKey: 'device_gps_geocs_000',
-                  ZDataKey: 'device_gps_geocs_000',
+                  XDataKey: 'device_gps_geods_000',
+                  YDataKey: 'device_gps_geods_000',
+                  ZDataKey: 'device_gps_geods_000',
                   processXDataKey: (x) => x.h * Math.cos(x.lat) * Math.cos(x.lon),
                   processYDataKey: (x) => x.h * Math.cos(x.lat) * Math.sin(x.lon),
                   processZDataKey: (x) => x.h * Math.sin(x.lat),
@@ -1533,7 +1533,7 @@ export default {
                   marker: {
                     color: 'red',
                   },
-                  name: 'Motherboard',
+                  name: 'RSSI Strength',
                   YDataKey: 'device_tcv_rssi_000',
                   timeDataKey: 'device_gps_utc_000',
                   processYDataKey: (x) => x,
@@ -1545,44 +1545,15 @@ export default {
           },
         },
         {
-          i: 'satellite-neutron1-dpr-h',
+          i: 'satellite-neutron1-dpr-i',
           x: 0,
           y: 3,
-          w: 6,
+          w: 12,
           h: 18,
           component: {
             name: 'Chart',
             props: {
-              name: 'Service Available',
-              plots: [
-                {
-                  x: [],
-                  y: [],
-                  type: 'scatter',
-                  marker: {
-                    color: 'red',
-                  },
-                  name: 'Service Available',
-                  YDataKey: 'device_tcv_flag_000',
-                  timeDataKey: 'device_gps_utc_000',
-                  processYDataKey: (x) => x >> 2 & 1,
-                  nodeProcess: 'any',
-                  live: true,
-                },
-              ],
-            },
-          },
-        },
-        {
-          i: 'satellite-neutron1-dpr-i',
-          x: 6,
-          y: 3,
-          w: 6,
-          h: 18,
-          component: {
-            name: 'Chart',
-            props: {
-              name: 'Service Mode',
+              name: 'Service Statuses',
               plots: [
                 {
                   x: [],
@@ -1594,54 +1565,10 @@ export default {
                   name: 'Service Mode',
                   YDataKey: 'device_tcv_flag_000',
                   timeDataKey: 'device_gps_utc_000',
-                  processYDataKey: (x) => x >> 1 & 1,
+                  processYDataKey: (x) => x >> 8 & 0x4,
                   nodeProcess: 'any',
                   live: true,
                 },
-              ],
-            },
-          },
-        },
-        {
-          i: 'satellite-neutron1-dpr-j',
-          x: 0,
-          y: 4,
-          w: 6,
-          h: 18,
-          component: {
-            name: 'Chart',
-            props: {
-              name: 'Gateway',
-              plots: [
-                {
-                  x: [],
-                  y: [],
-                  type: 'scatter',
-                  marker: {
-                    color: 'red',
-                  },
-                  name: 'Gateway',
-                  YDataKey: 'device_tcv_flag_000',
-                  timeDataKey: 'device_gps_utc_000',
-                  processYDataKey: (x) => x,
-                  nodeProcess: 'any',
-                  live: true,
-                },
-              ],
-            },
-          },
-        },
-        {
-          i: 'satellite-neutron1-dpr-k',
-          x: 6,
-          y: 4,
-          w: 6,
-          h: 18,
-          component: {
-            name: 'Chart',
-            props: {
-              name: 'Registration',
-              plots: [
                 {
                   x: [],
                   y: [],
@@ -1656,21 +1583,20 @@ export default {
                   nodeProcess: 'any',
                   live: true,
                 },
-              ],
-            },
-          },
-        },
-        {
-          i: 'satellite-neutron1-dpr-l',
-          x: 0,
-          y: 5,
-          w: 6,
-          h: 18,
-          component: {
-            name: 'Chart',
-            props: {
-              name: 'Call State',
-              plots: [
+                {
+                  x: [],
+                  y: [],
+                  type: 'scatter',
+                  marker: {
+                    color: 'red',
+                  },
+                  name: 'Gateway',
+                  YDataKey: 'placeholder',
+                  timeDataKey: 'device_gps_utc_000',
+                  processYDataKey: (x) => x,
+                  nodeProcess: 'any',
+                  live: true,
+                },
                 {
                   x: [],
                   y: [],
@@ -1681,25 +1607,10 @@ export default {
                   name: 'Call State',
                   YDataKey: 'device_tcv_flag_000',
                   timeDataKey: 'device_gps_utc_000',
-                  processYDataKey: (x) => x >> 4 & 1,
+                  processYDataKey: (x) => x >> 12 & 0x4,
                   nodeProcess: 'any',
                   live: true,
                 },
-              ],
-            },
-          },
-        },
-        {
-          i: 'satellite-neutron1-dpr-m',
-          x: 6,
-          y: 5,
-          w: 6,
-          h: 18,
-          component: {
-            name: 'Chart',
-            props: {
-              name: 'Service Ready',
-              plots: [
                 {
                   x: [],
                   y: [],
