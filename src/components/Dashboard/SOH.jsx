@@ -22,6 +22,7 @@ function SOH({
   /** Accessing the neutron1 messages from the socket */
   const state = useSelector((s) => s.data);
   const namespace = useSelector((s) => s.namespace);
+  const realm = useSelector((s) => s.realm);
 
   /** Initialize settings */
   const [init, setInit] = useState(true);
@@ -52,7 +53,7 @@ function SOH({
     const start = dateToMJD(dates[0]);
     const end = dateToMJD(dates[1]);
 
-    const { data } = await axios.post(`/query/${process.env.MONGODB_COLLECTION}/${nameState}:soh`, {
+    const { data } = await axios.post(`/query/${realm}/${nameState}:soh`, {
       multiple: true,
       query: {
         node_utc: {

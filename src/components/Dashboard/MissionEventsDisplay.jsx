@@ -10,6 +10,7 @@ import dayjs from 'dayjs';
 import BaseComponent from '../BaseComponent';
 import { axios } from '../../api';
 import { mjdToString } from '../../utility/time';
+import parseEscapedChar from '../../utility/string';
 
 function MissionEventsDisplay({
   nodes,
@@ -17,6 +18,7 @@ function MissionEventsDisplay({
 }) {
   /** Retrieve data from the Context */
   const live = useSelector((s) => s.data);
+  const realm = useSelector((s) => s.realm);
 
   /** The node whose events is displayed */
   const [node, setNode] = useState(nodes[0]);
@@ -49,7 +51,7 @@ function MissionEventsDisplay({
   const queryEventLog = async () => {
     try {
       /** Query database for event logs */
-      const { data } = await axios.post(`/query/${process.env.MONGODB_COLLECTION}/${node}:executed`, {
+      const { data } = await axios.post(`/query/${realm}/${node}:executed`, {
         multiple: true,
         query: {},
       });
@@ -63,7 +65,7 @@ function MissionEventsDisplay({
           key: i,
           time: mjdToString(el.event_utc),
           name: el.event_name,
-          status: el.event_executc != null ? 'Done.' : 'Pending...',
+          status: el.event_utcexec != null ? 'Done.' : 'Pending...',
           log: newObj,
         };
       });
@@ -128,7 +130,50 @@ function MissionEventsDisplay({
       <Table
         columns={columns}
         dataSource={info}
-        expandedRowRender={(record) => <p>{JSON.stringify(record.log)}</p>}
+        expandedRowRender={(record) => (
+          <table>
+            <tbody>
+              <tr className="align-top w-full pr-4">
+                <td className="w-1/2">
+                  {
+                    Object.keys(record.log).map((key) => (
+                      <tr>
+                        <td>
+                          {`${key}:`}
+                        </td>
+                        <td>
+                          {record.log[key]}
+                        </td>
+                      </tr>
+                    ))
+                  }
+                </td>
+                <td className="w-1/2 border-l pl-4">
+                  {
+                    record.log.event_utcexec != null ? (
+                      <>
+                        <p>{`➜ ${record.log.event_data}`}</p>
+                        {
+                          record.log.output.length !== 0
+                            ? (
+                              <pre>
+                                {
+                                  parseEscapedChar(JSON.stringify(record.log.output))
+                                    .substring(1, record.log.output.length)
+                                }
+                              </pre>
+                            )
+                            : null
+                        }
+                      </>
+                    )
+                      : null
+                  }
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        )}
       />
     </BaseComponent>
   );
