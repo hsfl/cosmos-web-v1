@@ -42,6 +42,7 @@ import AsyncComponent, { components } from '../components/AsyncComponent';
 import LayoutSelector from '../components/LayoutSelector';
 import Clock from '../components/Clock';
 import SocketStatus from '../components/SocketStatus';
+import FlightStatus from '../components/FlightStatus';
 import GetHistoricalData from '../components/GetHistoricalData';
 
 const { TabPane } = Tabs;
@@ -470,6 +471,7 @@ function Dashboard({
             <SocketStatus
               status={socketStatus}
             />
+            <FlightStatus />
           </div>
 
           <div className="pt-4">
