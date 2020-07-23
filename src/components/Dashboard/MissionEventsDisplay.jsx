@@ -39,9 +39,9 @@ function MissionEventsDisplay({
       key: 'name',
     },
     {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
+      title: 'Executed',
+      dataIndex: 'exec',
+      key: 'exec',
     },
   ]);
 
@@ -65,7 +65,7 @@ function MissionEventsDisplay({
           key: i,
           time: mjdToString(el.event_utc),
           name: el.event_name,
-          status: el.event_utcexec != null ? 'Done.' : 'Pending...',
+          exec: el.event_utcexec != null ? mjdToString(el.event_utcexec) : 'Pending...',
           log: newObj,
         };
       });
@@ -88,7 +88,7 @@ function MissionEventsDisplay({
       const executed = Object.keys(live).find((item) => item.split(':')[1] === 'executed');
       if (live[executed] != null) {
         const idx = info.findIndex((event) => event.time === live[executed].event_utc);
-        info[idx].status = 'Done.';
+        info[idx].exec = live[executed].utcexec;
         info[idx].log = live[executed];
       }
     }
