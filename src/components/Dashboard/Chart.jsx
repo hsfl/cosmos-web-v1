@@ -532,8 +532,8 @@ function Chart({
           }
 
           <Switch
-            checkedChildren="Y Scroll"
-            unCheckedChildren="X Scroll"
+            checkedChildren="X Scroll"
+            unCheckedChildren="Y Scroll"
             checked={layout.yaxis.fixedrange}
             onChange={(checked) => {
               if (checked) {
@@ -1026,4 +1026,4 @@ Chart.defaultProps = {
   children: null,
 };
 
-export default React.memo(Chart);
+export default Chart;
