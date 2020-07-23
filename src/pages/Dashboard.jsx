@@ -150,6 +150,26 @@ function Dashboard({
               ? json.device_bcreg_volt_004 * json.device_bcreg_amp_004 : undefined,
             device_bcreg_power_005: json.device_bcreg_volt_005 && json.device_bcreg_amp_005
               ? json.device_bcreg_volt_005 * json.device_bcreg_amp_005 : undefined,
+            device_swch_power_000: json.device_swch_volt_000 && json.device_swch_amp_000
+              ? json.device_swch_volt_000 * json.device_swch_amp_000 : undefined,
+            device_swch_power_001: json.device_swch_volt_001 && json.device_swch_amp_001
+              ? json.device_swch_volt_001 * json.device_swch_amp_001 : undefined,
+            device_swch_power_002: json.device_swch_volt_002 && json.device_swch_amp_002
+              ? json.device_swch_volt_002 * json.device_swch_amp_002 : undefined,
+            device_swch_power_003: json.device_swch_volt_003 && json.device_swch_amp_003
+              ? json.device_swch_volt_003 * json.device_swch_amp_003 : undefined,
+            device_swch_power_004: json.device_swch_volt_004 && json.device_swch_amp_004
+              ? json.device_swch_volt_004 * json.device_swch_amp_004 : undefined,
+            device_swch_power_005: json.device_swch_volt_005 && json.device_swch_amp_005
+              ? json.device_swch_volt_005 * json.device_swch_amp_005 : undefined,
+            device_swch_power_006: json.device_swch_volt_006 && json.device_swch_amp_006
+              ? json.device_swch_volt_006 * json.device_swch_amp_006 : undefined,
+            device_swch_power_007: json.device_swch_volt_007 && json.device_swch_amp_007
+              ? json.device_swch_volt_007 * json.device_swch_amp_007 : undefined,
+            device_swch_power_008: json.device_swch_volt_008 && json.device_swch_amp_008
+              ? json.device_swch_volt_008 * json.device_swch_amp_008 : undefined,
+            device_swch_power_009: json.device_swch_volt_009 && json.device_swch_amp_009
+              ? json.device_swch_volt_009 * json.device_swch_amp_009 : undefined,
             recorded_time: dateToMJD(dayjs().utc()),
           };
 
