@@ -17,6 +17,7 @@ function MissionEventsDisplay({
 }) {
   /** Retrieve data from the Context */
   const live = useSelector((s) => s.data);
+  const realm = useSelector((s) => s.realm);
 
   /** The node whose events is displayed */
   const [node, setNode] = useState(nodes[0]);
@@ -49,7 +50,7 @@ function MissionEventsDisplay({
   const queryEventLog = async () => {
     try {
       /** Query database for event logs */
-      const { data } = await axios.post(`/query/${process.env.MONGODB_COLLECTION}/${node}:executed`, {
+      const { data } = await axios.post(`/query/${realm}/${node}:executed`, {
         multiple: true,
         query: {},
       });
