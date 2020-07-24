@@ -159,7 +159,7 @@ function CesiumGlobe({
         && state[realm][XDataKey]
         && state[realm][YDataKey]
         && state[realm][ZDataKey]
-        && ((!process.env.FLIGHT_MODE === 'true' && state[realm].recorded_time)
+        && ((!(process.env.FLIGHT_MODE === 'true') && state[realm].recorded_time)
         || (process.env.FLIGHT_MODE === 'true' && state[realm][timeDataKey]))
         && live
       ) {
