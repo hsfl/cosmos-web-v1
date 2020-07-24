@@ -108,7 +108,7 @@ function DisplayValue({
       // by checking the node process and the key it is watching
       if (state && realm && state[realm]
         && state[realm][v.dataKey] !== undefined
-        && ((!process.env.FLIGHT_MODE === 'true' && state[realm].recorded_time)
+        && ((!(process.env.FLIGHT_MODE === 'true') && state[realm].recorded_time)
         || (process.env.FLIGHT_MODE === 'true' && state[realm][v.timeDataKey]))
       ) {
         const value = v.processDataKey(state[realm][v.dataKey]);

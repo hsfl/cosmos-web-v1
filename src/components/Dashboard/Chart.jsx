@@ -204,7 +204,7 @@ function Chart({
     plotsState.forEach((p, i) => {
       // Upon context change, see if changes affect this chart's values
       if (state && realm && state[realm]
-        && ((!process.env.FLIGHT_MODE === 'true' && state[realm].recorded_time)
+        && ((!(process.env.FLIGHT_MODE === 'true') && state[realm].recorded_time)
         || (process.env.FLIGHT_MODE === 'true' && state[realm][p.timeDataKey]))
         && state[realm][p.YDataKey]
         && p.live
