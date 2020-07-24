@@ -6,7 +6,7 @@ function SocketStatus() {
   return (
     <>
       {
-        process.env.FLIGHT_MODE === false
+        process.env.FLIGHT_MODE === 'true'
           ? (
             <Tag icon={<CheckCircleTwoTone twoToneColor="#52c41a" />} color="success">
               Flight Mode

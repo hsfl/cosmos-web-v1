@@ -108,8 +108,8 @@ function DisplayValue({
       // by checking the node process and the key it is watching
       if (state && realm && state[realm]
         && state[realm][v.dataKey] !== undefined
-        && ((!process.env.FLIGHT_MODE && state[realm].recorded_time)
-        || (process.env.FLIGHT_MODE && state[realm][v.timeDataKey]))
+        && ((!process.env.FLIGHT_MODE === 'true' && state[realm].recorded_time)
+        || (process.env.FLIGHT_MODE === 'true' && state[realm][v.timeDataKey]))
       ) {
         const value = v.processDataKey(state[realm][v.dataKey]);
 
@@ -117,7 +117,7 @@ function DisplayValue({
         displayValuesState[i].value = value;
 
         // If not in flight mode, use recorded_time to avoid chart jumping
-        if (process.env.FLIGHT_MODE && state[realm][v.timeDataKey]) {
+        if (process.env.FLIGHT_MODE === 'true' && state[realm][v.timeDataKey]) {
           displayValuesState[i].time = mjdToString(state[realm][v.timeDataKey]);
         } else {
           displayValuesState[i].time = mjdToString(state[realm].recorded_time);

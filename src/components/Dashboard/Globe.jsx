@@ -159,8 +159,8 @@ function CesiumGlobe({
         && state[realm][XDataKey]
         && state[realm][YDataKey]
         && state[realm][ZDataKey]
-        && ((!process.env.FLIGHT_MODE && state[realm].recorded_time)
-        || (process.env.FLIGHT_MODE && state[realm][timeDataKey]))
+        && ((!process.env.FLIGHT_MODE === 'true' && state[realm].recorded_time)
+        || (process.env.FLIGHT_MODE === 'true' && state[realm][timeDataKey]))
         && live
       ) {
         const tempOrbit = [...orbitsState];
@@ -171,7 +171,7 @@ function CesiumGlobe({
 
         let date;
 
-        if (process.env.FLIGHT_MODE && state[realm][timeDataKey]) {
+        if (process.env.FLIGHT_MODE === 'true' && state[realm][timeDataKey]) {
           date = Cesium
             .JulianDate
             .fromDate(MJDtoJavaScriptDate(state[realm][timeDataKey]));

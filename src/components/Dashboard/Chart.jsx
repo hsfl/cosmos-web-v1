@@ -204,8 +204,8 @@ function Chart({
     plotsState.forEach((p, i) => {
       // Upon context change, see if changes affect this chart's values
       if (state && realm && state[realm]
-        && ((!process.env.FLIGHT_MODE && state[realm].recorded_time)
-        || (process.env.FLIGHT_MODE && state[realm][p.timeDataKey]))
+        && ((!process.env.FLIGHT_MODE === 'true' && state[realm].recorded_time)
+        || (process.env.FLIGHT_MODE === 'true' && state[realm][p.timeDataKey]))
         && state[realm][p.YDataKey]
         && p.live
       ) {
@@ -213,7 +213,7 @@ function Chart({
 
         // Check if polar or not
         if (polar) {
-          if (process.env.FLIGHT_MODE && state[realm][p.timeDataKey]) {
+          if (process.env.FLIGHT_MODE === 'true' && state[realm][p.timeDataKey]) {
             plotsState[i].r.push(mjdToString(state[realm][p.timeDataKey]));
           } else {
             plotsState[i].r.push(mjdToString(state[realm].recorded_time));
@@ -227,7 +227,7 @@ function Chart({
                 : state[realm][p.ThetaDataKey],
             );
         } else {
-          if (process.env.FLIGHT_MODE && state[realm][p.timeDataKey]) {
+          if (process.env.FLIGHT_MODE === 'true' && state[realm][p.timeDataKey]) {
             plotsState[i].x.push(mjdToString(state[realm][p.timeDataKey]));
           } else {
             plotsState[i].x.push(mjdToString(state[realm].recorded_time));
