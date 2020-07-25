@@ -2,14 +2,15 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  Form, Input, Collapse, Button, InputNumber,
+  Form, Input, Collapse, Button, InputNumber, message,
 } from 'antd';
 
 import BaseComponent from '../BaseComponent';
 import DisplayValuesTable from './DisplayValues/DisplayValuesTable';
 
-import { setActivity } from '../../store/actions';
-import { mjdToString } from '../../utility/time';
+import { setActivity, set } from '../../store/actions';
+import { mjdToString, dateToMJD } from '../../utility/time';
+import { axios } from '../../api';
 
 const { Panel } = Collapse;
 const { TextArea } = Input;
@@ -34,6 +35,8 @@ function DisplayValue({
   /** Accessing the neutron1 messages from the socket */
   const state = useSelector((s) => s.data);
   const realm = useSelector((s) => s.realm);
+  const globalHistoricalDate = useSelector((s) => s.globalHistoricalDate);
+  const globalQueue = useSelector((s) => s.globalQueue);
 
   /** Storage for global form values */
   const [displayValuesForm] = Form.useForm();
@@ -53,6 +56,67 @@ function DisplayValue({
   const [displayValuesState, setDisplayValuesState] = useState(displayValues);
   /** Variable to update to force component update */
   const [updateComponent, setUpdateComponent] = useState(false);
+
+  const queryHistoricalData = async (dates, dataKey, timeDataKey, nodeProcess, index) => {
+    if (dates && dates.length === 2) {
+      message.loading(`Querying ${nodeProcess} for ${dataKey}...`, 0);
+
+      // Unix time to modified julian date
+      const to = dateToMJD(dates[1]);
+
+      try {
+        const { data } = await axios.post(`/query/${realm}/${nodeProcess}`, {
+          query: {
+            [timeDataKey]: {
+              $lt: to,
+            },
+            [dataKey]: {
+              $exists: true,
+            },
+          },
+          options: {
+            projection: {
+              [timeDataKey]: 1,
+              [dataKey]: 1,
+            },
+            sort: {
+              [timeDataKey]: -1,
+            },
+          },
+        });
+
+        message.destroy();
+
+        if (Object.keys(data).length === 0) {
+          message.warning(`No data for specified date range in ${nodeProcess} for ${dataKey}.`);
+        } else {
+          message.success(`Retrieved ${dataKey} in ${nodeProcess}.`);
+          displayValuesState[index].value = displayValuesState[index].processDataKey(data[dataKey]);
+          displayValuesState[index].time = mjdToString(data[timeDataKey]);
+          setDisplayValuesState(displayValuesState);
+        }
+      } catch (error) {
+        message.destroy();
+        message.error(error.message);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (globalHistoricalDate != null && globalQueue) {
+      displayValuesState.forEach(({ dataKey, timeDataKey, nodeProcess }, index) => {
+        queryHistoricalData(
+          globalHistoricalDate,
+          dataKey,
+          timeDataKey,
+          nodeProcess,
+          index,
+        );
+      });
+      dispatch(set('globalQueue', globalQueue - 1));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [globalHistoricalDate]);
 
   /** Initialize form components for each display value */
   useEffect(() => {

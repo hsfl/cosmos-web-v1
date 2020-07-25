@@ -131,6 +131,11 @@ function Dashboard({
         const json = JSON.parse(data);
         const [node, process] = json.node_type.split(':');
 
+        if (json.node_type === 'file') {
+          console.log(data);
+          dispatch(set('file', json));
+        }
+
         if (json.node_type === 'list') {
           dispatch(set('list', json));
         // Send data if allowed node AND if flight mode and soh, send,
@@ -476,7 +481,7 @@ function Dashboard({
 
           <div className="pt-4">
             <GetHistoricalData
-              amountOfComponents={layouts.lg.filter((el) => el.component.name === 'Chart').length}
+              amountOfComponents={layouts.lg.filter((el) => (el.component.name === 'Chart' || el.component.name === 'DisplayValue')).length}
             />
           </div>
         </div>
