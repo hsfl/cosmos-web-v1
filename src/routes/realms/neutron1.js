@@ -1496,9 +1496,43 @@ export default {
                   XDataKey: 'device_gps_geods_000',
                   YDataKey: 'device_gps_geods_000',
                   ZDataKey: 'device_gps_geods_000',
-                  processXDataKey: (x) => x.h * Math.cos(x.lat) * Math.cos(x.lon),
-                  processYDataKey: (x) => x.h * Math.cos(x.lat) * Math.sin(x.lon),
-                  processZDataKey: (x) => x.h * Math.sin(x.lat),
+                  processXDataKey: ({ lat, lon }) => {
+                    const cosLat = Math.cos(lat);
+                    const sinLat = Math.sin(lat);
+                    const cosLon = Math.cos(lon);
+                    const rad = 6378137.0;
+                    const f = 1.0 / 298.257224;
+                    const C = 1.0 / Math.sqrt(
+                      cosLat * cosLat + (1 - f) * (1 - f) * sinLat * sinLat,
+                    );
+                    const h = 0.0;
+
+                    return (rad * C + h) * cosLat * cosLon;
+                  },
+                  processYDataKey: ({ lat, lon, h }) => {
+                    const cosLat = Math.cos(lat);
+                    const sinLat = Math.sin(lat);
+                    const sinLon = Math.sin(lon);
+                    const rad = 6378137.0;
+                    const f = 1.0 / 298.257224;
+                    const C = 1.0 / Math.sqrt(
+                      cosLat * cosLat + (1 - f) * (1 - f) * sinLat * sinLat,
+                    );
+
+                    return (rad * C + h) * cosLat * sinLon;
+                  },
+                  processZDataKey: ({ lat, h }) => {
+                    const cosLat = Math.cos(lat);
+                    const sinLat = Math.sin(lat);
+                    const rad = 6378137.0;
+                    const f = 1.0 / 298.257224;
+                    const C = 1.0 / Math.sqrt(
+                      cosLat * cosLat + (1 - f) * (1 - f) * sinLat * sinLat,
+                    );
+                    const S = (1.0 - f) * (1.0 - f) * C;
+
+                    return (rad * S + h) * sinLat;
+                  },
                   timeDataKey: 'device_gps_utc_000',
                   live: true,
                   position: [21.289373, 157.917480, 350000.0],
@@ -1574,7 +1608,7 @@ export default {
                   y: [],
                   type: 'scatter',
                   marker: {
-                    color: 'red',
+                    color: 'orange',
                   },
                   name: 'Registration',
                   YDataKey: 'device_tcv_flag_000',
@@ -1588,7 +1622,7 @@ export default {
                   y: [],
                   type: 'scatter',
                   marker: {
-                    color: 'red',
+                    color: 'green',
                   },
                   name: 'Gateway',
                   YDataKey: 'placeholder',
@@ -1602,7 +1636,7 @@ export default {
                   y: [],
                   type: 'scatter',
                   marker: {
-                    color: 'red',
+                    color: 'blue',
                   },
                   name: 'Call State',
                   YDataKey: 'device_tcv_flag_000',
@@ -1616,7 +1650,7 @@ export default {
                   y: [],
                   type: 'scatter',
                   marker: {
-                    color: 'red',
+                    color: 'purple',
                   },
                   name: 'Service Ready',
                   YDataKey: 'device_tcv_flag_000',
