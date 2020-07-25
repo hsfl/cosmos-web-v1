@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { Badge, Switch } from 'antd';
+import { Badge } from 'antd';
 import ActivityTable from './Activity/ActivityTable';
 import BaseComponent from '../BaseComponent';
 
@@ -11,8 +11,6 @@ import BaseComponent from '../BaseComponent';
 function Activity({
   height,
 }) {
-  const [toggle, setToggle] = useState(true);
-
   return (
     <BaseComponent
       name="Activity"
@@ -31,12 +29,6 @@ function Activity({
             <Badge status="error" />
             &#62;&nbsp;10min
           </span>
-          <Switch
-            checked={toggle}
-            onClick={() => setToggle(!toggle)}
-            checkedChildren="Visible"
-            unCheckedChildren="Invisible"
-          />
         </>
       )}
       height={height}
@@ -50,7 +42,7 @@ function Activity({
           `
         }
       </style>
-      <ActivityTable toggle={toggle} />
+      <ActivityTable />
     </BaseComponent>
   );
 }

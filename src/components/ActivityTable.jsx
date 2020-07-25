@@ -4,7 +4,7 @@ import React, {
 import { useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 
-import ActivityEntry from './ActivityEntry';
+import ActivityEntry from './Dashboard/Activity/ActivityEntry';
 
 /**
  * Shows the incoming activity from the web socket and displays time elapsed
@@ -68,25 +68,32 @@ function ActivityTable() {
   // }, [elapsed]);
 
   return (
-    <div className={`bg-${color}-200 transition ease-in duration-500 rounded p-3 activity overflow-auto`}>
-      <table>
-        <tbody>
-          {
-            activities ? activities.map(({
-              status, summary, scope, time,
-            }) => (
-              <ActivityEntry
-                key={status + summary + scope + time}
-                status={status}
-                summary={summary}
-                scope={scope}
-                time={time}
-              />
-            )) : 'No activity.'
+    <td className={`bg-${color}-200 rounded-md absolute overflow-y-auto activities px-1 pb-1 z-10 bg-gray-100 transition-all duration-500 ease-in-out`}>
+      <style>
+        {`
+          .activities {
+            height: 25px;
           }
-        </tbody>
-      </table>
-    </div>
+
+          .activities:hover {
+            height: 300px;
+          }
+        `}
+      </style>
+      {
+        activities ? activities.map(({
+          status, summary, scope, time,
+        }) => (
+          <ActivityEntry
+            key={status + summary + scope + time}
+            status={status}
+            summary={summary}
+            scope={scope}
+            time={time}
+          />
+        )) : 'No activity.'
+      }
+    </td>
   );
 }
 
