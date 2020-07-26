@@ -294,7 +294,6 @@ function Chart({
         });
 
         message.destroy();
-        plotsState[plot].live = false;
 
         if (data.length === 0) {
           message.warning(`No data for specified date range in ${nodeProcess} for ${YDataKey}.`);
