@@ -96,7 +96,7 @@ export default {
                 nodeProcess: 'any',
                 dataKey: 'node_downtime',
                 timeDataKey: 'node_utc',
-                unit: '',
+                unit: 's',
                 processDataKey: (x) => x,
               },
             ],
