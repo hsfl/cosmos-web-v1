@@ -80,19 +80,23 @@ function ActivityTable() {
           }
         `}
       </style>
-      {
-        activities ? activities.map(({
-          status, summary, scope, time,
-        }) => (
-          <ActivityEntry
-            key={status + summary + scope + time}
-            status={status}
-            summary={summary}
-            scope={scope}
-            time={time}
-          />
-        )) : 'No activity.'
-      }
+      <table>
+        <tbody>
+          {
+            activities ? activities.map(({
+              status, summary, scope, time,
+            }) => (
+              <ActivityEntry
+                key={status + summary + scope + time}
+                status={status}
+                summary={summary}
+                scope={scope}
+                time={time}
+              />
+            )) : 'No activity.'
+          }
+        </tbody>
+      </table>
     </td>
   );
 }

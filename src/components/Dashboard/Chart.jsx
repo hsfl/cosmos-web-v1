@@ -294,12 +294,19 @@ function Chart({
         });
 
         message.destroy();
-        plotsState[plot].live = false;
 
         if (data.length === 0) {
           message.warning(`No data for specified date range in ${nodeProcess} for ${YDataKey}.`);
         } else {
           message.success(`Retrieved ${data.length} records in ${nodeProcess} for ${YDataKey}.`);
+
+          // Don't restrict zooming to allow for correct data panning
+          const xaxisFixed = layout.xaxis.fixedrange;
+          const yaxisFixed = layout.yaxis.fixedrange;
+
+          layout.xaxis.fixedrange = false;
+          layout.yaxis.fixedrange = false;
+
           // Reset chart for past data
           plotsState[plot].x = [];
           plotsState[plot].y = [];
@@ -317,6 +324,15 @@ function Chart({
             layout.datarevision += 1;
             setDataRevision(dataRevision + 1);
           });
+
+          // Revert panning back to original
+          layout.xaxis.fixedrange = xaxisFixed;
+          layout.yaxis.fixedrange = yaxisFixed;
+
+          layout.datarevision += 1;
+          setDataRevision(dataRevision + 1);
+
+          message.success('Done retrieving historical values.');
         }
       } catch (error) {
         message.destroy();

@@ -25,7 +25,7 @@ export default {
         x: 3,
         y: 0,
         w: 3,
-        h: 14,
+        h: 7,
         component: {
           name: 'AgentList',
         },
@@ -42,7 +42,7 @@ export default {
             name: 'CPU',
             displayValues: [
               {
-                name: 'BBB CPU Load',
+                name: 'BBB Load',
                 nodeProcess: 'any',
                 dataKey: 'device_cpu_load_000',
                 dataKeyUpperThreshold: 1,
@@ -51,7 +51,7 @@ export default {
                 processDataKey: (x) => x.toFixed(2),
               },
               {
-                name: 'BBB CPU Uptime',
+                name: 'BBB Uptime',
                 nodeProcess: 'any',
                 dataKey: 'device_cpu_uptime_000',
                 timeDataKey: 'device_cpu_utc_000',
@@ -59,7 +59,7 @@ export default {
                 processDataKey: (x) => x.toFixed(2),
               },
               {
-                name: 'BBB CPU Boot Count',
+                name: 'BBB Boot Count',
                 nodeProcess: 'any',
                 dataKey: 'device_cpu_boot_count_000',
                 timeDataKey: 'device_cpu_utc_000',
@@ -67,7 +67,7 @@ export default {
                 processDataKey: (x) => x,
               },
               {
-                name: 'OBC CPU Load',
+                name: 'OBC Load',
                 nodeProcess: 'any',
                 dataKey: 'device_cpu_load_003',
                 dataKeyUpperThreshold: 1,
@@ -76,7 +76,7 @@ export default {
                 processDataKey: (x) => x.toFixed(2),
               },
               {
-                name: 'OBC CPU Uptime',
+                name: 'OBC Uptime',
                 nodeProcess: 'any',
                 dataKey: 'device_cpu_uptime_003',
                 timeDataKey: 'device_cpu_utc_003',
@@ -84,10 +84,18 @@ export default {
                 processDataKey: (x) => x.toFixed(2),
               },
               {
-                name: 'OBC CPU Boot Count',
+                name: 'OBC Boot Count',
                 nodeProcess: 'any',
                 dataKey: 'device_cpu_boot_count_003',
                 timeDataKey: 'device_cpu_utc_003',
+                unit: '',
+                processDataKey: (x) => x,
+              },
+              {
+                name: 'Downtime',
+                nodeProcess: 'any',
+                dataKey: 'node_downtime',
+                timeDataKey: 'node_utc',
                 unit: '',
                 processDataKey: (x) => x,
               },
@@ -100,7 +108,7 @@ export default {
         x: 9,
         y: 0,
         w: 3,
-        h: 7,
+        h: 14,
         component: {
           name: 'DisplayValue',
           props: {
@@ -116,7 +124,7 @@ export default {
                 processDataKey: (x) => (x - 272.15).toFixed(2),
               },
               {
-                name: 'Daughterboard 1',
+                name: 'DB 1',
                 nodeProcess: 'any',
                 dataKey: 'device_tsen_temp_000',
                 dataKeyUpperThreshold: 60,
@@ -125,7 +133,7 @@ export default {
                 processDataKey: (x) => (x - 272.15).toFixed(2),
               },
               {
-                name: 'Daughterboard 2 001',
+                name: 'DB 2 001',
                 nodeProcess: 'any',
                 dataKey: 'device_tsen_temp_001',
                 dataKeyUpperThreshold: 60,
@@ -134,7 +142,7 @@ export default {
                 processDataKey: (x) => (x - 272.15).toFixed(2),
               },
               {
-                name: 'Daughterboard 2 002',
+                name: 'DB 2 002',
                 nodeProcess: 'any',
                 dataKey: 'device_tsen_temp_002',
                 dataKeyUpperThreshold: 60,
@@ -143,7 +151,7 @@ export default {
                 processDataKey: (x) => (x - 272.15).toFixed(2),
               },
               {
-                name: 'Daughterboard 2 003',
+                name: 'DB 2 003',
                 nodeProcess: 'any',
                 dataKey: 'device_tsen_temp_003',
                 dataKeyUpperThreshold: 60,
@@ -152,7 +160,7 @@ export default {
                 processDataKey: (x) => (x - 272.15).toFixed(2),
               },
               {
-                name: 'BBB CPU',
+                name: 'BBB',
                 nodeProcess: 'any',
                 dataKey: 'device_cpu_temp_000',
                 dataKeyUpperThreshold: 60,
@@ -161,7 +169,7 @@ export default {
                 processDataKey: (x) => (x - 272.15).toFixed(2),
               },
               {
-                name: 'OBC CPU',
+                name: 'OBC',
                 nodeProcess: 'any',
                 dataKey: 'device_cpu_temp_003',
                 dataKeyUpperThreshold: 60,
@@ -170,7 +178,7 @@ export default {
                 processDataKey: (x) => (x - 272.15).toFixed(2),
               },
               {
-                name: 'EPS DU CPU',
+                name: 'EPS DU',
                 nodeProcess: 'any',
                 dataKey: 'device_cpu_temp_001',
                 dataKeyUpperThreshold: 60,
@@ -179,7 +187,7 @@ export default {
                 processDataKey: (x) => (x - 272.15).toFixed(2),
               },
               {
-                name: 'CubeComputer CPU',
+                name: 'CubeComp',
                 nodeProcess: 'any',
                 dataKey: 'device_cpu_temp_002',
                 dataKeyUpperThreshold: 60,
@@ -202,14 +210,14 @@ export default {
       },
       {
         i: 'satellite-neutron1-e',
-        x: 6,
+        x: 3,
         y: 7,
         w: 3,
         h: 7,
         component: {
           name: 'DisplayValue',
           props: {
-            name: 'beagle1 EPS',
+            name: 'EPS',
             displayValues: [
               {
                 name: 'Battery Capacity',
@@ -258,7 +266,7 @@ export default {
       },
       {
         i: 'satellite-neutron1-ee',
-        x: 9,
+        x: 6,
         y: 7,
         w: 3,
         h: 7,
@@ -356,7 +364,7 @@ export default {
                 marker: {
                   color: 'darkseagreen',
                 },
-                name: 'Battery Motherboard Temperature',
+                name: 'Battery MB',
                 YDataKey: 'device_batt_temp_000',
                 timeDataKey: 'device_batt_utc_000',
                 processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -370,7 +378,7 @@ export default {
                 marker: {
                   color: 'blue',
                 },
-                name: 'Battery Daughterboard Temperature 1',
+                name: 'Batt DB 1',
                 YDataKey: 'device_tsen_temp_000',
                 timeDataKey: 'device_tsen_utc_000',
                 processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -384,7 +392,7 @@ export default {
                 marker: {
                   color: 'orange',
                 },
-                name: 'Battery Daughterboard 2 Temperature',
+                name: 'Batt DB 2 000',
                 YDataKey: 'device_tsen_temp_001',
                 timeDataKey: 'device_tsen_utc_001',
                 processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -398,7 +406,7 @@ export default {
                 marker: {
                   color: 'red',
                 },
-                name: 'Battery Daughterboard 2 Temperature',
+                name: 'Batt DB 2 001',
                 YDataKey: 'device_tsen_temp_002',
                 timeDataKey: 'device_tsen_utc_002',
                 processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -412,7 +420,7 @@ export default {
                 marker: {
                   color: 'brown',
                 },
-                name: 'Battery Daughterboard 2 Temperature',
+                name: 'Batt DB 2 002',
                 YDataKey: 'device_tsen_temp_003',
                 timeDataKey: 'device_tsen_utc_003',
                 processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -426,7 +434,7 @@ export default {
                 marker: {
                   color: 'cyan',
                 },
-                name: 'BBB Temperature',
+                name: 'BBB',
                 YDataKey: 'device_cpu_temp_000',
                 timeDataKey: 'device_cpu_utc_000',
                 processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -440,7 +448,7 @@ export default {
                 marker: {
                   color: 'green',
                 },
-                name: 'EPS DU Temperature',
+                name: 'EPS DU',
                 YDataKey: 'device_cpu_temp_001',
                 timeDataKey: 'device_cpu_utc_001',
                 processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -454,7 +462,7 @@ export default {
                 marker: {
                   color: 'purple',
                 },
-                name: 'CubeComputer Temperature',
+                name: 'CubeComputer',
                 YDataKey: 'device_cpu_temp_002',
                 timeDataKey: 'device_cpu_utc_002',
                 processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -466,9 +474,23 @@ export default {
                 y: [],
                 type: 'scatter',
                 marker: {
+                  color: 'purple',
+                },
+                name: 'OBC',
+                YDataKey: 'device_cpu_temp_003',
+                timeDataKey: 'device_cpu_utc_003',
+                processYDataKey: (x) => (x - 272.15).toFixed(2),
+                nodeProcess: 'any',
+                live: true,
+              },
+              {
+                x: [],
+                y: [],
+                type: 'scatter',
+                marker: {
                   color: 'violet',
                 },
-                name: 'IMU Temperature',
+                name: 'IMU',
                 YDataKey: 'device_imu_temp_000',
                 timeDataKey: 'device_imu_utc_000',
                 processYDataKey: (x) => (x - 272.15).toFixed(2),
