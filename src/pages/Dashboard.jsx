@@ -1,8 +1,8 @@
 import React, {
-  useState, useEffect,
+  useState, useEffect, useRef,
 } from 'react';
 import PropTypes from 'prop-types';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Button,
   message,
@@ -40,7 +40,7 @@ import { dateToMJD } from '../utility/time';
 
 import AsyncComponent, { components } from '../components/AsyncComponent';
 import LayoutSelector from '../components/LayoutSelector';
-import Clock from '../components/Clock';
+import Clock from '../components/Statuses';
 import SocketStatus from '../components/SocketStatus';
 import FlightStatus from '../components/FlightStatus';
 import GetHistoricalData from '../components/GetHistoricalData';
@@ -66,6 +66,7 @@ function Dashboard({
   realms,
 }) {
   const dispatch = useDispatch();
+  const activities = useSelector((s) => s.activity);
 
   /** Store the default page layout in case user wants to switch to it */
   const [defaultPageLayout, setDefaultPageLayout] = useState({
@@ -457,11 +458,53 @@ function Dashboard({
     }
   };
 
+  /** Color of the indicator, initial state is red */
+  const [color, setColor] = useState('red');
+  /** Reference to the timer that changes the indicator to yellow */
+  const timerYellow = useRef(null);
+  /** Reference to the timer that changes the indicator to red */
+  const timerRed = useRef(null);
+  /** Reference to the timer that increments all elapsed times after 1 second */
+  const timer = useRef(null);
+
+  /**
+     * Store the incoming activity in data with the elapsed field and calculate the difference.
+     * Start the timers for the indicator color change.
+     */
+  useEffect(() => {
+    if (activities && activities.length !== 0) {
+      /** Calculate difference in times */
+      const minuteDifference = activities[0].time.diff(dayjs(), 'minute');
+      if (-minuteDifference <= 2) {
+        /** Reset 1 second timer */
+        if (timer.current != null) {
+          clearTimeout(timer.current);
+        }
+
+        setColor('green');
+
+        /** Reset timers */
+        if (timerYellow.current != null && timerRed.current != null) {
+          clearTimeout(timerYellow.current);
+          clearTimeout(timerRed.current);
+        }
+
+        /** Start timers */
+        timerYellow.current = setTimeout(() => {
+          setColor('orange');
+        }, 300000);
+        timerRed.current = setTimeout(() => {
+          setColor('red');
+        }, 600000);
+      }
+    }
+  }, [activities]);
+
   return (
     <div>
       <div className="sticky z-10 top-0">
         <div
-          className="flex justify-between component-color py-2 px-5 border-gray-200 border-solid border-b"
+          className={`flex justify-between py-2 px-5 border-gray-200 border-solid border-b transition-all duration-500 ease-in-out ${color === 'green' ? 'bg-green-100' : ''} ${color === 'orange' ? 'bg-orange-100' : ''} ${color === 'red' ? 'bg-red-100' : ''}`}
         >
           <div>
             <Clock />

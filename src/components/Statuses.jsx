@@ -5,10 +5,11 @@ import dayjsPluginUTC from 'dayjs-plugin-utc';
 import ActivityTable from './ActivityTable';
 import ActivityTime from './ActivityTime';
 import ShowTime from './ShowTime';
+import Downtime from './Downtime';
 
 dayjs.extend(dayjsPluginUTC);
 
-function Clock() {
+function Statuses() {
   return (
     <table>
       <tbody>
@@ -21,6 +22,9 @@ function Clock() {
           </td>
           <td className="pr-2 text-gray-500 ">
             Activity
+          </td>
+          <td className="pr-2 text-gray-500 ">
+            Downtime
           </td>
         </tr>
         <tr>
@@ -39,6 +43,9 @@ function Clock() {
           <td className="pr-2">
             <ActivityTime />
           </td>
+          <td className="pr-2">
+            <Downtime />
+          </td>
         </tr>
         <tr>
           <td className="pr-4">
@@ -53,11 +60,25 @@ function Clock() {
               format="HH:mm:ss"
             />
           </td>
-          <ActivityTable />
+          <td className="rounded absolute overflow-y-auto activities px-1 pb-1 z-10 transition-all duration-500 ease-in-out">
+            <style>
+              {`
+                .activities {
+                  height: 25px;
+                }
+
+                .activities:hover {
+                  height: 300px;
+                  background-color: #fff;
+                }
+              `}
+            </style>
+            <ActivityTable />
+          </td>
         </tr>
       </tbody>
     </table>
   );
 }
 
-export default Clock;
+export default Statuses;
