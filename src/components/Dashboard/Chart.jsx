@@ -73,7 +73,7 @@ function Chart({
   /** Counter determining when the plot should be updated */
   const [dataRevision, setDataRevision] = useState(0);
   /** Layout parameters for the plot */
-  const [layout] = useState({
+  const [layout, setLayout] = useState({
     autosize: true,
     uirevision: 0,
     datarevision: dataRevision,
@@ -88,11 +88,11 @@ function Chart({
       t: 20,
       b: 15,
     },
-    yaxis: {
-      fixedrange: true,
-    },
     xaxis: {
       fixedrange: false,
+    },
+    yaxis: {
+      fixedrange: true,
     },
   });
   /** Store to detect whether the user wants to get historical data to plot */
@@ -251,7 +251,10 @@ function Chart({
         }
 
         // Trigger the chart to update
-        layout.datarevision += 1;
+        setLayout({
+          ...layout,
+          dataRevision: layout.dataRevision + 1,
+        });
         setDataRevision(dataRevision + 1);
       }
     });
@@ -300,13 +303,6 @@ function Chart({
         } else {
           message.success(`Retrieved ${data.length} records in ${nodeProcess} for ${YDataKey}.`);
 
-          // Don't restrict zooming to allow for correct data panning
-          const xaxisFixed = layout.xaxis.fixedrange;
-          const yaxisFixed = layout.yaxis.fixedrange;
-
-          layout.xaxis.fixedrange = false;
-          layout.yaxis.fixedrange = false;
-
           // Reset chart for past data
           plotsState[plot].x = [];
           plotsState[plot].y = [];
@@ -320,19 +316,13 @@ function Chart({
                 plotsState[plot]
                   .processYDataKey(d[plotsState[plot].YDataKey]),
               );
-
-            layout.datarevision += 1;
-            setDataRevision(dataRevision + 1);
           });
 
-          // Revert panning back to original
-          layout.xaxis.fixedrange = xaxisFixed;
-          layout.yaxis.fixedrange = yaxisFixed;
-
-          layout.datarevision += 1;
-          setDataRevision(dataRevision + 1);
-
-          message.success('Done retrieving historical values.');
+          // Update layout
+          setLayout({
+            ...layout,
+            dataRevision: layout.dataRevision + 1,
+          });
         }
       } catch (error) {
         message.destroy();
