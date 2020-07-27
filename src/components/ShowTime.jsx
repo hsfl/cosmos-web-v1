@@ -23,7 +23,7 @@ function ShowTime({
     return () => {
       clearTimeout(clock);
     };
-  }, [time]);
+  }, [utc, time]);
 
   return (
     <>
