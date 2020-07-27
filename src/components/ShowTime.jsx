@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 
 /**
- * Shows the incoming activity from the web socket and displays time elapsed
  * from the last data retrieval.
+ * Shows the incoming activity from the web socket and displays time elapsed
  */
 function ShowTime({
   utc,

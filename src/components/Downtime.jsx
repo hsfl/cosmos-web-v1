@@ -7,7 +7,7 @@ import { getDiff } from '../utility/time';
 /**
  * Counts down the downtime of the satellite
  */
-function ActivityTable() {
+function Downtime() {
   /** Get realm and node downtime */
   const realm = useSelector((s) => s.realm);
   const nodeDowntime = useSelector((s) => {
@@ -19,27 +19,28 @@ function ActivityTable() {
   });
 
   /** Timer to countdown time from node_downtime */
-  const [downtime, setDowntime] = useState(dayjs());
+  const [downtime, setDowntime] = useState(null);
   /** Timer */
-  const [elapsed, setElapsed] = useState('Over a day');
+  const [elapsed, setElapsed] = useState('Finished');
 
   const timer = useRef(null);
 
   /** Upon node downtime change, recalculate countdown from now */
   useEffect(() => {
     if (nodeDowntime !== false) {
-      setDowntime(dayjs().add(nodeDowntime), 'second');
-      setElapsed(getDiff(dayjs().add(nodeDowntime, 'second')));
+      setDowntime(dayjs().add(nodeDowntime, 'second'));
+      setElapsed(getDiff(dayjs().add(nodeDowntime, 'second'), true));
     }
   }, [nodeDowntime]);
 
   /** Increments the timer */
   useEffect(() => {
-    /** Set the 1 second timer */
-    timer.current = setTimeout(() => {
-      setElapsed(getDiff(downtime));
-    }, 900);
-
+    if (downtime != null && typeof elapsed !== 'string') {
+      /** Set the 1 second timer */
+      timer.current = setTimeout(() => {
+        setElapsed(getDiff(downtime, true));
+      }, 900);
+    }
     /** Clear timer on unmount */
     return () => clearTimeout(timer.current);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -49,10 +50,11 @@ function ActivityTable() {
     <>
       {
         elapsed && typeof elapsed !== 'string'
-          ? elapsed.format('HH:mm:ss') : 'Over a day'
+          ? elapsed.format('HH:mm:ss') : dayjs().second(0).minute(0).hour(0)
+            .format('HH:mm:ss')
       }
     </>
   );
 }
 
-export default ActivityTable;
+export default Downtime;
