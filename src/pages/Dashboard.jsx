@@ -132,7 +132,6 @@ function Dashboard({
         const [node, process] = json.node_type.split(':');
 
         if (json.node_type === 'file') {
-          console.log(data);
           dispatch(set('file', json));
         }
 
