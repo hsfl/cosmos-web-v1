@@ -40,30 +40,32 @@ function GetHistoricalData({
         value={globalHistoricalDate}
         size="small"
       />
-      <Button
-        disabled={!globalHistoricalDate}
-        size="small"
-        onClick={() => {
-          dispatch(set('globalQueue', amountOfComponents));
-          dispatch(set('globalHistoricalDate', globalHistoricalDate));
-        }}
-      >
-        Get Historical Data
-      </Button>
-      &nbsp;
-      <Button
-        size="small"
-        onClick={() => getPastHourData(1)}
-      >
-        Past Hour
-      </Button>
-      &nbsp;
-      <Button
-        size="small"
-        onClick={() => getPastHourData(6)}
-      >
-        Past 6 Hours
-      </Button>
+      <div className="pt-1">
+        <Button
+          disabled={!globalHistoricalDate}
+          size="small"
+          onClick={() => {
+            dispatch(set('globalQueue', amountOfComponents));
+            dispatch(set('globalHistoricalDate', globalHistoricalDate));
+          }}
+        >
+          Get Past Data
+        </Button>
+        &nbsp;
+        <Button
+          size="small"
+          onClick={() => getPastHourData(1)}
+        >
+          Past Hour
+        </Button>
+        &nbsp;
+        <Button
+          size="small"
+          onClick={() => getPastHourData(6)}
+        >
+          Past 6 Hours
+        </Button>
+      </div>
     </>
   );
 }
