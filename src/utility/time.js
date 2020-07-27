@@ -50,7 +50,7 @@ export function getDiff(date, countdown = false) {
     pastTime = dayjs();
   }
 
-  if (typeof date !== 'string' && futureTime().diff(pastTime, 'day') < 1) {
+  if (typeof date !== 'string' && futureTime.diff(pastTime, 'day') < 1) {
     const hour = futureTime.diff(pastTime, 'hour');
     const minute = futureTime.diff(pastTime, 'minute') % 60;
     const second = futureTime.diff(pastTime, 'second') % 60;
