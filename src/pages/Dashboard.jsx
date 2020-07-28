@@ -18,6 +18,7 @@ import {
   Row,
   InputNumber,
   Menu,
+  Badge,
 } from 'antd';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import {
@@ -67,6 +68,7 @@ function Dashboard({
 }) {
   const dispatch = useDispatch();
   const activities = useSelector((s) => s.activity);
+  const tabsStatus = useSelector((s) => s.tabStatus);
 
   /** Store the default page layout in case user wants to switch to it */
   const [defaultPageLayout, setDefaultPageLayout] = useState({
@@ -230,6 +232,8 @@ function Dashboard({
   useEffect(() => {
     // By default, set the defaultLayout prop as a flive.ack if child doesn't have a layout set
     let layout = defaultLayout;
+    let dataKeys = [];
+    const tabStatus = [];
 
     // Find child route of dashboard and retrieve default layout
     routes.forEach((route) => {
@@ -237,18 +241,67 @@ function Dashboard({
         route.children.forEach((child) => {
           // Get page layout from route config and save it into the state
           if (child.name === id && child.defaultLayout) {
+            child.defaultLayout.lg.forEach((component) => {
+              if (component.component.name === 'DisplayValue') {
+                component.component.props.displayValues.forEach(
+                  ({ dataKey, dataKeyUpperThreshold, dataKeyLowerThreshold }) => {
+                    if (dataKeyUpperThreshold || dataKeyLowerThreshold) {
+                      dataKeys.push({
+                        [dataKey]: {
+                          dataKeyUpperThreshold,
+                          dataKeyLowerThreshold,
+                        },
+                      });
+                    }
+                  },
+                );
+              }
+            });
+            tabStatus.push({
+              defaultLayout: {
+                dataKeys,
+                status: 'success',
+              },
+            });
             layout = child.defaultLayout;
             setDefaultPageLayout(child.defaultLayout);
           }
 
           // Get page layout simple from route config and save it into the state
           if (child.name === id && child.tabs) {
+            Object.keys(child.tabs).forEach((tab) => {
+              dataKeys = [];
+              child.tabs[tab].lg.forEach((component) => {
+                if (component.component.name === 'DisplayValue') {
+                  component.component.props.displayValues.forEach(
+                    ({ dataKey, dataKeyUpperThreshold, dataKeyLowerThreshold }) => {
+                      if (dataKeyUpperThreshold || dataKeyLowerThreshold) {
+                        dataKeys.push({
+                          [dataKey]: {
+                            dataKeyUpperThreshold,
+                            dataKeyLowerThreshold,
+                          },
+                        });
+                      }
+                    },
+                  );
+                }
+              });
+              tabStatus.push({
+                [tab]: {
+                  dataKeys,
+                  status: 'success',
+                },
+              });
+            });
+
             setTabs(child.tabs);
           }
         });
       }
     });
 
+    dispatch(set('tabStatus', tabStatus));
     // Set timeout to let the grid initialize; won't work otherwise.
     setTimeout(() => {
       setLayouts(layout);
@@ -256,6 +309,7 @@ function Dashboard({
       // Initialize JSON editor
       setJsonEdit(JSON.stringify(layout.lg, null, 2));
     }, 100);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [defaultLayout, id, path]);
 
   /** Save layout */
@@ -389,6 +443,22 @@ function Dashboard({
 
       // Add to object
       add.i = newId;
+
+      if (add.component.name === 'DisplayValue') {
+        add.component.props.displayValues.forEach(
+          ({ dataKey, dataKeyUpperThreshold, dataKeyLowerThreshold }) => {
+            if (dataKeyUpperThreshold || dataKeyLowerThreshold) {
+              // Interact with dispatch
+              // dataKeys.push({
+              //   [dataKey]: {
+              //     dataKeyUpperThreshold,
+              //     dataKeyLowerThreshold,
+              //   },
+              // });
+            }
+          },
+        );
+      }
 
       // Update layout with new component
       setLayouts({
@@ -535,6 +605,7 @@ function Dashboard({
                   setLayouts(tabs[tab]);
                 }}
               >
+                <Badge status={tabsStatus[tab].status} />
                 {tab}
               </Menu.Item>
             ))
