@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import dayjs from 'dayjs';
 
 import {
   Form,
@@ -141,7 +142,7 @@ function Chart({
       [
         [
           ['mjd', 'time', ...yValues].join(','), // columns
-          Object.entries(xValues).map(([key, value]) => [dateToMJD(key), key, ...value].join(',')).join('\n'), // rows
+          Object.entries(xValues).map(([key, value]) => [dateToMJD(dayjs(key)), key, ...value].join(',')).join('\n'), // rows
         ].join('\n'),
       ],
       { type: 'text/csv' },
