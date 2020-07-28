@@ -275,16 +275,23 @@ function Dashboard({
               if (component.component.name === 'DisplayValue') {
                 component.component.props.displayValues.forEach(
                   ({ dataKey, dataKeyUpperThreshold, dataKeyLowerThreshold }) => {
-                    if (dataKeyUpperThreshold || dataKeyLowerThreshold) {
-                      dataKeys.push({
-                        [dataKey]: {
-                          dataKeyUpperThreshold,
-                          dataKeyLowerThreshold,
-                        },
-                      });
-                    }
+                    dataKeys.push({
+                      [dataKey]: {
+                        dataKeyUpperThreshold,
+                        dataKeyLowerThreshold,
+                      },
+                    });
                   },
                 );
+              }
+              if (component.component.name === 'Chart') {
+                component.component.props.plots.forEach(({ YDataKey, timeDataKey }) => {
+                  dataKeys.push({
+                    [YDataKey]: {
+                      timeDataKey,
+                    },
+                  });
+                });
               }
             });
             tabStatus.push({
@@ -305,22 +312,29 @@ function Dashboard({
                 if (component.component.name === 'DisplayValue') {
                   component.component.props.displayValues.forEach(
                     ({ dataKey, dataKeyUpperThreshold, dataKeyLowerThreshold }) => {
-                      if (dataKeyUpperThreshold || dataKeyLowerThreshold) {
-                        dataKeys.push({
-                          [dataKey]: {
-                            dataKeyUpperThreshold,
-                            dataKeyLowerThreshold,
-                          },
-                        });
-                      }
+                      dataKeys.push({
+                        [dataKey]: {
+                          dataKeyUpperThreshold,
+                          dataKeyLowerThreshold,
+                        },
+                      });
                     },
                   );
+                }
+                if (component.component.name === 'Chart') {
+                  component.component.props.plots.forEach(({ YDataKey, timeDataKey }) => {
+                    dataKeys.push({
+                      [YDataKey]: {
+                        timeDataKey,
+                      },
+                    });
+                  });
                 }
               });
               tabStatus.push({
                 [tab]: {
                   dataKeys,
-                  status: 'success',
+                  status: 'default',
                 },
               });
             });
