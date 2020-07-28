@@ -251,10 +251,7 @@ function Chart({
         }
 
         // Trigger the chart to update
-        setLayout({
-          ...layout,
-          dataRevision: layout.dataRevision + 1,
-        });
+        layout.datarevision += 1;
         setDataRevision(dataRevision + 1);
       }
     });
