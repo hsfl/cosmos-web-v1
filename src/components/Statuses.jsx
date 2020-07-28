@@ -5,7 +5,7 @@ import dayjsPluginUTC from 'dayjs-plugin-utc';
 import ActivityTable from './ActivityTable';
 import ActivityTime from './ActivityTime';
 import ShowTime from './ShowTime';
-// import Downtime from './Downtime';
+import Downtime from './Downtime';
 
 dayjs.extend(dayjsPluginUTC);
 
@@ -44,7 +44,7 @@ function Statuses() {
             <ActivityTime />
           </td>
           <td className="pr-2">
-            {/* <Downtime /> */}
+            <Downtime />
           </td>
         </tr>
         <tr>
