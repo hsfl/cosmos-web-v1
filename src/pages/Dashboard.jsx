@@ -69,6 +69,7 @@ function Dashboard({
   const dispatch = useDispatch();
   const activities = useSelector((s) => s.activity);
   const tabsStatus = useSelector((s) => s.tabStatus);
+  const state = useSelector((s) => s.data);
 
   /** Store the default page layout in case user wants to switch to it */
   const [defaultPageLayout, setDefaultPageLayout] = useState({
@@ -227,6 +228,35 @@ function Dashboard({
     fetchNamespace();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (state[id]) {
+      let flag = false;
+      tabsStatus.forEach((tab, i) => {
+        Object.keys(tab).forEach((dKey) => {
+          if (state[id][dKey]) {
+            if (tab[dKey].dataKeyUpperThreshold !== undefined
+              && state[id][dKey] > tab[dKey].dataKeyUpperThreshold) {
+              flag = true;
+            }
+            if (tab[dKey].dataKeyLowerThreshold !== undefined
+              && state[id][dKey] < tab[dKey].dataKeyLowerThreshold) {
+              flag = true;
+            }
+          }
+        });
+
+        if (flag) {
+          tabsStatus[i].status = 'error';
+        } else {
+          tabsStatus[i].status = 'success';
+        }
+
+        flag = false;
+      });
+    }
+    console.log(state, tabsStatus);
+  }, [state]);
 
   /** Retrieve default layout for page */
   useEffect(() => {
@@ -595,6 +625,10 @@ function Dashboard({
         </div>
         <Menu mode="horizontal">
           <Menu.Item onClick={() => selectLayout('defaultPageLayout')}>
+            {
+              tabsStatus.defaultLayout != null ? <Badge status={tabsStatus.defaultLayout.status} />
+                : <Badge status="success" />
+            }
             Overview
           </Menu.Item>
           {
@@ -605,7 +639,10 @@ function Dashboard({
                   setLayouts(tabs[tab]);
                 }}
               >
-                <Badge status={tabsStatus[tab].status} />
+                {
+                  tabsStatus[tab] != null ? <Badge status={tabsStatus[tab].status} />
+                    : <Badge status="success" />
+                }
                 {tab}
               </Menu.Item>
             ))
