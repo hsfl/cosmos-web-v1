@@ -318,6 +318,7 @@ export default {
                 x: [],
                 y: [],
                 type: 'scatter',
+                mode: 'lines+markers',
                 marker: {
                   color: 'red',
                 },
@@ -332,6 +333,7 @@ export default {
                 x: [],
                 y: [],
                 type: 'scatter',
+                mode: 'lines+markers',
                 marker: {
                   color: 'blue',
                 },
@@ -361,6 +363,7 @@ export default {
                 x: [],
                 y: [],
                 type: 'scatter',
+                mode: 'lines+markers',
                 marker: {
                   color: 'darkseagreen',
                 },
@@ -375,6 +378,7 @@ export default {
                 x: [],
                 y: [],
                 type: 'scatter',
+                mode: 'lines+markers',
                 marker: {
                   color: 'blue',
                 },
@@ -389,6 +393,7 @@ export default {
                 x: [],
                 y: [],
                 type: 'scatter',
+                mode: 'lines+markers',
                 marker: {
                   color: 'orange',
                 },
@@ -403,6 +408,7 @@ export default {
                 x: [],
                 y: [],
                 type: 'scatter',
+                mode: 'lines+markers',
                 marker: {
                   color: 'red',
                 },
@@ -417,6 +423,7 @@ export default {
                 x: [],
                 y: [],
                 type: 'scatter',
+                mode: 'lines+markers',
                 marker: {
                   color: 'brown',
                 },
@@ -431,6 +438,7 @@ export default {
                 x: [],
                 y: [],
                 type: 'scatter',
+                mode: 'lines+markers',
                 marker: {
                   color: 'cyan',
                 },
@@ -445,6 +453,7 @@ export default {
                 x: [],
                 y: [],
                 type: 'scatter',
+                mode: 'lines+markers',
                 marker: {
                   color: 'green',
                 },
@@ -459,6 +468,7 @@ export default {
                 x: [],
                 y: [],
                 type: 'scatter',
+                mode: 'lines+markers',
                 marker: {
                   color: 'purple',
                 },
@@ -473,6 +483,7 @@ export default {
                 x: [],
                 y: [],
                 type: 'scatter',
+                mode: 'lines+markers',
                 marker: {
                   color: 'purple',
                 },
@@ -487,6 +498,7 @@ export default {
                 x: [],
                 y: [],
                 type: 'scatter',
+                mode: 'lines+markers',
                 marker: {
                   color: 'violet',
                 },
@@ -518,7 +530,7 @@ export default {
                 x: [],
                 y: [],
                 type: 'scatter',
-                mode: 'marker',
+                mode: 'lines+markers',
                 marker: {
                   color: 'orange',
                 },
@@ -550,6 +562,7 @@ export default {
                 x: [],
                 y: [],
                 type: 'scatter',
+                mode: 'lines+markers',
                 marker: {
                   color: 'red',
                 },
@@ -564,6 +577,7 @@ export default {
                 x: [],
                 y: [],
                 type: 'scatter',
+                mode: 'lines+markers',
                 marker: {
                   color: 'orange',
                 },
@@ -578,6 +592,7 @@ export default {
                 x: [],
                 y: [],
                 type: 'scatter',
+                mode: 'lines+markers',
                 marker: {
                   color: 'blue',
                 },
@@ -592,6 +607,7 @@ export default {
                 x: [],
                 y: [],
                 type: 'scatter',
+                mode: 'lines+markers',
                 marker: {
                   color: 'gray',
                 },
@@ -606,6 +622,7 @@ export default {
                 x: [],
                 y: [],
                 type: 'scatter',
+                mode: 'lines+markers',
                 marker: {
                   color: 'green',
                 },
@@ -637,6 +654,7 @@ export default {
                 x: [],
                 y: [],
                 type: 'scatter',
+                mode: 'lines+markers',
                 marker: {
                   color: 'green',
                 },
@@ -651,6 +669,7 @@ export default {
                 x: [],
                 y: [],
                 type: 'scatter',
+                mode: 'lines+markers',
                 marker: {
                   color: 'blue',
                 },
@@ -860,6 +879,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'red',
                   },
@@ -891,6 +911,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'red',
                   },
@@ -920,6 +941,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'red',
                   },
@@ -1051,6 +1073,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'red',
                   },
@@ -1081,6 +1104,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'red',
                   },
@@ -1110,6 +1134,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'red',
                   },
@@ -1578,6 +1603,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'red',
                   },
@@ -1607,6 +1633,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'red',
                   },
@@ -1621,6 +1648,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'orange',
                   },
@@ -1635,6 +1663,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'green',
                   },
@@ -1649,6 +1678,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'blue',
                   },
@@ -1663,6 +1693,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'purple',
                   },
@@ -1977,6 +2008,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'red',
                   },
@@ -1991,6 +2023,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'orange',
                   },
@@ -2005,6 +2038,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'blue',
                   },
@@ -2019,6 +2053,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'gray',
                   },
@@ -2033,6 +2068,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'purple',
                   },
@@ -2062,6 +2098,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'red',
                   },
@@ -2091,6 +2128,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'red',
                   },
@@ -2120,7 +2158,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
-                  mode: 'marker',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'red',
                   },
@@ -2418,6 +2456,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'blue',
                   },
@@ -2432,6 +2471,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'orange',
                   },
@@ -2446,6 +2486,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'red',
                   },
@@ -2460,6 +2501,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'purple',
                   },
@@ -2474,6 +2516,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'cyan',
                   },
@@ -2488,6 +2531,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'green',
                   },
@@ -2517,6 +2561,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'blue',
                   },
@@ -2531,6 +2576,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'orange',
                   },
@@ -2545,6 +2591,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'red',
                   },
@@ -2559,6 +2606,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'purple',
                   },
@@ -2573,6 +2621,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'cyan',
                   },
@@ -2587,6 +2636,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'green',
                   },
@@ -2616,6 +2666,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'blue',
                   },
@@ -2630,6 +2681,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'orange',
                   },
@@ -2644,6 +2696,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'red',
                   },
@@ -2658,6 +2711,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'red',
                   },
@@ -2672,6 +2726,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'red',
                   },
@@ -2686,6 +2741,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'red',
                   },
@@ -2717,6 +2773,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'blue',
                   },
@@ -2731,6 +2788,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'orange',
                   },
@@ -2745,6 +2803,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'red',
                   },
@@ -2759,6 +2818,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'purple',
                   },
@@ -2773,6 +2833,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'cyan',
                   },
@@ -2787,6 +2848,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'green',
                   },
@@ -3093,6 +3155,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'red',
                   },
@@ -3107,6 +3170,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'orange',
                   },
@@ -3121,6 +3185,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'blue',
                   },
@@ -3135,6 +3200,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'gray',
                   },
@@ -3164,6 +3230,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'red',
                   },
@@ -3178,6 +3245,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'orange',
                   },
@@ -3192,6 +3260,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'blue',
                   },
@@ -3206,6 +3275,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'gray',
                   },
@@ -3552,6 +3622,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'darkseagreen',
                   },
@@ -3566,6 +3637,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'blue',
                   },
@@ -3580,6 +3652,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'orange',
                   },
@@ -3594,6 +3667,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'green',
                   },
@@ -3608,6 +3682,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'brown',
                   },
@@ -3622,6 +3697,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'purple',
                   },
@@ -3636,6 +3712,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'red',
                   },
@@ -3650,6 +3727,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'black',
                   },
@@ -3664,6 +3742,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'pink',
                   },
@@ -3678,6 +3757,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'cyan',
                   },
@@ -3709,6 +3789,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'darkseagreen',
                   },
@@ -3723,6 +3804,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'blue',
                   },
@@ -3737,6 +3819,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'orange',
                   },
@@ -3751,6 +3834,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'green',
                   },
@@ -3765,6 +3849,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'brown',
                   },
@@ -3779,6 +3864,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'purple',
                   },
@@ -3793,6 +3879,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'red',
                   },
@@ -3807,6 +3894,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'black',
                   },
@@ -3821,6 +3909,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'pink',
                   },
@@ -3835,6 +3924,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'cyan',
                   },
@@ -3864,6 +3954,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'darkseagreen',
                   },
@@ -3878,6 +3969,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'blue',
                   },
@@ -3892,6 +3984,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'orange',
                   },
@@ -3906,6 +3999,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'green',
                   },
@@ -3920,6 +4014,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'brown',
                   },
@@ -3934,6 +4029,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'purple',
                   },
@@ -3948,6 +4044,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'red',
                   },
@@ -3962,6 +4059,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'black',
                   },
@@ -3976,6 +4074,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'pink',
                   },
@@ -3990,6 +4089,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'cyan',
                   },
@@ -5130,6 +5230,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'red',
                   },
@@ -5159,6 +5260,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'red',
                   },
@@ -5173,6 +5275,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'orange',
                   },
@@ -5187,6 +5290,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'blue',
                   },
@@ -5355,6 +5459,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'red',
                   },
@@ -5369,6 +5474,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'orange',
                   },
@@ -5383,6 +5489,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'blue',
                   },
@@ -5412,6 +5519,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'red',
                   },
@@ -5426,6 +5534,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'orange',
                   },
@@ -5440,6 +5549,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'blue',
                   },
@@ -5469,6 +5579,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'red',
                   },
@@ -5483,6 +5594,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'orange',
                   },
@@ -5497,6 +5609,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'blue',
                   },
@@ -5526,6 +5639,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'red',
                   },
@@ -5555,6 +5669,7 @@ export default {
                   x: [],
                   y: [],
                   type: 'scatter',
+                  mode: 'lines+markers',
                   marker: {
                     color: 'red',
                   },
