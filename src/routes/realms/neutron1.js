@@ -328,7 +328,7 @@ export default {
                 marker: {
                   color: 'darkseagreen',
                 },
-                name: 'Battery MB',
+                name: 'Battery MB (C)',
                 YDataKey: 'device_batt_temp_000',
                 timeDataKey: 'device_batt_utc_000',
                 processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -343,7 +343,7 @@ export default {
                 marker: {
                   color: 'blue',
                 },
-                name: 'Batt DB 1',
+                name: 'Batt DB 1 (C)',
                 YDataKey: 'device_tsen_temp_000',
                 timeDataKey: 'device_tsen_utc_000',
                 processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -358,7 +358,7 @@ export default {
                 marker: {
                   color: 'orange',
                 },
-                name: 'Batt DB 2 000',
+                name: 'Batt DB 2 000 (C)',
                 YDataKey: 'device_tsen_temp_001',
                 timeDataKey: 'device_tsen_utc_001',
                 processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -373,7 +373,7 @@ export default {
                 marker: {
                   color: 'red',
                 },
-                name: 'Batt DB 2 001',
+                name: 'Batt DB 2 001 (C)',
                 YDataKey: 'device_tsen_temp_002',
                 timeDataKey: 'device_tsen_utc_002',
                 processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -388,7 +388,7 @@ export default {
                 marker: {
                   color: 'brown',
                 },
-                name: 'Batt DB 2 002',
+                name: 'Batt DB 2 002 (C)',
                 YDataKey: 'device_tsen_temp_003',
                 timeDataKey: 'device_tsen_utc_003',
                 processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -403,7 +403,7 @@ export default {
                 marker: {
                   color: 'cyan',
                 },
-                name: 'BBB',
+                name: 'BBB (C)',
                 YDataKey: 'device_cpu_temp_000',
                 timeDataKey: 'device_cpu_utc_000',
                 processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -418,7 +418,7 @@ export default {
                 marker: {
                   color: 'green',
                 },
-                name: 'EPS DU',
+                name: 'EPS DU (C)',
                 YDataKey: 'device_cpu_temp_001',
                 timeDataKey: 'device_cpu_utc_001',
                 processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -433,7 +433,7 @@ export default {
                 marker: {
                   color: 'purple',
                 },
-                name: 'CubeComputer',
+                name: 'CubeComputer (C)',
                 YDataKey: 'device_cpu_temp_002',
                 timeDataKey: 'device_cpu_utc_002',
                 processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -448,7 +448,7 @@ export default {
                 marker: {
                   color: 'purple',
                 },
-                name: 'OBC',
+                name: 'OBC (C)',
                 YDataKey: 'device_cpu_temp_003',
                 timeDataKey: 'device_cpu_utc_003',
                 processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -463,7 +463,7 @@ export default {
                 marker: {
                   color: 'violet',
                 },
-                name: 'IMU',
+                name: 'IMU (C)',
                 YDataKey: 'device_imu_temp_000',
                 timeDataKey: 'device_imu_utc_000',
                 processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -495,7 +495,7 @@ export default {
                 marker: {
                   color: 'orange',
                 },
-                name: 'Batt Power',
+                name: 'Batt Power (W)',
                 YDataKey: 'device_batt_power_000',
                 timeDataKey: 'device_batt_utc_000',
                 processYDataKey: (x) => x,
@@ -527,7 +527,7 @@ export default {
                 marker: {
                   color: 'red',
                 },
-                name: 'Power 000',
+                name: 'Power 000 (W)',
                 YDataKey: 'device_bus_power_000',
                 timeDataKey: 'device_bus_utc_000',
                 processYDataKey: (x) => x,
@@ -542,7 +542,7 @@ export default {
                 marker: {
                   color: 'orange',
                 },
-                name: 'Power 001',
+                name: 'Power 001 (W)',
                 YDataKey: 'device_bus_power_001',
                 timeDataKey: 'device_bus_utc_001',
                 processYDataKey: (x) => x,
@@ -557,7 +557,7 @@ export default {
                 marker: {
                   color: 'blue',
                 },
-                name: 'Power 002',
+                name: 'Power 002 (W)',
                 YDataKey: 'device_bus_power_002',
                 timeDataKey: 'device_bus_utc_002',
                 processYDataKey: (x) => x,
@@ -572,7 +572,7 @@ export default {
                 marker: {
                   color: 'gray',
                 },
-                name: 'Power 003',
+                name: 'Power 003 (W)',
                 YDataKey: 'device_bus_power_003',
                 timeDataKey: 'device_bus_utc_003',
                 processYDataKey: (x) => x,
@@ -619,7 +619,7 @@ export default {
                 marker: {
                   color: 'green',
                 },
-                name: 'Power Generation',
+                name: 'Power Generation (W)',
                 YDataKey: 'node_powgen',
                 timeDataKey: 'node_utc',
                 processYDataKey: (x) => x,
@@ -634,7 +634,7 @@ export default {
                 marker: {
                   color: 'blue',
                 },
-                name: 'Power Usage',
+                name: 'Power Usage (W)',
                 YDataKey: 'node_powuse',
                 timeDataKey: 'node_utc',
                 processYDataKey: (x) => x,
@@ -903,7 +903,7 @@ export default {
                   marker: {
                     color: 'red',
                   },
-                  name: 'beagle1 Storage',
+                  name: 'beagle1 Storage (GiB)',
                   YDataKey: 'device_cpu_gib_000',
                   timeDataKey: 'device_cpu_utc_000',
                   processYDataKey: (x) => x,
@@ -966,7 +966,7 @@ export default {
                   processDataKey: (x) => x.toFixed(2),
                 },
                 {
-                  name: 'CPU Uptime',
+                  name: 'CPU Uptime (s)',
                   nodeProcess: 'any',
                   dataKey: 'device_cpu_uptime_003',
                   timeDataKey: 'device_cpu_utc_003',
@@ -997,7 +997,7 @@ export default {
               name: 'Memory',
               displayValues: [
                 {
-                  name: 'CPU GiB',
+                  name: 'OBC Storage (GiB)',
                   nodeProcess: 'any',
                   dataKey: 'device_cpu_gib_003',
                   timeDataKey: 'device_cpu_utc_003',
@@ -1005,7 +1005,7 @@ export default {
                   processDataKey: (x) => x.toFixed(2),
                 },
                 {
-                  name: 'CPU Max GiB',
+                  name: 'CPU Max Storage (GiB)',
                   nodeProcess: 'any',
                   dataKey: 'device_cpu_maxgib_003',
                   timeDataKey: 'device_cpu_utc_003',
@@ -1064,7 +1064,7 @@ export default {
                   marker: {
                     color: 'red',
                   },
-                  name: 'neutron1 Storage',
+                  name: 'neutron1 Storage (GiB)',
                   YDataKey: 'device_cpu_gib_003',
                   timeDataKey: 'device_cpu_utc_003',
                   processYDataKey: (x) => x,
@@ -1649,7 +1649,7 @@ export default {
                   marker: {
                     color: 'red',
                   },
-                  name: 'Battery MB',
+                  name: 'Battery MB (C)',
                   YDataKey: 'device_batt_temp_000',
                   timeDataKey: 'device_batt_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -1663,7 +1663,7 @@ export default {
                   marker: {
                     color: 'blue',
                   },
-                  name: 'Batt DB 1',
+                  name: 'Batt DB 1 (C)',
                   YDataKey: 'device_tsen_temp_000',
                   timeDataKey: 'device_tsen_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -1677,7 +1677,7 @@ export default {
                   marker: {
                     color: 'orange',
                   },
-                  name: 'Batt DB 2 000',
+                  name: 'Batt DB 2 000 (C)',
                   YDataKey: 'device_tsen_temp_001',
                   timeDataKey: 'device_tsen_utc_001',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -1691,7 +1691,7 @@ export default {
                   marker: {
                     color: 'green',
                   },
-                  name: 'Batt DB 2 001',
+                  name: 'Batt DB 2 001 (C)',
                   YDataKey: 'device_tsen_temp_002',
                   timeDataKey: 'device_tsen_utc_002',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -1705,7 +1705,7 @@ export default {
                   marker: {
                     color: 'brown',
                   },
-                  name: 'Batt DB 2 002',
+                  name: 'Batt DB 2 002 (C)',
                   YDataKey: 'device_tsen_temp_003',
                   timeDataKey: 'device_tsen_utc_003',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -1734,7 +1734,7 @@ export default {
                   marker: {
                     color: 'red',
                   },
-                  name: 'BBB',
+                  name: 'BBB (C)',
                   YDataKey: 'device_cpu_temp_000',
                   timeDataKey: 'device_cpu_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -1748,7 +1748,7 @@ export default {
                   marker: {
                     color: 'blue',
                   },
-                  name: 'OBC',
+                  name: 'OBC (C)',
                   YDataKey: 'device_cpu_temp_003',
                   timeDataKey: 'device_cpu_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -1762,7 +1762,7 @@ export default {
                   marker: {
                     color: 'orange',
                   },
-                  name: 'EPS DU',
+                  name: 'EPS DU (C)',
                   YDataKey: 'device_cpu_temp_001',
                   timeDataKey: 'device_cpu_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -1776,7 +1776,7 @@ export default {
                   marker: {
                     color: 'green',
                   },
-                  name: 'CubeComp',
+                  name: 'CubeComp (C)',
                   YDataKey: 'device_cpu_temp_002',
                   timeDataKey: 'device_cpu_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -1790,7 +1790,7 @@ export default {
                   marker: {
                     color: 'brown',
                   },
-                  name: 'IMU',
+                  name: 'IMU (C)',
                   YDataKey: 'device_imu_temp_000',
                   timeDataKey: 'device_imu_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -1819,7 +1819,7 @@ export default {
                   marker: {
                     color: 'red',
                   },
-                  name: 'Bus 000',
+                  name: 'Bus 000 (C)',
                   YDataKey: 'device_bus_temp_000',
                   timeDataKey: 'device_bus_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -1833,7 +1833,7 @@ export default {
                   marker: {
                     color: 'blue',
                   },
-                  name: 'Bus 001',
+                  name: 'Bus 001 (C)',
                   YDataKey: 'device_bus_temp_001',
                   timeDataKey: 'device_bus_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -1847,7 +1847,7 @@ export default {
                   marker: {
                     color: 'orange',
                   },
-                  name: 'Bus 002',
+                  name: 'Bus 002 (C)',
                   YDataKey: 'device_bus_temp_002',
                   timeDataKey: 'device_bus_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -1861,7 +1861,7 @@ export default {
                   marker: {
                     color: 'green',
                   },
-                  name: 'Bus 003',
+                  name: 'Bus 003 (C)',
                   YDataKey: 'device_bus_temp_003',
                   timeDataKey: 'device_bus_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -1875,7 +1875,7 @@ export default {
                   marker: {
                     color: 'brown',
                   },
-                  name: 'Bus 004',
+                  name: 'Bus 004 (C)',
                   YDataKey: 'device_bus_temp_004',
                   timeDataKey: 'device_bus_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -1889,7 +1889,7 @@ export default {
                   marker: {
                     color: 'cyan',
                   },
-                  name: 'Bus 005',
+                  name: 'Bus 005 (C)',
                   YDataKey: 'device_bus_temp_005',
                   timeDataKey: 'device_bus_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -1903,7 +1903,7 @@ export default {
                   marker: {
                     color: 'purple',
                   },
-                  name: 'Bus 006',
+                  name: 'Bus 006 (C)',
                   YDataKey: 'device_bus_temp_006',
                   timeDataKey: 'device_bus_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -1917,7 +1917,7 @@ export default {
                   marker: {
                     color: 'darkseagreen',
                   },
-                  name: 'Bus 007',
+                  name: 'Bus 007 (C)',
                   YDataKey: 'device_bus_temp_007',
                   timeDataKey: 'device_bus_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -1946,7 +1946,7 @@ export default {
                   marker: {
                     color: 'red',
                   },
-                  name: 'Solar Panel Z-',
+                  name: 'Solar Panel Z- (C)',
                   YDataKey: 'device_bcreg_temp_000',
                   timeDataKey: 'device_bcreg_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -1960,7 +1960,7 @@ export default {
                   marker: {
                     color: 'blue',
                   },
-                  name: 'Solar Panel Z+',
+                  name: 'Solar Panel Z+ (C)',
                   YDataKey: 'device_bcreg_temp_001',
                   timeDataKey: 'device_bcreg_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -1974,7 +1974,7 @@ export default {
                   marker: {
                     color: 'orange',
                   },
-                  name: 'Solar Panel Y-',
+                  name: 'Solar Panel Y- (C)',
                   YDataKey: 'device_bcreg_temp_002',
                   timeDataKey: 'device_bcreg_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -1988,7 +1988,7 @@ export default {
                   marker: {
                     color: 'green',
                   },
-                  name: 'Solar Panel Y+',
+                  name: 'Solar Panel Y+ (C)',
                   YDataKey: 'device_breg_temp_003',
                   timeDataKey: 'device_bcreg_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -2002,7 +2002,7 @@ export default {
                   marker: {
                     color: 'brown',
                   },
-                  name: 'Solar Power Supply X-',
+                  name: 'Solar Power Supply X- (C)',
                   YDataKey: 'device_bcreg_temp_004',
                   timeDataKey: 'device_bcreg_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -2016,7 +2016,7 @@ export default {
                   marker: {
                     color: 'cyan',
                   },
-                  name: 'Solar Power Supply X+',
+                  name: 'Solar Power Supply X+ (C)',
                   YDataKey: 'device_bcreg_temp_005',
                   timeDataKey: 'device_bcreg_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -2045,7 +2045,7 @@ export default {
                   marker: {
                     color: 'red',
                   },
-                  name: 'Switch 000',
+                  name: 'Switch 000 (C)',
                   YDataKey: 'device_swch_temp_000',
                   timeDataKey: 'device_swch_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -2059,7 +2059,7 @@ export default {
                   marker: {
                     color: 'blue',
                   },
-                  name: 'Switch 001',
+                  name: 'Switch 001 (C)',
                   YDataKey: 'device_swch_temp_001',
                   timeDataKey: 'device_swch_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -2073,7 +2073,7 @@ export default {
                   marker: {
                     color: 'orange',
                   },
-                  name: 'Switch 002',
+                  name: 'Switch 002 (C)',
                   YDataKey: 'device_swch_temp_002',
                   timeDataKey: 'device_swch_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -2087,7 +2087,7 @@ export default {
                   marker: {
                     color: 'green',
                   },
-                  name: 'Switch 003',
+                  name: 'Switch 003 (C)',
                   YDataKey: 'device_swch_temp_003',
                   timeDataKey: 'device_swch_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -2101,7 +2101,7 @@ export default {
                   marker: {
                     color: 'brown',
                   },
-                  name: 'Switch 004',
+                  name: 'Switch 004 (C)',
                   YDataKey: 'device_swch_temp_004',
                   timeDataKey: 'device_swch_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -2115,7 +2115,7 @@ export default {
                   marker: {
                     color: 'cyan',
                   },
-                  name: 'Switch 005',
+                  name: 'Switch 005 (C)',
                   YDataKey: 'device_swch_temp_005',
                   timeDataKey: 'device_swch_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -2129,7 +2129,7 @@ export default {
                   marker: {
                     color: 'purple',
                   },
-                  name: 'Switch 006',
+                  name: 'Switch 006 (C)',
                   YDataKey: 'device_swch_temp_006',
                   timeDataKey: 'device_swch_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -2144,7 +2144,7 @@ export default {
                     color: 'darkseagreen',
                   },
                   name: 'Switch 007',
-                  YDataKey: 'device_swch_temp_007',
+                  YDataKey: 'device_swch_temp_007 (C)',
                   timeDataKey: 'device_swch_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
                   nodeProcess: 'any',
@@ -2159,7 +2159,7 @@ export default {
                     color: 'pink',
                   },
                   name: 'Switch 008',
-                  YDataKey: 'device_swch_temp_008',
+                  YDataKey: 'device_swch_temp_008 (C)',
                   timeDataKey: 'device_swch_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
                   nodeProcess: 'any',
@@ -2173,7 +2173,7 @@ export default {
                   marker: {
                     color: 'gray',
                   },
-                  name: 'Switch 009',
+                  name: 'Switch 009 (C)',
                   YDataKey: 'device_swch_temp_009',
                   timeDataKey: 'device_swch_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -2203,7 +2203,7 @@ export default {
                   marker: {
                     color: 'red',
                   },
-                  name: 'Motor X',
+                  name: 'Motor X (C)',
                   YDataKey: 'device_mtr_temp_000',
                   timeDataKey: 'device_mtr_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -2217,7 +2217,7 @@ export default {
                   marker: {
                     color: 'blue',
                   },
-                  name: 'Motor Y',
+                  name: 'Motor Y (C)',
                   YDataKey: 'device_mtr_temp_001',
                   timeDataKey: 'device_mtr_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -2231,7 +2231,7 @@ export default {
                   marker: {
                     color: 'orange',
                   },
-                  name: 'Motor Z',
+                  name: 'Motor Z (C)',
                   YDataKey: 'device_mtr_temp_002',
                   timeDataKey: 'device_mtr_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -2245,7 +2245,7 @@ export default {
                   marker: {
                     color: 'green',
                   },
-                  name: 'Reaction Wheel',
+                  name: 'Reaction Wheel (C)',
                   YDataKey: 'device_rw_temp_000',
                   timeDataKey: 'device_rw_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -2275,7 +2275,7 @@ export default {
                   marker: {
                     color: 'red',
                   },
-                  name: 'Sun Sensor',
+                  name: 'Sun Sensor (C)',
                   YDataKey: 'device_ssen_temp_000',
                   timeDataKey: 'device_ssen_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -2290,7 +2290,7 @@ export default {
                   marker: {
                     color: 'blue',
                   },
-                  name: 'Transceiver',
+                  name: 'Transceiver (C)',
                   YDataKey: 'device_tcv_temp_000',
                   timeDataKey: 'device_tcv_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -2305,7 +2305,7 @@ export default {
                   marker: {
                     color: 'orange',
                   },
-                  name: 'GPS',
+                  name: 'GPS (C)',
                   YDataKey: 'device_gps_temp_000',
                   timeDataKey: 'device_gps_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -2319,7 +2319,7 @@ export default {
                   marker: {
                     color: 'green',
                   },
-                  name: 'Payload',
+                  name: 'Payload (C)',
                   YDataKey: 'device_pload_temp_000',
                   timeDataKey: 'device_pload_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -3192,7 +3192,7 @@ export default {
                   marker: {
                     color: 'red',
                   },
-                  name: 'Motherboard',
+                  name: 'Motherboard (C)',
                   YDataKey: 'device_batt_temp_000',
                   timeDataKey: 'device_batt_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -3207,7 +3207,7 @@ export default {
                   marker: {
                     color: 'orange',
                   },
-                  name: 'Daughterboard 1 000',
+                  name: 'Daughterboard 1 000 (C)',
                   YDataKey: 'device_tsen_temp_000',
                   timeDataKey: 'device_tsen_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -3222,7 +3222,7 @@ export default {
                   marker: {
                     color: 'blue',
                   },
-                  name: 'Daughterboard 2 001',
+                  name: 'Daughterboard 2 001 (C)',
                   YDataKey: 'device_tsen_temp_001',
                   timeDataKey: 'device_tsen_utc_001',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -3237,7 +3237,7 @@ export default {
                   marker: {
                     color: 'gray',
                   },
-                  name: 'Daughterboard 2 002',
+                  name: 'Daughterboard 2 002 (C)',
                   YDataKey: 'device_tsen_temp_002',
                   timeDataKey: 'device_tsen_utc_002',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -3252,7 +3252,7 @@ export default {
                   marker: {
                     color: 'purple',
                   },
-                  name: 'Daughterboard 2 003',
+                  name: 'Daughterboard 2 003 (C)',
                   YDataKey: 'device_tsen_temp_003',
                   timeDataKey: 'device_tsen_utc_003',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
@@ -3312,7 +3312,7 @@ export default {
                   marker: {
                     color: 'red',
                   },
-                  name: 'Batt Amperage',
+                  name: 'Batt Amperage (A)',
                   YDataKey: 'device_batt_amp_000',
                   timeDataKey: 'device_batt_utc_000',
                   processYDataKey: (x) => x,
@@ -3342,7 +3342,7 @@ export default {
                   marker: {
                     color: 'red',
                   },
-                  name: 'Batt Voltage',
+                  name: 'Batt Voltage (V)',
                   YDataKey: 'device_batt_volt_000',
                   timeDataKey: 'device_batt_utc_000',
                   processYDataKey: (x) => x,
@@ -3640,7 +3640,7 @@ export default {
                   marker: {
                     color: 'blue',
                   },
-                  name: 'Solar Panel Z-',
+                  name: 'Solar Panel Z- (A)',
                   YDataKey: 'device_bcreg_amp_000',
                   timeDataKey: 'device_bcreg_utc_000',
                   processYDataKey: (x) => x,
@@ -3655,7 +3655,7 @@ export default {
                   marker: {
                     color: 'orange',
                   },
-                  name: 'Solar Panel Z+',
+                  name: 'Solar Panel Z+ (A)',
                   YDataKey: 'device_bcreg_amp_001',
                   timeDataKey: 'device_bcreg_utc_001',
                   processYDataKey: (x) => x,
@@ -3670,7 +3670,7 @@ export default {
                   marker: {
                     color: 'red',
                   },
-                  name: 'Solar Panel Y-',
+                  name: 'Solar Panel Y- (A)',
                   YDataKey: 'device_bcreg_amp_002',
                   timeDataKey: 'device_bcreg_utc_002',
                   processYDataKey: (x) => x,
@@ -3685,7 +3685,7 @@ export default {
                   marker: {
                     color: 'purple',
                   },
-                  name: 'Solar Panel Y+',
+                  name: 'Solar Panel Y+ (A)',
                   YDataKey: 'device_bcreg_amp_003',
                   timeDataKey: 'device_bcreg_utc_003',
                   processYDataKey: (x) => x,
@@ -3700,7 +3700,7 @@ export default {
                   marker: {
                     color: 'cyan',
                   },
-                  name: 'Solar Power Supply X-',
+                  name: 'Solar Power Supply X- (A)',
                   YDataKey: 'device_bcreg_amp_004',
                   timeDataKey: 'device_bcreg_utc_004',
                   processYDataKey: (x) => x,
@@ -3715,7 +3715,7 @@ export default {
                   marker: {
                     color: 'green',
                   },
-                  name: 'Solar Power Supply X+',
+                  name: 'Solar Power Supply X+ (A)',
                   YDataKey: 'device_bcreg_amp_005',
                   timeDataKey: 'device_bcreg_utc_005',
                   processYDataKey: (x) => x,
@@ -3745,7 +3745,7 @@ export default {
                   marker: {
                     color: 'blue',
                   },
-                  name: 'Solar Panel Z-',
+                  name: 'Solar Panel Z- (V)',
                   YDataKey: 'device_bcreg_volt_000',
                   timeDataKey: 'device_bcreg_utc_000',
                   processYDataKey: (x) => x,
@@ -3760,7 +3760,7 @@ export default {
                   marker: {
                     color: 'orange',
                   },
-                  name: 'Solar Panel Z+',
+                  name: 'Solar Panel Z+ (V)',
                   YDataKey: 'device_bcreg_volt_001',
                   timeDataKey: 'device_bcreg_utc_000',
                   processYDataKey: (x) => x,
@@ -3775,7 +3775,7 @@ export default {
                   marker: {
                     color: 'red',
                   },
-                  name: 'Solar Panel Y-',
+                  name: 'Solar Panel Y- (V)',
                   YDataKey: 'device_bcreg_volt_002',
                   timeDataKey: 'device_bcreg_utc_002',
                   processYDataKey: (x) => x,
@@ -3790,7 +3790,7 @@ export default {
                   marker: {
                     color: 'purple',
                   },
-                  name: 'Solar Panel Y+',
+                  name: 'Solar Panel Y+ (V)',
                   YDataKey: 'device_bcreg_volt_003',
                   timeDataKey: 'device_bcreg_utc_003',
                   processYDataKey: (x) => x,
@@ -3805,7 +3805,7 @@ export default {
                   marker: {
                     color: 'cyan',
                   },
-                  name: 'Solar Power Supply X-',
+                  name: 'Solar Power Supply X- (V)',
                   YDataKey: 'device_bcreg_volt_004',
                   timeDataKey: 'device_bcreg_utc_004',
                   processYDataKey: (x) => x,
@@ -3820,7 +3820,7 @@ export default {
                   marker: {
                     color: 'green',
                   },
-                  name: 'Solar Power Supply X+',
+                  name: 'Solar Power Supply X+ (V)',
                   YDataKey: 'device_bcreg_volt_005',
                   timeDataKey: 'device_bcreg_utc_005',
                   processYDataKey: (x) => x,
@@ -3850,7 +3850,7 @@ export default {
                   marker: {
                     color: 'blue',
                   },
-                  name: 'Solar Panel Z-',
+                  name: 'Solar Panel Z- (W)',
                   YDataKey: 'device_bcreg_power_000',
                   timeDataKey: 'device_bcreg_utc_000',
                   processYDataKey: (x) => x,
@@ -3865,7 +3865,7 @@ export default {
                   marker: {
                     color: 'orange',
                   },
-                  name: 'Solar Panel Z+',
+                  name: 'Solar Panel Z+ (W)',
                   YDataKey: 'device_bcreg_power_001',
                   timeDataKey: 'device_bcreg_utc_001',
                   processYDataKey: (x) => x,
@@ -3880,7 +3880,7 @@ export default {
                   marker: {
                     color: 'red',
                   },
-                  name: 'Solar Panel Y-',
+                  name: 'Solar Panel Y- (W)',
                   YDataKey: 'device_bcreg_power_002',
                   timeDataKey: 'device_bcreg_utc_002',
                   processYDataKey: (x) => x,
@@ -3895,7 +3895,7 @@ export default {
                   marker: {
                     color: 'red',
                   },
-                  name: 'Solar Panel Y+',
+                  name: 'Solar Panel Y+ (W)',
                   YDataKey: 'device_bcreg_power_003',
                   timeDataKey: 'device_bcreg_utc_003',
                   processYDataKey: (x) => x,
@@ -3910,7 +3910,7 @@ export default {
                   marker: {
                     color: 'red',
                   },
-                  name: 'Solar Power Supply X-',
+                  name: 'Solar Power Supply X- (W)',
                   YDataKey: 'device_bcreg_power_004',
                   timeDataKey: 'device_bcreg_utc_004',
                   processYDataKey: (x) => x,
@@ -3925,7 +3925,7 @@ export default {
                   marker: {
                     color: 'red',
                   },
-                  name: 'Solar Power Supply X+',
+                  name: 'Solar Power Supply X+ (W)',
                   YDataKey: 'device_bcreg_power_005',
                   timeDataKey: 'device_bcreg_utc_005',
                   processYDataKey: (x) => x,
@@ -3957,7 +3957,7 @@ export default {
                   marker: {
                     color: 'blue',
                   },
-                  name: 'Solar Panel Z-',
+                  name: 'Solar Panel Z- (C)',
                   YDataKey: 'device_bcreg_temp_000',
                   timeDataKey: 'device_bcreg_utc_000',
                   processYDataKey: (x) => x,
@@ -3972,7 +3972,7 @@ export default {
                   marker: {
                     color: 'orange',
                   },
-                  name: 'Solar Panel Z+',
+                  name: 'Solar Panel Z+ (C)',
                   YDataKey: 'device_bcreg_temp_001',
                   timeDataKey: 'device_bcreg_utc_001',
                   processYDataKey: (x) => x,
@@ -3987,7 +3987,7 @@ export default {
                   marker: {
                     color: 'red',
                   },
-                  name: 'Solar Panel Y-',
+                  name: 'Solar Panel Y- (C)',
                   YDataKey: 'device_bcreg_temp_002',
                   timeDataKey: 'device_bcreg_utc_002',
                   processYDataKey: (x) => x,
@@ -4002,7 +4002,7 @@ export default {
                   marker: {
                     color: 'purple',
                   },
-                  name: 'Solar Panel Y+',
+                  name: 'Solar Panel Y+ (C)',
                   YDataKey: 'device_bcreg_temp_003',
                   timeDataKey: 'device_bcreg_utc_003',
                   processYDataKey: (x) => x,
@@ -4017,7 +4017,7 @@ export default {
                   marker: {
                     color: 'cyan',
                   },
-                  name: 'Solar Power Supply X-',
+                  name: 'Solar Power Supply X- (C)',
                   YDataKey: 'device_bcreg_temp_004',
                   timeDataKey: 'device_bcreg_utc_004',
                   processYDataKey: (x) => x,
@@ -4032,7 +4032,7 @@ export default {
                   marker: {
                     color: 'green',
                   },
-                  name: 'Solar Power Supply X+',
+                  name: 'Solar Power Supply X+ (C)',
                   YDataKey: 'device_bcreg_temp_005',
                   timeDataKey: 'device_bcreg_utc_005',
                   processYDataKey: (x) => x,
@@ -4339,7 +4339,7 @@ export default {
                   marker: {
                     color: 'red',
                   },
-                  name: 'Amp 000',
+                  name: 'Amp 000 (A)',
                   YDataKey: 'device_bus_amp_000',
                   timeDataKey: 'device_bus_utc_000',
                   processYDataKey: (x) => x,
@@ -4354,7 +4354,7 @@ export default {
                   marker: {
                     color: 'orange',
                   },
-                  name: 'Amp 001',
+                  name: 'Amp 001 (A)',
                   YDataKey: 'device_bus_amp_001',
                   timeDataKey: 'device_bus_utc_001',
                   processYDataKey: (x) => x,
@@ -4369,7 +4369,7 @@ export default {
                   marker: {
                     color: 'blue',
                   },
-                  name: 'Amp 002',
+                  name: 'Amp 002 (A)',
                   YDataKey: 'device_bus_amp_002',
                   timeDataKey: 'device_bus_utc_002',
                   processYDataKey: (x) => x,
@@ -4384,7 +4384,7 @@ export default {
                   marker: {
                     color: 'gray',
                   },
-                  name: '12V Amperage',
+                  name: '12V Amperage (A)',
                   YDataKey: 'device_bus_amp_003',
                   timeDataKey: 'device_bus_utc_003',
                   processYDataKey: (x) => x,
@@ -4414,7 +4414,7 @@ export default {
                   marker: {
                     color: 'red',
                   },
-                  name: 'Volt 000',
+                  name: 'Volt 000 (V)',
                   YDataKey: 'device_bus_volt_000',
                   timeDataKey: 'device_bus_utc_000',
                   processYDataKey: (x) => x,
@@ -4429,7 +4429,7 @@ export default {
                   marker: {
                     color: 'orange',
                   },
-                  name: 'Volt 001',
+                  name: 'Volt 001 (V)',
                   YDataKey: 'device_bus_volt_001',
                   timeDataKey: 'device_bus_utc_001',
                   processYDataKey: (x) => x,
@@ -4444,7 +4444,7 @@ export default {
                   marker: {
                     color: 'blue',
                   },
-                  name: 'Volt 002',
+                  name: 'Volt 002 (V)',
                   YDataKey: 'device_bus_volt_002',
                   timeDataKey: 'device_bus_utc_002',
                   processYDataKey: (x) => x,
@@ -4459,7 +4459,7 @@ export default {
                   marker: {
                     color: 'gray',
                   },
-                  name: 'Volt 003',
+                  name: 'Volt 003 (V)',
                   YDataKey: 'device_bus_volt_003',
                   timeDataKey: 'device_bus_utc_003',
                   processYDataKey: (x) => x,
@@ -4806,7 +4806,7 @@ export default {
                   marker: {
                     color: 'darkseagreen',
                   },
-                  name: 'Amp 000',
+                  name: 'Amp 000 (A)',
                   YDataKey: 'device_swch_amp_000',
                   timeDataKey: 'device_swch_utc_000',
                   processYDataKey: (x) => x,
@@ -4821,7 +4821,7 @@ export default {
                   marker: {
                     color: 'blue',
                   },
-                  name: 'Amp 001',
+                  name: 'Amp 001 (A)',
                   YDataKey: 'device_swch_amp_001',
                   timeDataKey: 'device_swch_utc_001',
                   processYDataKey: (x) => x,
@@ -4836,7 +4836,7 @@ export default {
                   marker: {
                     color: 'orange',
                   },
-                  name: 'Amp 002',
+                  name: 'Amp 002 (A)',
                   YDataKey: 'device_swch_amp_002',
                   timeDataKey: 'device_swch_utc_0002',
                   processYDataKey: (x) => x,
@@ -4851,7 +4851,7 @@ export default {
                   marker: {
                     color: 'green',
                   },
-                  name: 'Amp 003',
+                  name: 'Amp 003 (A)',
                   YDataKey: 'device_swch_amp_003',
                   timeDataKey: 'device_swch_utc_003',
                   processYDataKey: (x) => x,
@@ -4866,7 +4866,7 @@ export default {
                   marker: {
                     color: 'brown',
                   },
-                  name: 'Amp 004',
+                  name: 'Amp 004 (A)',
                   YDataKey: 'device_swch_amp_004',
                   timeDataKey: 'device_swch_utc_004',
                   processYDataKey: (x) => x,
@@ -4881,7 +4881,7 @@ export default {
                   marker: {
                     color: 'purple',
                   },
-                  name: 'Amp 005',
+                  name: 'Amp 005 (A)',
                   YDataKey: 'device_swch_amp_005',
                   timeDataKey: 'device_swch_utc_005',
                   processYDataKey: (x) => x,
@@ -4896,7 +4896,7 @@ export default {
                   marker: {
                     color: 'red',
                   },
-                  name: 'Amp 006',
+                  name: 'Amp 006 (A)',
                   YDataKey: 'device_swch_amp_006',
                   timeDataKey: 'device_swch_utc_006',
                   processYDataKey: (x) => x,
@@ -4911,7 +4911,7 @@ export default {
                   marker: {
                     color: 'black',
                   },
-                  name: 'Amp 007',
+                  name: 'Amp 007 (A)',
                   YDataKey: 'device_swch_amp_007',
                   timeDataKey: 'device_swch_utc_007',
                   processYDataKey: (x) => x,
@@ -4926,7 +4926,7 @@ export default {
                   marker: {
                     color: 'pink',
                   },
-                  name: 'Amp 008',
+                  name: 'Amp 008 (A)',
                   YDataKey: 'device_swch_amp_008',
                   timeDataKey: 'device_swch_utc_008',
                   processYDataKey: (x) => x,
@@ -4941,7 +4941,7 @@ export default {
                   marker: {
                     color: 'cyan',
                   },
-                  name: 'Amp 009',
+                  name: 'Amp 009 (A)',
                   YDataKey: 'device_swch_amp_009',
                   timeDataKey: 'device_swch_utc_009',
                   processYDataKey: (x) => x,
@@ -4973,7 +4973,7 @@ export default {
                   marker: {
                     color: 'darkseagreen',
                   },
-                  name: 'Volt 000',
+                  name: 'Volt 000 (V)',
                   YDataKey: 'device_swch_volt_000',
                   timeDataKey: 'device_swch_utc_000',
                   processYDataKey: (x) => x,
@@ -4988,7 +4988,7 @@ export default {
                   marker: {
                     color: 'blue',
                   },
-                  name: 'Volt 001',
+                  name: 'Volt 001 (V)',
                   YDataKey: 'device_swch_volt_001',
                   timeDataKey: 'device_swch_utc_001',
                   processYDataKey: (x) => x,
@@ -5003,7 +5003,7 @@ export default {
                   marker: {
                     color: 'orange',
                   },
-                  name: 'Volt 002',
+                  name: 'Volt 002 (V)',
                   YDataKey: 'device_swch_volt_002',
                   timeDataKey: 'device_swch_utc_002',
                   processYDataKey: (x) => x,
@@ -5018,7 +5018,7 @@ export default {
                   marker: {
                     color: 'green',
                   },
-                  name: 'Volt 003',
+                  name: 'Volt 003 (V)',
                   YDataKey: 'device_swch_volt_003',
                   timeDataKey: 'device_swch_utc_003',
                   processYDataKey: (x) => x,
@@ -5033,7 +5033,7 @@ export default {
                   marker: {
                     color: 'brown',
                   },
-                  name: 'Volt 004',
+                  name: 'Volt 004 (V)',
                   YDataKey: 'device_swch_volt_004',
                   timeDataKey: 'device_swch_utc_004',
                   processYDataKey: (x) => x,
@@ -5048,7 +5048,7 @@ export default {
                   marker: {
                     color: 'purple',
                   },
-                  name: 'Volt 005',
+                  name: 'Volt 005 (V)',
                   YDataKey: 'device_swch_volt_005',
                   timeDataKey: 'device_swch_utc_005',
                   processYDataKey: (x) => x,
@@ -5063,7 +5063,7 @@ export default {
                   marker: {
                     color: 'red',
                   },
-                  name: 'Volt 006',
+                  name: 'Volt 006 (V)',
                   YDataKey: 'device_swch_volt_006',
                   timeDataKey: 'device_swch_utc_006',
                   processYDataKey: (x) => x,
@@ -5078,7 +5078,7 @@ export default {
                   marker: {
                     color: 'black',
                   },
-                  name: 'Volt 007',
+                  name: 'Volt 007 (V)',
                   YDataKey: 'device_swch_volt_007',
                   timeDataKey: 'device_swch_utc_007',
                   processYDataKey: (x) => x,
@@ -5093,7 +5093,7 @@ export default {
                   marker: {
                     color: 'pink',
                   },
-                  name: 'Volt 008',
+                  name: 'Volt 008 (V)',
                   YDataKey: 'device_swch_volt_008',
                   timeDataKey: 'device_swch_utc_008',
                   processYDataKey: (x) => x,
@@ -5108,7 +5108,7 @@ export default {
                   marker: {
                     color: 'cyan',
                   },
-                  name: 'Volt 009',
+                  name: 'Volt 009 (V)',
                   YDataKey: 'device_swch_volt_009',
                   timeDataKey: 'device_swch_utc_009',
                   processYDataKey: (x) => x,
@@ -5138,7 +5138,7 @@ export default {
                   marker: {
                     color: 'darkseagreen',
                   },
-                  name: 'Power 000',
+                  name: 'Power 000 (W)',
                   YDataKey: 'device_swch_power_000',
                   timeDataKey: 'device_swch_utc_000',
                   processYDataKey: (x) => x,
@@ -5153,7 +5153,7 @@ export default {
                   marker: {
                     color: 'blue',
                   },
-                  name: 'Power 001',
+                  name: 'Power 001 (W)',
                   YDataKey: 'device_swch_power_001',
                   timeDataKey: 'device_swch_utc_001',
                   processYDataKey: (x) => x,
@@ -5168,7 +5168,7 @@ export default {
                   marker: {
                     color: 'orange',
                   },
-                  name: 'Power 002',
+                  name: 'Power 002 (W)',
                   YDataKey: 'device_swch_power_002',
                   timeDataKey: 'device_swch_utc_0002',
                   processYDataKey: (x) => x,
@@ -5183,7 +5183,7 @@ export default {
                   marker: {
                     color: 'green',
                   },
-                  name: 'Power 003',
+                  name: 'Power 003 (W)',
                   YDataKey: 'device_swch_power_003',
                   timeDataKey: 'device_swch_utc_003',
                   processYDataKey: (x) => x,
@@ -5198,7 +5198,7 @@ export default {
                   marker: {
                     color: 'brown',
                   },
-                  name: 'Power 004',
+                  name: 'Power 004 (W)',
                   YDataKey: 'device_swch_power_004',
                   timeDataKey: 'device_swch_utc_004',
                   processYDataKey: (x) => x,
@@ -5213,7 +5213,7 @@ export default {
                   marker: {
                     color: 'purple',
                   },
-                  name: 'Power 005',
+                  name: 'Power 005 (W)',
                   YDataKey: 'device_swch_power_005',
                   timeDataKey: 'device_swch_utc_005',
                   processYDataKey: (x) => x,
@@ -5228,7 +5228,7 @@ export default {
                   marker: {
                     color: 'red',
                   },
-                  name: 'Power 006',
+                  name: 'Power 006 (W)',
                   YDataKey: 'device_swch_power_006',
                   timeDataKey: 'device_swch_utc_006',
                   processYDataKey: (x) => x,
@@ -5243,7 +5243,7 @@ export default {
                   marker: {
                     color: 'black',
                   },
-                  name: 'Power 007',
+                  name: 'Power 007 (W)',
                   YDataKey: 'device_swch_power_007',
                   timeDataKey: 'device_swch_utc_007',
                   processYDataKey: (x) => x,
@@ -5258,7 +5258,7 @@ export default {
                   marker: {
                     color: 'pink',
                   },
-                  name: 'Power 008',
+                  name: 'Power 008 (W)',
                   YDataKey: 'device_swch_power_008',
                   timeDataKey: 'device_swch_utc_008',
                   processYDataKey: (x) => x,
@@ -5273,7 +5273,7 @@ export default {
                   marker: {
                     color: 'cyan',
                   },
-                  name: 'Power 009',
+                  name: 'Power 009 (W)',
                   YDataKey: 'device_swch_power_009',
                   timeDataKey: 'device_swch_utc_009',
                   processYDataKey: (x) => x,
@@ -6444,7 +6444,7 @@ export default {
                   marker: {
                     color: 'red',
                   },
-                  name: 'Position X',
+                  name: 'Position X (m)',
                   YDataKey: 'placeholder',
                   timeDataKey: 'placeholder',
                   processYDataKey: (x) => x[0],
@@ -6459,7 +6459,7 @@ export default {
                   marker: {
                     color: 'orange',
                   },
-                  name: 'Position Y',
+                  name: 'Position Y (m)',
                   YDataKey: 'placeholder',
                   timeDataKey: 'placeholder',
                   processYDataKey: (x) => x[1],
@@ -6474,7 +6474,7 @@ export default {
                   marker: {
                     color: 'blue',
                   },
-                  name: 'Position Z',
+                  name: 'Position Z (m)',
                   YDataKey: 'placeholder',
                   timeDataKey: 'placeholder',
                   processYDataKey: (x) => x[2],
@@ -6703,7 +6703,7 @@ export default {
                   marker: {
                     color: 'red',
                   },
-                  name: 'Position X',
+                  name: 'Position X (m)',
                   YDataKey: 'device_gps_geocs_000',
                   timeDataKey: 'device_gps_utc_000',
                   processYDataKey: (x) => x[0],
@@ -6718,7 +6718,7 @@ export default {
                   marker: {
                     color: 'orange',
                   },
-                  name: 'Position Y',
+                  name: 'Position Y (m)',
                   YDataKey: 'device_gps_geocs_000',
                   timeDataKey: 'device_gps_utc_000',
                   processYDataKey: (x) => x[1],
@@ -6733,7 +6733,7 @@ export default {
                   marker: {
                     color: 'blue',
                   },
-                  name: 'Position Z',
+                  name: 'Position Z (m)',
                   YDataKey: 'device_gps_geocs_000',
                   timeDataKey: 'device_gps_utc_000',
                   processYDataKey: (x) => x[2],
@@ -6763,7 +6763,7 @@ export default {
                   marker: {
                     color: 'red',
                   },
-                  name: 'Position X',
+                  name: 'Position X (m)',
                   YDataKey: 'device_gps_geocv_000',
                   timeDataKey: 'device_gps_utc_000',
                   processYDataKey: (x) => x[0],
@@ -6778,7 +6778,7 @@ export default {
                   marker: {
                     color: 'orange',
                   },
-                  name: 'Position Y',
+                  name: 'Position Y (m)',
                   YDataKey: 'device_gps_geocv_000',
                   timeDataKey: 'device_gps_utc_000',
                   processYDataKey: (x) => x[1],
@@ -6793,7 +6793,7 @@ export default {
                   marker: {
                     color: 'blue',
                   },
-                  name: 'Position Z',
+                  name: 'Position Z (m)',
                   YDataKey: 'device_gps_geocv_000',
                   timeDataKey: 'device_gps_utc_000',
                   processYDataKey: (x) => x[2],
