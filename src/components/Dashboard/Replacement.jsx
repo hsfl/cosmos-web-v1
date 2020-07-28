@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Badge } from 'antd';
 import { useSelector } from 'react-redux';
 // import moment from 'moment-timezone';
 
 import BaseComponent from '../BaseComponent';
+import Node from './Replacement/Node';
 
 /**
  * Retrieves the agent list and displays it in a table.
@@ -24,26 +24,17 @@ function Replacement({
       height={height}
     >
       {
-        !list || list.length === 0 ? 'No files.' : null
+        Object.keys(list).length === 0 ? 'No files.' : null
       }
       <table>
         <tbody>
           {
-            list && list.outgoing ? list.map(({
-              tx_id: txId, agent, name, size, bytes,
-            }) => (
-              <tr key={txId + name + agent + size}>
-                <td>
-                  <Badge status={bytes / size < 1 ? 'processing' : 'success'} />
-                </td>
-                <td className="text-gray-500 pr-1">
-                  {Math.round((bytes / size) * 100) / 100}
-                  %
-                </td>
-                <td>
-                  {name}
-                </td>
-              </tr>
+            list && list.outgoing ? Object.entries(list.outgoing).map(([node, files]) => (
+              <Node
+                node={node}
+                files={files}
+                key={node}
+              />
             )) : null
           }
         </tbody>
