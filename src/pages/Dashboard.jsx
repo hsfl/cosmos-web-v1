@@ -230,31 +230,31 @@ function Dashboard({
   }, []);
 
   useEffect(() => {
-    if (state[id]) {
-      let flag = false;
-      tabsStatus.forEach((tab, i) => {
-        Object.keys(tab).forEach((dKey) => {
-          if (state[id][dKey]) {
-            if (tab[dKey].dataKeyUpperThreshold !== undefined
-              && state[id][dKey] > tab[dKey].dataKeyUpperThreshold) {
-              flag = true;
-            }
-            if (tab[dKey].dataKeyLowerThreshold !== undefined
-              && state[id][dKey] < tab[dKey].dataKeyLowerThreshold) {
-              flag = true;
-            }
-          }
-        });
+    // if (state[id]) {
+    //   let flag = false;
+    //   tabsStatus.forEach((tab, i) => {
+    //     Object.keys(tab).forEach((dKey) => {
+    //       if (state[id][dKey]) {
+    //         if (tab[dKey].dataKeyUpperThreshold !== undefined
+    //           && state[id][dKey] > tab[dKey].dataKeyUpperThreshold) {
+    //           flag = true;
+    //         }
+    //         if (tab[dKey].dataKeyLowerThreshold !== undefined
+    //           && state[id][dKey] < tab[dKey].dataKeyLowerThreshold) {
+    //           flag = true;
+    //         }
+    //       }
+    //     });
 
-        if (flag) {
-          tabsStatus[i].status = 'error';
-        } else {
-          tabsStatus[i].status = 'success';
-        }
+    //     if (flag) {
+    //       tabsStatus[i].status = 'error';
+    //     } else {
+    //       tabsStatus[i].status = 'success';
+    //     }
 
-        flag = false;
-      });
-    }
+    //     flag = false;
+    //   });
+    // }
     console.log(state, tabsStatus);
   }, [state]);
 
@@ -262,7 +262,7 @@ function Dashboard({
   useEffect(() => {
     // By default, set the defaultLayout prop as a flive.ack if child doesn't have a layout set
     let layout = defaultLayout;
-    let dataKeys = [];
+    let dataKeys = {};
     const tabStatus = [];
 
     // Find child route of dashboard and retrieve default layout
@@ -275,22 +275,18 @@ function Dashboard({
               if (component.component.name === 'DisplayValue') {
                 component.component.props.displayValues.forEach(
                   ({ dataKey, dataKeyUpperThreshold, dataKeyLowerThreshold }) => {
-                    dataKeys.push({
-                      [dataKey]: {
-                        dataKeyUpperThreshold,
-                        dataKeyLowerThreshold,
-                      },
-                    });
+                    dataKeys[dataKey] = {
+                      dataKeyUpperThreshold,
+                      dataKeyLowerThreshold,
+                    };
                   },
                 );
               }
               if (component.component.name === 'Chart') {
                 component.component.props.plots.forEach(({ YDataKey, timeDataKey }) => {
-                  dataKeys.push({
-                    [YDataKey]: {
-                      timeDataKey,
-                    },
-                  });
+                  dataKeys[YDataKey] = {
+                    timeDataKey,
+                  };
                 });
               }
             });
@@ -312,22 +308,18 @@ function Dashboard({
                 if (component.component.name === 'DisplayValue') {
                   component.component.props.displayValues.forEach(
                     ({ dataKey, dataKeyUpperThreshold, dataKeyLowerThreshold }) => {
-                      dataKeys.push({
-                        [dataKey]: {
-                          dataKeyUpperThreshold,
-                          dataKeyLowerThreshold,
-                        },
-                      });
+                      dataKeys[dataKey] = {
+                        dataKeyUpperThreshold,
+                        dataKeyLowerThreshold,
+                      };
                     },
                   );
                 }
                 if (component.component.name === 'Chart') {
                   component.component.props.plots.forEach(({ YDataKey, timeDataKey }) => {
-                    dataKeys.push({
-                      [YDataKey]: {
-                        timeDataKey,
-                      },
-                    });
+                    dataKeys[YDataKey] = {
+                      timeDataKey,
+                    };
                   });
                 }
               });
