@@ -68,7 +68,7 @@ function Dashboard({
 }) {
   const dispatch = useDispatch();
   const activities = useSelector((s) => s.activity);
-  const tabsStatus = useSelector((s) => s.tabStatus);
+  const keys = useSelector((s) => s.keys);
   const state = useSelector((s) => s.data);
 
   /** Store the default page layout in case user wants to switch to it */
@@ -246,7 +246,7 @@ function Dashboard({
     //     });
     //   });
     // }
-    console.log(state, tabsStatus, activities);
+    console.log(state, keys, activities);
   }, [state]);
 
   /** Retrieve default layout for page */
@@ -254,7 +254,7 @@ function Dashboard({
     // By default, set the defaultLayout prop as a flive.ack if child doesn't have a layout set
     let layout = defaultLayout;
     let dataKeys = {};
-    const tabStatus = [];
+    const tabStatus = {};
 
     // Find child route of dashboard and retrieve default layout
     routes.forEach((route) => {
@@ -283,7 +283,7 @@ function Dashboard({
             });
             tabStatus.defaultLayout = {
               dataKeys,
-              status: 'success',
+              status: 'default',
             };
 
             layout = child.defaultLayout;
@@ -620,8 +620,8 @@ function Dashboard({
         <Menu mode="horizontal">
           <Menu.Item onClick={() => selectLayout('defaultPageLayout')}>
             {
-              tabsStatus.defaultLayout != null ? <Badge status={tabsStatus.defaultLayout.status} />
-                : <Badge status="success" />
+              keys.defaultLayout != null ? <Badge status={keys.defaultLayout.status} />
+                : <Badge status="grey" />
             }
             Overview
           </Menu.Item>
@@ -634,8 +634,8 @@ function Dashboard({
                 }}
               >
                 {
-                  tabsStatus[tab] != null ? <Badge status={tabsStatus[tab].status} />
-                    : <Badge status="success" />
+                  keys[tab] != null ? <Badge status={keys[tab].status} />
+                    : <Badge status="grey" />
                 }
                 {tab}
               </Menu.Item>
