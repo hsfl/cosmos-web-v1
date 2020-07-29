@@ -377,7 +377,6 @@ function Chart({
   const processForm = (id) => {
     // Destructure form, field, index to retrieve changed field
     const [form, field, index] = id.split('_');
-
     // Check type of form
     if (form === 'plotsForm') {
       const fields = plotsForm.getFieldsValue();
@@ -388,6 +387,27 @@ function Chart({
           break;
         case 'dataLimit':
           setDataLimitState(fields.dataLimit);
+          break;
+        case 'globalChartMode':
+          setPlotsState(plotsState.map((value, i) => {
+            editForm.setFieldsValue({
+              [`mode_${i}`]: fields.globalChartMode,
+            });
+
+            return {
+              x: value.x,
+              y: value.y,
+              name: value.name,
+              nodeProcess: value.nodeProcess,
+              YDataKey: value.YDataKey,
+              timeDataKey: value.timeDataKey,
+              processYDataKey: value.processYDataKey,
+              type: value.type,
+              mode: fields.globalChartMode,
+              live: value.live,
+              marker: value.marker,
+            };
+          }));
           break;
         default:
           break;
@@ -628,6 +648,21 @@ function Chart({
             >
               Set Y Range
             </Button>
+            <Form.Item className="pt-3" label="Chart Mode" name="globalChartMode">
+              <Select
+                showSearch
+                placeholder="Chart Mode"
+                onBlur={({ target: { id } }) => processForm(id)}
+              >
+                <Select.Option value="lines">lines</Select.Option>
+                <Select.Option value="marker">marker</Select.Option>
+                <Select.Option value="markers">markers</Select.Option>
+                <Select.Option value="text">text</Select.Option>
+                <Select.Option value="lines+markers">lines+markers</Select.Option>
+                <Select.Option value="lines+markers+text">lines+markers+text</Select.Option>
+                <Select.Option value="none">none</Select.Option>
+              </Select>
+            </Form.Item>
           </Form>
 
           <br />
