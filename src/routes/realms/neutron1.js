@@ -2704,65 +2704,24 @@ export default {
           w: 6,
           h: 18,
           component: {
-            name: 'Globe',
+            name: 'Chart',
             props: {
-              name: 'Orbit',
-              orbits: [
+              name: 'Uptime',
+              plots: [
                 {
-                  name: 'neutron1',
-                  modelFileName: 'cubesat1.glb',
-                  nodeProcess: 'any',
-                  XDataKey: 'device_gps_geods_000',
-                  YDataKey: 'device_gps_geods_000',
-                  ZDataKey: 'device_gps_geods_000',
-                  processXDataKey: ({ lat, lon }) => {
-                    const cosLat = Math.cos(lat);
-                    const sinLat = Math.sin(lat);
-                    const cosLon = Math.cos(lon);
-                    const rad = 6378137.0;
-                    const f = 1.0 / 298.257224;
-                    const C = 1.0 / Math.sqrt(
-                      cosLat * cosLat + (1 - f) * (1 - f) * sinLat * sinLat,
-                    );
-                    const h = 0.0;
-
-                    return (rad * C + h) * cosLat * cosLon;
+                  x: [],
+                  y: [],
+                  type: 'scatter',
+                  mode: 'lines+markers',
+                  marker: {
+                    color: 'red',
                   },
-                  processYDataKey: ({ lat, lon, h }) => {
-                    const cosLat = Math.cos(lat);
-                    const sinLat = Math.sin(lat);
-                    const sinLon = Math.sin(lon);
-                    const rad = 6378137.0;
-                    const f = 1.0 / 298.257224;
-                    const C = 1.0 / Math.sqrt(
-                      cosLat * cosLat + (1 - f) * (1 - f) * sinLat * sinLat,
-                    );
-
-                    return (rad * C + h) * cosLat * sinLon;
-                  },
-                  processZDataKey: ({ lat, h }) => {
-                    const cosLat = Math.cos(lat);
-                    const sinLat = Math.sin(lat);
-                    const rad = 6378137.0;
-                    const f = 1.0 / 298.257224;
-                    const C = 1.0 / Math.sqrt(
-                      cosLat * cosLat + (1 - f) * (1 - f) * sinLat * sinLat,
-                    );
-                    const S = (1.0 - f) * (1.0 - f) * C;
-
-                    return (rad * S + h) * sinLat;
-                  },
+                  name: 'Uptime',
+                  YDataKey: 'device_gps_uptime_000',
                   timeDataKey: 'device_gps_utc_000',
+                  processYDataKey: (x) => x,
+                  nodeProcess: 'any',
                   live: true,
-                  position: [21.289373, 157.917480, 350000.0],
-                  orientation: {
-                    d: {
-                      x: 0,
-                      y: 0,
-                      z: 0,
-                    },
-                    w: 0,
-                  },
                 },
               ],
             },
@@ -2883,6 +2842,77 @@ export default {
                   processYDataKey: (x) => x >> 1 & 1,
                   nodeProcess: 'any',
                   live: true,
+                },
+              ],
+            },
+          },
+        },
+        {
+          i: 'satellite-neutron1-duplex-j',
+          x: 0,
+          y: 5,
+          w: 12,
+          h: 18,
+          component: {
+            name: 'Globe',
+            props: {
+              name: 'Orbit',
+              orbits: [
+                {
+                  name: 'neutron1',
+                  modelFileName: 'cubesat1.glb',
+                  nodeProcess: 'any',
+                  XDataKey: 'device_gps_geods_000',
+                  YDataKey: 'device_gps_geods_000',
+                  ZDataKey: 'device_gps_geods_000',
+                  processXDataKey: ({ lat, lon }) => {
+                    const cosLat = Math.cos(lat);
+                    const sinLat = Math.sin(lat);
+                    const cosLon = Math.cos(lon);
+                    const rad = 6378137.0;
+                    const f = 1.0 / 298.257224;
+                    const C = 1.0 / Math.sqrt(
+                      cosLat * cosLat + (1 - f) * (1 - f) * sinLat * sinLat,
+                    );
+                    const h = 0.0;
+
+                    return (rad * C + h) * cosLat * cosLon;
+                  },
+                  processYDataKey: ({ lat, lon, h }) => {
+                    const cosLat = Math.cos(lat);
+                    const sinLat = Math.sin(lat);
+                    const sinLon = Math.sin(lon);
+                    const rad = 6378137.0;
+                    const f = 1.0 / 298.257224;
+                    const C = 1.0 / Math.sqrt(
+                      cosLat * cosLat + (1 - f) * (1 - f) * sinLat * sinLat,
+                    );
+
+                    return (rad * C + h) * cosLat * sinLon;
+                  },
+                  processZDataKey: ({ lat, h }) => {
+                    const cosLat = Math.cos(lat);
+                    const sinLat = Math.sin(lat);
+                    const rad = 6378137.0;
+                    const f = 1.0 / 298.257224;
+                    const C = 1.0 / Math.sqrt(
+                      cosLat * cosLat + (1 - f) * (1 - f) * sinLat * sinLat,
+                    );
+                    const S = (1.0 - f) * (1.0 - f) * C;
+
+                    return (rad * S + h) * sinLat;
+                  },
+                  timeDataKey: 'device_gps_utc_000',
+                  live: true,
+                  position: [21.289373, 157.917480, 350000.0],
+                  orientation: {
+                    d: {
+                      x: 0,
+                      y: 0,
+                      z: 0,
+                    },
+                    w: 0,
+                  },
                 },
               ],
             },
