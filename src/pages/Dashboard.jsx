@@ -231,31 +231,22 @@ function Dashboard({
 
   useEffect(() => {
     // if (state[id]) {
-    //   let flag = false;
-    //   tabsStatus.forEach((tab, i) => {
-    //     Object.keys(tab).forEach((dKey) => {
-    //       if (state[id][dKey]) {
-    //         if (tab[dKey].dataKeyUpperThreshold !== undefined
-    //           && state[id][dKey] > tab[dKey].dataKeyUpperThreshold) {
-    //           flag = true;
+    //   Object.keys(state[id]).forEach((namespace) => {
+    //     Object.keys(tabsStatus).forEach((tab) => {
+    //       if (tabsStatus[tab].dataKeys[namespace]) {
+    //         if (tabsStatus[tab].dataKeys[namespace].dataKeyUpperThreshold !== undefined
+    //           && state[id][namespace] > tabsStatus[tab].dataKeys[namespace].dataKeyUpperThreshold) {
+    //           tabsStatus[tab].status = 'error';
     //         }
-    //         if (tab[dKey].dataKeyLowerThreshold !== undefined
-    //           && state[id][dKey] < tab[dKey].dataKeyLowerThreshold) {
-    //           flag = true;
+    //         if (tabsStatus[tab].dataKeys[namespace].dataKeyLowerThreshold !== undefined
+    //           && state[id][namespace] < tabsStatus[tab].dataKeys[namespace].dataKeyLowerThreshold) {
+    //           tabsStatus[tab].status = 'error';
     //         }
     //       }
     //     });
-
-    //     if (flag) {
-    //       tabsStatus[i].status = 'error';
-    //     } else {
-    //       tabsStatus[i].status = 'success';
-    //     }
-
-    //     flag = false;
     //   });
     // }
-    console.log(state, tabsStatus);
+    console.log(state, tabsStatus, activities);
   }, [state]);
 
   /** Retrieve default layout for page */
@@ -290,12 +281,11 @@ function Dashboard({
                 });
               }
             });
-            tabStatus.push({
-              defaultLayout: {
-                dataKeys,
-                status: 'success',
-              },
-            });
+            tabStatus.defaultLayout = {
+              dataKeys,
+              status: 'success',
+            };
+
             layout = child.defaultLayout;
             setDefaultPageLayout(child.defaultLayout);
           }
@@ -323,12 +313,10 @@ function Dashboard({
                   });
                 }
               });
-              tabStatus.push({
-                [tab]: {
-                  dataKeys,
-                  status: 'default',
-                },
-              });
+              tabStatus[tab] = {
+                dataKeys,
+                status: 'default',
+              };
             });
 
             setTabs(child.tabs);
@@ -337,7 +325,7 @@ function Dashboard({
       }
     });
 
-    dispatch(set('tabStatus', tabStatus));
+    dispatch(set('keys', tabStatus));
     // Set timeout to let the grid initialize; won't work otherwise.
     setTimeout(() => {
       setLayouts(layout);

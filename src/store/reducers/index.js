@@ -10,7 +10,7 @@ export default function reducer(state = {
   data: {},
   realm: null,
   activity: [],
-  tabStatus: [],
+  keys: {},
 }, {
   type, key, payload,
 }) {
