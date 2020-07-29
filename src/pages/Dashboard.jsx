@@ -230,23 +230,38 @@ function Dashboard({
   }, []);
 
   useEffect(() => {
-    // if (state[id]) {
-    //   Object.keys(state[id]).forEach((namespace) => {
-    //     Object.keys(tabsStatus).forEach((tab) => {
-    //       if (tabsStatus[tab].dataKeys[namespace]) {
-    //         if (tabsStatus[tab].dataKeys[namespace].dataKeyUpperThreshold !== undefined
-    //           && state[id][namespace] > tabsStatus[tab].dataKeys[namespace].dataKeyUpperThreshold) {
-    //           tabsStatus[tab].status = 'error';
-    //         }
-    //         if (tabsStatus[tab].dataKeys[namespace].dataKeyLowerThreshold !== undefined
-    //           && state[id][namespace] < tabsStatus[tab].dataKeys[namespace].dataKeyLowerThreshold) {
-    //           tabsStatus[tab].status = 'error';
-    //         }
-    //       }
-    //     });
-    //   });
-    // }
-    console.log(state, keys, activities);
+    if (state[id]) {
+      const flags = {};
+      Object.keys(keys).forEach((tab) => {
+        flags[tab] = [false, false];
+      });
+
+      Object.keys(state[id]).forEach((namespace) => {
+        Object.keys(keys).forEach((tab) => {
+          if (keys[tab].dataKeys[namespace]) {
+            if (keys[tab].dataKeys[namespace].dataKeyUpperThreshold !== undefined
+              && keys[tab].dataKeys[namespace].processDataKey(state[id][namespace])
+              > keys[tab].dataKeys[namespace].dataKeyUpperThreshold) {
+              flags[tab][0] = true;
+            } else if (keys[tab].dataKeys[namespace].dataKeyLowerThreshold !== undefined
+              && keys[tab].dataKeys[namespace].processDataKey(state[id][namespace])
+              < keys[tab].dataKeys[namespace].dataKeyLowerThreshold) {
+              flags[tab][0] = true;
+            } else {
+              flags[tab][1] = true;
+            }
+          }
+        });
+      });
+      Object.keys(keys).forEach((tab) => {
+        if (flags[tab][0]) {
+          keys[tab].status = 'error';
+        } else if (flags[tab][1]) {
+          keys[tab].status = 'success';
+        }
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
 
   /** Retrieve default layout for page */
@@ -265,19 +280,27 @@ function Dashboard({
             child.defaultLayout.lg.forEach((component) => {
               if (component.component.name === 'DisplayValue') {
                 component.component.props.displayValues.forEach(
-                  ({ dataKey, dataKeyUpperThreshold, dataKeyLowerThreshold }) => {
-                    dataKeys[dataKey] = {
-                      dataKeyUpperThreshold,
-                      dataKeyLowerThreshold,
-                    };
+                  ({
+                    dataKey, processDataKey, dataKeyUpperThreshold, dataKeyLowerThreshold,
+                  }) => {
+                    if (dataKeys[dataKey] === undefined) {
+                      dataKeys[dataKey] = {};
+                    }
+                    dataKeys[dataKey].dataKeyUpperThreshold = dataKeyUpperThreshold;
+                    dataKeys[dataKey].dataKeyLowerThreshold = dataKeyLowerThreshold;
+                    dataKeys[dataKey].processDataKey = processDataKey;
                   },
                 );
               }
               if (component.component.name === 'Chart') {
-                component.component.props.plots.forEach(({ YDataKey, timeDataKey }) => {
-                  dataKeys[YDataKey] = {
-                    timeDataKey,
-                  };
+                component.component.props.plots.forEach((
+                  { YDataKey, processYDataKey, timeDataKey },
+                ) => {
+                  if (dataKeys[YDataKey] === undefined) {
+                    dataKeys[YDataKey] = {};
+                  }
+                  dataKeys[YDataKey].timeDataKey = timeDataKey;
+                  dataKeys[YDataKey].processYDataKey = processYDataKey;
                 });
               }
             });
@@ -293,23 +316,31 @@ function Dashboard({
           // Get page layout simple from route config and save it into the state
           if (child.name === id && child.tabs) {
             Object.keys(child.tabs).forEach((tab) => {
-              dataKeys = [];
+              dataKeys = {};
               child.tabs[tab].lg.forEach((component) => {
                 if (component.component.name === 'DisplayValue') {
                   component.component.props.displayValues.forEach(
-                    ({ dataKey, dataKeyUpperThreshold, dataKeyLowerThreshold }) => {
-                      dataKeys[dataKey] = {
-                        dataKeyUpperThreshold,
-                        dataKeyLowerThreshold,
-                      };
+                    ({
+                      dataKey, processDataKey, dataKeyUpperThreshold, dataKeyLowerThreshold,
+                    }) => {
+                      if (dataKeys[dataKey] === undefined) {
+                        dataKeys[dataKey] = {};
+                      }
+                      dataKeys[dataKey].dataKeyUpperThreshold = dataKeyUpperThreshold;
+                      dataKeys[dataKey].dataKeyLowerThreshold = dataKeyLowerThreshold;
+                      dataKeys[dataKey].processDataKey = processDataKey;
                     },
                   );
                 }
                 if (component.component.name === 'Chart') {
-                  component.component.props.plots.forEach(({ YDataKey, timeDataKey }) => {
-                    dataKeys[YDataKey] = {
-                      timeDataKey,
-                    };
+                  component.component.props.plots.forEach((
+                    { YDataKey, processYDataKey, timeDataKey },
+                  ) => {
+                    if (dataKeys[YDataKey] === undefined) {
+                      dataKeys[YDataKey] = {};
+                    }
+                    dataKeys[YDataKey].timeDataKey = timeDataKey;
+                    dataKeys[YDataKey].processYDataKey = processYDataKey;
                   });
                 }
               });
@@ -468,21 +499,18 @@ function Dashboard({
       // Add to object
       add.i = newId;
 
-      if (add.component.name === 'DisplayValue') {
-        add.component.props.displayValues.forEach(
-          ({ dataKey, dataKeyUpperThreshold, dataKeyLowerThreshold }) => {
-            if (dataKeyUpperThreshold || dataKeyLowerThreshold) {
-              // Interact with dispatch
-              // dataKeys.push({
-              //   [dataKey]: {
-              //     dataKeyUpperThreshold,
-              //     dataKeyLowerThreshold,
-              //   },
-              // });
-            }
-          },
-        );
-      }
+      // if (add.component.name === 'DisplayValue') {
+      //   add.component.props.displayValues.forEach(
+      //     ({ dataKey, processDataKey, dataKeyUpperThreshold, dataKeyLowerThreshold }) => {
+      //       if (keys[/* tab */][dataKey] === undefined) {
+      //         keys[/* tab */][dataKey] = {};
+      //       }
+      //       keys[/* tab */][dataKey].processDataKey = processDataKey;
+      //       keys[/* tab */][dataKey].dataKeyUpperThreshold = dataKeyUpperThreshold;
+      //       keys[/* tab */][dataKey].dataKeyLowerThreshold = dataKeyLowerThreshold;
+      //     },
+      //   );
+      // }
 
       // Update layout with new component
       setLayouts({
