@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import dayjs from 'dayjs';
 
 import {
   Form,
@@ -141,7 +142,7 @@ function Chart({
       [
         [
           ['mjd', 'time', ...yValues].join(','), // columns
-          Object.entries(xValues).map(([key, value]) => [dateToMJD(key), key, ...value].join(',')).join('\n'), // rows
+          Object.entries(xValues).map(([key, value]) => [dateToMJD(dayjs(key)), key, ...value].join(',')).join('\n'), // rows
         ].join('\n'),
       ],
       { type: 'text/csv' },
@@ -251,10 +252,7 @@ function Chart({
         }
 
         // Trigger the chart to update
-        setLayout({
-          ...layout,
-          dataRevision: layout.dataRevision + 1,
-        });
+        layout.datarevision += 1;
         setDataRevision(dataRevision + 1);
       }
     });
@@ -379,7 +377,6 @@ function Chart({
   const processForm = (id) => {
     // Destructure form, field, index to retrieve changed field
     const [form, field, index] = id.split('_');
-
     // Check type of form
     if (form === 'plotsForm') {
       const fields = plotsForm.getFieldsValue();
@@ -390,6 +387,27 @@ function Chart({
           break;
         case 'dataLimit':
           setDataLimitState(fields.dataLimit);
+          break;
+        case 'globalChartMode':
+          setPlotsState(plotsState.map((value, i) => {
+            editForm.setFieldsValue({
+              [`mode_${i}`]: fields.globalChartMode,
+            });
+
+            return {
+              x: value.x,
+              y: value.y,
+              name: value.name,
+              nodeProcess: value.nodeProcess,
+              YDataKey: value.YDataKey,
+              timeDataKey: value.timeDataKey,
+              processYDataKey: value.processYDataKey,
+              type: value.type,
+              mode: fields.globalChartMode,
+              live: value.live,
+              marker: value.marker,
+            };
+          }));
           break;
         default:
           break;
@@ -630,6 +648,21 @@ function Chart({
             >
               Set Y Range
             </Button>
+            <Form.Item className="pt-3" label="Chart Mode" name="globalChartMode">
+              <Select
+                showSearch
+                placeholder="Chart Mode"
+                onBlur={({ target: { id } }) => processForm(id)}
+              >
+                <Select.Option value="lines">lines</Select.Option>
+                <Select.Option value="marker">marker</Select.Option>
+                <Select.Option value="markers">markers</Select.Option>
+                <Select.Option value="text">text</Select.Option>
+                <Select.Option value="lines+markers">lines+markers</Select.Option>
+                <Select.Option value="lines+markers+text">lines+markers+text</Select.Option>
+                <Select.Option value="none">none</Select.Option>
+              </Select>
+            </Form.Item>
           </Form>
 
           <br />
