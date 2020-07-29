@@ -18,7 +18,6 @@ import {
   Row,
   InputNumber,
   Menu,
-  Badge,
 } from 'antd';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import {
@@ -40,6 +39,7 @@ import { set, setData, setActivity } from '../store/actions';
 import { dateToMJD } from '../utility/time';
 
 import AsyncComponent, { components } from '../components/AsyncComponent';
+import MenuTab from '../components/Dashboard/MenuTab';
 import LayoutSelector from '../components/LayoutSelector';
 import Clock from '../components/Statuses';
 import SocketStatus from '../components/SocketStatus';
@@ -647,11 +647,7 @@ function Dashboard({
         </div>
         <Menu mode="horizontal">
           <Menu.Item onClick={() => selectLayout('defaultPageLayout')}>
-            {
-              keys.defaultLayout != null ? <Badge status={keys.defaultLayout.status} />
-                : <Badge status="grey" />
-            }
-            Overview
+            <MenuTab name="Overview" layout={keys.defaultLayout} />
           </Menu.Item>
           {
             Object.keys(tabs).map((tab) => (
@@ -661,11 +657,7 @@ function Dashboard({
                   setLayouts(tabs[tab]);
                 }}
               >
-                {
-                  keys[tab] != null ? <Badge status={keys[tab].status} />
-                    : <Badge status="grey" />
-                }
-                {tab}
+                <MenuTab name={tab} layout={keys[tab]} />
               </Menu.Item>
             ))
           }
