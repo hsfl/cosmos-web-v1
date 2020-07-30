@@ -24,7 +24,7 @@ import {
 import Plot from 'react-plotly.js';
 import { saveAs } from 'file-saver';
 import { useSelector, useDispatch } from 'react-redux';
-import { set } from '../../store/actions';
+import { incrementQueue } from '../../store/actions';
 
 import BaseComponent from '../BaseComponent';
 import ChartValues from './Chart/ChartValues';
@@ -54,9 +54,10 @@ function Chart({
 
   /** Accessing the neutron1 node process context and drilling down */
   const state = useSelector((s) => s.data);
-  const globalHistoricalDate = useSelector((s) => s.globalHistoricalDate);
-  const globalQueue = useSelector((s) => s.globalQueue);
+  // const globalHistoricalDate = useSelector((s) => s.globalHistoricalDate);
+  // const globalQueue = useSelector((s) => s.globalQueue);
   const realm = useSelector((s) => s.realm);
+  const queriedData = useSelector((s) => s.queriedData);
 
   /** Storage for global form values */
   const [plotsForm] = Form.useForm();
@@ -352,26 +353,61 @@ function Chart({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [retrievePlotHistory]);
 
-  /** Handle the collection of global historical data */
+  // /** Handle the collection of global historical data */
+  // useEffect(() => {
+  //   if (globalHistoricalDate != null && globalQueue) {
+  //     plotsState.forEach((plot, i) => {
+  //       queryHistoricalData(
+  //         globalHistoricalDate,
+  //         plot.YDataKey,
+  //         plot.timeDataKey,
+  //         plot.nodeProcess,
+  //         i,
+  //       );
+  //     });
+
+  //     dispatch(set('globalQueue', globalQueue - 1));
+
+  //     // Reset state to null to allow for detection of future plot history requests
+  //     setRetrievePlotHistory(null);
+  //   }
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [globalHistoricalDate]);
+
   useEffect(() => {
-    if (globalHistoricalDate != null && globalQueue) {
-      plotsState.forEach((plot, i) => {
-        queryHistoricalData(
-          globalHistoricalDate,
-          plot.YDataKey,
-          plot.timeDataKey,
-          plot.nodeProcess,
-          i,
-        );
+    if (queriedData) {
+      plotsState.forEach(({ timeDataKey, YDataKey, processYDataKey }, i) => {
+        const { x, y } = queriedData.reduce((filtered, field) => {
+          if (timeDataKey in field) {
+            filtered.x.push(mjdToString(field[timeDataKey]));
+          }
+
+          if (YDataKey in field) {
+            filtered.y.push(processYDataKey(field[YDataKey]));
+          }
+
+          return filtered;
+        }, { x: [], y: [] });
+
+        if (y.length === 0) {
+          message.warning(`No data for specified date range in for ${YDataKey}/${timeDataKey}.`);
+        } else {
+          message.success(`Retrieved ${y.length} records in ${YDataKey}/${timeDataKey}.`);
+
+          plotsState[i].x = x;
+          plotsState[i].y = y;
+        }
       });
 
-      dispatch(set('globalQueue', globalQueue - 1));
+      dispatch(incrementQueue());
 
-      // Reset state to null to allow for detection of future plot history requests
-      setRetrievePlotHistory(null);
+      setLayout({
+        ...layout,
+        dataRevision: layout.dataRevision + 1,
+      });
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [globalHistoricalDate]);
+  }, [queriedData]);
 
   /** Process edit value form */
   const processForm = (id) => {

@@ -8,7 +8,7 @@ import {
 import BaseComponent from '../BaseComponent';
 import DisplayValuesTable from './DisplayValues/DisplayValuesTable';
 
-import { setActivity } from '../../store/actions';
+import { setActivity, incrementQueue } from '../../store/actions';
 import { mjdToString } from '../../utility/time';
 
 const { Panel } = Collapse;
@@ -30,6 +30,7 @@ function DisplayValue({
   height,
 }) {
   const dispatch = useDispatch();
+  const queriedData = useSelector((s) => s.queriedData);
 
   /** Accessing the neutron1 messages from the socket */
   const state = useSelector((s) => s.data);
@@ -146,6 +147,31 @@ function DisplayValue({
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
+
+  useEffect(() => {
+    if (queriedData) {
+      let field = queriedData.length - 1;
+      displayValuesState.forEach(({ dataKey, timeDataKey }) => {
+        if (dataKey && timeDataKey) {
+          while (!(timeDataKey in queriedData[field]
+           && dataKey in queriedData[field])
+          ) {
+            if (timeDataKey in queriedData[field] && dataKey in queriedData[field]) {
+              displayValuesState[field].value = queriedData[field][dataKey];
+              displayValuesState[field].time = mjdToString(queriedData[field][timeDataKey]);
+
+              break;
+            }
+
+            field -= 1;
+          }
+        }
+      });
+
+      dispatch(incrementQueue());
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [queriedData]);
 
   /** Process edit value form */
   const processForm = (id) => {

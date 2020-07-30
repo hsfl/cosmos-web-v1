@@ -121,6 +121,8 @@ function Dashboard({
 
   const [socketStatus, setSocketStatus] = useState('error');
 
+  const [currentTab, setCurrentTab] = useState('defaultLayout');
+
   /** Get socket data from the agent */
   useEffect(() => {
     const live = socket('/live/all');
@@ -641,12 +643,18 @@ function Dashboard({
 
           <div className="pt-4">
             <GetHistoricalData
-              amountOfComponents={layouts.lg.filter((el) => el.component.name === 'Chart').length}
+              tab={currentTab}
+              amountOfComponents={layouts.lg.filter((el) => el.component.name === 'Chart' || el.component.name === 'DisplayValue').length}
             />
           </div>
         </div>
         <Menu mode="horizontal">
-          <Menu.Item onClick={() => selectLayout('defaultPageLayout')}>
+          <Menu.Item
+            onClick={() => {
+              selectLayout('defaultPageLayout');
+              setCurrentTab('defaultLayout');
+            }}
+          >
             <MenuTab name="Overview" layout={keys.defaultLayout} />
           </Menu.Item>
           {
@@ -655,6 +663,7 @@ function Dashboard({
                 key={tab}
                 onClick={() => {
                   setLayouts(tabs[tab]);
+                  setCurrentTab(tab);
                 }}
               >
                 <MenuTab name={tab} layout={keys[tab]} />
