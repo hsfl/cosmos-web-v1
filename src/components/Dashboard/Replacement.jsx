@@ -2,13 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { useSelector } from 'react-redux';
-// import moment from 'moment-timezone';
-
-import { Collapse } from 'antd';
 import BaseComponent from '../BaseComponent';
-import Node from './Replacement/Node';
+import PanelList from './Replacement/PanelList';
 
-const { Panel } = Collapse;
 /**
  * Retrieves the agent list and displays it in a table.
  * Also displays the timestamp of the agent's last heartbeat.
@@ -26,37 +22,12 @@ function Replacement({
       height={height}
     >
       {
-        Object.keys(list.outgoing).length === 0
-        && Object.keys(list.incoming).length === 0
+        !list
           ? 'No files.' : (
-            <Collapse>
-              <strong className="pl-2">Outgoing:</strong>
-              {
-                list ? Object.entries(list.outgoing).map(([node, files]) => (
-                  <Panel
-                    header={node}
-                  >
-                    <Node
-                      files={files}
-                      key={node}
-                    />
-                  </Panel>
-                )) : null
-              }
-              <strong className="pl-2">Incoming:</strong>
-              {
-                list ? Object.entries(list.incoming).map(([node, files]) => (
-                  <Panel
-                    header={node}
-                  >
-                    <Node
-                      files={files}
-                      key={node}
-                    />
-                  </Panel>
-                )) : null
-              }
-            </Collapse>
+            <>
+              <PanelList list={list} fileType="outgoing" />
+              <PanelList list={list} fileType="incoming" />
+            </>
           )
       }
     </BaseComponent>

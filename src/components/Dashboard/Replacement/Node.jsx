@@ -11,15 +11,17 @@ function Node({
       <div>
         {
           files.map(({
-            txId, name, agent, size, bytes,
+            tx_id: txId, name, agent, size, bytes,
           }) => (
-            <File
-              txId={txId}
-              name={name}
-              agent={agent}
-              size={size}
-              bytes={bytes}
-            />
+            <>
+              <File
+                txId={txId}
+                name={name}
+                agent={agent}
+                size={size}
+                bytes={bytes}
+              />
+            </>
           ))
         }
       </div>
