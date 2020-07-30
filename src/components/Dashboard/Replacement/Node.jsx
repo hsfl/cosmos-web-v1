@@ -4,16 +4,10 @@ import PropTypes from 'prop-types';
 import File from './File';
 
 function Node({
-  node,
   files,
 }) {
   return (
     <>
-      <div>
-        {
-          node
-        }
-      </div>
       <div>
         {
           files.map(({
@@ -34,7 +28,6 @@ function Node({
 }
 
 Node.propTypes = {
-  node: PropTypes.string.isRequired,
   files: PropTypes.arrayOf(PropTypes.shape({
     txId: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
