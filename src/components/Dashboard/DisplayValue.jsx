@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  Form, Input, Collapse, Button, InputNumber,
+  Form, Input, Collapse, Button, InputNumber, message,
 } from 'antd';
 
 import BaseComponent from '../BaseComponent';
@@ -150,25 +150,23 @@ function DisplayValue({
 
   useEffect(() => {
     if (queriedData) {
-      let field = queriedData.length - 1;
-      displayValuesState.forEach(({ dataKey, timeDataKey }) => {
-        if (dataKey && timeDataKey) {
-          while (!(timeDataKey in queriedData[field]
-           && dataKey in queriedData[field])
-          ) {
-            if (timeDataKey in queriedData[field] && dataKey in queriedData[field]) {
-              displayValuesState[field].value = queriedData[field][dataKey];
-              displayValuesState[field].time = mjdToString(queriedData[field][timeDataKey]);
+      displayValuesState.forEach(({ dataKey, timeDataKey, processDataKey }, i) => {
+        if (queriedData[dataKey].length === 0 || queriedData[timeDataKey].length === 0) {
+          message.warning(`No data for specified date range in for ${dataKey}/${timeDataKey}.`);
+        } else {
+          message.success(`Retrieved ${queriedData[dataKey].length} records in ${dataKey}/${timeDataKey}.`);
 
-              break;
-            }
+          const lastValue = queriedData[dataKey][queriedData[dataKey].length - 1];
+          const lastTimeValue = queriedData[timeDataKey][queriedData[timeDataKey].length - 1];
 
-            field -= 1;
-          }
+          displayValuesState[i].value = processDataKey ? processDataKey(lastValue) : lastValue;
+          displayValuesState[i].time = mjdToString(lastTimeValue);
         }
       });
 
       dispatch(incrementQueue());
+
+      setUpdateComponent(!updateComponent);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [queriedData]);

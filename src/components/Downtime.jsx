@@ -1,13 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 
-import { getDiff } from '../utility/time';
+import { incrementQueue } from '../store/actions';
+import { getDiff, mjdToString } from '../utility/time';
 
 /**
  * Counts down the downtime of the satellite
  */
 function Downtime() {
+  const dispatch = useDispatch();
+
   /** Get realm and node downtime */
   const realm = useSelector((s) => s.realm);
   const nodeDowntime = useSelector((s) => {
@@ -17,6 +20,7 @@ function Downtime() {
 
     return false;
   });
+  const queriedData = useSelector((s) => s.queriedData);
 
   /** Timer to countdown time from node_downtime */
   const [downtime, setDowntime] = useState(null);
@@ -45,6 +49,18 @@ function Downtime() {
     return () => clearTimeout(timer.current);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [elapsed]);
+
+  useEffect(() => {
+    if (queriedData) {
+      const lastNodeDowntime = queriedData.node_downtime[queriedData.node_downtime.length - 1];
+      const lastNodeUTC = queriedData.node_utc[queriedData.node_utc.length - 1];
+
+      setDowntime(dayjs(mjdToString(lastNodeUTC)).add(lastNodeDowntime, 'second'));
+      setElapsed(getDiff(dayjs(mjdToString(lastNodeUTC)).add(lastNodeDowntime, 'second'), true));
+
+      dispatch(incrementQueue());
+    }
+  }, [queriedData]);
 
   return (
     <>

@@ -283,7 +283,11 @@ function Dashboard({
               if (component.component.name === 'DisplayValue') {
                 component.component.props.displayValues.forEach(
                   ({
-                    dataKey, processDataKey, dataKeyUpperThreshold, dataKeyLowerThreshold,
+                    dataKey,
+                    timeDataKey,
+                    processDataKey,
+                    dataKeyUpperThreshold,
+                    dataKeyLowerThreshold,
                   }) => {
                     if (dataKeys[dataKey] === undefined) {
                       dataKeys[dataKey] = {};
@@ -291,6 +295,7 @@ function Dashboard({
                     dataKeys[dataKey].dataKeyUpperThreshold = dataKeyUpperThreshold;
                     dataKeys[dataKey].dataKeyLowerThreshold = dataKeyLowerThreshold;
                     dataKeys[dataKey].processDataKey = processDataKey;
+                    dataKeys[dataKey].timeDataKey = timeDataKey;
                   },
                 );
               }
@@ -323,7 +328,11 @@ function Dashboard({
                 if (component.component.name === 'DisplayValue') {
                   component.component.props.displayValues.forEach(
                     ({
-                      dataKey, processDataKey, dataKeyUpperThreshold, dataKeyLowerThreshold,
+                      dataKey,
+                      timeDataKey,
+                      processDataKey,
+                      dataKeyUpperThreshold,
+                      dataKeyLowerThreshold,
                     }) => {
                       if (dataKeys[dataKey] === undefined) {
                         dataKeys[dataKey] = {};
@@ -331,6 +340,7 @@ function Dashboard({
                       dataKeys[dataKey].dataKeyUpperThreshold = dataKeyUpperThreshold;
                       dataKeys[dataKey].dataKeyLowerThreshold = dataKeyLowerThreshold;
                       dataKeys[dataKey].processDataKey = processDataKey;
+                      dataKeys[dataKey].timeDataKey = timeDataKey;
                     },
                   );
                 }
@@ -644,7 +654,7 @@ function Dashboard({
           <div className="pt-4">
             <GetHistoricalData
               tab={currentTab}
-              amountOfComponents={layouts.lg.filter((el) => el.component.name === 'Chart' || el.component.name === 'DisplayValue').length}
+              amountOfComponents={layouts.lg.filter((el) => el.component.name === 'Chart' || el.component.name === 'DisplayValue').length + 2}
             />
           </div>
         </div>

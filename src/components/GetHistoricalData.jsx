@@ -32,15 +32,18 @@ function GetHistoricalData({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [retrievedQuery]);
 
+  /** Global query data for current tab view */
   const queryData = async (from, to) => {
     message.loading('Retrieving past data...', null);
 
+    // Initialize query queue
     dispatch(set('retrievedQuery', 0));
 
     const query = [];
     const projection = {};
     const sort = {};
 
+    // Generate mongodb query based on keys
     if (keys && keys.dataKeys) {
       Object.entries(keys.dataKeys).forEach(([key, entry]) => {
         query.push({
@@ -68,7 +71,41 @@ function GetHistoricalData({
           },
         });
 
-        dispatch(set('queriedData', data));
+        // Coerce data into array according to retrieved data
+        const fields = {};
+        console.log(data);
+
+        if (data.length !== 0) {
+          // Go through data keys and sort based on time
+          Object.entries(keys.dataKeys).forEach(([key, { timeDataKey }]) => {
+            // Filter out corresponding data key and time data key, insert into x,y object to sort
+            const unsorted = data.reduce((filter, entry) => {
+              if (key in entry && timeDataKey in entry && entry[key] && entry[timeDataKey]) {
+                filter.push({
+                  x: entry[timeDataKey],
+                  y: entry[key],
+                });
+              }
+              return filter;
+            }, []);
+
+            // Sort based on date
+            const sorted = unsorted.sort((a, b) => a.x - b.x);
+
+            // Store values in array according to key in an object
+            fields[timeDataKey] = [];
+            fields[key] = [];
+
+            sorted.forEach((entry) => {
+              fields[timeDataKey].push(entry.x);
+              fields[key].push(entry.y);
+            });
+          });
+        } else {
+          message.warning('No data during this time');
+        }
+
+        dispatch(set('queriedData', fields));
       } catch (error) {
         message.destroy();
         message.error(error.message);
