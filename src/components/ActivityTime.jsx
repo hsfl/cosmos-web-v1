@@ -1,39 +1,57 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import dayjs from 'dayjs';
 
-import { getDiff } from '../utility/time';
+import { incrementQueue } from '../store/actions';
+import { getDiff, MJDtoJavaScriptDate } from '../utility/time';
 
 /**
  * Shows the incoming activity from the web socket and displays time elapsed
  * from the last data retrieval.
  */
 function ActivityTimer() {
+  const dispatch = useDispatch();
+
   /** Get agent list state from the Context */
   const activities = useSelector((s) => s.activity);
+  const queriedData = useSelector((s) => s.queriedData);
+
+  const [lastMessage, setLastMessage] = useState(null);
   /** Time elapsed from last activity */
   const [elapsed, setElapsed] = useState('Over a day');
   /** Reference to the timer that increments all elapsed times after 1 second */
   const timer = useRef(null);
 
+  const lastMessageTimeRef = useRef(null);
+  lastMessageTimeRef.current = lastMessage;
+
   useEffect(() => {
     if (activities && activities.length > 0) {
-      setElapsed(getDiff(activities[0].time));
+      setLastMessage(getDiff(activities[0].time));
+    /** Upon querying data, calculate the last known node activity */
+    } else if (queriedData) {
+      const lastNodeUTC = queriedData.node_utc[queriedData.node_utc.length - 1];
+
+      setLastMessage(dayjs(MJDtoJavaScriptDate(lastNodeUTC).toISOString()));
+
+      dispatch(incrementQueue());
     }
-  }, [activities]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activities, queriedData]);
 
   /** Increments the timer */
   useEffect(() => {
     /** Set the 1 second timer */
     timer.current = setTimeout(() => {
-      if (activities && activities.length > 0) {
-        setElapsed(getDiff(activities[0].time));
+      if (lastMessage != null) {
+        setElapsed(getDiff(lastMessageTimeRef.current));
       }
     }, 900);
 
     /** Clear timer on unmount */
     return () => clearTimeout(timer.current);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [elapsed]);
+  }, [elapsed, lastMessage]);
 
   return (
     <>

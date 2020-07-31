@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 
 import { incrementQueue } from '../store/actions';
-import { getDiff, mjdToString } from '../utility/time';
+import { getDiff, MJDtoJavaScriptDate } from '../utility/time';
 
 /**
  * Counts down the downtime of the satellite
@@ -50,16 +50,19 @@ function Downtime() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [elapsed]);
 
+  /** Upon querying data, calculate the last known node downtime and countdown */
   useEffect(() => {
     if (queriedData) {
       const lastNodeDowntime = queriedData.node_downtime[queriedData.node_downtime.length - 1];
       const lastNodeUTC = queriedData.node_utc[queriedData.node_utc.length - 1];
 
-      setDowntime(dayjs(mjdToString(lastNodeUTC)).add(lastNodeDowntime, 'second'));
-      setElapsed(getDiff(dayjs(mjdToString(lastNodeUTC)).add(lastNodeDowntime, 'second'), true));
+      //
+      setDowntime(dayjs(MJDtoJavaScriptDate(lastNodeUTC).toISOString()).add(lastNodeDowntime, 'second'));
+      setElapsed(getDiff(dayjs(MJDtoJavaScriptDate(lastNodeUTC).toISOString()).add(lastNodeDowntime, 'second'), true));
 
       dispatch(incrementQueue());
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [queriedData]);
 
   return (
