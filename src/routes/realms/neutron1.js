@@ -610,7 +610,7 @@ export default {
         i: 'satellite-neutron1-l',
         x: 0,
         y: 68,
-        w: 12,
+        w: 6,
         h: 18,
         component: {
           name: 'Chart',
@@ -644,6 +644,38 @@ export default {
                 },
                 name: 'Power Usage (W)',
                 YDataKey: 'node_powuse',
+                timeDataKey: 'node_utc',
+                processYDataKey: (x) => x,
+                nodeProcess: 'any',
+                live: true,
+              },
+            ],
+          },
+        },
+      },
+      {
+        i: 'satellite-neutron1-la',
+        x: 6,
+        y: 68,
+        w: 6,
+        h: 18,
+        component: {
+          name: 'Chart',
+          props: {
+            name: 'EPS Power Mode',
+            XDataKey: 'node_utc',
+            processXDataKey: (x) => mjdToString(x),
+            plots: [
+              {
+                x: [],
+                y: [],
+                type: 'scatter',
+                mode: 'lines+markers',
+                marker: {
+                  color: 'green',
+                },
+                name: 'Power Mode',
+                YDataKey: 'node_powmode',
                 timeDataKey: 'node_utc',
                 processYDataKey: (x) => x,
                 nodeProcess: 'any',
