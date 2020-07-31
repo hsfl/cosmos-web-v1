@@ -151,16 +151,18 @@ function DisplayValue({
   useEffect(() => {
     if (queriedData) {
       displayValuesState.forEach(({ dataKey, timeDataKey, processDataKey }, i) => {
-        if (queriedData[dataKey].length === 0 || queriedData[timeDataKey].length === 0) {
-          message.warning(`No data for specified date range in for ${dataKey}/${timeDataKey}.`);
-        } else {
-          message.success(`Retrieved ${queriedData[dataKey].length} records in ${dataKey}/${timeDataKey}.`);
+        if (queriedData[dataKey]) {
+          if (queriedData[dataKey].length === 0 || queriedData[timeDataKey].length === 0) {
+            message.warning(`No data for specified date range in for ${dataKey}/${timeDataKey}.`);
+          } else {
+            message.success(`Retrieved ${queriedData[dataKey].length} records in ${dataKey}/${timeDataKey}.`);
 
-          const lastValue = queriedData[dataKey][queriedData[dataKey].length - 1];
-          const lastTimeValue = queriedData[timeDataKey][queriedData[timeDataKey].length - 1];
+            const lastValue = queriedData[dataKey][queriedData[dataKey].length - 1];
+            const lastTimeValue = queriedData[timeDataKey][queriedData[timeDataKey].length - 1];
 
-          displayValuesState[i].value = processDataKey ? processDataKey(lastValue) : lastValue;
-          displayValuesState[i].time = mjdToString(lastTimeValue);
+            displayValuesState[i].value = processDataKey ? processDataKey(lastValue) : lastValue;
+            displayValuesState[i].time = mjdToString(lastTimeValue);
+          }
         }
       });
 
