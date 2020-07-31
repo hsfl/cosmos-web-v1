@@ -41,7 +41,7 @@ function GetHistoricalData({
 
     const query = [];
     const projection = {};
-    const sort = {};
+    const nodeDowntime = {}; // in case node_downtime/node_utc aren't added
 
     // Generate mongodb query based on keys
     if (keys && keys.dataKeys) {
@@ -55,9 +55,35 @@ function GetHistoricalData({
 
         projection[entry.timeDataKey] = 1;
         projection[key] = 1;
-
-        sort[entry.timeDataKey] = 1;
       });
+
+      // If node_downtime or node_utc aren't already included
+      // To populate the activity/downtime in toolbar
+      if (!('node_downtime' in keys.dataKeys)) {
+        query.push({
+          node_downtime: {
+            $gt: dateToMJD(from),
+            $lt: dateToMJD(to),
+          },
+        });
+
+        projection.node_downtime = 1;
+
+        nodeDowntime.node_downtime = {
+          timeDataKey: 'node_utc',
+        };
+      }
+
+      if (!('node_utc' in keys.dataKeys)) {
+        query.push({
+          node_utc: {
+            $gt: dateToMJD(from),
+            $lt: dateToMJD(to),
+          },
+        });
+
+        projection.node_utc = 1;
+      }
 
       try {
         const { data } = await axios.post(`/query/${realm}/any`, {
@@ -67,17 +93,18 @@ function GetHistoricalData({
           },
           options: {
             projection,
-            sort,
           },
         });
 
         // Coerce data into array according to retrieved data
         const fields = {};
-        console.log(data);
 
         if (data.length !== 0) {
           // Go through data keys and sort based on time
-          Object.entries(keys.dataKeys).forEach(([key, { timeDataKey }]) => {
+          Object.entries({
+            ...keys.dataKeys,
+            ...nodeDowntime,
+          }).forEach(([key, { timeDataKey }]) => {
             // Filter out corresponding data key and time data key, insert into x,y object to sort
             const unsorted = data.reduce((filter, entry) => {
               if (key in entry && timeDataKey in entry && entry[key] && entry[timeDataKey]) {
