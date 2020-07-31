@@ -12,6 +12,7 @@ function Downtime() {
   const dispatch = useDispatch();
 
   /** Get realm and node downtime */
+  const state = useSelector((s) => s);
   const realm = useSelector((s) => s.realm);
   const nodeDowntime = useSelector((s) => {
     if (s.data[realm] && s.data[realm].node_downtime) {
@@ -32,6 +33,9 @@ function Downtime() {
   /** Upon node downtime change, recalculate countdown from now */
   useEffect(() => {
     if (nodeDowntime !== false) {
+      if (timer !== null) {
+        clearTimeout(timer.current);
+      }
       setDowntime(dayjs().add(nodeDowntime, 'second'));
       setElapsed(getDiff(dayjs().add(nodeDowntime, 'second'), true));
     }
@@ -43,6 +47,9 @@ function Downtime() {
       if (queriedData.node_utc && queriedData.node_utc.length > 0
           && queriedData.node_downtime && queriedData.node_downtime.length > 0
       ) {
+        if (timer !== null) {
+          clearTimeout(timer.current);
+        }
         const lastNodeDowntime = queriedData.node_downtime[queriedData.node_downtime.length - 1];
         const lastNodeUTC = queriedData.node_utc[queriedData.node_utc.length - 1];
 
@@ -71,6 +78,7 @@ function Downtime() {
 
   return (
     <>
+      {console.log(state)}
       {
         elapsed && typeof elapsed !== 'string'
           ? elapsed.format('HH:mm:ss') : dayjs().second(0).minute(0).hour(0)

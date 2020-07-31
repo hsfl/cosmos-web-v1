@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 
+import { message } from 'antd';
+import { axios } from '../api';
 import { incrementQueue } from '../store/actions';
 import { getDiff, MJDtoJavaScriptDate } from '../utility/time';
 
@@ -15,6 +17,7 @@ function ActivityTimer() {
   /** Get agent list state from the Context */
   const activities = useSelector((s) => s.activity);
   const queriedData = useSelector((s) => s.queriedData);
+  const realm = useSelector((s) => s.realm);
 
   const [lastMessage, setLastMessage] = useState(null);
   /** Time elapsed from last activity */
@@ -25,10 +28,35 @@ function ActivityTimer() {
   const lastMessageTimeRef = useRef(null);
   lastMessageTimeRef.current = lastMessage;
 
+  const queryData = async () => {
+    try {
+      const { data } = await axios.post(`query/${realm}/any/`, {
+        query: {},
+        options: {
+          projection: {
+            node_utc: 1,
+          },
+        },
+        sort: {
+          node_utc: 1,
+        },
+      });
+      console.log(data, realm);
+    } catch {
+      message.error('Failed to retrieve last activity.');
+    }
+  };
+
+  useEffect(() => {
+    setTimeout(() => queryData(), 500);
+  }, []);
+
   /** Retrieve last activity time */
   useEffect(() => {
     if (activities && activities.length > 0) {
-      setLastMessage(getDiff(activities[0].time));
+      clearTimeout(timer.current);
+      setElapsed(getDiff(activities[0].time));
+      setLastMessage(activities[0].time);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activities]);
@@ -38,7 +66,8 @@ function ActivityTimer() {
     if (queriedData) {
       if (queriedData.node_utc && queriedData.node_utc.length > 0) {
         const lastNodeUTC = queriedData.node_utc[queriedData.node_utc.length - 1];
-
+        clearTimeout(timer.current);
+        setElapsed(getDiff(dayjs(MJDtoJavaScriptDate(lastNodeUTC).toISOString())));
         setLastMessage(dayjs(MJDtoJavaScriptDate(lastNodeUTC).toISOString()));
       }
 
