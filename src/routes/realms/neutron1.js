@@ -602,7 +602,7 @@ export default {
         i: 'satellite-neutron1-l',
         x: 0,
         y: 68,
-        w: 12,
+        w: 6,
         h: 18,
         component: {
           name: 'Chart',
@@ -636,6 +636,38 @@ export default {
                 },
                 name: 'Power Usage (W)',
                 YDataKey: 'node_powuse',
+                timeDataKey: 'node_utc',
+                processYDataKey: (x) => x,
+                nodeProcess: 'any',
+                live: true,
+              },
+            ],
+          },
+        },
+      },
+      {
+        i: 'satellite-neutron1-la',
+        x: 6,
+        y: 68,
+        w: 6,
+        h: 18,
+        component: {
+          name: 'Chart',
+          props: {
+            name: 'EPS Batt Volt',
+            XDataKey: 'node_utc',
+            processXDataKey: (x) => mjdToString(x),
+            plots: [
+              {
+                x: [],
+                y: [],
+                type: 'scatter',
+                mode: 'lines+markers',
+                marker: {
+                  color: 'green',
+                },
+                name: 'Batt Voltage (V)',
+                YDataKey: 'device_batt_volt_000',
                 timeDataKey: 'node_utc',
                 processYDataKey: (x) => x,
                 nodeProcess: 'any',
@@ -2802,7 +2834,7 @@ export default {
           i: 'satellite-neutron1-dpr-i',
           x: 0,
           y: 3,
-          w: 12,
+          w: 6,
           h: 18,
           component: {
             name: 'Chart',
@@ -2881,6 +2913,36 @@ export default {
                   YDataKey: 'device_tcv_flag_000',
                   timeDataKey: 'device_gps_utc_000',
                   processYDataKey: (x) => x >> 1 & 1,
+                  nodeProcess: 'any',
+                  live: true,
+                },
+              ],
+            },
+          },
+        },
+        {
+          i: 'satellite-neutron1-dpr-j',
+          x: 6,
+          y: 3,
+          w: 6,
+          h: 18,
+          component: {
+            name: 'Chart',
+            props: {
+              name: 'Uptime',
+              plots: [
+                {
+                  x: [],
+                  y: [],
+                  type: 'scatter',
+                  mode: 'lines+markers',
+                  marker: {
+                    color: 'red',
+                  },
+                  name: 'Uptime (s)',
+                  YDataKey: 'device_gps_uptime_000',
+                  timeDataKey: 'device_gps_utc_000',
+                  processYDataKey: (x) => x,
                   nodeProcess: 'any',
                   live: true,
                 },
