@@ -235,13 +235,16 @@ function Chart({
             plotsState[i].x.push(mjdToString(state[realm].recorded_time));
           }
 
-          plotsState[i]
-            .y
-            .push(
-              plotsState[i].processYDataKey
-                ? plotsState[i].processYDataKey(state[realm][p.YDataKey])
-                : state[realm][p.YDataKey],
-            );
+          // Zero values are not valid!
+          if (state[realm][p.YDataKey]) {
+            plotsState[i]
+              .y
+              .push(
+                plotsState[i].processYDataKey
+                  ? plotsState[i].processYDataKey(state[realm][p.YDataKey])
+                  : state[realm][p.YDataKey],
+              );
+          }
         }
 
         // Upon insertion, check if the length of y exceeds the data limit.
