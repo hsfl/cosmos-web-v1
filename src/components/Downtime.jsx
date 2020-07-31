@@ -12,7 +12,6 @@ function Downtime() {
   const dispatch = useDispatch();
 
   /** Get realm and node downtime */
-  const state = useSelector((s) => s);
   const realm = useSelector((s) => s.realm);
   const nodeDowntime = useSelector((s) => {
     if (s.data[realm] && s.data[realm].node_downtime) {
@@ -78,7 +77,6 @@ function Downtime() {
 
   return (
     <>
-      {console.log(state)}
       {
         elapsed && typeof elapsed !== 'string'
           ? elapsed.format('HH:mm:ss') : dayjs().second(0).minute(0).hour(0)
