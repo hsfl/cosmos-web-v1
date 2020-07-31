@@ -25,25 +25,33 @@ function ActivityTimer() {
   const lastMessageTimeRef = useRef(null);
   lastMessageTimeRef.current = lastMessage;
 
+  /** Retrieve last activity time */
   useEffect(() => {
     if (activities && activities.length > 0) {
       setLastMessage(getDiff(activities[0].time));
-    /** Upon querying data, calculate the last known node activity */
-    } else if (queriedData) {
-      const lastNodeUTC = queriedData.node_utc[queriedData.node_utc.length - 1];
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activities]);
 
-      setLastMessage(dayjs(MJDtoJavaScriptDate(lastNodeUTC).toISOString()));
+  /** Upon querying historical data, calculate the last known node activity */
+  useEffect(() => {
+    if (queriedData) {
+      if (queriedData.node_utc && queriedData.node_utc.length > 0) {
+        const lastNodeUTC = queriedData.node_utc[queriedData.node_utc.length - 1];
+
+        setLastMessage(dayjs(MJDtoJavaScriptDate(lastNodeUTC).toISOString()));
+      }
 
       dispatch(incrementQueue());
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activities, queriedData]);
+  }, [queriedData]);
 
   /** Increments the timer */
   useEffect(() => {
     /** Set the 1 second timer */
     timer.current = setTimeout(() => {
-      if (lastMessage != null) {
+      if (queriedData != null || lastMessage != null) {
         setElapsed(getDiff(lastMessageTimeRef.current));
       }
     }, 900);

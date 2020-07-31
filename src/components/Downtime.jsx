@@ -37,6 +37,25 @@ function Downtime() {
     }
   }, [nodeDowntime]);
 
+  /** Upon querying data, calculate the last known node downtime and count down */
+  useEffect(() => {
+    if (queriedData) {
+      if (queriedData.node_utc && queriedData.node_utc.length > 0
+          && queriedData.node_downtime && queriedData.node_downtime.length > 0
+      ) {
+        const lastNodeDowntime = queriedData.node_downtime[queriedData.node_downtime.length - 1];
+        const lastNodeUTC = queriedData.node_utc[queriedData.node_utc.length - 1];
+
+        //
+        setDowntime(dayjs(MJDtoJavaScriptDate(lastNodeUTC)).add(lastNodeDowntime, 'second'));
+        setElapsed(getDiff(dayjs(MJDtoJavaScriptDate(lastNodeUTC)).add(lastNodeDowntime, 'second'), true));
+      }
+
+      dispatch(incrementQueue());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [queriedData]);
+
   /** Increments the timer */
   useEffect(() => {
     if (downtime != null && typeof elapsed !== 'string') {
@@ -48,22 +67,7 @@ function Downtime() {
     /** Clear timer on unmount */
     return () => clearTimeout(timer.current);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [elapsed]);
-
-  /** Upon querying data, calculate the last known node downtime and countdown */
-  useEffect(() => {
-    if (queriedData) {
-      const lastNodeDowntime = queriedData.node_downtime[queriedData.node_downtime.length - 1];
-      const lastNodeUTC = queriedData.node_utc[queriedData.node_utc.length - 1];
-
-      //
-      setDowntime(dayjs(MJDtoJavaScriptDate(lastNodeUTC).toISOString()).add(lastNodeDowntime, 'second'));
-      setElapsed(getDiff(dayjs(MJDtoJavaScriptDate(lastNodeUTC).toISOString()).add(lastNodeDowntime, 'second'), true));
-
-      dispatch(incrementQueue());
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [queriedData]);
+  }, [elapsed, downtime]);
 
   return (
     <>
