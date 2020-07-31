@@ -380,15 +380,17 @@ function Chart({
   useEffect(() => {
     if (queriedData) {
       plotsState.forEach(({ timeDataKey, YDataKey, processYDataKey }, i) => {
-        if (queriedData[YDataKey].length === 0 || queriedData[timeDataKey].length === 0) {
-          message.warning(`No data for specified date range in for ${YDataKey}/${timeDataKey}.`);
-        } else {
-          message.success(`Retrieved ${queriedData[YDataKey].length} records in ${YDataKey}/${timeDataKey}.`);
+        if (queriedData[YDataKey]) {
+          if (queriedData[YDataKey].length === 0 || queriedData[timeDataKey].length === 0) {
+            message.warning(`No data for specified date range in for ${YDataKey}/${timeDataKey}.`);
+          } else {
+            message.success(`Retrieved ${queriedData[YDataKey].length} records in ${YDataKey}/${timeDataKey}.`);
 
-          plotsState[i].x = queriedData[timeDataKey].map((x) => mjdToString(x));
-          plotsState[i].y = processYDataKey
-            ? queriedData[YDataKey].map((y) => processYDataKey(y))
-            : queriedData[YDataKey];
+            plotsState[i].x = queriedData[timeDataKey].map((x) => mjdToString(x));
+            plotsState[i].y = processYDataKey
+              ? queriedData[YDataKey].map((y) => processYDataKey(y))
+              : queriedData[YDataKey];
+          }
         }
       });
 
