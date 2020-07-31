@@ -398,6 +398,8 @@ function Chart({
         ...layout,
         dataRevision: layout.dataRevision + 1,
       });
+
+      setDataRevision(dataRevision + 1);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [queriedData]);
