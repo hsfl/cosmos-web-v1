@@ -237,6 +237,14 @@ export default {
                 processDataKey: (x) => (x * 100).toFixed(4),
               },
               {
+                name: 'Battery Voltage',
+                nodeProcess: 'any',
+                dataKey: 'device_batt_volt_000',
+                timeDataKey: 'device_batt_utc_000',
+                unit: 'V',
+                processDataKey: (x) => x.toFixed(4),
+              },
+              {
                 name: 'Power Gen',
                 nodeProcess: 'any',
                 dataKey: 'node_powgen',
@@ -602,7 +610,7 @@ export default {
         i: 'satellite-neutron1-l',
         x: 0,
         y: 68,
-        w: 6,
+        w: 12,
         h: 18,
         component: {
           name: 'Chart',
@@ -636,38 +644,6 @@ export default {
                 },
                 name: 'Power Usage (W)',
                 YDataKey: 'node_powuse',
-                timeDataKey: 'node_utc',
-                processYDataKey: (x) => x,
-                nodeProcess: 'any',
-                live: true,
-              },
-            ],
-          },
-        },
-      },
-      {
-        i: 'satellite-neutron1-la',
-        x: 6,
-        y: 68,
-        w: 6,
-        h: 18,
-        component: {
-          name: 'Chart',
-          props: {
-            name: 'EPS Batt Volt',
-            XDataKey: 'node_utc',
-            processXDataKey: (x) => mjdToString(x),
-            plots: [
-              {
-                x: [],
-                y: [],
-                type: 'scatter',
-                mode: 'lines+markers',
-                marker: {
-                  color: 'green',
-                },
-                name: 'Batt Voltage (V)',
-                YDataKey: 'device_batt_volt_000',
                 timeDataKey: 'node_utc',
                 processYDataKey: (x) => x,
                 nodeProcess: 'any',
