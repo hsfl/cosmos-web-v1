@@ -2,10 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { useSelector } from 'react-redux';
-// import moment from 'moment-timezone';
-
 import BaseComponent from '../BaseComponent';
-import Node from './Replacement/Node';
+import PanelList from './Replacement/PanelList';
 
 /**
  * Retrieves the agent list and displays it in a table.
@@ -24,21 +22,14 @@ function Replacement({
       height={height}
     >
       {
-        Object.keys(list).length === 0 ? 'No files.' : null
+        !list
+          ? 'No files.' : (
+            <>
+              <PanelList list={list} fileType="outgoing" />
+              <PanelList list={list} fileType="incoming" />
+            </>
+          )
       }
-      <table>
-        <tbody>
-          {
-            list && list.outgoing ? Object.entries(list.outgoing).map(([node, files]) => (
-              <Node
-                node={node}
-                files={files}
-                key={node}
-              />
-            )) : null
-          }
-        </tbody>
-      </table>
     </BaseComponent>
   );
 }
