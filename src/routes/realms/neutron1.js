@@ -237,6 +237,14 @@ export default {
                 processDataKey: (x) => (x * 100).toFixed(4),
               },
               {
+                name: 'Battery Voltage',
+                nodeProcess: 'any',
+                dataKey: 'device_batt_volt_000',
+                timeDataKey: 'device_batt_utc_000',
+                unit: 'V',
+                processDataKey: (x) => x.toFixed(4),
+              },
+              {
                 name: 'Power Gen',
                 nodeProcess: 'any',
                 dataKey: 'node_powgen',
@@ -2802,7 +2810,7 @@ export default {
           i: 'satellite-neutron1-dpr-i',
           x: 0,
           y: 3,
-          w: 12,
+          w: 6,
           h: 18,
           component: {
             name: 'Chart',
@@ -2881,6 +2889,36 @@ export default {
                   YDataKey: 'device_tcv_flag_000',
                   timeDataKey: 'device_gps_utc_000',
                   processYDataKey: (x) => x >> 1 & 1,
+                  nodeProcess: 'any',
+                  live: true,
+                },
+              ],
+            },
+          },
+        },
+        {
+          i: 'satellite-neutron1-dpr-j',
+          x: 6,
+          y: 3,
+          w: 6,
+          h: 18,
+          component: {
+            name: 'Chart',
+            props: {
+              name: 'Uptime',
+              plots: [
+                {
+                  x: [],
+                  y: [],
+                  type: 'scatter',
+                  mode: 'lines+markers',
+                  marker: {
+                    color: 'red',
+                  },
+                  name: 'Uptime (s)',
+                  YDataKey: 'device_gps_uptime_000',
+                  timeDataKey: 'device_gps_utc_000',
+                  processYDataKey: (x) => x,
                   nodeProcess: 'any',
                   live: true,
                 },
