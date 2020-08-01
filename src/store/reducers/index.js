@@ -1,4 +1,6 @@
-import { SET_KEY, SET_DATA, SET_ACTIVITY } from '../actions';
+import {
+  SET_KEY, SET_DATA, SET_ACTIVITY, INCREMENT_QUEUE, RESET_QUEUE,
+} from '../actions';
 
 /**
  * Process the value provided by get() function and place in context
@@ -10,6 +12,8 @@ export default function reducer(state = {
   data: {},
   realm: null,
   activity: [],
+  keys: {},
+  retrievedQuery: null,
 }, {
   type, key, payload,
 }) {
@@ -37,6 +41,16 @@ export default function reducer(state = {
           payload,
           ...state.activity,
         ],
+      };
+    case INCREMENT_QUEUE:
+      return {
+        ...state,
+        retrievedQuery: state.retrievedQuery + 1,
+      };
+    case RESET_QUEUE:
+      return {
+        ...state,
+        retrievedQuery: 0,
       };
     default:
       return state;

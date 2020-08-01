@@ -39,6 +39,7 @@ import { set, setData, setActivity } from '../store/actions';
 import { dateToMJD } from '../utility/time';
 
 import AsyncComponent, { components } from '../components/AsyncComponent';
+import MenuTab from '../components/Dashboard/MenuTab';
 import LayoutSelector from '../components/LayoutSelector';
 import Clock from '../components/Statuses';
 import SocketStatus from '../components/SocketStatus';
@@ -67,6 +68,8 @@ function Dashboard({
 }) {
   const dispatch = useDispatch();
   const activities = useSelector((s) => s.activity);
+  const keys = useSelector((s) => s.keys);
+  const state = useSelector((s) => s.data);
 
   /** Store the default page layout in case user wants to switch to it */
   const [defaultPageLayout, setDefaultPageLayout] = useState({
@@ -118,6 +121,8 @@ function Dashboard({
 
   const [socketStatus, setSocketStatus] = useState('error');
 
+  const [currentTab, setCurrentTab] = useState('defaultLayout');
+
   /** Get socket data from the agent */
   useEffect(() => {
     const live = socket('/live/all');
@@ -136,6 +141,8 @@ function Dashboard({
           dispatch(set('list', json));
         // Send data if allowed node AND if flight mode and soh, send,
         // OW if not flight mode don't send soh
+        } else if (json.node_type === 'file') {
+          dispatch(set('file_list', json));
         } else if (realms[id].includes(node) && ((flightMode === 'true') || (!(flightMode === 'true') && process !== 'soh'))) {
           dispatch(set('lastDate', dayjs()));
 
@@ -226,10 +233,47 @@ function Dashboard({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if (state[id]) {
+      const flags = {};
+      Object.keys(keys).forEach((tab) => {
+        flags[tab] = [false, false];
+      });
+
+      Object.keys(state[id]).forEach((namespace) => {
+        Object.keys(keys).forEach((tab) => {
+          if (keys[tab].dataKeys[namespace]) {
+            if (keys[tab].dataKeys[namespace].dataKeyUpperThreshold !== undefined
+              && keys[tab].dataKeys[namespace].processDataKey(state[id][namespace])
+              > keys[tab].dataKeys[namespace].dataKeyUpperThreshold) {
+              flags[tab][0] = true;
+            } else if (keys[tab].dataKeys[namespace].dataKeyLowerThreshold !== undefined
+              && keys[tab].dataKeys[namespace].processDataKey(state[id][namespace])
+              < keys[tab].dataKeys[namespace].dataKeyLowerThreshold) {
+              flags[tab][0] = true;
+            } else {
+              flags[tab][1] = true;
+            }
+          }
+        });
+      });
+      Object.keys(keys).forEach((tab) => {
+        if (flags[tab][0]) {
+          keys[tab].status = 'error';
+        } else if (flags[tab][1]) {
+          keys[tab].status = 'success';
+        }
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state]);
+
   /** Retrieve default layout for page */
   useEffect(() => {
     // By default, set the defaultLayout prop as a flive.ack if child doesn't have a layout set
     let layout = defaultLayout;
+    let dataKeys = {};
+    const tabStatus = {};
 
     // Find child route of dashboard and retrieve default layout
     routes.forEach((route) => {
@@ -237,18 +281,96 @@ function Dashboard({
         route.children.forEach((child) => {
           // Get page layout from route config and save it into the state
           if (child.name === id && child.defaultLayout) {
+            child.defaultLayout.lg.forEach((component) => {
+              if (component.component.name === 'DisplayValue') {
+                component.component.props.displayValues.forEach(
+                  ({
+                    dataKey,
+                    timeDataKey,
+                    processDataKey,
+                    dataKeyUpperThreshold,
+                    dataKeyLowerThreshold,
+                  }) => {
+                    if (dataKeys[dataKey] === undefined) {
+                      dataKeys[dataKey] = {};
+                    }
+                    dataKeys[dataKey].dataKeyUpperThreshold = dataKeyUpperThreshold;
+                    dataKeys[dataKey].dataKeyLowerThreshold = dataKeyLowerThreshold;
+                    dataKeys[dataKey].processDataKey = processDataKey;
+                    dataKeys[dataKey].timeDataKey = timeDataKey;
+                  },
+                );
+              }
+              if (component.component.name === 'Chart') {
+                component.component.props.plots.forEach((
+                  { YDataKey, processYDataKey, timeDataKey },
+                ) => {
+                  if (dataKeys[YDataKey] === undefined) {
+                    dataKeys[YDataKey] = {};
+                  }
+                  dataKeys[YDataKey].timeDataKey = timeDataKey;
+                  dataKeys[YDataKey].processYDataKey = processYDataKey;
+                });
+              }
+            });
+            tabStatus.defaultLayout = {
+              dataKeys,
+              status: 'default',
+            };
+
             layout = child.defaultLayout;
             setDefaultPageLayout(child.defaultLayout);
           }
 
           // Get page layout simple from route config and save it into the state
           if (child.name === id && child.tabs) {
+            Object.keys(child.tabs).forEach((tab) => {
+              dataKeys = {};
+              child.tabs[tab].lg.forEach((component) => {
+                if (component.component.name === 'DisplayValue') {
+                  component.component.props.displayValues.forEach(
+                    ({
+                      dataKey,
+                      timeDataKey,
+                      processDataKey,
+                      dataKeyUpperThreshold,
+                      dataKeyLowerThreshold,
+                    }) => {
+                      if (dataKeys[dataKey] === undefined) {
+                        dataKeys[dataKey] = {};
+                      }
+                      dataKeys[dataKey].dataKeyUpperThreshold = dataKeyUpperThreshold;
+                      dataKeys[dataKey].dataKeyLowerThreshold = dataKeyLowerThreshold;
+                      dataKeys[dataKey].processDataKey = processDataKey;
+                      dataKeys[dataKey].timeDataKey = timeDataKey;
+                    },
+                  );
+                }
+                if (component.component.name === 'Chart') {
+                  component.component.props.plots.forEach((
+                    { YDataKey, processYDataKey, timeDataKey },
+                  ) => {
+                    if (dataKeys[YDataKey] === undefined) {
+                      dataKeys[YDataKey] = {};
+                    }
+                    dataKeys[YDataKey].timeDataKey = timeDataKey;
+                    dataKeys[YDataKey].processYDataKey = processYDataKey;
+                  });
+                }
+              });
+              tabStatus[tab] = {
+                dataKeys,
+                status: 'default',
+              };
+            });
+
             setTabs(child.tabs);
           }
         });
       }
     });
 
+    dispatch(set('keys', tabStatus));
     // Set timeout to let the grid initialize; won't work otherwise.
     setTimeout(() => {
       setLayouts(layout);
@@ -256,6 +378,7 @@ function Dashboard({
       // Initialize JSON editor
       setJsonEdit(JSON.stringify(layout.lg, null, 2));
     }, 100);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [defaultLayout, id, path]);
 
   /** Save layout */
@@ -390,6 +513,19 @@ function Dashboard({
       // Add to object
       add.i = newId;
 
+      // if (add.component.name === 'DisplayValue') {
+      //   add.component.props.displayValues.forEach(
+      //     ({ dataKey, processDataKey, dataKeyUpperThreshold, dataKeyLowerThreshold }) => {
+      //       if (keys[/* tab */][dataKey] === undefined) {
+      //         keys[/* tab */][dataKey] = {};
+      //       }
+      //       keys[/* tab */][dataKey].processDataKey = processDataKey;
+      //       keys[/* tab */][dataKey].dataKeyUpperThreshold = dataKeyUpperThreshold;
+      //       keys[/* tab */][dataKey].dataKeyLowerThreshold = dataKeyLowerThreshold;
+      //     },
+      //   );
+      // }
+
       // Update layout with new component
       setLayouts({
         lg: [
@@ -519,13 +655,19 @@ function Dashboard({
 
           <div className="pt-4">
             <GetHistoricalData
-              amountOfComponents={layouts.lg.filter((el) => el.component.name === 'Chart').length}
+              tab={currentTab}
+              amountOfComponents={layouts.lg.filter((el) => el.component.name === 'Chart' || el.component.name === 'DisplayValue').length + 2}
             />
           </div>
         </div>
         <Menu mode="horizontal">
-          <Menu.Item onClick={() => selectLayout('defaultPageLayout')}>
-            Overview
+          <Menu.Item
+            onClick={() => {
+              selectLayout('defaultPageLayout');
+              setCurrentTab('defaultLayout');
+            }}
+          >
+            <MenuTab name="Overview" layout={keys.defaultLayout} />
           </Menu.Item>
           {
             Object.keys(tabs).map((tab) => (
@@ -533,9 +675,10 @@ function Dashboard({
                 key={tab}
                 onClick={() => {
                   setLayouts(tabs[tab]);
+                  setCurrentTab(tab);
                 }}
               >
-                {tab}
+                <MenuTab name={tab} layout={keys[tab]} />
               </Menu.Item>
             ))
           }

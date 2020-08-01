@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  Form, Input, Collapse, Button, InputNumber,
+  Form, Input, Collapse, Button, InputNumber, message,
 } from 'antd';
 
 import BaseComponent from '../BaseComponent';
 import DisplayValuesTable from './DisplayValues/DisplayValuesTable';
 
-import { setActivity } from '../../store/actions';
+import { setActivity, incrementQueue } from '../../store/actions';
 import { mjdToString } from '../../utility/time';
 
 const { Panel } = Collapse;
@@ -30,6 +30,7 @@ function DisplayValue({
   height,
 }) {
   const dispatch = useDispatch();
+  const queriedData = useSelector((s) => s.queriedData);
 
   /** Accessing the neutron1 messages from the socket */
   const state = useSelector((s) => s.data);
@@ -146,6 +147,31 @@ function DisplayValue({
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
+
+  useEffect(() => {
+    if (queriedData) {
+      displayValuesState.forEach(({ dataKey, timeDataKey, processDataKey }, i) => {
+        if (queriedData[dataKey]) {
+          if (queriedData[dataKey].length === 0 || queriedData[timeDataKey].length === 0) {
+            message.warning(`No data for specified date range in for ${dataKey}/${timeDataKey}.`);
+          } else {
+            message.success(`Retrieved ${queriedData[dataKey].length} records in ${dataKey}/${timeDataKey}.`);
+
+            const lastValue = queriedData[dataKey][queriedData[dataKey].length - 1];
+            const lastTimeValue = queriedData[timeDataKey][queriedData[timeDataKey].length - 1];
+
+            displayValuesState[i].value = processDataKey ? processDataKey(lastValue) : lastValue;
+            displayValuesState[i].time = mjdToString(lastTimeValue);
+          }
+        }
+      });
+
+      dispatch(incrementQueue());
+
+      setUpdateComponent(!updateComponent);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [queriedData]);
 
   /** Process edit value form */
   const processForm = (id) => {
