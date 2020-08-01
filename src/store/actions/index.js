@@ -3,6 +3,8 @@ import dayjs from 'dayjs';
 export const SET_KEY = 'SET_KEY';
 export const SET_DATA = 'SET_DATA';
 export const SET_ACTIVITY = 'SET_ACTIVITY';
+export const INCREMENT_QUEUE = 'INCREMENT_QUEUE';
+export const RESET_QUEUE = 'RESET_QUEUE';
 
 /**
  * Add a key within the context
@@ -39,5 +41,17 @@ export function setActivity(activity) {
       ...activity,
       time: dayjs(),
     },
+  };
+}
+
+export function incrementQueue() {
+  return {
+    type: INCREMENT_QUEUE,
+  };
+}
+
+export function resetQueue() {
+  return {
+    type: RESET_QUEUE,
   };
 }
