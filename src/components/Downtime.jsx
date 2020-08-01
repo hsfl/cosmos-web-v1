@@ -13,13 +13,7 @@ function Downtime() {
 
   /** Get realm and node downtime */
   const realm = useSelector((s) => s.realm);
-  const nodeDowntime = useSelector((s) => {
-    if (s.data[realm] && s.data[realm].node_downtime) {
-      return s.data[realm].node_downtime;
-    }
-
-    return false;
-  });
+  const data = useSelector((s) => s.data);
   const queriedData = useSelector((s) => s.queriedData);
 
   /** Timer to countdown time from node_downtime */
@@ -31,14 +25,14 @@ function Downtime() {
 
   /** Upon node downtime change, recalculate countdown from now */
   useEffect(() => {
-    if (nodeDowntime !== false) {
+    if (data && data[realm]) {
       if (timer !== null) {
         clearTimeout(timer.current);
       }
-      setDowntime(dayjs().add(nodeDowntime, 'second'));
-      setElapsed(getDiff(dayjs().add(nodeDowntime, 'second'), true));
+      setDowntime(dayjs().add(data[realm].node_downtime, 'second'));
+      setElapsed(getDiff(dayjs().add(data[realm].node_downtime, 'second'), true));
     }
-  }, [nodeDowntime]);
+  }, [data]);
 
   /** Upon querying data, calculate the last known node downtime and count down */
   useEffect(() => {

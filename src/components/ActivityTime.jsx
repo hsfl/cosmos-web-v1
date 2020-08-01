@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 
@@ -11,13 +12,14 @@ import { getDiff, MJDtoJavaScriptDate } from '../utility/time';
  * Shows the incoming activity from the web socket and displays time elapsed
  * from the last data retrieval.
  */
-function ActivityTimer() {
+function ActivityTimer({
+  realm,
+}) {
   const dispatch = useDispatch();
 
   /** Get agent list state from the Context */
   const activities = useSelector((s) => s.activity);
   const queriedData = useSelector((s) => s.queriedData);
-  const realm = useSelector((s) => s.realm);
 
   const [lastMessage, setLastMessage] = useState(null);
   /** Time elapsed from last activity */
@@ -32,14 +34,14 @@ function ActivityTimer() {
     try {
       const { data } = await axios.post(`query/${realm}/any/`, {
         query: {},
-        options: {
-          projection: {
-            node_utc: 1,
-          },
-        },
-        sort: {
-          node_utc: 1,
-        },
+        // options: {
+        //   projection: {
+        //     node_utc: 1,
+        //   },
+        // },
+        // sort: {
+        //   node_utc: 1,
+        // },
       });
       console.log(data, realm);
     } catch {
@@ -48,7 +50,7 @@ function ActivityTimer() {
   };
 
   useEffect(() => {
-    setTimeout(() => queryData(), 500);
+    setTimeout(() => queryData(), 5000);
   }, []);
 
   /** Retrieve last activity time */
@@ -99,5 +101,9 @@ function ActivityTimer() {
     </>
   );
 }
+
+ActivityTimer.propTypes = {
+  realm: PropTypes.string.isRequired,
+};
 
 export default ActivityTimer;
