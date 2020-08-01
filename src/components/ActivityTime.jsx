@@ -1,10 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 
-import { message } from 'antd';
-import { axios } from '../api';
 import { incrementQueue } from '../store/actions';
 import { getDiff, MJDtoJavaScriptDate } from '../utility/time';
 
@@ -12,50 +9,28 @@ import { getDiff, MJDtoJavaScriptDate } from '../utility/time';
  * Shows the incoming activity from the web socket and displays time elapsed
  * from the last data retrieval.
  */
-function ActivityTimer({
-  realm,
-}) {
+function ActivityTimer() {
   const dispatch = useDispatch();
 
   /** Get agent list state from the Context */
   const activities = useSelector((s) => s.activity);
+  /** List of queried data */
   const queriedData = useSelector((s) => s.queriedData);
-
+  /** The time of the last message */
   const [lastMessage, setLastMessage] = useState(null);
   /** Time elapsed from last activity */
   const [elapsed, setElapsed] = useState('Over a day');
   /** Reference to the timer that increments all elapsed times after 1 second */
   const timer = useRef(null);
 
+  /** Reference to the lastMessage */
   const lastMessageTimeRef = useRef(null);
   lastMessageTimeRef.current = lastMessage;
-
-  const queryData = async () => {
-    try {
-      const { data } = await axios.post(`query/${realm}/any/`, {
-        query: {},
-        // options: {
-        //   projection: {
-        //     node_utc: 1,
-        //   },
-        // },
-        // sort: {
-        //   node_utc: 1,
-        // },
-      });
-      console.log(data, realm);
-    } catch {
-      message.error('Failed to retrieve last activity.');
-    }
-  };
-
-  useEffect(() => {
-    setTimeout(() => queryData(), 5000);
-  }, []);
 
   /** Retrieve last activity time */
   useEffect(() => {
     if (activities && activities.length > 0) {
+      /** Reset timer and set the new timer */
       clearTimeout(timer.current);
       setElapsed(getDiff(activities[0].time));
       setLastMessage(activities[0].time);
@@ -101,9 +76,5 @@ function ActivityTimer({
     </>
   );
 }
-
-ActivityTimer.propTypes = {
-  realm: PropTypes.string.isRequired,
-};
 
 export default ActivityTimer;

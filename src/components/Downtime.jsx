@@ -13,7 +13,9 @@ function Downtime() {
 
   /** Get realm and node downtime */
   const realm = useSelector((s) => s.realm);
+  /** The data coming in from the realm */
   const data = useSelector((s) => s.data);
+  /** The list of data retrieved from database */
   const queriedData = useSelector((s) => s.queriedData);
 
   /** Timer to countdown time from node_downtime */
@@ -32,6 +34,7 @@ function Downtime() {
       setDowntime(dayjs().add(data[realm].node_downtime, 'second'));
       setElapsed(getDiff(dayjs().add(data[realm].node_downtime, 'second'), true));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   /** Upon querying data, calculate the last known node downtime and count down */
@@ -46,7 +49,7 @@ function Downtime() {
         const lastNodeDowntime = queriedData.node_downtime[queriedData.node_downtime.length - 1];
         const lastNodeUTC = queriedData.node_utc[queriedData.node_utc.length - 1];
 
-        //
+        // Set the past downtime
         setDowntime(dayjs(MJDtoJavaScriptDate(lastNodeUTC)).add(lastNodeDowntime, 'second'));
         setElapsed(getDiff(dayjs(MJDtoJavaScriptDate(lastNodeUTC)).add(lastNodeDowntime, 'second'), true));
       }
