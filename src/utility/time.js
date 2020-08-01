@@ -45,7 +45,7 @@ export function getDiff(date, countdown = false) {
   let futureTime = dayjs();
   let pastTime = date;
 
-  if (date > dayjs()) {
+  if (date > dayjs() && countdown) {
     futureTime = date;
     pastTime = dayjs();
   }

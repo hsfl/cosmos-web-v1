@@ -1,22 +1,22 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 
-import { getDiff } from '../utility/time';
+import { incrementQueue } from '../store/actions';
+import { getDiff, MJDtoJavaScriptDate } from '../utility/time';
 
 /**
  * Counts down the downtime of the satellite
  */
 function Downtime() {
+  const dispatch = useDispatch();
+
   /** Get realm and node downtime */
   const realm = useSelector((s) => s.realm);
-  const nodeDowntime = useSelector((s) => {
-    if (s.data[realm] && s.data[realm].node_downtime) {
-      return s.data[realm].node_downtime;
-    }
-
-    return false;
-  });
+  /** The data coming in from the realm */
+  const data = useSelector((s) => s.data);
+  /** The list of data retrieved from database */
+  const queriedData = useSelector((s) => s.queriedData);
 
   /** Timer to countdown time from node_downtime */
   const [downtime, setDowntime] = useState(null);
@@ -27,11 +27,37 @@ function Downtime() {
 
   /** Upon node downtime change, recalculate countdown from now */
   useEffect(() => {
-    if (nodeDowntime !== false) {
-      setDowntime(dayjs().add(nodeDowntime, 'second'));
-      setElapsed(getDiff(dayjs().add(nodeDowntime, 'second'), true));
+    if (data && data[realm]) {
+      if (timer !== null) {
+        clearTimeout(timer.current);
+      }
+      setDowntime(dayjs().add(data[realm].node_downtime, 'second'));
+      setElapsed(getDiff(dayjs().add(data[realm].node_downtime, 'second'), true));
     }
-  }, [nodeDowntime]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
+
+  /** Upon querying data, calculate the last known node downtime and count down */
+  useEffect(() => {
+    if (queriedData) {
+      if (queriedData.node_utc && queriedData.node_utc.length > 0
+          && queriedData.node_downtime && queriedData.node_downtime.length > 0
+      ) {
+        if (timer !== null) {
+          clearTimeout(timer.current);
+        }
+        const lastNodeDowntime = queriedData.node_downtime[queriedData.node_downtime.length - 1];
+        const lastNodeUTC = queriedData.node_utc[queriedData.node_utc.length - 1];
+
+        // Set the past downtime
+        setDowntime(dayjs(MJDtoJavaScriptDate(lastNodeUTC)).add(lastNodeDowntime, 'second'));
+        setElapsed(getDiff(dayjs(MJDtoJavaScriptDate(lastNodeUTC)).add(lastNodeDowntime, 'second'), true));
+      }
+
+      dispatch(incrementQueue());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [queriedData]);
 
   /** Increments the timer */
   useEffect(() => {
@@ -44,7 +70,7 @@ function Downtime() {
     /** Clear timer on unmount */
     return () => clearTimeout(timer.current);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [elapsed]);
+  }, [elapsed, downtime]);
 
   return (
     <>

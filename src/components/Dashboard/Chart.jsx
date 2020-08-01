@@ -24,7 +24,7 @@ import {
 import Plot from 'react-plotly.js';
 import { saveAs } from 'file-saver';
 import { useSelector, useDispatch } from 'react-redux';
-import { set } from '../../store/actions';
+import { incrementQueue } from '../../store/actions';
 
 import BaseComponent from '../BaseComponent';
 import ChartValues from './Chart/ChartValues';
@@ -54,9 +54,10 @@ function Chart({
 
   /** Accessing the neutron1 node process context and drilling down */
   const state = useSelector((s) => s.data);
-  const globalHistoricalDate = useSelector((s) => s.globalHistoricalDate);
-  const globalQueue = useSelector((s) => s.globalQueue);
+  // const globalHistoricalDate = useSelector((s) => s.globalHistoricalDate);
+  // const globalQueue = useSelector((s) => s.globalQueue);
   const realm = useSelector((s) => s.realm);
+  const queriedData = useSelector((s) => s.queriedData);
 
   /** Storage for global form values */
   const [plotsForm] = Form.useForm();
@@ -234,13 +235,16 @@ function Chart({
             plotsState[i].x.push(mjdToString(state[realm].recorded_time));
           }
 
-          plotsState[i]
-            .y
-            .push(
-              plotsState[i].processYDataKey
-                ? plotsState[i].processYDataKey(state[realm][p.YDataKey])
-                : state[realm][p.YDataKey],
-            );
+          // Zero values are not valid!
+          if (state[realm][p.YDataKey]) {
+            plotsState[i]
+              .y
+              .push(
+                plotsState[i].processYDataKey
+                  ? plotsState[i].processYDataKey(state[realm][p.YDataKey])
+                  : state[realm][p.YDataKey],
+              );
+          }
         }
 
         // Upon insertion, check if the length of y exceeds the data limit.
@@ -352,26 +356,55 @@ function Chart({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [retrievePlotHistory]);
 
-  /** Handle the collection of global historical data */
+  // /** Handle the collection of global historical data */
+  // useEffect(() => {
+  //   if (globalHistoricalDate != null && globalQueue) {
+  //     plotsState.forEach((plot, i) => {
+  //       queryHistoricalData(
+  //         globalHistoricalDate,
+  //         plot.YDataKey,
+  //         plot.timeDataKey,
+  //         plot.nodeProcess,
+  //         i,
+  //       );
+  //     });
+
+  //     dispatch(set('globalQueue', globalQueue - 1));
+
+  //     // Reset state to null to allow for detection of future plot history requests
+  //     setRetrievePlotHistory(null);
+  //   }
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [globalHistoricalDate]);
+
   useEffect(() => {
-    if (globalHistoricalDate != null && globalQueue) {
-      plotsState.forEach((plot, i) => {
-        queryHistoricalData(
-          globalHistoricalDate,
-          plot.YDataKey,
-          plot.timeDataKey,
-          plot.nodeProcess,
-          i,
-        );
+    if (queriedData) {
+      plotsState.forEach(({ timeDataKey, YDataKey, processYDataKey }, i) => {
+        if (queriedData[YDataKey]) {
+          if (queriedData[YDataKey].length === 0 || queriedData[timeDataKey].length === 0) {
+            message.warning(`No data for specified date range in for ${YDataKey}/${timeDataKey}.`);
+          } else {
+            message.success(`Retrieved ${queriedData[YDataKey].length} records in ${YDataKey}/${timeDataKey}.`);
+
+            plotsState[i].x = queriedData[timeDataKey].map((x) => mjdToString(x));
+            plotsState[i].y = processYDataKey
+              ? queriedData[YDataKey].map((y) => processYDataKey(y))
+              : queriedData[YDataKey];
+          }
+        }
       });
 
-      dispatch(set('globalQueue', globalQueue - 1));
+      dispatch(incrementQueue());
 
-      // Reset state to null to allow for detection of future plot history requests
-      setRetrievePlotHistory(null);
+      setLayout({
+        ...layout,
+        dataRevision: layout.dataRevision + 1,
+      });
+
+      setDataRevision(dataRevision + 1);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [globalHistoricalDate]);
+  }, [queriedData]);
 
   /** Process edit value form */
   const processForm = (id) => {
