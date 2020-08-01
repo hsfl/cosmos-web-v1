@@ -2889,9 +2889,9 @@ export default {
         },
         {
           i: 'satellite-neutron1-duplex-j',
-          x: 0,
-          y: 5,
-          w: 12,
+          x: 6,
+          y: 3,
+          w: 6,
           h: 18,
           component: {
             name: 'Globe',
