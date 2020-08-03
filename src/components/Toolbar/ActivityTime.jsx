@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 
-import { incrementQueue } from '../store/actions';
-import { getDiff, MJDtoJavaScriptDate } from '../utility/time';
+import { incrementQueue } from '../../store/actions';
+import { getDiff, MJDtoJavaScriptDate } from '../../utility/time';
 
 /**
  * Shows the incoming activity from the web socket and displays time elapsed

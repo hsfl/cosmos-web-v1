@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 
-import ActivityEntry from './Dashboard/Activity/ActivityEntry';
+import ActivityEntry from '../Dashboard/Activity/ActivityEntry';
 
 /**
  * Shows the incoming activity from the web socket and displays time elapsed
