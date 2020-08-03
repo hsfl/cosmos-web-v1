@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
-  Viewer, Entity, Model, Globe, Clock, CameraFlyTo, PathGraphics, GeoJsonDataSource,
+  Viewer, Entity, Model, Globe, Clock, CameraFlyTo, PathGraphics, GeoJsonDataSource, ImageryLayer,
 } from 'resium';
 import Cesium from 'cesium';
 
@@ -23,6 +23,10 @@ const { TextArea } = Input;
 if (process.env.CESIUM_ION_TOKEN) {
   Cesium.Ion.defaultAccessToken = process.env.CESIUM_ION_TOKEN;
 }
+
+const imageryProvider = new Cesium.ArcGisMapServerImageryProvider({
+  url: '//services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer',
+});
 
 const pixelSize = {
   pixelSize: 10,
@@ -644,6 +648,7 @@ function CesiumGlobe({
       <Viewer
         fullscreenButton={false}
       >
+        <ImageryLayer imageryProvider={imageryProvider} />
         {overlaysState.map((overlay, i) => (
           <GeoJsonDataSource
             data={overlay.geoJson}
