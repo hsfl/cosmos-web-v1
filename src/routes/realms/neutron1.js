@@ -115,7 +115,16 @@ export default {
             name: 'Temperature',
             displayValues: [
               {
-                name: 'Battery',
+                name: 'EPS MB',
+                nodeProcess: 'any',
+                dataKey: 'device_cpu_temp_001',
+                dataKeyUpperThreshold: 60,
+                timeDataKey: 'device_cpu_utc_001',
+                unit: 'C',
+                processDataKey: (x) => (x - 272.15).toFixed(2),
+              },
+              {
+                name: 'BATT MB',
                 nodeProcess: 'any',
                 dataKey: 'device_batt_temp_000',
                 timeDataKey: 'device_batt_utc_000',
@@ -124,7 +133,7 @@ export default {
                 processDataKey: (x) => (x - 272.15).toFixed(2),
               },
               {
-                name: 'DB 1',
+                name: 'BATT DB 1',
                 nodeProcess: 'any',
                 dataKey: 'device_tsen_temp_000',
                 dataKeyUpperThreshold: 60,
@@ -133,7 +142,7 @@ export default {
                 processDataKey: (x) => (x - 272.15).toFixed(2),
               },
               {
-                name: 'DB 2 001',
+                name: 'BATT DB 2',
                 nodeProcess: 'any',
                 dataKey: 'device_tsen_temp_001',
                 dataKeyUpperThreshold: 60,
@@ -142,7 +151,7 @@ export default {
                 processDataKey: (x) => (x - 272.15).toFixed(2),
               },
               {
-                name: 'DB 2 002',
+                name: 'BATT DB 3',
                 nodeProcess: 'any',
                 dataKey: 'device_tsen_temp_002',
                 dataKeyUpperThreshold: 60,
@@ -151,7 +160,7 @@ export default {
                 processDataKey: (x) => (x - 272.15).toFixed(2),
               },
               {
-                name: 'DB 2 003',
+                name: 'BATT DB 4',
                 nodeProcess: 'any',
                 dataKey: 'device_tsen_temp_003',
                 dataKeyUpperThreshold: 60,
@@ -178,16 +187,7 @@ export default {
                 processDataKey: (x) => (x - 272.15).toFixed(2),
               },
               {
-                name: 'EPS DU',
-                nodeProcess: 'any',
-                dataKey: 'device_cpu_temp_001',
-                dataKeyUpperThreshold: 60,
-                timeDataKey: 'device_cpu_utc_001',
-                unit: 'C',
-                processDataKey: (x) => (x - 272.15).toFixed(2),
-              },
-              {
-                name: 'CubeComp',
+                name: 'ADCS MCU',
                 nodeProcess: 'any',
                 dataKey: 'device_cpu_temp_002',
                 dataKeyUpperThreshold: 60,
@@ -196,7 +196,25 @@ export default {
                 processDataKey: (x) => (x - 272.15).toFixed(2),
               },
               {
-                name: 'IMU',
+                name: 'ADCS Gyro X',
+                nodeProcess: 'any',
+                dataKey: 'device_imu_temp_000',
+                dataKeyUpperThreshold: 60,
+                timeDataKey: 'device_imu_utc_000',
+                unit: 'C',
+                processDataKey: (x) => (x - 272.15).toFixed(2),
+              },
+              {
+                name: 'ADCS Gyro Y',
+                nodeProcess: 'any',
+                dataKey: 'device_imu_temp_000',
+                dataKeyUpperThreshold: 60,
+                timeDataKey: 'device_imu_utc_000',
+                unit: 'C',
+                processDataKey: (x) => (x - 272.15).toFixed(2),
+              },
+              {
+                name: 'ADCS Gyro Z',
                 nodeProcess: 'any',
                 dataKey: 'device_imu_temp_000',
                 dataKeyUpperThreshold: 60,
@@ -1254,7 +1272,7 @@ export default {
                   processDataKey: (x) => (x - 272.15).toFixed(2),
                 },
                 {
-                  name: 'EPS DU',
+                  name: 'EPS MB',
                   nodeProcess: 'any',
                   dataKey: 'device_cpu_temp_001',
                   dataKeyUpperThreshold: 60,
@@ -1263,7 +1281,7 @@ export default {
                   processDataKey: (x) => (x - 272.15).toFixed(2),
                 },
                 {
-                  name: 'CubeComp',
+                  name: 'ADCS MCU',
                   nodeProcess: 'any',
                   dataKey: 'device_cpu_temp_002',
                   dataKeyUpperThreshold: 60,
@@ -1272,7 +1290,25 @@ export default {
                   processDataKey: (x) => (x - 272.15).toFixed(2),
                 },
                 {
-                  name: 'IMU',
+                  name: 'ADCS Gyro X',
+                  nodeProcess: 'any',
+                  dataKey: 'device_imu_temp_000',
+                  dataKeyUpperThreshold: 60,
+                  timeDataKey: 'device_imu_utc_000',
+                  unit: 'C',
+                  processDataKey: (x) => (x - 272.15).toFixed(2),
+                },
+                {
+                  name: 'ADCS Gyro Y',
+                  nodeProcess: 'any',
+                  dataKey: 'device_imu_temp_000',
+                  dataKeyUpperThreshold: 60,
+                  timeDataKey: 'device_imu_utc_000',
+                  unit: 'C',
+                  processDataKey: (x) => (x - 272.15).toFixed(2),
+                },
+                {
+                  name: 'ADCS Gyro Z',
                   nodeProcess: 'any',
                   dataKey: 'device_imu_temp_000',
                   dataKeyUpperThreshold: 60,
@@ -1416,11 +1452,38 @@ export default {
               name: 'Battery Heaters',
               displayValues: [
                 {
-                  name: 'Heater',
+                  name: 'BATT HEATER 1',
                   nodeProcess: 'any',
-                  dataKey: 'placeholder',
+                  dataKey: 'device_htr_temp_000',
                   dataKeyUpperThreshold: 60,
-                  timeDataKey: 'device_cpu_utc_000',
+                  timeDataKey: 'device_htr_utc_000',
+                  unit: 'C',
+                  processDataKey: (x) => (x - 272.15).toFixed(2),
+                },
+                {
+                  name: 'BATT HEATER 2',
+                  nodeProcess: 'any',
+                  dataKey: 'device_htr_temp_001',
+                  dataKeyUpperThreshold: 60,
+                  timeDataKey: 'device_htr_utc_001',
+                  unit: 'C',
+                  processDataKey: (x) => (x - 272.15).toFixed(2),
+                },
+                {
+                  name: 'BATT HEATER 3',
+                  nodeProcess: 'any',
+                  dataKey: 'device_htr_temp_002',
+                  dataKeyUpperThreshold: 60,
+                  timeDataKey: 'device_htr_utc_002',
+                  unit: 'C',
+                  processDataKey: (x) => (x - 272.15).toFixed(2),
+                },
+                {
+                  name: 'BATT HEATER 4',
+                  nodeProcess: 'any',
+                  dataKey: 'device_htr_temp_003',
+                  dataKeyUpperThreshold: 60,
+                  timeDataKey: 'device_htr_utc_003',
                   unit: 'C',
                   processDataKey: (x) => (x - 272.15).toFixed(2),
                 },
@@ -2744,65 +2807,24 @@ export default {
           w: 6,
           h: 18,
           component: {
-            name: 'Globe',
+            name: 'Chart',
             props: {
-              name: 'Orbit',
-              orbits: [
+              name: 'Uptime',
+              plots: [
                 {
-                  name: 'neutron1',
-                  modelFileName: 'cubesat1.glb',
-                  nodeProcess: 'any',
-                  XDataKey: 'device_gps_geods_000',
-                  YDataKey: 'device_gps_geods_000',
-                  ZDataKey: 'device_gps_geods_000',
-                  processXDataKey: ({ lat, lon }) => {
-                    const cosLat = Math.cos(lat);
-                    const sinLat = Math.sin(lat);
-                    const cosLon = Math.cos(lon);
-                    const rad = 6378137.0;
-                    const f = 1.0 / 298.257224;
-                    const C = 1.0 / Math.sqrt(
-                      cosLat * cosLat + (1 - f) * (1 - f) * sinLat * sinLat,
-                    );
-                    const h = 0.0;
-
-                    return (rad * C + h) * cosLat * cosLon;
+                  x: [],
+                  y: [],
+                  type: 'scatter',
+                  mode: 'lines+markers',
+                  marker: {
+                    color: 'red',
                   },
-                  processYDataKey: ({ lat, lon, h }) => {
-                    const cosLat = Math.cos(lat);
-                    const sinLat = Math.sin(lat);
-                    const sinLon = Math.sin(lon);
-                    const rad = 6378137.0;
-                    const f = 1.0 / 298.257224;
-                    const C = 1.0 / Math.sqrt(
-                      cosLat * cosLat + (1 - f) * (1 - f) * sinLat * sinLat,
-                    );
-
-                    return (rad * C + h) * cosLat * sinLon;
-                  },
-                  processZDataKey: ({ lat, h }) => {
-                    const cosLat = Math.cos(lat);
-                    const sinLat = Math.sin(lat);
-                    const rad = 6378137.0;
-                    const f = 1.0 / 298.257224;
-                    const C = 1.0 / Math.sqrt(
-                      cosLat * cosLat + (1 - f) * (1 - f) * sinLat * sinLat,
-                    );
-                    const S = (1.0 - f) * (1.0 - f) * C;
-
-                    return (rad * S + h) * sinLat;
-                  },
+                  name: 'Uptime',
+                  YDataKey: 'device_gps_uptime_000',
                   timeDataKey: 'device_gps_utc_000',
+                  processYDataKey: (x) => x,
+                  nodeProcess: 'any',
                   live: true,
-                  position: [21.289373, 157.917480, 350000.0],
-                  orientation: {
-                    d: {
-                      x: 0,
-                      y: 0,
-                      z: 0,
-                    },
-                    w: 0,
-                  },
                 },
               ],
             },
@@ -2929,30 +2951,71 @@ export default {
           },
         },
         {
-          i: 'satellite-neutron1-dpr-j',
+          i: 'satellite-neutron1-duplex-j',
           x: 6,
           y: 3,
           w: 6,
           h: 18,
           component: {
-            name: 'Chart',
+            name: 'Globe',
             props: {
-              name: 'Uptime',
-              plots: [
+              name: 'Orbit',
+              orbits: [
                 {
-                  x: [],
-                  y: [],
-                  type: 'scatter',
-                  mode: 'lines+markers',
-                  marker: {
-                    color: 'red',
-                  },
-                  name: 'Uptime (s)',
-                  YDataKey: 'device_gps_uptime_000',
-                  timeDataKey: 'device_gps_utc_000',
-                  processYDataKey: (x) => x,
+                  name: 'neutron1',
+                  modelFileName: 'cubesat1.glb',
                   nodeProcess: 'any',
+                  XDataKey: 'device_gps_geods_000',
+                  YDataKey: 'device_gps_geods_000',
+                  ZDataKey: 'device_gps_geods_000',
+                  processXDataKey: ({ lat, lon }) => {
+                    const cosLat = Math.cos(lat);
+                    const sinLat = Math.sin(lat);
+                    const cosLon = Math.cos(lon);
+                    const rad = 6378137.0;
+                    const f = 1.0 / 298.257224;
+                    const C = 1.0 / Math.sqrt(
+                      cosLat * cosLat + (1 - f) * (1 - f) * sinLat * sinLat,
+                    );
+                    const h = 0.0;
+
+                    return (rad * C + h) * cosLat * cosLon;
+                  },
+                  processYDataKey: ({ lat, lon, h }) => {
+                    const cosLat = Math.cos(lat);
+                    const sinLat = Math.sin(lat);
+                    const sinLon = Math.sin(lon);
+                    const rad = 6378137.0;
+                    const f = 1.0 / 298.257224;
+                    const C = 1.0 / Math.sqrt(
+                      cosLat * cosLat + (1 - f) * (1 - f) * sinLat * sinLat,
+                    );
+
+                    return (rad * C + h) * cosLat * sinLon;
+                  },
+                  processZDataKey: ({ lat, h }) => {
+                    const cosLat = Math.cos(lat);
+                    const sinLat = Math.sin(lat);
+                    const rad = 6378137.0;
+                    const f = 1.0 / 298.257224;
+                    const C = 1.0 / Math.sqrt(
+                      cosLat * cosLat + (1 - f) * (1 - f) * sinLat * sinLat,
+                    );
+                    const S = (1.0 - f) * (1.0 - f) * C;
+
+                    return (rad * S + h) * sinLat;
+                  },
+                  timeDataKey: 'device_gps_utc_000',
                   live: true,
+                  position: [21.289373, 157.917480, 350000.0],
+                  orientation: {
+                    d: {
+                      x: 0,
+                      y: 0,
+                      z: 0,
+                    },
+                    w: 0,
+                  },
                 },
               ],
             },
