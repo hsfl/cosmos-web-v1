@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 
-import { incrementQueue } from '../store/actions';
-import { getDiff, MJDtoJavaScriptDate } from '../utility/time';
+import { incrementQueue } from '../../store/actions';
+import { getDiff, MJDtoJavaScriptDate } from '../../utility/time';
 
 /**
  * Counts down the downtime of the satellite
