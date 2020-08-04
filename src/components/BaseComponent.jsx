@@ -62,9 +62,9 @@ function BaseComponent({
             ) : null}
 
             {/* Title */}
-            <div className="font-bold text-base">
+            <h2 className="text-gray-700 font-bold text-base">
               {name}
-            </div>
+            </h2>
           </div>
 
           {/* Settings / buttons for component */}
