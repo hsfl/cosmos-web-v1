@@ -2,11 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import FourOhFour from '../src/pages/404';
 
-describe('Home page', () => {
-  it('renders', () => {
-    shallow(<FourOhFour />);
-  });
-
+describe('404 page', () => {
   it('displays the image', () => {
     const wrapper = shallow(<FourOhFour />);
 
