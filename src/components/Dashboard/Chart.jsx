@@ -109,7 +109,7 @@ function Chart({
   /** Toggle for zero values */
   const [toggleZero, setToggleZero] = useState(showZero);
   /** Keep track of the full list of data points */
-  const [plotPoints, setPlotPoints] = useState(plots.map((plot) => ({
+  const [plotPoints] = useState(plots.map((plot) => ({
     x: plot.x,
     y: plot.y,
   })));
@@ -626,7 +626,8 @@ function Chart({
         plotsState[i].y = plotPoints[i].y;
       });
     }
-  }
+  };
+
   return (
     <BaseComponent
       name={nameState}
