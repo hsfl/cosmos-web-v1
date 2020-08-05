@@ -21,10 +21,10 @@ function Statuses() {
             UTC
           </td>
           <td className="pr-2 text-gray-500 ">
-            Activity
+            Last Activity
           </td>
           <td className="pr-2 text-gray-500 ">
-            Downtime
+            Downtime Counter
           </td>
         </tr>
         <tr>
