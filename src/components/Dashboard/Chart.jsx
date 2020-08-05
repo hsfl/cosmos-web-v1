@@ -106,13 +106,6 @@ function Chart({
   const [updateComponent, setUpdateComponent] = useState(false);
   /** State to store switch denoting whether added value is live or not */
   const [addChartLive, setAddChartLive] = useState(true);
-  /** Toggle for zero values */
-  const [toggleZero, setToggleZero] = useState(showZero);
-  /** Keep track of the full list of data points */
-  const [plotPoints] = useState(plots.map((plot) => ({
-    x: plot.x,
-    y: plot.y,
-  })));
 
   /**
    * Use object with keyed time
@@ -220,21 +213,15 @@ function Chart({
       ) {
         // If so, push to arrays and update state
 
-        // Check if polar or not
-        if (polar) {
-          if (process.env.FLIGHT_MODE === 'true' && state[realm][p.timeDataKey]) {
-            if (toggleZero || (!toggleZero && state[realm][p.YDataKey])) {
+        if (showZero || (!showZero && state[realm][p.YDataKey])) {
+          // Check if polar or not
+          if (polar) {
+            if (process.env.FLIGHT_MODE === 'true' && state[realm][p.timeDataKey]) {
               plotsState[i].r.push(mjdToString(state[realm][p.timeDataKey]));
-            }
-            plotPoints[i].r.push(mjdToString(state[realm][p.timeDataKey]));
-          } else {
-            if (toggleZero || (!toggleZero && state[realm][p.YDataKey])) {
+            } else {
               plotsState[i].r.push(mjdToString(state[realm].recorded_time));
             }
-            plotsState[i].r.push(mjdToString(state[realm].recorded_time));
-          }
 
-          if (toggleZero || (!toggleZero && state[realm][p.YDataKey])) {
             plotsState[i]
               .theta
               .push(
@@ -242,29 +229,13 @@ function Chart({
                   ? plotsState[i].processThetaDataKey(state[realm][p.YDataKey])
                   : state[realm][p.ThetaDataKey],
               );
-          }
-
-          plotPoints[i]
-            .theta
-            .push(
-              plotsState[i].processThetaDataKey
-                ? plotsState[i].processThetaDataKey(state[realm][p.YDataKey])
-                : state[realm][p.ThetaDataKey],
-            );
-        } else {
-          if (process.env.FLIGHT_MODE === 'true' && state[realm][p.timeDataKey]) {
-            if (toggleZero || (!toggleZero && state[realm][p.YDataKey])) {
-              plotsState[i].x.push(mjdToString(state[realm][p.timeDataKey]));
-            }
-            plotPoints[i].x.push(mjdToString(state[realm][p.timeDataKey]));
           } else {
-            if (toggleZero || (!toggleZero && state[realm][p.YDataKey])) {
+            if (process.env.FLIGHT_MODE === 'true' && state[realm][p.timeDataKey]) {
+              plotsState[i].x.push(mjdToString(state[realm][p.timeDataKey]));
+            } else {
               plotsState[i].x.push(mjdToString(state[realm].recorded_time));
             }
-            plotPoints[i].x.push(mjdToString(state[realm].recorded_time));
-          }
 
-          if (toggleZero || (!toggleZero && state[realm][p.YDataKey])) {
             plotsState[i]
               .y
               .push(
@@ -273,13 +244,6 @@ function Chart({
                   : state[realm][p.YDataKey],
               );
           }
-          plotPoints[i]
-            .y
-            .push(
-              plotsState[i].processYDataKey
-                ? plotsState[i].processYDataKey(state[realm][p.YDataKey])
-                : state[realm][p.YDataKey],
-            );
         }
 
         // Upon insertion, check if the length of y exceeds the data limit.
@@ -346,7 +310,7 @@ function Chart({
 
           // Insert past data into chart
           data.forEach((d) => {
-            if (toggleZero || (!toggleZero && d[plotsState[plot.YDataKey]])) {
+            if (showZero || (!showZero && d[plotsState[plot.YDataKey]])) {
               plotsState[plot].x.push(mjdToString(d[timeDataKey]));
               plotsState[plot]
                 .y
@@ -355,14 +319,6 @@ function Chart({
                     .processYDataKey(d[plotsState[plot].YDataKey]),
                 );
             }
-
-            plotPoints[plot].x.push(mjdToString(d[timeDataKey]));
-            plotPoints[plot]
-              .y
-              .push(
-                plotsState[plot]
-                  .processYDataKey(d[plotPoints[plot].YDataKey]),
-              );
           });
 
           // Update layout
@@ -433,11 +389,6 @@ function Chart({
 
             plotsState[i].x = queriedData[timeDataKey].map((x) => mjdToString(x));
             plotsState[i].y = processYDataKey
-              ? queriedData[YDataKey].map((y) => processYDataKey(y))
-              : queriedData[YDataKey];
-
-            plotPoints[i].x = queriedData[timeDataKey].map((x) => mjdToString(x));
-            plotPoints[i].y = processYDataKey
               ? queriedData[YDataKey].map((y) => processYDataKey(y))
               : queriedData[YDataKey];
           }
@@ -614,20 +565,6 @@ function Chart({
     }
   };
 
-  const processZeroValues = (checked) => {
-    if (checked) {
-      plotsState.forEach((plot, i) => {
-        plotsState[i].x = plotPoints[i].x.filter((value) => value !== 0);
-        plotsState[i].y = plotPoints[i].y.filter((value) => value !== 0);
-      });
-    } else {
-      plotsState.forEach((plot, i) => {
-        plotsState[i].x = plotPoints[i].x;
-        plotsState[i].y = plotPoints[i].y;
-      });
-    }
-  };
-
   return (
     <BaseComponent
       name={nameState}
@@ -761,16 +698,6 @@ function Chart({
               </Select>
             </Form.Item>
           </Form>
-          <Switch
-            className="mb-4"
-            onChange={(checked) => {
-              processZeroValues(checked);
-              setToggleZero(checked);
-            }}
-            checkedChildren="Show Zero"
-            unCheckedChildren="Hide Zero"
-            defaultChecked={toggleZero}
-          />
 
           {/* Edit existing values */}
           <Form
