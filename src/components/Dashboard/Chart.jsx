@@ -209,6 +209,7 @@ function Chart({
       if (state && realm && state[realm]
         && ((!(process.env.FLIGHT_MODE === 'true') && state[realm].recorded_time)
         || (process.env.FLIGHT_MODE === 'true' && state[realm][p.timeDataKey]))
+        && state[realm][p.dataKey] != null
         && p.live
       ) {
         // If so, push to arrays and update state
