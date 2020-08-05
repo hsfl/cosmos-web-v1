@@ -300,6 +300,7 @@ export default {
           name: 'Chart',
           props: {
             name: 'CPU',
+            defaultYAxis: 'load',
             plots: [
               {
                 x: [],
@@ -345,6 +346,7 @@ export default {
           name: 'Chart',
           props: {
             name: 'Thermal',
+            defaultYAxis: 'temperature',
             plots: [
               {
                 x: [],
@@ -892,6 +894,7 @@ export default {
             name: 'Chart',
             props: {
               name: 'CPU',
+              defaultYAxis: 'load',
               plots: [
                 {
                   x: [],
@@ -1083,6 +1086,7 @@ export default {
             name: 'Chart',
             props: {
               name: 'CPU',
+              defaultYAxis: 'load',
               plots: [
                 {
                   x: [],
@@ -1743,6 +1747,7 @@ export default {
             name: 'Chart',
             props: {
               name: 'Battery',
+              defaultYAxis: 'temperature',
               plots: [
                 {
                   x: [],
@@ -1828,6 +1833,7 @@ export default {
             name: 'Chart',
             props: {
               name: 'CPU',
+              defaultYAxis: 'temperature',
               plots: [
                 {
                   x: [],
@@ -1913,6 +1919,7 @@ export default {
             name: 'Chart',
             props: {
               name: 'EPS Bus Temperatures',
+              defaultYAxis: 'temperature',
               plots: [
                 {
                   x: [],
@@ -2040,6 +2047,7 @@ export default {
             name: 'Chart',
             props: {
               name: 'EPS Solar Panel Tempuratures',
+              defaultYAxis: 'temperature',
               plots: [
                 {
                   x: [],
@@ -2139,6 +2147,7 @@ export default {
             name: 'Chart',
             props: {
               name: 'Switch Temperature',
+              defaultYAxis: 'temperature',
               plots: [
                 {
                   x: [],
@@ -2296,6 +2305,7 @@ export default {
             name: 'Chart',
             props: {
               name: 'Switch Temperature',
+              defaultYAxis: 'temperature',
               plots: [
                 {
                   x: [],
@@ -2368,6 +2378,7 @@ export default {
             name: 'Chart',
             props: {
               name: 'Other Temperatures',
+              defaultYAxis: 'temperature',
               plots: [
                 {
                   x: [],
@@ -3316,6 +3327,7 @@ export default {
             name: 'Chart',
             props: {
               name: 'Battery Temperature',
+              defaultYAxis: 'temperature',
               plots: [
                 {
                   x: [],
@@ -3406,6 +3418,7 @@ export default {
             name: 'Chart',
             props: {
               name: 'Battery Percentage',
+              defaultYAxis: 'batteryCharge',
               plots: [
                 {
                   x: [],
@@ -4079,6 +4092,7 @@ export default {
             name: 'Chart',
             props: {
               name: 'Solar Panel Temperature',
+              defaultYAxis: 'temperature',
               XDataKey: 'node_utc',
               processXDataKey: (x) => mjdToString(x),
               plots: [
