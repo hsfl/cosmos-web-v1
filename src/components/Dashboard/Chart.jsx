@@ -435,6 +435,11 @@ function Chart({
             plotsState[i].y = processYDataKey
               ? queriedData[YDataKey].map((y) => processYDataKey(y))
               : queriedData[YDataKey];
+
+            plotPoints[i].x = queriedData[timeDataKey].map((x) => mjdToString(x));
+            plotPoints[i].y = processYDataKey
+              ? queriedData[YDataKey].map((y) => processYDataKey(y))
+              : queriedData[YDataKey];
           }
         }
       });
@@ -609,6 +614,19 @@ function Chart({
     }
   };
 
+  const processZeroValues = (checked) => {
+    if (checked) {
+      plotsState.forEach((plot, i) => {
+        plotsState[i].x = plotPoints[i].x.filter((value) => value !== 0);
+        plotsState[i].y = plotPoints[i].y.filter((value) => value !== 0);
+      });
+    } else {
+      plotsState.forEach((plot, i) => {
+        plotsState[i].x = plotPoints[i].x;
+        plotsState[i].y = plotPoints[i].y;
+      });
+    }
+  }
   return (
     <BaseComponent
       name={nameState}
@@ -745,7 +763,7 @@ function Chart({
           <Switch
             className="mb-4"
             onChange={(checked) => {
-              console.log(plotPoints);
+              processZeroValues(checked);
               setToggleZero(checked);
             }}
             checkedChildren="Show Zero"
