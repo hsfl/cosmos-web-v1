@@ -681,8 +681,7 @@ export default {
           name: 'Chart',
           props: {
             name: 'EPS Power Mode',
-            XDataKey: 'node_utc',
-            processXDataKey: (x) => mjdToString(x),
+            showZero: true,
             plots: [
               {
                 x: [],
