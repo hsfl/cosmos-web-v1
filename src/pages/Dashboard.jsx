@@ -238,34 +238,51 @@ function Dashboard({
   }, []);
 
   useEffect(() => {
+    // If the realm state exists
     if (state[id]) {
       const flags = {};
+      // Initialize flags to detect if something is wrong
       Object.keys(keys).forEach((tab) => {
+        // Flags: error, success
         flags[tab] = [false, false];
+        if (keys[tab].timer) {
+          clearTimeout(keys[tab].timer);
+        }
       });
 
+      // For each namespace values
       Object.keys(state[id]).forEach((namespace) => {
+        // For each tab
         Object.keys(keys).forEach((tab) => {
+          // Check if the incoming namespace value is used in tab
           if (keys[tab].dataKeys[namespace]) {
+            // Check if the upper threshold is defined and if incoming data exceeds it
             if (keys[tab].dataKeys[namespace].dataKeyUpperThreshold !== undefined
               && keys[tab].dataKeys[namespace].processDataKey(state[id][namespace])
               > keys[tab].dataKeys[namespace].dataKeyUpperThreshold) {
+              // Set error flag
               flags[tab][0] = true;
+            // Check if lower threshold is defined and if incoming data exceeds it
             } else if (keys[tab].dataKeys[namespace].dataKeyLowerThreshold !== undefined
               && keys[tab].dataKeys[namespace].processDataKey(state[id][namespace])
               < keys[tab].dataKeys[namespace].dataKeyLowerThreshold) {
+              // Set error flag
               flags[tab][0] = true;
+            // Otherwise, set the flag to success
             } else {
               flags[tab][1] = true;
             }
           }
         });
       });
+      // Check if there's any errors flagged in each tab. If so, indicate error
       Object.keys(keys).forEach((tab) => {
         if (flags[tab][0]) {
           keys[tab].status = 'error';
+          keys[tab].timer = setTimeout(() => { keys[tab].status = 'default'; }, 120000);
         } else if (flags[tab][1]) {
           keys[tab].status = 'success';
+          keys[tab].timer = setTimeout(() => { keys[tab].status = 'default'; }, 120000);
         }
       });
     }
@@ -285,8 +302,11 @@ function Dashboard({
         route.children.forEach((child) => {
           // Get page layout from route config and save it into the state
           if (child.name === id && child.defaultLayout) {
+            // For each component,
             child.defaultLayout.lg.forEach((component) => {
+              // If it contains the DisplayValue component
               if (component.component.name === 'DisplayValue') {
+                // Store the component info into the redux
                 component.component.props.displayValues.forEach(
                   ({
                     dataKey,
@@ -305,7 +325,9 @@ function Dashboard({
                   },
                 );
               }
+              // If it contains the Chart component
               if (component.component.name === 'Chart') {
+                // Store these values in the redux
                 component.component.props.plots.forEach((
                   { YDataKey, processYDataKey, timeDataKey },
                 ) => {
@@ -317,21 +339,27 @@ function Dashboard({
                 });
               }
             });
+            // Append the status of the defaultLayout to the redux
             tabStatus.defaultLayout = {
               dataKeys,
               status: 'default',
             };
 
+            // Set layout
             layout = child.defaultLayout;
             setDefaultPageLayout(child.defaultLayout);
           }
 
           // Get page layout simple from route config and save it into the state
           if (child.name === id && child.tabs) {
+            // For each tab
             Object.keys(child.tabs).forEach((tab) => {
               dataKeys = {};
+              // For each component
               child.tabs[tab].lg.forEach((component) => {
+                // If it contains the DisplayValue component
                 if (component.component.name === 'DisplayValue') {
+                  // Add values to redux
                   component.component.props.displayValues.forEach(
                     ({
                       dataKey,
@@ -350,7 +378,9 @@ function Dashboard({
                     },
                   );
                 }
+                // If it contains the Chart component
                 if (component.component.name === 'Chart') {
+                  // Add these values to redux
                   component.component.props.plots.forEach((
                     { YDataKey, processYDataKey, timeDataKey },
                   ) => {
@@ -362,12 +392,14 @@ function Dashboard({
                   });
                 }
               });
+              // Append a status to the tab
               tabStatus[tab] = {
                 dataKeys,
                 status: 'default',
               };
             });
 
+            // Set the tabs
             setTabs(child.tabs);
           }
         });
