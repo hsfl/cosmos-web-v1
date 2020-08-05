@@ -129,6 +129,8 @@ function Dashboard({
 
     // Set current realm
     dispatch(set('realm', id));
+    document.title = 'COSMOS Web - Overview';
+
     const flightMode = process.env.FLIGHT_MODE;
 
     /** Get latest data from neutron1_exec */
@@ -214,6 +216,8 @@ function Dashboard({
 
     return () => {
       live.close(1000);
+
+      document.title = 'COSMOS Web';
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -665,6 +669,7 @@ function Dashboard({
             onClick={() => {
               selectLayout('defaultPageLayout');
               setCurrentTab('defaultLayout');
+              document.title = 'COSMOS Web - Overview';
             }}
           >
             <MenuTab name="Overview" layout={keys.defaultLayout} />
@@ -676,6 +681,7 @@ function Dashboard({
                 onClick={() => {
                   setLayouts(tabs[tab]);
                   setCurrentTab(tab);
+                  document.title = `COSMOS Web - ${tab}`;
                 }}
               >
                 <MenuTab name={tab} layout={keys[tab]} />
