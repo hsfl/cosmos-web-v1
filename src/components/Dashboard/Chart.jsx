@@ -46,6 +46,7 @@ function Chart({
   name,
   dataLimit,
   plots,
+  showZero,
   polar,
   children,
   height,
@@ -208,35 +209,34 @@ function Chart({
       if (state && realm && state[realm]
         && ((!(process.env.FLIGHT_MODE === 'true') && state[realm].recorded_time)
         || (process.env.FLIGHT_MODE === 'true' && state[realm][p.timeDataKey]))
-        && state[realm][p.YDataKey]
+        && state[realm][p.YDataKey] != null
         && p.live
       ) {
         // If so, push to arrays and update state
 
-        // Check if polar or not
-        if (polar) {
-          if (process.env.FLIGHT_MODE === 'true' && state[realm][p.timeDataKey]) {
-            plotsState[i].r.push(mjdToString(state[realm][p.timeDataKey]));
-          } else {
-            plotsState[i].r.push(mjdToString(state[realm].recorded_time));
-          }
+        if (showZero || (!showZero && state[realm][p.YDataKey])) {
+          // Check if polar or not
+          if (polar) {
+            if (process.env.FLIGHT_MODE === 'true' && state[realm][p.timeDataKey]) {
+              plotsState[i].r.push(mjdToString(state[realm][p.timeDataKey]));
+            } else {
+              plotsState[i].r.push(mjdToString(state[realm].recorded_time));
+            }
 
-          plotsState[i]
-            .theta
-            .push(
-              plotsState[i].processThetaDataKey
-                ? plotsState[i].processThetaDataKey(state[realm][p.YDataKey])
-                : state[realm][p.ThetaDataKey],
-            );
-        } else {
-          if (process.env.FLIGHT_MODE === 'true' && state[realm][p.timeDataKey]) {
-            plotsState[i].x.push(mjdToString(state[realm][p.timeDataKey]));
+            plotsState[i]
+              .theta
+              .push(
+                plotsState[i].processThetaDataKey
+                  ? plotsState[i].processThetaDataKey(state[realm][p.YDataKey])
+                  : state[realm][p.ThetaDataKey],
+              );
           } else {
-            plotsState[i].x.push(mjdToString(state[realm].recorded_time));
-          }
+            if (process.env.FLIGHT_MODE === 'true' && state[realm][p.timeDataKey]) {
+              plotsState[i].x.push(mjdToString(state[realm][p.timeDataKey]));
+            } else {
+              plotsState[i].x.push(mjdToString(state[realm].recorded_time));
+            }
 
-          // Zero values are not valid!
-          if (state[realm][p.YDataKey]) {
             plotsState[i]
               .y
               .push(
@@ -311,13 +311,15 @@ function Chart({
 
           // Insert past data into chart
           data.forEach((d) => {
-            plotsState[plot].x.push(mjdToString(d[timeDataKey]));
-            plotsState[plot]
-              .y
-              .push(
-                plotsState[plot]
-                  .processYDataKey(d[plotsState[plot].YDataKey]),
-              );
+            if (showZero || (!showZero && d[plotsState[plot.YDataKey]])) {
+              plotsState[plot].x.push(mjdToString(d[timeDataKey]));
+              plotsState[plot]
+                .y
+                .push(
+                  plotsState[plot]
+                    .processYDataKey(d[plotsState[plot].YDataKey]),
+                );
+            }
           });
 
           // Update layout
@@ -698,8 +700,6 @@ function Chart({
             </Form.Item>
           </Form>
 
-          <br />
-
           {/* Edit existing values */}
           <Form
             form={editForm}
@@ -1056,6 +1056,8 @@ Chart.propTypes = {
   name: PropTypes.string,
   /** Specify limit on how many data points can be displayed */
   dataLimit: PropTypes.number,
+  /** Show the zero values or not */
+  showZero: PropTypes.bool,
   /** Plot options for each chart */
   plots: PropTypes.arrayOf(
     PropTypes.shape({
@@ -1093,6 +1095,7 @@ Chart.propTypes = {
 Chart.defaultProps = {
   name: '',
   dataLimit: 5000,
+  showZero: false,
   polar: false,
   plots: [],
   children: null,

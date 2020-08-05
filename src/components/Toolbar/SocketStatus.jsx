@@ -12,7 +12,7 @@ function SocketStatus({
         status === 'success'
           ? (
             <Tag icon={<CheckCircleTwoTone twoToneColor="#52c41a" />} color="success">
-              Connected.
+              Connected to MongoDB.
             </Tag>
           )
           : (
