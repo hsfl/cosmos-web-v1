@@ -2246,8 +2246,8 @@ export default {
                   marker: {
                     color: 'darkseagreen',
                   },
-                  name: 'Switch 007',
-                  YDataKey: 'device_swch_temp_007 (C)',
+                  name: 'Switch 007 (C)',
+                  YDataKey: 'device_swch_temp_007',
                   timeDataKey: 'device_swch_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
                   nodeProcess: 'any',
@@ -2261,8 +2261,8 @@ export default {
                   marker: {
                     color: 'pink',
                   },
-                  name: 'Switch 008',
-                  YDataKey: 'device_swch_temp_008 (C)',
+                  name: 'Switch 008 (C)',
+                  YDataKey: 'device_swch_temp_008',
                   timeDataKey: 'device_swch_utc_000',
                   processYDataKey: (x) => (x - 272.15).toFixed(2),
                   nodeProcess: 'any',
@@ -2486,7 +2486,7 @@ export default {
                   name: 'PPP Link',
                   nodeProcess: 'any',
                   dataKey: 'device_tcv_rxutc_000',
-                  timeDataKey: 'device_gps_utc_00',
+                  timeDataKey: 'device_tcv_utc_000',
                   unit: '',
                   processDataKey: (x) => mjdToString(x),
                 },
@@ -2494,7 +2494,7 @@ export default {
                   name: 'Last Time RX',
                   nodeProcess: 'any',
                   dataKey: 'device_tcv_rxutc_000',
-                  timeDataKey: 'device_gps_utc_00',
+                  timeDataKey: 'device_tcv_utc_000',
                   unit: '',
                   processDataKey: (x) => mjdToString(x),
                 },
@@ -2502,7 +2502,7 @@ export default {
                   name: 'Last Time TX',
                   nodeProcess: 'any',
                   dataKey: 'device_tcv_txutc_000',
-                  timeDataKey: 'device_gps_utc_000',
+                  timeDataKey: 'device_tcv_utc_000',
                   unit: '',
                   processDataKey: (x) => mjdToString(x),
                 },
@@ -2526,7 +2526,7 @@ export default {
                   name: 'Packet Size',
                   nodeProcess: 'any',
                   dataKey: 'device_tcv_pktsize_000',
-                  timeDataKey: 'device_gps_utc_000',
+                  timeDataKey: 'device_tcv_utc_000',
                   unit: '',
                   processDataKey: (x) => x,
                 },
@@ -2549,7 +2549,7 @@ export default {
                   name: 'Transceiver Flag',
                   nodeProcess: 'any',
                   dataKey: 'device_tcv_flag_000',
-                  timeDataKey: 'device_gps_utc_000',
+                  timeDataKey: 'device_tcv_utc_000',
                   unit: '',
                   processDataKey: (x) => x,
                 },
@@ -2557,7 +2557,7 @@ export default {
                   name: 'Call Connected',
                   nodeProcess: 'any',
                   dataKey: 'device_tcv_flag_000',
-                  timeDataKey: 'device_gps_utc_000',
+                  timeDataKey: 'device_tcv_utc_000',
                   unit: '',
                   processDataKey: (x) => {
                     const connected = ['Disconnected', 'Connected'];
@@ -2568,7 +2568,7 @@ export default {
                   name: 'Service Available',
                   nodeProcess: 'any',
                   dataKey: 'device_tcv_flag_000',
-                  timeDataKey: 'device_gps_utc_000',
+                  timeDataKey: 'device_tcv_utc_000',
                   unit: '',
                   processDataKey: (x) => {
                     const service = ['NO', 'YES'];
@@ -2579,7 +2579,7 @@ export default {
                   name: 'Service Mode',
                   nodeProcess: 'any',
                   dataKey: 'device_tcv_flag_000',
-                  timeDataKey: 'device_gps_utc_000',
+                  timeDataKey: 'device_tcv_utc_000',
                   unit: '',
                   processDataKey: (x) => {
                     const ready = ['Not Ready', 'Ready'];
@@ -2590,7 +2590,7 @@ export default {
                   name: 'Provider',
                   nodeProcess: 'any',
                   dataKey: 'placeholder',
-                  timeDataKey: 'device_gps_utc_000',
+                  timeDataKey: 'device_tcv_utc_000',
                   unit: '',
                   processDataKey: (x) => x,
                 },
@@ -2598,7 +2598,7 @@ export default {
                   name: 'Gateway',
                   nodeProcess: 'any',
                   dataKey: 'placeholder',
-                  timeDataKey: 'device_gps_utc_000',
+                  timeDataKey: 'device_tcv_utc_000',
                   unit: '',
                   processDataKey: (x) => x,
                 },
@@ -2606,7 +2606,7 @@ export default {
                   name: 'Signal Strength',
                   nodeProcess: 'any',
                   dataKey: 'device_tcv_rssi_000',
-                  timeDataKey: 'device_gps_utc_000',
+                  timeDataKey: 'device_tcv_utc_000',
                   unit: '',
                   processDataKey: (x) => x,
                 },
@@ -2614,7 +2614,7 @@ export default {
                   name: 'Registration',
                   nodeProcess: 'any',
                   dataKey: 'device_tcv_flag_000',
-                  timeDataKey: 'device_gps_utc_000',
+                  timeDataKey: 'device_tcv_utc_000',
                   unit: '',
                   processDataKey: (x) => {
                     const registered = ['NO', 'YES'];
@@ -2625,7 +2625,7 @@ export default {
                   name: 'Roaming',
                   nodeProcess: 'any',
                   dataKey: 'device_tcv_flag_000',
-                  timeDataKey: 'device_gps_utc_000',
+                  timeDataKey: 'device_tcv_utc_000',
                   unit: '',
                   processDataKey: (x) => {
                     const roaming = ['NO', 'YES'];
@@ -2636,7 +2636,7 @@ export default {
                   name: 'Call State',
                   nodeProcess: 'any',
                   dataKey: 'device_tcv_flag_000',
-                  timeDataKey: 'device_gps_utc_000',
+                  timeDataKey: 'device_tcv_utc_000',
                   unit: '',
                   processDataKey: (x) => {
                     const roaming = ['NO', 'YES'];
@@ -2647,7 +2647,7 @@ export default {
                   name: 'Call Type',
                   nodeProcess: 'any',
                   dataKey: 'device_tcv_flag_000',
-                  timeDataKey: 'device_gps_utc_000',
+                  timeDataKey: 'device_tcv_utc_000',
                   unit: '',
                   processDataKey: (x) => {
                     const roaming = ['NO', 'YES'];
@@ -2657,16 +2657,16 @@ export default {
                 {
                   name: 'Call Duration',
                   nodeProcess: 'any',
-                  dataKey: 'device_tvc_uptime_000',
-                  timeDataKey: 'device_gps_utc_000',
+                  dataKey: 'device_tcv_uptime_000',
+                  timeDataKey: 'device_tcv_utc_000',
                   unit: '',
                   processDataKey: (x) => x,
                 },
                 {
                   name: 'Call Number',
                   nodeProcess: 'any',
-                  dataKey: 'device_tvc_uptime_000',
-                  timeDataKey: 'device_gps_utc_000',
+                  dataKey: 'device_tcv_uptime_000',
+                  timeDataKey: 'device_tcv_utc_000',
                   unit: '',
                   processDataKey: (x) => x,
                 },
@@ -2674,7 +2674,7 @@ export default {
                   name: 'Service Ready',
                   nodeProcess: 'any',
                   dataKey: 'device_tcv_flag_000',
-                  timeDataKey: 'device_gps_utc_000',
+                  timeDataKey: 'device_tcv_utc_000',
                   unit: '',
                   processDataKey: (x) => {
                     const ready = ['Not Ready', 'Ready'];
@@ -2700,7 +2700,7 @@ export default {
                   name: 'Power Mode',
                   nodeProcess: 'any',
                   dataKey: 'device_swch_volt_004',
-                  timeDataKey: 'device_gps_utc_000',
+                  timeDataKey: 'device_swch_utc_000',
                   unit: '',
                   processDataKey: (x) => {
                     if (x < 4) {
@@ -2729,7 +2729,7 @@ export default {
                   name: 'ESN',
                   nodeProcess: 'any',
                   dataKey: 'device_tcv_flag_000',
-                  timeDataKey: 'device_gps_utc_000',
+                  timeDataKey: 'device_tcv_utc_000',
                   unit: '',
                   processDataKey: (x) => x,
                 },
@@ -2840,6 +2840,7 @@ export default {
             name: 'Chart',
             props: {
               name: 'RSSI Strength',
+              showZero: true,
               plots: [
                 {
                   x: [],
@@ -2851,7 +2852,7 @@ export default {
                   },
                   name: 'RSSI Strength',
                   YDataKey: 'device_tcv_rssi_000',
-                  timeDataKey: 'device_gps_utc_000',
+                  timeDataKey: 'device_tcv_utc_000',
                   processYDataKey: (x) => x,
                   nodeProcess: 'any',
                   live: true,
@@ -2881,7 +2882,7 @@ export default {
                   },
                   name: 'Service Mode',
                   YDataKey: 'device_tcv_flag_000',
-                  timeDataKey: 'device_gps_utc_000',
+                  timeDataKey: 'device_tcv_utc_000',
                   processYDataKey: (x) => x >> 8 & 0x4,
                   nodeProcess: 'any',
                   live: true,
@@ -2896,7 +2897,7 @@ export default {
                   },
                   name: 'Registration',
                   YDataKey: 'device_tcv_flag_000',
-                  timeDataKey: 'device_gps_utc_000',
+                  timeDataKey: 'device_tcv_utc_000',
                   processYDataKey: (x) => x >> 3 & 1,
                   nodeProcess: 'any',
                   live: true,
@@ -2926,7 +2927,7 @@ export default {
                   },
                   name: 'Call State',
                   YDataKey: 'device_tcv_flag_000',
-                  timeDataKey: 'device_gps_utc_000',
+                  timeDataKey: 'device_tcv_utc_000',
                   processYDataKey: (x) => x >> 12 & 0x4,
                   nodeProcess: 'any',
                   live: true,
@@ -2941,7 +2942,7 @@ export default {
                   },
                   name: 'Service Ready',
                   YDataKey: 'device_tcv_flag_000',
-                  timeDataKey: 'device_gps_utc_000',
+                  timeDataKey: 'device_tcv_utc_000',
                   processYDataKey: (x) => x >> 1 & 1,
                   nodeProcess: 'any',
                   live: true,

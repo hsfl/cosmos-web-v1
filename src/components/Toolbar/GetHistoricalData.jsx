@@ -98,7 +98,6 @@ function GetHistoricalData({
 
         // Coerce data into array according to retrieved data
         const fields = {};
-
         if (data.length !== 0) {
           // Go through data keys and sort based on time
           Object.entries({
@@ -107,7 +106,7 @@ function GetHistoricalData({
           }).forEach(([key, { timeDataKey }]) => {
             // Filter out corresponding data key and time data key, insert into x,y object to sort
             const unsorted = data.reduce((filter, entry) => {
-              if (key in entry && timeDataKey in entry && entry[key] && entry[timeDataKey]) {
+              if (key in entry && timeDataKey in entry) {
                 filter.push({
                   x: entry[timeDataKey],
                   y: entry[key],

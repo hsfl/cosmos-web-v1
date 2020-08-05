@@ -742,15 +742,16 @@ function Chart({
               </Select>
             </Form.Item>
           </Form>
-
-          <br />
           <Switch
-            onChange={(checked) => setToggleZero(checked)}
+            className="mb-4"
+            onChange={(checked) => {
+              console.log(plotPoints);
+              setToggleZero(checked);
+            }}
             checkedChildren="Show Zero"
             unCheckedChildren="Hide Zero"
             defaultChecked={toggleZero}
           />
-          <br />
 
           {/* Edit existing values */}
           <Form
