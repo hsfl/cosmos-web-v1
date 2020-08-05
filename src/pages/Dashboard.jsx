@@ -241,6 +241,9 @@ function Dashboard({
       Object.keys(keys).forEach((tab) => {
         // Flags: error, success
         flags[tab] = [false, false];
+        if (keys[tab].timer) {
+          clearTimeout(keys[tab].timer);
+        }
       });
 
       // For each namespace values
@@ -272,8 +275,10 @@ function Dashboard({
       Object.keys(keys).forEach((tab) => {
         if (flags[tab][0]) {
           keys[tab].status = 'error';
+          keys[tab].timer = setTimeout(() => { keys[tab].status = 'default'; }, 120000);
         } else if (flags[tab][1]) {
           keys[tab].status = 'success';
+          keys[tab].timer = setTimeout(() => { keys[tab].status = 'default'; }, 120000);
         }
       });
     }
