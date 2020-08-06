@@ -3,9 +3,9 @@ export function returnDefaultYAxisRange(defaultYAxis) {
     case 'temperature':
       return [0, 80];
     case 'load':
-      return [0, 110];
-    case 'batteryCharge':
       return [0, 5];
+    case 'batteryCharge':
+      return [0, 110];
     default:
       return null;
   }
