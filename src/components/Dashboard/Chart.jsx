@@ -24,6 +24,7 @@ import {
 import Plot from 'react-plotly.js';
 import { saveAs } from 'file-saver';
 import { useSelector, useDispatch } from 'react-redux';
+import { determineLayout, returnDefaultYAxisRange } from '../../utility/chart';
 import { incrementQueue } from '../../store/actions';
 
 import BaseComponent from '../BaseComponent';
@@ -44,6 +45,7 @@ const { TextArea } = Input;
  */
 function Chart({
   name,
+  defaultYAxis,
   dataLimit,
   plots,
   showZero,
@@ -76,28 +78,7 @@ function Chart({
   /** Counter determining when the plot should be updated */
   const [dataRevision, setDataRevision] = useState(0);
   /** Layout parameters for the plot */
-  const [layout, setLayout] = useState({
-    autosize: true,
-    uirevision: 0,
-    datarevision: dataRevision,
-    paper_bgcolor: '#FBFBFB',
-    plot_bgcolor: '#FBFBFB',
-    showlegend: true,
-    legend: {
-      orientation: 'h',
-    },
-    margin: {
-      r: 10,
-      t: 20,
-      b: 15,
-    },
-    xaxis: {
-      fixedrange: false,
-    },
-    yaxis: {
-      fixedrange: true,
-    },
-  });
+  const [layout, setLayout] = useState(determineLayout(defaultYAxis, dataRevision));
   /** Store to detect whether the user wants to get historical data to plot */
   const [retrievePlotHistory, setRetrievePlotHistory] = useState(null);
   /** Plot data storage */
@@ -574,6 +555,19 @@ function Chart({
       height={height}
       toolsSlot={(
         <>
+          <Button
+            className="mr-2"
+            onClick={() => {
+              layout.yaxis.range = returnDefaultYAxisRange(defaultYAxis);
+              layout.datarevision += 1;
+              layout.uirevision += 1;
+              setDataRevision(dataRevision + 1);
+            }}
+            disabled={!defaultYAxis}
+            size="small"
+          >
+            Revert Y Axis
+          </Button>
           {
             dataLimitState !== -1 ? (
               <Tag icon={<ExclamationCircleOutlined />} color="warning">
@@ -1054,6 +1048,7 @@ function Chart({
 Chart.propTypes = {
   /** Name of the component to display at the time */
   name: PropTypes.string,
+  defaultYAxis: PropTypes.string,
   /** Specify limit on how many data points can be displayed */
   dataLimit: PropTypes.number,
   /** Show the zero values or not */
@@ -1094,6 +1089,7 @@ Chart.propTypes = {
 
 Chart.defaultProps = {
   name: '',
+  defaultYAxis: null,
   dataLimit: 5000,
   showZero: false,
   polar: false,
