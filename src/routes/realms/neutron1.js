@@ -35,7 +35,7 @@ export default {
         x: 6,
         y: 0,
         w: 3,
-        h: 14,
+        h: 7,
         component: {
           name: 'DisplayValue',
           props: {
@@ -98,6 +98,84 @@ export default {
                 timeDataKey: 'node_utc',
                 unit: 's',
                 processDataKey: (x) => x,
+              },
+            ],
+          },
+        },
+      },
+      {
+        i: 'satellite-neutron1-cc',
+        x: 6,
+        y: 1,
+        w: 3,
+        h: 7,
+        component: {
+          name: 'DisplayValue',
+          props: {
+            name: 'Event Triggers',
+            displayValues: [
+              {
+                name: 'Last Event Name',
+                nodeProcess: 'any',
+                dataKey: 'node_lastevent',
+                dataKeyUpperThreshold: 1,
+                timeDataKey: 'node_utc',
+                unit: '',
+                processDataKey: (x) => x,
+              },
+              {
+                name: 'BBB Uptime',
+                nodeProcess: 'any',
+                dataKey: 'device_cpu_uptime_000',
+                timeDataKey: 'device_cpu_utc_000',
+                unit: 's',
+                processDataKey: (x) => x.toFixed(2),
+              },
+              {
+                name: 'OBC Uptime',
+                nodeProcess: 'any',
+                dataKey: 'device_cpu_uptime_003',
+                timeDataKey: 'device_cpu_utc_003',
+                unit: 's',
+                processDataKey: (x) => x.toFixed(2),
+              },
+              {
+                name: 'Battery Percent',
+                nodeProcess: 'any',
+                dataKey: 'device_batt_percentage_000',
+                dataKeyLowerThreshold: 0.05,
+                timeDataKey: 'device_batt_utc_000',
+                unit: '%',
+                processDataKey: (x) => (x * 100).toFixed(4),
+              },
+              {
+                name: 'Power Mode',
+                nodeProcess: 'any',
+                dataKey: 'node_powmode',
+                timeDataKey: 'node_utc',
+                unit: '',
+                processDataKey: (x) => {
+                  const powerMode = ['Off', 'Low Power', 'Standard Power', 'Standard ADCS', 'Standard Telecomm', 'Neutron Mission'];
+                  return `${powerMode[x]} (${x})`;
+                },
+              },
+              {
+                name: 'EPS MB Temp',
+                nodeProcess: 'any',
+                dataKey: 'device_cpu_temp_001',
+                dataKeyUpperThreshold: 60,
+                timeDataKey: 'device_cpu_utc_001',
+                unit: 'C',
+                processDataKey: (x) => (x - 273.15).toFixed(2),
+              },
+              {
+                name: 'BATT DB 1 Temp',
+                nodeProcess: 'any',
+                dataKey: 'device_tsen_temp_000',
+                dataKeyUpperThreshold: 60,
+                timeDataKey: 'device_tsen_utc_000',
+                unit: 'C',
+                processDataKey: (x) => (x - 273.15).toFixed(2),
               },
             ],
           },
@@ -284,7 +362,10 @@ export default {
                 dataKey: 'node_powmode',
                 timeDataKey: 'node_utc',
                 unit: '',
-                processDataKey: (x) => { const powerMode = ['Off', 'Low Power', 'Standard Power', 'Standard ADCS', 'Standard Telecomm', 'Neutron Mission']; return `${powerMode[x]} (${x})`; },
+                processDataKey: (x) => {
+                  const powerMode = ['Off', 'Low Power', 'Standard Power', 'Standard ADCS', 'Standard Telecomm', 'Neutron Mission'];
+                  return `${powerMode[x]} (${x})`;
+                },
               },
             ],
           },
