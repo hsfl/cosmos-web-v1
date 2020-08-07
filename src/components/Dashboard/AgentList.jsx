@@ -13,7 +13,6 @@ import AgentListTable from './AgentList/AgentListTable';
  */
 function AgentList({
   node,
-  height,
 }) {
   /** Get agent list state from the Context */
   const list = useSelector((s) => s.list.agent_list);
@@ -41,7 +40,6 @@ function AgentList({
     <BaseComponent
       name="Agent List"
       movable
-      height={height}
       toolsSlot={(
         <>
           <Switch
@@ -62,9 +60,8 @@ function AgentList({
 }
 
 AgentList.propTypes = {
-  /** Name of the node to display */
+  /** Name of the node to display. If empty string, display all */
   node: PropTypes.string,
-  height: PropTypes.number.isRequired,
 };
 
 AgentList.defaultProps = {

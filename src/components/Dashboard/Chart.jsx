@@ -51,7 +51,6 @@ function Chart({
   showZero,
   polar,
   children,
-  height,
 }) {
   const dispatch = useDispatch();
 
@@ -552,7 +551,6 @@ function Chart({
       name={nameState}
       subheader={<ChartValues plots={plotsState} />}
       liveOnly
-      height={height}
       toolsSlot={(
         <>
           <Button
@@ -1046,8 +1044,9 @@ function Chart({
 }
 
 Chart.propTypes = {
-  /** Name of the component to display at the time */
+  /** Name of the component to display at the top */
   name: PropTypes.string,
+  /** Axis range view of the chart */
   defaultYAxis: PropTypes.string,
   /** Specify limit on how many data points can be displayed */
   dataLimit: PropTypes.number,
@@ -1084,7 +1083,6 @@ Chart.propTypes = {
   polar: PropTypes.bool,
   /** Children node */
   children: PropTypes.node,
-  height: PropTypes.number.isRequired,
 };
 
 Chart.defaultProps = {

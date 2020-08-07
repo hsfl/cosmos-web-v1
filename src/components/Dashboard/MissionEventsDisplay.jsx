@@ -14,7 +14,6 @@ import parseEscapedChar from '../../utility/string';
 
 function MissionEventsDisplay({
   nodes,
-  height,
 }) {
   /** Retrieve data from the Context */
   const live = useSelector((s) => s.data);
@@ -98,7 +97,6 @@ function MissionEventsDisplay({
   return (
     <BaseComponent
       name="Mission Events Display"
-      height={height}
       toolsSlot={(
         <>
           <Select
@@ -182,7 +180,6 @@ function MissionEventsDisplay({
 MissionEventsDisplay.propTypes = {
   /** Name of the component to display at the time */
   nodes: PropTypes.arrayOf(PropTypes.string).isRequired,
-  height: PropTypes.number.isRequired,
 };
 
 export default MissionEventsDisplay;

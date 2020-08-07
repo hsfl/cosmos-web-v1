@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 
 import { message, Select, Button } from 'antd';
@@ -13,9 +12,7 @@ import { set } from '../../store/actions';
  * Retrieves the agent list and displays it in a table.
  * Also displays the timestamp of the agent's last heartbeat.
  */
-function Macro({
-  height,
-}) {
+function Macro() {
   /** Get agent list state from the Context */
   const dispatch = useDispatch();
 
@@ -61,7 +58,6 @@ function Macro({
     <BaseComponent
       name="Macros"
       movable
-      height={height}
     >
       <div className="flex">
         <Select
@@ -97,9 +93,5 @@ function Macro({
     </BaseComponent>
   );
 }
-
-Macro.propTypes = {
-  height: PropTypes.number.isRequired,
-};
 
 export default Macro;

@@ -17,7 +17,6 @@ const { RangePicker } = DatePicker;
 function SOH({
   name,
   dateRange,
-  height,
 }) {
   /** Accessing the neutron1 messages from the socket */
   const state = useSelector((s) => s.data);
@@ -203,7 +202,6 @@ function SOH({
       )}
       liveOnly
       showStatus
-      height={height}
       status={state.length === 0 ? 'default' : 'success'}
       toolsSlot={(
         <Switch
@@ -307,7 +305,6 @@ SOH.propTypes = {
   /** Name of the component to display at the time */
   name: PropTypes.string,
   dateRange: PropTypes.number,
-  height: PropTypes.number.isRequired,
 };
 
 SOH.defaultProps = {

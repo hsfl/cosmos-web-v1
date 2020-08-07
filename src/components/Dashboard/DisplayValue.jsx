@@ -27,7 +27,6 @@ const editFormStyle = {
 function DisplayValue({
   name,
   displayValues,
-  height,
 }) {
   const dispatch = useDispatch();
   const queriedData = useSelector((s) => s.queriedData);
@@ -268,7 +267,6 @@ function DisplayValue({
       name={nameState}
       liveOnly
       showStatus
-      height={height}
       status={displayValuesState.length === 0 ? 'default' : 'success'}
       formItems={(
         <>
@@ -516,7 +514,6 @@ DisplayValue.propTypes = {
       unit: PropTypes.string,
     }),
   ),
-  height: PropTypes.number.isRequired,
 };
 
 DisplayValue.defaultProps = {

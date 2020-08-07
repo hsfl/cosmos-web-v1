@@ -70,7 +70,6 @@ function CesiumGlobe({
   showStatus,
   status,
   coordinateSystem,
-  height,
 }) {
   /** Accessing the neutron1 messages from the socket */
   const state = useSelector((s) => s.data);
@@ -419,7 +418,6 @@ function CesiumGlobe({
       name={nameState}
       subheader={orbitsState.length === 0 ? 'No orbits to display.' : null}
       liveOnly
-      height={height}
       showStatus={showStatus}
       status={status}
       formItems={(
@@ -792,7 +790,6 @@ CesiumGlobe.propTypes = {
     return null;
   },
   coordinateSystem: PropTypes.string,
-  height: PropTypes.number.isRequired,
 };
 
 CesiumGlobe.defaultProps = {
