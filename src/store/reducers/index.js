@@ -1,5 +1,5 @@
 import {
-  SET_KEY, SET_DATA, SET_ACTIVITY, INCREMENT_QUEUE, RESET_QUEUE,
+  SET_KEY, SET_DATA, SET_ACTIVITY, INCREMENT_QUEUE, RESET_QUEUE, SET_LIVE_DATA,
 } from '../actions';
 
 /**
@@ -14,6 +14,8 @@ export default function reducer(state = {
   activity: [],
   keys: {},
   retrievedQuery: null,
+  allKeys: {},
+  tab: 'defaultLayout',
 }, {
   type, key, payload,
 }) {
@@ -51,6 +53,23 @@ export default function reducer(state = {
       return {
         ...state,
         retrievedQuery: 0,
+      };
+    case SET_LIVE_DATA:
+      return {
+        ...state,
+        keys: {
+          ...state.keys,
+          [key]: { // tab to store in
+            ...state.keys[key],
+            realtimeKeys: {
+              ...state.keys[key].realtimeKeys,
+              [payload.key]: [
+                ...state.keys[key].realtimeKeys[payload.key],
+                payload.value,
+              ],
+            },
+          },
+        },
       };
     default:
       return state;

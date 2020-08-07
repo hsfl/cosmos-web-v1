@@ -5,6 +5,7 @@ export const SET_DATA = 'SET_DATA';
 export const SET_ACTIVITY = 'SET_ACTIVITY';
 export const INCREMENT_QUEUE = 'INCREMENT_QUEUE';
 export const RESET_QUEUE = 'RESET_QUEUE';
+export const SET_LIVE_DATA = 'SET_LIVE_DATA';
 
 /**
  * Add a key within the context
@@ -34,6 +35,11 @@ export function setData(realm, data) {
   };
 }
 
+/**
+ * Record an activity update
+ *
+ * @param {*} activity
+ */
 export function setActivity(activity) {
   return {
     type: SET_ACTIVITY,
@@ -44,14 +50,33 @@ export function setActivity(activity) {
   };
 }
 
+/**
+ * Once chart/display value are done consuming values
+ * increment queue to indicate it is done with the values
+ * in queriedData state
+ */
 export function incrementQueue() {
   return {
     type: INCREMENT_QUEUE,
   };
 }
 
+/**
+ * Set queue back to zero for next data query
+ */
 export function resetQueue() {
   return {
     type: RESET_QUEUE,
+  };
+}
+
+/**
+ * Set real time data
+ */
+export function setLiveData(key, value) {
+  return {
+    type: SET_LIVE_DATA,
+    key,
+    payload: value,
   };
 }

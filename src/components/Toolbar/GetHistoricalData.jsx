@@ -18,9 +18,11 @@ function GetHistoricalData({
   const realm = useSelector((s) => s.realm);
   const keys = useSelector((s) => s.keys[tab]);
   const retrievedQuery = useSelector((s) => s.retrievedQuery);
+  const allKeys = useSelector((s) => s.allKeys);
 
   const [globalHistoricalDate, setGlobalHistoricalDate] = useState(null);
 
+  /** If all components retrieved data, clear values for next query */
   useEffect(() => {
     if (retrievedQuery === amountOfComponents) {
       dispatch(resetQueue());
@@ -32,8 +34,35 @@ function GetHistoricalData({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [retrievedQuery]);
 
+  /** Get 500 latest data points */
+  useEffect(() => {
+    async function initializeCharts(projection) {
+      const { data } = await axios.post(`/query/${realm}/any`, {
+        multiple: true,
+        query: {},
+        options: {
+          projection,
+          sort: {
+            _id: -1,
+          },
+          limit: 500,
+        },
+      });
+    }
+
+    const projection = {};
+
+    // Get all of the required keys
+    Object.keys(allKeys).forEach((key) => {
+      projection[key] = 1;
+    });
+
+    // initializeCharts(projection);
+  }, []);
+
   /** Global query data for current tab view */
   const queryData = async (from, to) => {
+    console.log(from, to, dateToMJD(from), dateToMJD(to), (dayjs().unix() / 86400.0) + 2440587.5 - 2400000.5, (dayjs().utc().unix() / 86400.0) + 2440587.5 - 2400000.5);
     message.loading('Retrieving past data...', null);
 
     // Initialize query queue
@@ -163,14 +192,14 @@ function GetHistoricalData({
         &nbsp;
         <Button
           size="small"
-          onClick={() => queryData(dayjs().subtract(1, 'hour'), dayjs())}
+          onClick={() => queryData(dayjs().utc().subtract(1, 'hour'), dayjs().utc())}
         >
           Past Hour
         </Button>
         &nbsp;
         <Button
           size="small"
-          onClick={() => queryData(dayjs().subtract(6, 'hour'), dayjs())}
+          onClick={() => queryData(dayjs().utc().subtract(6, 'hour').utc(), dayjs().utc())}
         >
           Past 6 Hours
         </Button>

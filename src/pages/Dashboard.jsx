@@ -35,7 +35,9 @@ import { highlight, languages } from 'prismjs/components/prism-core';
 import { axios, socket } from '../api';
 import routes from '../routes';
 import defaultComponent from '../components/Default/Default';
-import { set, setData, setActivity } from '../store/actions';
+import {
+  set, setData, setActivity, setLiveData,
+} from '../store/actions';
 import { dateToMJD } from '../utility/time';
 
 import AsyncComponent, { components } from '../components/AsyncComponent';
@@ -70,6 +72,8 @@ function Dashboard({
   const activities = useSelector((s) => s.activity);
   const keys = useSelector((s) => s.keys);
   const state = useSelector((s) => s.data);
+  const allNameKeys = useSelector((s) => s.allKeys);
+  const currentTab = useSelector((s) => s.tab);
 
   /** Store the default page layout in case user wants to switch to it */
   const [defaultPageLayout, setDefaultPageLayout] = useState({
@@ -120,8 +124,6 @@ function Dashboard({
   const [updateLayoutSelector, setUpdateLayoutSelector] = useState(false);
 
   const [socketStatus, setSocketStatus] = useState('error');
-
-  const [currentTab, setCurrentTab] = useState('defaultLayout');
 
   /** Get socket data from the agent */
   useEffect(() => {
@@ -184,17 +186,36 @@ function Dashboard({
             recorded_time: dateToMJD(dayjs().utc()),
           };
 
-          // Store in realm object
-          dispatch(setData(id, {
+          const d = {
             ...json,
             ...aliases,
-          }));
+          };
+
+          // Store in realm object
+          dispatch(setData(id, d));
 
           dispatch(setActivity({
             status: 'success',
             summary: 'Data received',
             scope: `from ${json.node_type}`,
           }));
+
+          // Store real time data to be populated for other tabs
+          Object.entries(d).forEach(([key, value]) => {
+            // Check if key needs to be saved
+            if (key in allNameKeys) {
+              tabs.forEach((tab) => {
+                // Check if user is on current tab
+                // If so, it doesn't need to be saved
+                if (tab !== currentTab) {
+                  setLiveData(tab, {
+                    key,
+                    value,
+                  });
+                }
+              });
+            }
+          });
         }
       } catch (error) {
         message.error(error.message);
@@ -293,8 +314,10 @@ function Dashboard({
   useEffect(() => {
     // By default, set the defaultLayout prop as a flive.ack if child doesn't have a layout set
     let layout = defaultLayout;
-    let dataKeys = {};
     const tabStatus = {};
+    let dataKeys = {};
+    const allKeys = {}; //
+    let realtimeKeys = {};
 
     // Find child route of dashboard and retrieve default layout
     routes.forEach((route) => {
@@ -315,6 +338,7 @@ function Dashboard({
                     dataKeyUpperThreshold,
                     dataKeyLowerThreshold,
                   }) => {
+                    // Data keys for subsystem tab status
                     if (dataKeys[dataKey] === undefined) {
                       dataKeys[dataKey] = {};
                     }
@@ -322,6 +346,24 @@ function Dashboard({
                     dataKeys[dataKey].dataKeyLowerThreshold = dataKeyLowerThreshold;
                     dataKeys[dataKey].processDataKey = processDataKey;
                     dataKeys[dataKey].timeDataKey = timeDataKey;
+
+                    // Key dictionary for real time data storage
+                    // Shows where data key is defined for certain route
+                    if (allKeys[dataKey] === undefined) {
+                      allKeys[dataKey] = ['defaultLayout'];
+                    } else if (!allKeys[dataKey].includes('defaultLayout')) {
+                      allKeys[dataKey].push('defaultLayout');
+                    }
+
+                    if (allKeys[timeDataKey] === undefined) {
+                      allKeys[timeDataKey] = ['defaultLayout'];
+                    } else if (!allKeys[timeDataKey].includes('defaultLayout')) {
+                      allKeys[timeDataKey].push('defaultLayout');
+                    }
+
+                    // Object to store real time data
+                    realtimeKeys[dataKey] = [];
+                    realtimeKeys[timeDataKey] = [];
                   },
                 );
               }
@@ -336,6 +378,24 @@ function Dashboard({
                   }
                   dataKeys[YDataKey].timeDataKey = timeDataKey;
                   dataKeys[YDataKey].processYDataKey = processYDataKey;
+
+                  // Key dictionary for real time data storage
+                  // Shows where data key is defined for certain route
+                  if (allKeys[YDataKey] === undefined) {
+                    allKeys[YDataKey] = ['defaultLayout'];
+                  } else if (!allKeys[YDataKey].includes('defaultLayout')) {
+                    allKeys[YDataKey].push('defaultLayout');
+                  }
+
+                  if (allKeys[timeDataKey] === undefined) {
+                    allKeys[timeDataKey] = ['defaultLayout'];
+                  } else if (!allKeys[timeDataKey].includes('defaultLayout')) {
+                    allKeys[timeDataKey].push('defaultLayout');
+                  }
+
+                  // Object to store real time data
+                  realtimeKeys[YDataKey] = [];
+                  realtimeKeys[timeDataKey] = [];
                 });
               }
             });
@@ -343,6 +403,7 @@ function Dashboard({
             tabStatus.defaultLayout = {
               dataKeys,
               status: 'default',
+              realtimeKeys,
             };
 
             // Set layout
@@ -355,6 +416,7 @@ function Dashboard({
             // For each tab
             Object.keys(child.tabs).forEach((tab) => {
               dataKeys = {};
+              realtimeKeys = {};
               // For each component
               child.tabs[tab].lg.forEach((component) => {
                 // If it contains the DisplayValue component
@@ -375,6 +437,24 @@ function Dashboard({
                       dataKeys[dataKey].dataKeyLowerThreshold = dataKeyLowerThreshold;
                       dataKeys[dataKey].processDataKey = processDataKey;
                       dataKeys[dataKey].timeDataKey = timeDataKey;
+
+                      // Key dictionary for real time data storage
+                      // Shows where data key is defined for certain route
+                      if (allKeys[dataKey] === undefined) {
+                        allKeys[dataKey] = [tab];
+                      } else if (!allKeys[dataKey].includes(tab)) {
+                        allKeys[dataKey].push(tab);
+                      }
+
+                      if (allKeys[timeDataKey] === undefined) {
+                        allKeys[timeDataKey] = [tab];
+                      } else if (!allKeys[timeDataKey].includes(tab)) {
+                        allKeys[timeDataKey].push(tab);
+                      }
+
+                      // Object to store real time data
+                      realtimeKeys[dataKey] = [];
+                      realtimeKeys[timeDataKey] = [];
                     },
                   );
                 }
@@ -389,6 +469,24 @@ function Dashboard({
                     }
                     dataKeys[YDataKey].timeDataKey = timeDataKey;
                     dataKeys[YDataKey].processYDataKey = processYDataKey;
+
+                    // Key dictionary for real time data storage
+                    // Shows where data key is defined for certain route
+                    if (allKeys[YDataKey] === undefined) {
+                      allKeys[YDataKey] = [tab];
+                    } else if (!allKeys[YDataKey].includes(tab)) {
+                      allKeys[YDataKey].push(tab);
+                    }
+
+                    if (allKeys[timeDataKey] === undefined) {
+                      allKeys[timeDataKey] = [tab];
+                    } else if (!allKeys[timeDataKey].includes(tab)) {
+                      allKeys[timeDataKey].push(tab);
+                    }
+
+                    // Object to store real time data
+                    realtimeKeys[YDataKey] = [];
+                    realtimeKeys[timeDataKey] = [];
                   });
                 }
               });
@@ -396,6 +494,7 @@ function Dashboard({
               tabStatus[tab] = {
                 dataKeys,
                 status: 'default',
+                realtimeKeys,
               };
             });
 
@@ -407,6 +506,7 @@ function Dashboard({
     });
 
     dispatch(set('keys', tabStatus));
+    dispatch(set('allKeys', allKeys));
     // Set timeout to let the grid initialize; won't work otherwise.
     setTimeout(() => {
       setLayouts(layout);
@@ -700,7 +800,7 @@ function Dashboard({
           <Menu.Item
             onClick={() => {
               selectLayout('defaultPageLayout');
-              setCurrentTab('defaultLayout');
+              dispatch(set('tab', 'defaultLayout'));
               document.title = 'COSMOS Web - Overview';
             }}
           >
@@ -712,7 +812,7 @@ function Dashboard({
                 key={tab}
                 onClick={() => {
                   setLayouts(tabs[tab]);
-                  setCurrentTab(tab);
+                  dispatch(set('tab', tab));
                   document.title = `COSMOS Web - ${tab}`;
                 }}
               >
