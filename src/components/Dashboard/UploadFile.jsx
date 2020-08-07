@@ -130,8 +130,11 @@ function UploadFile({
 }
 
 UploadFile.propTypes = {
+  /** Node to upload file to */
   node: PropTypes.string.isRequired,
+  /** Process to send file to */
   proc: PropTypes.string.isRequired,
+  /** Command to run */
   command: PropTypes.string.isRequired,
 };
 

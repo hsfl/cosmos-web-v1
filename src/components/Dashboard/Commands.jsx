@@ -563,6 +563,7 @@ function Commands({
 }
 
 Commands.propTypes = {
+  /** List of nodes available to be able to send commands to */
   nodes: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 

@@ -304,6 +304,7 @@ function SOH({
 SOH.propTypes = {
   /** Name of the component to display at the time */
   name: PropTypes.string,
+  /** Date range to retrieve for SOH */
   dateRange: PropTypes.number,
 };
 

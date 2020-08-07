@@ -4,11 +4,11 @@ import PropTypes from 'prop-types';
 import BaseComponent from '../BaseComponent';
 
 /**
- * Image of the component
+ * Display an image from public/<node>/<file>
  */
 function Image({
-  node,
   name,
+  node,
   file,
 }) {
   return (
@@ -27,8 +27,11 @@ function Image({
 }
 
 Image.propTypes = {
-  node: PropTypes.string.isRequired,
+  /** Name of component */
   name: PropTypes.string.isRequired,
+  /** Node to pull image from */
+  node: PropTypes.string.isRequired,
+  /** File name in public/<node> */
   file: PropTypes.string.isRequired,
 };
 

@@ -756,24 +756,36 @@ CesiumGlobe.propTypes = {
   /** Default orbits to display */
   orbits: PropTypes.arrayOf(
     PropTypes.shape({
+      /** Name of satellite */
       name: PropTypes.string,
+      /** Model to use on globe */
       modelFileName: PropTypes.string,
+      /** Node process to look at for xyz data */
       nodeProcess: PropTypes.string,
+      /** Cartesian X value */
       XDataKey: PropTypes.string,
+      /** Cartesian Y value */
       YDataKey: PropTypes.string,
+      /** Cartesian Z value */
       ZDataKey: PropTypes.string,
+      /** Process X function */
       processXDataKey: PropTypes.func,
+      /** Process Y function */
       processYDataKey: PropTypes.func,
+      /** Process Z function */
       processZDataKey: PropTypes.func,
+      /** Time data key to look at for data */
       timeDataKey: PropTypes.string,
-      processDataKey: PropTypes.func,
+      /** Whether or not the orbit is live */
       live: PropTypes.bool,
     }),
   ),
   /** Store overlays on map (geocoloring) */
   overlays: PropTypes.arrayOf(
     PropTypes.shape({
+      /** Color of the overlay */
       color: PropTypes.string,
+      /** GeoJSON code */
       geoJson: PropTypes.shape({}),
     }),
   ),
@@ -789,6 +801,7 @@ CesiumGlobe.propTypes = {
 
     return null;
   },
+  /** Geodetic or cartesian */
   coordinateSystem: PropTypes.string,
 };
 

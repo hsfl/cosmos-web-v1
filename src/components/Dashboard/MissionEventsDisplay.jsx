@@ -12,6 +12,10 @@ import { axios } from '../../api';
 import { mjdToString } from '../../utility/time';
 import parseEscapedChar from '../../utility/string';
 
+/**
+ * Display previously queued and/or executed commands by agent exec in a table.
+ * Shows the create date, execute date, event details, and output.
+ */
 function MissionEventsDisplay({
   nodes,
 }) {
@@ -178,7 +182,7 @@ function MissionEventsDisplay({
 }
 
 MissionEventsDisplay.propTypes = {
-  /** Name of the component to display at the time */
+  /** Nodes to retrieve commands from and to display */
   nodes: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 

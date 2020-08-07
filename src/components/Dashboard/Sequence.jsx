@@ -129,9 +129,12 @@ function Sequence({
 }
 
 Sequence.propTypes = {
+  /** Definition of sequences */
   sequences: PropTypes.arrayOf(
     PropTypes.shape({
+      /** Name of sequence to display on button */
       button: PropTypes.string,
+      /** Definition of sequence of commands to run on button press */
       sequence: PropTypes.arrayOf(PropTypes.string),
     }),
   ),

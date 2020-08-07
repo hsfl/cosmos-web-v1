@@ -253,7 +253,7 @@ function CommandEditor({
 }
 
 CommandEditor.propTypes = {
-  /** List of nodes */
+  /** List of nodes available to be able to add commands to */
   nodes: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 

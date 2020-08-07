@@ -61,6 +61,7 @@ function Subsystem({
 }
 
 Subsystem.propTypes = {
+  /** Name of component to display at the top */
   name: PropTypes.string.isRequired,
 };
 
