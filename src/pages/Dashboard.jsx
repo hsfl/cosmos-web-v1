@@ -39,7 +39,7 @@ import { set, setData, setActivity } from '../store/actions';
 import { dateToMJD } from '../utility/time';
 
 import AsyncComponent, { components } from '../components/AsyncComponent';
-import MenuTab from '../components/Dashboard/MenuTab';
+import MenuTab from '../components/Toolbar/MenuTab';
 import LayoutSelector from '../components/Toolbar/LayoutSelector';
 import Statuses from '../components/Toolbar/Statuses';
 import SocketStatus from '../components/Toolbar/SocketStatus';

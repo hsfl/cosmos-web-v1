@@ -26,7 +26,6 @@ function SetValues({
   values,
   node,
   proc,
-  height,
 }) {
   const macro = useSelector((s) => s.macro);
 
@@ -173,7 +172,6 @@ function SetValues({
       status={status}
       formItems={formItems}
       handleLiveSwitchChange={(checked) => setLiveSwitch(checked)}
-      height={height}
     >
       Doppler On / Doppler Off
       <Switch
@@ -344,7 +342,6 @@ SetValues.propTypes = {
   node: PropTypes.string.isRequired,
   /** The process of the agent to set the values */
   proc: PropTypes.string.isRequired,
-  height: PropTypes.number.isRequired,
 };
 
 SetValues.defaultProps = {

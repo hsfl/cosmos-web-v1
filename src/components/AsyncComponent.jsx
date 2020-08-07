@@ -54,12 +54,12 @@ export const components = {
  * A wrapper component for dynamically rendering components into the dashboard layout pages
  * such as in /pages/Dashboard.jsx.
  */
-function AsyncComponent({ component, props, height }) {
+function AsyncComponent({ component, props }) {
   // Dynamically choose the component to render based on the component prop being passed in
   const Component = components[component];
 
   // eslint-disable-next-line react/jsx-props-no-spreading
-  return <Component {...props} height={height} />;
+  return <Component {...props} />;
 }
 
 AsyncComponent.propTypes = {
@@ -67,13 +67,10 @@ AsyncComponent.propTypes = {
   component: PropTypes.string.isRequired,
   /** The props to pass into the component on render */
   props: PropTypes.shape({}),
-  /** The height obtained from the ref to dynamically set height */
-  height: PropTypes.number,
 };
 
 AsyncComponent.defaultProps = {
   props: {},
-  height: 300,
 };
 
 export default AsyncComponent;

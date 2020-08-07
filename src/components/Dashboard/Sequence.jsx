@@ -14,7 +14,6 @@ import { axios } from '../../api';
  */
 function Sequence({
   sequences,
-  height,
 }) {
   /** Auto scroll the history log to the bottom */
   const [updateLog, setUpdateLog] = useState(false);
@@ -74,7 +73,6 @@ function Sequence({
   return (
     <BaseComponent
       name="Sequence"
-      height={height}
     >
       <div className="flex">
         {
@@ -131,13 +129,15 @@ function Sequence({
 }
 
 Sequence.propTypes = {
+  /** Definition of sequences */
   sequences: PropTypes.arrayOf(
     PropTypes.shape({
+      /** Name of sequence to display on button */
       button: PropTypes.string,
+      /** Definition of sequence of commands to run on button press */
       sequence: PropTypes.arrayOf(PropTypes.string),
     }),
   ),
-  height: PropTypes.number.isRequired,
 };
 
 Sequence.defaultProps = {

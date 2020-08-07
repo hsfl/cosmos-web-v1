@@ -20,7 +20,6 @@ function Attitude({
   attitudes,
   showStatus,
   status,
-  height,
 }) {
   /** Accessing the neutron1 messages from the socket */
   const state = useSelector((s) => s.data);
@@ -104,7 +103,6 @@ function Attitude({
       liveOnly
       showStatus={showStatus}
       status={status}
-      height={height}
       formItems={(
         <>
           <Form
@@ -196,7 +194,7 @@ function Attitude({
 }
 
 Attitude.propTypes = {
-  /** Name of the component to display at the time */
+  /** Name of the component at the top */
   name: PropTypes.string,
   /** Currently displayed attitudes */
   attitudes: PropTypes.arrayOf(
@@ -205,6 +203,7 @@ Attitude.propTypes = {
       name: PropTypes.string,
       /** node:process to look at for retrieving attitude data */
       nodeProcess: PropTypes.string,
+      /** Data key to retrieve data from */
       dataKey: PropTypes.string,
     }),
   ),
@@ -220,7 +219,6 @@ Attitude.propTypes = {
 
     return null;
   },
-  height: PropTypes.number.isRequired,
 };
 
 Attitude.defaultProps = {
