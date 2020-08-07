@@ -506,6 +506,10 @@ DisplayValue.propTypes = {
       nodeProcess: PropTypes.string,
       /** The data key to pull the value from */
       dataKey: PropTypes.string,
+      /** Emit warning if data key exceeds threshold */
+      dataKeyUpperThreshold: PropTypes.number,
+      /** Emit warning if data key is below threshold */
+      dataKeyLowerThreshold: PropTypes.number,
       /** The data key to pull the time from */
       timeDataKey: PropTypes.string,
       /** The function to put the value through to manipulate it */
