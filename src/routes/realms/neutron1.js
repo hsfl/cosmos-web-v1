@@ -363,7 +363,7 @@ export default {
                 dataKey: 'node_powuse',
                 timeDataKey: 'node_utc',
                 unit: 'W',
-                processDataKey: (x) => x.toFixed(2),
+                processDataKey: (x) => Math.abs(x.toFixed(2)),
               },
               {
                 name: 'Power Mode',
@@ -752,7 +752,7 @@ export default {
                 name: 'Power Usage (W)',
                 YDataKey: 'node_powuse',
                 timeDataKey: 'node_utc',
-                processYDataKey: (x) => x,
+                processYDataKey: (x) => Math.abs(x.toFixed(2)),
                 nodeProcess: 'any',
                 live: true,
               },
@@ -3197,7 +3197,7 @@ export default {
                   timeDataKey: 'node_utc',
                   dataKey: 'node_powuse',
                   unit: 'W',
-                  processDataKey: (x) => x.toFixed(2),
+                  processDataKey: (x) => Math.abs(x.toFixed(2)),
                 },
                 {
                   name: 'Power Mode',

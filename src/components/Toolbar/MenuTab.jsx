@@ -22,7 +22,11 @@ function MenuTab({
 
 MenuTab.propTypes = {
   name: PropTypes.string.isRequired,
-  layout: PropTypes.shape.isRequired,
+  layout: PropTypes.objectOf(PropTypes.any),
+};
+
+MenuTab.defaultProps = {
+  layout: null,
 };
 
 export default MenuTab;

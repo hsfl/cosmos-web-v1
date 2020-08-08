@@ -18,7 +18,7 @@ function PanelList({
       <strong>{fileType.charAt(0).toUpperCase() + fileType.slice(1)}</strong>
       <Collapse>
         {
-          list[fileType] ? Object.entries(list[fileType]).map(([node, files]) => (
+          list && list[fileType] ? Object.entries(list[fileType]).map(([node, files]) => (
             <Panel
               key={node}
               header={node}
@@ -36,8 +36,12 @@ function PanelList({
 }
 
 PanelList.propTypes = {
-  list: PropTypes.shape.isRequired,
+  list: PropTypes.objectOf(PropTypes.any),
   fileType: PropTypes.string.isRequired,
+};
+
+PanelList.defaultProps = {
+  list: null,
 };
 
 export default PanelList;
