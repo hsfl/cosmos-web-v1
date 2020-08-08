@@ -3447,7 +3447,7 @@ export default {
             name: 'Chart',
             props: {
               name: 'Battery Percentage',
-              defaultRange: [0, 110],
+              defaultRange: [0, 100],
               plots: [
                 {
                   x: [],
