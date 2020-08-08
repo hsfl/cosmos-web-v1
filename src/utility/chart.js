@@ -1,17 +1,4 @@
-export function returnDefaultYAxisRange(defaultYAxis) {
-  switch (defaultYAxis) {
-    case 'temperature':
-      return [0, 80];
-    case 'load':
-      return [0, 5];
-    case 'batteryCharge':
-      return [0, 110];
-    default:
-      return null;
-  }
-}
-
-export function determineLayout(defaultYAxis, dataRevision) {
+export default function determineLayout(defaultYAxis, dataRevision) {
   const layout = {
     autosize: true,
     uirevision: 0,
@@ -35,9 +22,8 @@ export function determineLayout(defaultYAxis, dataRevision) {
     },
   };
 
-  const range = returnDefaultYAxisRange(defaultYAxis);
-  if (range) {
-    layout.yaxis.range = range;
+  if (defaultYAxis) {
+    layout.yaxis.range = defaultYAxis;
     layout.yaxis.autorange = false;
   }
 
