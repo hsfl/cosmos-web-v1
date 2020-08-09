@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Badge } from 'antd';
 
-import { mjdToString } from '../../../utility/time';
+import { mjdToUTCString } from '../../../utility/time';
 
 function AgentListEntry({
   agent,
@@ -17,7 +17,7 @@ function AgentListEntry({
       }
       </td>
       <td className="text-gray-500 pr-2">
-        {utc >= 0 ? mjdToString(utc) : mjdToString(-utc)}
+        {utc >= 0 ? mjdToUTCString(utc) : mjdToUTCString(-utc)}
       </td>
       <td style={{ color: utc >= 0 ? 'rgba(0, 0, 0, 0.65)' : 'lightgrey' }}>
         {agent}

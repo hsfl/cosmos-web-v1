@@ -1,4 +1,4 @@
-import { mjdToString } from '../../utility/time';
+import { mjdToUTCString } from '../../utility/time';
 
 export default {
   lg: [
@@ -142,7 +142,7 @@ export default {
         props: {
           name: 'CPU',
           XDataKey: 'node_utc',
-          processXDataKey: (x) => mjdToString(x),
+          processXDataKey: (x) => mjdToUTCString(x),
           plots: [
             {
               x: [],
@@ -198,7 +198,7 @@ export default {
         props: {
           name: 'EPS Buses',
           XDataKey: 'node_utc',
-          processXDataKey: (x) => mjdToString(x),
+          processXDataKey: (x) => mjdToUTCString(x),
           plots: [
             {
               x: [],
@@ -287,7 +287,7 @@ export default {
         props: {
           name: 'EPS Battery Charge Regulators',
           XDataKey: 'node_utc',
-          processXDataKey: (x) => mjdToString(x),
+          processXDataKey: (x) => mjdToUTCString(x),
           plots: [
             {
               x: [],

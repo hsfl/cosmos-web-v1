@@ -31,7 +31,7 @@ import BaseComponent from '../BaseComponent';
 import ChartValues from './Chart/ChartValues';
 
 import { axios } from '../../api';
-import { mjdToString, dateToMJD } from '../../utility/time';
+import { mjdToUTCString, dateToMJD, mjdToString } from '../../utility/time';
 
 const { RangePicker } = DatePicker;
 const { Panel } = Collapse;
@@ -60,6 +60,7 @@ function Chart({
   // const globalQueue = useSelector((s) => s.globalQueue);
   const realm = useSelector((s) => s.realm);
   const queriedData = useSelector((s) => s.queriedData);
+  // const currentTab = useSelector((s) => s.tab);
 
   /** Storage for global form values */
   const [plotsForm] = Form.useForm();
@@ -198,9 +199,9 @@ function Chart({
           // Check if polar or not
           if (polar) {
             if (process.env.FLIGHT_MODE === 'true' && state[realm][p.timeDataKey]) {
-              plotsState[i].r.push(mjdToString(state[realm][p.timeDataKey]));
+              plotsState[i].r.push(mjdToUTCString(state[realm][p.timeDataKey]));
             } else {
-              plotsState[i].r.push(mjdToString(state[realm].recorded_time));
+              plotsState[i].r.push(mjdToUTCString(state[realm].recorded_time));
             }
 
             plotsState[i]
@@ -212,9 +213,9 @@ function Chart({
               );
           } else {
             if (process.env.FLIGHT_MODE === 'true' && state[realm][p.timeDataKey]) {
-              plotsState[i].x.push(mjdToString(state[realm][p.timeDataKey]));
+              plotsState[i].x.push(mjdToUTCString(state[realm][p.timeDataKey]));
             } else {
-              plotsState[i].x.push(mjdToString(state[realm].recorded_time));
+              plotsState[i].x.push(mjdToUTCString(state[realm].recorded_time));
             }
 
             plotsState[i]
@@ -292,7 +293,7 @@ function Chart({
           // Insert past data into chart
           data.forEach((d) => {
             if (showZero || (!showZero && d[plotsState[plot.YDataKey]])) {
-              plotsState[plot].x.push(mjdToString(d[timeDataKey]));
+              plotsState[plot].x.push(mjdToUTCString(d[timeDataKey]));
               plotsState[plot]
                 .y
                 .push(

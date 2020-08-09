@@ -6,10 +6,22 @@ import dayjs from 'dayjs';
  * @param {Number} mjd MJD to convert
  * @returns {String} UTC date string
  */
-export function mjdToString(mjd) {
+export function mjdToUTCString(mjd) {
   return dayjs
     .unix((((mjd + 2400000.5) - 2440587.5) * 86400.0))
     .utc()
+    .format('YYYY-MM-DDTHH:mm:ss');
+}
+
+/**
+ * Convert MJD to human readable date
+ *
+ * @param {Number} mjd MJD to convert
+ * @returns {String} UTC date string
+ */
+export function mjdToString(mjd) {
+  return dayjs
+    .unix((((mjd + 2400000.5) - 2440587.5) * 86400.0))
     .format('YYYY-MM-DDTHH:mm:ss');
 }
 
