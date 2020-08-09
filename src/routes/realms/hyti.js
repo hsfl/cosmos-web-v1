@@ -1,4 +1,4 @@
-import { mjdToString } from '../../utility/time';
+import { mjdToUTCString } from '../../utility/time';
 
 export default {
   name: 'hyti',
@@ -134,7 +134,7 @@ export default {
           props: {
             name: 'Temperature',
             XDataKey: 'node_utc',
-            processXDataKey: (x) => mjdToString(x),
+            processXDataKey: (x) => mjdToUTCString(x),
             plots: [
               {
                 x: [],
@@ -190,7 +190,7 @@ export default {
           props: {
             name: 'Voltage',
             XDataKey: 'node_utc',
-            processXDataKey: (x) => mjdToString(x),
+            processXDataKey: (x) => mjdToUTCString(x),
             plots: [
               {
                 x: [],
@@ -246,7 +246,7 @@ export default {
           props: {
             name: 'Amperage',
             XDataKey: 'node_utc',
-            processXDataKey: (x) => mjdToString(x),
+            processXDataKey: (x) => mjdToUTCString(x),
             plots: [
               {
                 x: [],

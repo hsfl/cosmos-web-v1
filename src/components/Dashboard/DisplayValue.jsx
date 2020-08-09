@@ -9,7 +9,7 @@ import BaseComponent from '../BaseComponent';
 import DisplayValuesTable from './DisplayValues/DisplayValuesTable';
 
 import { setActivity, incrementQueue } from '../../store/actions';
-import { mjdToString } from '../../utility/time';
+import { mjdToUTCString } from '../../utility/time';
 
 /**
  * Displays a specified live value from an agent.
@@ -56,9 +56,9 @@ function DisplayValue({
 
         // If not in flight mode, use recorded_time to avoid chart jumping
         if (process.env.FLIGHT_MODE === 'true' && state[realm][v.timeDataKey]) {
-          displayValuesState[i].time = mjdToString(state[realm][v.timeDataKey]);
+          displayValuesState[i].time = mjdToUTCString(state[realm][v.timeDataKey]);
         } else {
-          displayValuesState[i].time = mjdToString(state[realm].recorded_time);
+          displayValuesState[i].time = mjdToUTCString(state[realm].recorded_time);
         }
 
         if (v.dataKeyLowerThreshold
@@ -98,7 +98,7 @@ function DisplayValue({
             const lastTimeValue = queriedData[timeDataKey][queriedData[timeDataKey].length - 1];
 
             displayValuesState[i].value = processDataKey ? processDataKey(lastValue) : lastValue;
-            displayValuesState[i].time = mjdToString(lastTimeValue);
+            displayValuesState[i].time = mjdToUTCString(lastTimeValue);
           }
         }
       });

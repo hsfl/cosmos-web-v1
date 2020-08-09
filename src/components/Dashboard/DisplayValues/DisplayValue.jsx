@@ -9,7 +9,7 @@ import BaseComponent from '../../BaseComponent';
 import DisplayValuesTable from './DisplayValuesTable';
 
 import { setActivity, incrementQueue } from '../../../store/actions';
-import { mjdToString } from '../../../utility/time';
+import { mjdToUTCString, mjdToString } from '../../../utility/time';
 
 const { Panel } = Collapse;
 const { TextArea } = Input;
@@ -119,9 +119,9 @@ function DisplayValue({
 
         // If not in flight mode, use recorded_time to avoid chart jumping
         if (process.env.FLIGHT_MODE === 'true' && state[realm][v.timeDataKey]) {
-          displayValuesState[i].time = mjdToString(state[realm][v.timeDataKey]);
+          displayValuesState[i].time = mjdToUTCString(state[realm][v.timeDataKey]);
         } else {
-          displayValuesState[i].time = mjdToString(state[realm].recorded_time);
+          displayValuesState[i].time = mjdToUTCString(state[realm].recorded_time);
         }
 
         if (v.dataKeyLowerThreshold

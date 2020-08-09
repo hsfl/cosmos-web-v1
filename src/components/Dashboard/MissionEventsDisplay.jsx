@@ -9,7 +9,7 @@ import {
 import dayjs from 'dayjs';
 import BaseComponent from '../BaseComponent';
 import { axios } from '../../api';
-import { mjdToString } from '../../utility/time';
+import { mjdToUTCString } from '../../utility/time';
 import parseEscapedChar from '../../utility/string';
 
 function MissionEventsDisplay({
@@ -63,9 +63,9 @@ function MissionEventsDisplay({
         delete newObj._id;
         return {
           key: i,
-          sent: mjdToString(el.event_utc),
+          sent: mjdToUTCString(el.event_utc),
           name: el.event_name,
-          exec: el.event_utcexec != null ? mjdToString(el.event_utcexec) : 'Pending...',
+          exec: el.event_utcexec != null ? mjdToUTCString(el.event_utcexec) : 'Pending...',
           log: newObj,
         };
       });

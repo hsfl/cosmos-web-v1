@@ -6,7 +6,7 @@ import {
 } from 'antd';
 import BaseComponent from '../BaseComponent';
 import { axios } from '../../api';
-import { mjdToString, dateToMJD } from '../../utility/time';
+import { mjdToUTCString, dateToMJD } from '../../utility/time';
 
 const { RangePicker } = DatePicker;
 
@@ -77,7 +77,7 @@ function SOH({
     if (input.length !== 0) {
       soh.forEach((obj) => {
         const newObj = {
-          localTime: mjdToString(obj.node_utc),
+          localTime: mjdToUTCString(obj.node_utc),
         };
 
         input.forEach((item) => {
