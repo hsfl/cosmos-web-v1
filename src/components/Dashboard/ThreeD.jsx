@@ -155,7 +155,7 @@
 // };
 
 // ThreeD.propTypes = {
-//   height: PropTypes.number.isRequired,
+//   
 // };
 
 // ThreeD.defaultProps = {

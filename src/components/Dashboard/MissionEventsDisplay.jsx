@@ -12,9 +12,12 @@ import { axios } from '../../api';
 import { mjdToUTCString } from '../../utility/time';
 import parseEscapedChar from '../../utility/string';
 
+/**
+ * Display previously queued and/or executed commands by agent exec in a table.
+ * Shows the create date, execute date, event details, and output.
+ */
 function MissionEventsDisplay({
   nodes,
-  height,
 }) {
   /** Retrieve data from the Context */
   const live = useSelector((s) => s.data);
@@ -98,7 +101,6 @@ function MissionEventsDisplay({
   return (
     <BaseComponent
       name="Mission Events Display"
-      height={height}
       toolsSlot={(
         <>
           <Select
@@ -180,9 +182,8 @@ function MissionEventsDisplay({
 }
 
 MissionEventsDisplay.propTypes = {
-  /** Name of the component to display at the time */
+  /** Nodes to retrieve commands from and to display */
   nodes: PropTypes.arrayOf(PropTypes.string).isRequired,
-  height: PropTypes.number.isRequired,
 };
 
 export default MissionEventsDisplay;

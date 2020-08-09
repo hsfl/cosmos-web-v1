@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 
 import { Badge, Form, Button } from 'antd';
@@ -12,9 +11,7 @@ import BaseComponent from '../BaseComponent';
 /**
  * Retrieves data from a web socket. Displays an event along with the timestamp in a table.
  */
-function Activity({
-  height,
-}) {
+function Activity() {
   /** Get agent list state from the Context */
   const activities = useSelector((s) => s.data.activity);
 
@@ -44,7 +41,6 @@ function Activity({
     <BaseComponent
       name="Activity"
       liveOnly
-      height={height}
       formItems={(
         <div>
           <Form layout="vertical">
@@ -95,9 +91,5 @@ function Activity({
     </BaseComponent>
   );
 }
-
-Activity.propTypes = {
-  height: PropTypes.number.isRequired,
-};
 
 export default Activity;

@@ -1,4 +1,16 @@
 import { mjdToUTCString } from '../../utility/time';
+import {
+  callConnected,
+  callType,
+  callState,
+  globeFunction,
+  powerMode,
+  registration,
+  roaming,
+  serviceAvailable,
+  serviceMode,
+  serviceReady,
+} from '../../utility/definition';
 
 export default {
   name: 'neutron1',
@@ -154,10 +166,7 @@ export default {
                 dataKey: 'node_powmode',
                 timeDataKey: 'node_utc',
                 unit: '',
-                processDataKey: (x) => {
-                  const powerMode = ['Off', 'Low Power', 'Standard Power', 'Standard ADCS', 'Standard Telecomm', 'Neutron Mission'];
-                  return `${powerMode[x]} (${x})`;
-                },
+                processDataKey: (x) => powerMode(x),
               },
               {
                 name: 'EPS MB Temp',
@@ -362,10 +371,7 @@ export default {
                 dataKey: 'node_powmode',
                 timeDataKey: 'node_utc',
                 unit: '',
-                processDataKey: (x) => {
-                  const powerMode = ['Off', 'Low Power', 'Standard Power', 'Standard ADCS', 'Standard Telecomm', 'Neutron Mission'];
-                  return `${powerMode[x]} (${x})`;
-                },
+                processDataKey: (x) => powerMode(x),
               },
             ],
           },
@@ -2650,10 +2656,7 @@ export default {
                   dataKey: 'device_tcv_flag_000',
                   timeDataKey: 'device_tcv_utc_000',
                   unit: '',
-                  processDataKey: (x) => {
-                    const connected = ['Disconnected', 'Connected'];
-                    return connected[x & 1];
-                  },
+                  processDataKey: (x) => callConnected(x),
                 },
                 {
                   name: 'Service Available',
@@ -2661,10 +2664,7 @@ export default {
                   dataKey: 'device_tcv_flag_000',
                   timeDataKey: 'device_tcv_utc_000',
                   unit: '',
-                  processDataKey: (x) => {
-                    const service = ['NO', 'YES'];
-                    return service[x >> 2 & 1];
-                  },
+                  processDataKey: (x) => serviceAvailable(x),
                 },
                 {
                   name: 'Service Mode',
@@ -2672,10 +2672,7 @@ export default {
                   dataKey: 'device_tcv_flag_000',
                   timeDataKey: 'device_tcv_utc_000',
                   unit: '',
-                  processDataKey: (x) => {
-                    const ready = ['Not Ready', 'Ready'];
-                    return ready[x >> 8 & 0x4];
-                  },
+                  processDataKey: (x) => serviceMode(x),
                 },
                 {
                   name: 'Provider',
@@ -2707,10 +2704,7 @@ export default {
                   dataKey: 'device_tcv_flag_000',
                   timeDataKey: 'device_tcv_utc_000',
                   unit: '',
-                  processDataKey: (x) => {
-                    const registered = ['NO', 'YES'];
-                    return registered[x >> 3 & 1];
-                  },
+                  processDataKey: (x) => registration(x),
                 },
                 {
                   name: 'Roaming',
@@ -2718,10 +2712,7 @@ export default {
                   dataKey: 'device_tcv_flag_000',
                   timeDataKey: 'device_tcv_utc_000',
                   unit: '',
-                  processDataKey: (x) => {
-                    const roaming = ['NO', 'YES'];
-                    return roaming[x >> 4 & 1];
-                  },
+                  processDataKey: (x) => roaming(x),
                 },
                 {
                   name: 'Call State',
@@ -2729,10 +2720,7 @@ export default {
                   dataKey: 'device_tcv_flag_000',
                   timeDataKey: 'device_tcv_utc_000',
                   unit: '',
-                  processDataKey: (x) => {
-                    const roaming = ['NO', 'YES'];
-                    return roaming[x >> 12 & 0x4];
-                  },
+                  processDataKey: (x) => callState(x),
                 },
                 {
                   name: 'Call Type',
@@ -2740,10 +2728,7 @@ export default {
                   dataKey: 'device_tcv_flag_000',
                   timeDataKey: 'device_tcv_utc_000',
                   unit: '',
-                  processDataKey: (x) => {
-                    const roaming = ['NO', 'YES'];
-                    return roaming[x >> 16 & 0x3];
-                  },
+                  processDataKey: (x) => callType(x),
                 },
                 {
                   name: 'Call Duration',
@@ -2767,10 +2752,7 @@ export default {
                   dataKey: 'device_tcv_flag_000',
                   timeDataKey: 'device_tcv_utc_000',
                   unit: '',
-                  processDataKey: (x) => {
-                    const ready = ['Not Ready', 'Ready'];
-                    return ready[x >> 1 & 1];
-                  },
+                  processDataKey: (x) => serviceReady(x),
                 },
               ],
             },
@@ -3060,43 +3042,9 @@ export default {
                   XDataKey: 'device_gps_geods_000',
                   YDataKey: 'device_gps_geods_000',
                   ZDataKey: 'device_gps_geods_000',
-                  processXDataKey: ({ lat, lon }) => {
-                    const cosLat = Math.cos(lat);
-                    const sinLat = Math.sin(lat);
-                    const cosLon = Math.cos(lon);
-                    const rad = 6378137.0;
-                    const f = 1.0 / 298.257224;
-                    const C = 1.0 / Math.sqrt(
-                      cosLat * cosLat + (1 - f) * (1 - f) * sinLat * sinLat,
-                    );
-                    const h = 0.0;
-
-                    return (rad * C + h) * cosLat * cosLon;
-                  },
-                  processYDataKey: ({ lat, lon, h }) => {
-                    const cosLat = Math.cos(lat);
-                    const sinLat = Math.sin(lat);
-                    const sinLon = Math.sin(lon);
-                    const rad = 6378137.0;
-                    const f = 1.0 / 298.257224;
-                    const C = 1.0 / Math.sqrt(
-                      cosLat * cosLat + (1 - f) * (1 - f) * sinLat * sinLat,
-                    );
-
-                    return (rad * C + h) * cosLat * sinLon;
-                  },
-                  processZDataKey: ({ lat, h }) => {
-                    const cosLat = Math.cos(lat);
-                    const sinLat = Math.sin(lat);
-                    const rad = 6378137.0;
-                    const f = 1.0 / 298.257224;
-                    const C = 1.0 / Math.sqrt(
-                      cosLat * cosLat + (1 - f) * (1 - f) * sinLat * sinLat,
-                    );
-                    const S = (1.0 - f) * (1.0 - f) * C;
-
-                    return (rad * S + h) * sinLat;
-                  },
+                  processXDataKey: ({ lat, lon }) => globeFunction(lat, lon),
+                  processYDataKey: ({ lat, lon, h }) => globeFunction(lat, lon, h),
+                  processZDataKey: ({ lat, h }) => globeFunction(lat, null, h),
                   timeDataKey: 'device_gps_utc_000',
                   live: true,
                   position: [21.289373, 157.917480, 350000.0],
@@ -3257,7 +3205,7 @@ export default {
                   timeDataKey: 'node_utc',
                   dataKey: 'node_powmode',
                   unit: '',
-                  processDataKey: (x) => { const powerMode = ['Off', 'Low Power', 'Standard Power', 'Standard ADCS', 'Standard Telecomm', 'Neutron Mission']; return `${powerMode[x]} (${x})`; },
+                  processDataKey: (x) => powerMode(x),
                 },
                 {
                   name: 'Battery Temperature',

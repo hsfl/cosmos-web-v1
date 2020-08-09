@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Badge } from 'antd';
 import ActivityTable from './Activity/ActivityTable';
 import BaseComponent from '../BaseComponent';
@@ -8,9 +7,7 @@ import BaseComponent from '../BaseComponent';
  * Shows the incoming activity from the web socket and displays time elapsed
  * from the last data retrieval.
  */
-function Activity({
-  height,
-}) {
+function Activity() {
   return (
     <BaseComponent
       name="Activity"
@@ -31,7 +28,6 @@ function Activity({
           </span>
         </>
       )}
-      height={height}
     >
       <style jsx>
         {
@@ -46,9 +42,5 @@ function Activity({
     </BaseComponent>
   );
 }
-
-Activity.propTypes = {
-  height: PropTypes.number.isRequired,
-};
 
 export default Activity;

@@ -9,14 +9,12 @@ import BaseComponent from '../BaseComponent';
 
 function Subsystem({
   name,
-  height,
 }) {
   return (
     <BaseComponent
       name={name}
       movable
       className="flex-col p-4"
-      height={height}
     >
       <div className="flex">
         <div className="flex-col shadow overflow-y-auto p-4 m-1 bg-white w-full lg:w-1/4">
@@ -63,8 +61,8 @@ function Subsystem({
 }
 
 Subsystem.propTypes = {
+  /** Name of component to display at the top */
   name: PropTypes.string.isRequired,
-  height: PropTypes.number.isRequired,
 };
 
 export default Subsystem;

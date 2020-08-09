@@ -26,7 +26,6 @@ import BaseComponent from '../BaseComponent';
  */
 function CommandEditor({
   nodes,
-  height,
 }) {
   /** List of commands stored in the node */
   const [commands, setCommands] = useState([]);
@@ -140,7 +139,6 @@ function CommandEditor({
       className="mb-0"
       name="Command Editor"
       liveOnly
-      height={height}
       showStatus={false}
       toolsSlot={(
         <>
@@ -255,9 +253,8 @@ function CommandEditor({
 }
 
 CommandEditor.propTypes = {
-  /** List of nodes */
+  /** List of nodes available to be able to add commands to */
   nodes: PropTypes.arrayOf(PropTypes.string).isRequired,
-  height: PropTypes.number.isRequired,
 };
 
 export default CommandEditor;

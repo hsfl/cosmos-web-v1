@@ -13,7 +13,6 @@ function UploadFile({
   node,
   proc,
   command,
-  height,
 }) {
   /** Maintain list of uploaded files */
   const [files, setFiles] = useState([]);
@@ -102,7 +101,6 @@ function UploadFile({
     <BaseComponent
       name="Upload"
       movable
-      height={height}
     >
       <Upload.Dragger
         fileList={files}
@@ -132,10 +130,12 @@ function UploadFile({
 }
 
 UploadFile.propTypes = {
+  /** Node to upload file to */
   node: PropTypes.string.isRequired,
+  /** Process to send file to */
   proc: PropTypes.string.isRequired,
+  /** Command to run */
   command: PropTypes.string.isRequired,
-  height: PropTypes.number.isRequired,
 };
 
 export default UploadFile;

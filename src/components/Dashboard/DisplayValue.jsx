@@ -18,7 +18,6 @@ import { mjdToUTCString } from '../../utility/time';
 function DisplayValue({
   name,
   displayValues,
-  height,
 }) {
   const dispatch = useDispatch();
   const queriedData = useSelector((s) => s.queriedData);
@@ -133,7 +132,6 @@ function DisplayValue({
       name={nameState}
       liveOnly
       showStatus
-      height={height}
       status={displayValuesState.length === 0 ? 'default' : 'success'}
       formItems={(
         <>
@@ -172,6 +170,10 @@ DisplayValue.propTypes = {
       nodeProcess: PropTypes.string,
       /** The data key to pull the value from */
       dataKey: PropTypes.string,
+      /** Emit warning if data key exceeds threshold */
+      dataKeyUpperThreshold: PropTypes.number,
+      /** Emit warning if data key is below threshold */
+      dataKeyLowerThreshold: PropTypes.number,
       /** The data key to pull the time from */
       timeDataKey: PropTypes.string,
       /** The function to put the value through to manipulate it */
@@ -180,7 +182,6 @@ DisplayValue.propTypes = {
       unit: PropTypes.string,
     }),
   ),
-  height: PropTypes.number.isRequired,
 };
 
 DisplayValue.defaultProps = {

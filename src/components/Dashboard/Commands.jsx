@@ -36,7 +36,6 @@ const minWidth = {
  */
 function Commands({
   nodes,
-  height,
 }) {
   /** Agents */
   // const [agentList, setAgentList] = useState([]);
@@ -319,7 +318,6 @@ function Commands({
       name="Commands"
       subheader=""
       liveOnly
-      height={height}
       showStatus={false}
     >
       <div className="flex flex-wrap">
@@ -565,8 +563,8 @@ function Commands({
 }
 
 Commands.propTypes = {
+  /** List of nodes available to be able to send commands to */
   nodes: PropTypes.arrayOf(PropTypes.string).isRequired,
-  height: PropTypes.number.isRequired,
 };
 
 export default React.memo(Commands);

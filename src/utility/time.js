@@ -57,19 +57,19 @@ export function getDiff(date, countdown = false) {
   let futureTime = dayjs();
   let pastTime = date;
 
-  if (date > dayjs() && countdown) {
-    futureTime = date;
-    pastTime = dayjs();
+  if (countdown) {
+    if (date > dayjs()) {
+      futureTime = date;
+      pastTime = dayjs();
+    } else {
+      return 'Finished';
+    }
   }
 
   if (typeof date !== 'string' && futureTime.diff(pastTime, 'day') < 1) {
     const hour = futureTime.diff(pastTime, 'hour');
     const minute = futureTime.diff(pastTime, 'minute') % 60;
     const second = futureTime.diff(pastTime, 'second') % 60;
-
-    if (countdown && hour === 0 && minute === 0 && second === 0) {
-      return 'Finished';
-    }
 
     return dayjs().set('hour', hour).set('minute', minute).set('second', second);
   }
