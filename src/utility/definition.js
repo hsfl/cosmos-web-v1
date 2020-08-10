@@ -7,6 +7,10 @@ export function powerMode(value) {
   return `${options[0]} (${value})`;
 }
 
+export function tempCAndK(tempK) {
+  return `${(tempK - 273.15).toFixed(2)}C (${tempK}K)`;
+}
+
 export function callConnected(value) {
   const connected = ['Disconnected', 'Connected'];
   return connected[value & 1];

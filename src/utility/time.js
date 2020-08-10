@@ -13,6 +13,12 @@ export function mjdToString(mjd) {
     .format('YYYY-MM-DDTHH:mm:ss');
 }
 
+export function secondsToMinute(seconds) {
+  const second = seconds % 60;
+  const minute = Math.floor(seconds / 60);
+  return `${minute}:${dayjs().second(second).format('ss')}`;
+}
+
 /**
  * Convert a dayjs date to MJD
  *
