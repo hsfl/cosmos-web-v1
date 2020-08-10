@@ -15,6 +15,7 @@ export default function determineLayout(defaultYAxis, dataRevision) {
       b: 15,
     },
     xaxis: {
+      autorange: false,
       fixedrange: false,
     },
     yaxis: {

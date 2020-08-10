@@ -27,7 +27,8 @@ import { set, incrementQueue } from '../../store/actions';
 
 import BaseComponent from '../BaseComponent';
 import ChartValues from './Chart/ChartValues';
-import { mjdToString, dateToMJD } from '../../utility/time';
+
+import { mjdToUTCString, dateToMJD, mjdToString } from '../../utility/time';
 
 /**
  * Display data on a chart using plot.ly. Allows for various plot.ly configurations.
@@ -48,10 +49,12 @@ function Chart({
 
   /** Accessing the neutron1 node process context and drilling down */
   const state = useSelector((s) => s.data);
-  const xAxis = useSelector((s) => s.xAxis);
+  const xMin = useSelector((s) => s.xMin);
+  const xMax = useSelector((s) => s.xMax);
   // const globalQueue = useSelector((s) => s.globalQueue);
   const realm = useSelector((s) => s.realm);
   const queriedData = useSelector((s) => s.queriedData);
+  // const currentTab = useSelector((s) => s.tab);
 
   /** Storage for global form values */
   const [plotsForm] = Form.useForm();
@@ -126,6 +129,15 @@ function Chart({
     setPlotsState(emptyArr);
   };
 
+  const syncXAxis = (update = false) => {
+    dispatch(set('xMin', layout.xaxis.range[0]));
+    if (update) {
+      dispatch(set('xMax', dayjs().utc().format('YYYY-MM-DDTHH:mm:ss')));
+    } else {
+      dispatch(set('xMax', layout.xaxis.range[1]));
+    }
+  };
+
   /** Handle new data incoming from the Context */
   useEffect(() => {
     plotsState.forEach((p, i) => {
@@ -142,9 +154,9 @@ function Chart({
           // Check if polar or not
           if (polar) {
             if (process.env.FLIGHT_MODE === 'true' && state[realm][p.timeDataKey]) {
-              plotsState[i].r.push(mjdToString(state[realm][p.timeDataKey]));
+              plotsState[i].r.push(mjdToUTCString(state[realm][p.timeDataKey]));
             } else {
-              plotsState[i].r.push(mjdToString(state[realm].recorded_time));
+              plotsState[i].r.push(mjdToUTCString(state[realm].recorded_time));
             }
 
             plotsState[i]
@@ -156,9 +168,9 @@ function Chart({
               );
           } else {
             if (process.env.FLIGHT_MODE === 'true' && state[realm][p.timeDataKey]) {
-              plotsState[i].x.push(mjdToString(state[realm][p.timeDataKey]));
+              plotsState[i].x.push(mjdToUTCString(state[realm][p.timeDataKey]));
             } else {
-              plotsState[i].x.push(mjdToString(state[realm].recorded_time));
+              plotsState[i].x.push(mjdToUTCString(state[realm].recorded_time));
             }
 
             plotsState[i]
@@ -182,6 +194,8 @@ function Chart({
         // Trigger the chart to update
         layout.datarevision += 1;
         setDataRevision(dataRevision + 1);
+
+        syncXAxis(true);
       }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -275,20 +289,19 @@ function Chart({
   };
 
   useEffect(() => {
-    if (xAxis[0] && xAxis[1] && layout.xaxis.range
-      && (layout.xaxis.range[0] !== xAxis[0] || layout.xaxis.range[1] !== xAxis[1])) {
-      layout.xaxis.range = xAxis;
-      layout.xaxis.autorange = false;
+    if (xMin) {
+      layout.xaxis.range = [xMin, xMax];
+      layout.datarevision += 1;
+      layout.uirevision += 1;
+      setDataRevision(dataRevision + 1);
+    } else {
+      layout.xaxis.range = [null, xMax];
       layout.datarevision += 1;
       layout.uirevision += 1;
       setDataRevision(dataRevision + 1);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [xAxis]);
-
-  const syncXAxis = () => {
-    dispatch(set('xAxis', layout.xaxis.range));
-  };
+  }, [xMax]);
 
   return (
     <BaseComponent
@@ -336,7 +349,6 @@ function Chart({
             onClick={() => {
               layout.yaxis.range = yAxis;
               layout.datarevision += 1;
-              layout.uirevision += 1;
               setDataRevision(dataRevision + 1);
             }}
             disabled={!yAxis[0] && !yAxis[1]}

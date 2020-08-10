@@ -26,8 +26,6 @@ function GetHistoricalData({
       dispatch(resetQueue());
       dispatch(set('globalHistoricalDate', null));
       dispatch(set('queriedData', null));
-
-      setGlobalHistoricalDate(null);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [retrievedQuery]);
@@ -132,7 +130,8 @@ function GetHistoricalData({
         }
 
         dispatch(set('queriedData', fields));
-        dispatch(set('xAxis', [from, to]));
+        dispatch(set('xMin', from.format('YYYY-MM-DDTHH:mm:ss')));
+        dispatch(set('xMax', to.format('YYYY-MM-DDTHH:mm:ss')));
       } catch (error) {
         message.destroy();
         message.error(error.message);

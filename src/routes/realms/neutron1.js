@@ -1,4 +1,4 @@
-import { mjdToString } from '../../utility/time';
+import { mjdToUTCString } from '../../utility/time';
 import {
   callConnected,
   callType,
@@ -600,7 +600,7 @@ export default {
           props: {
             name: 'EPS Bus Aux',
             XDataKey: 'node_utc',
-            processXDataKey: (x) => mjdToString(x),
+            processXDataKey: (x) => mjdToUTCString(x),
             plots: [
               {
                 x: [],
@@ -632,7 +632,7 @@ export default {
           props: {
             name: 'EPS Bus Power',
             XDataKey: 'node_utc',
-            processXDataKey: (x) => mjdToString(x),
+            processXDataKey: (x) => mjdToUTCString(x),
             plots: [
               {
                 x: [],
@@ -724,7 +724,7 @@ export default {
           props: {
             name: 'EPS Power',
             XDataKey: 'node_utc',
-            processXDataKey: (x) => mjdToString(x),
+            processXDataKey: (x) => mjdToUTCString(x),
             plots: [
               {
                 x: [],
@@ -1012,7 +1012,7 @@ export default {
             props: {
               name: 'Boot Count',
               XDataKey: 'device_cpu_utc_000',
-              processXDataKey: (x) => mjdToString(x),
+              processXDataKey: (x) => mjdToUTCString(x),
               plots: [
                 {
                   x: [],
@@ -1203,7 +1203,7 @@ export default {
             name: 'Chart',
             props: {
               name: 'Memory',
-              processXDataKey: (x) => mjdToString(x),
+              processXDataKey: (x) => mjdToUTCString(x),
               plots: [
                 {
                   x: [],
@@ -2585,7 +2585,7 @@ export default {
                   dataKey: 'device_tcv_rxutc_000',
                   timeDataKey: 'device_tcv_utc_000',
                   unit: '',
-                  processDataKey: (x) => mjdToString(x),
+                  processDataKey: (x) => mjdToUTCString(x),
                 },
                 {
                   name: 'Last Time RX',
@@ -2593,7 +2593,7 @@ export default {
                   dataKey: 'device_tcv_rxutc_000',
                   timeDataKey: 'device_tcv_utc_000',
                   unit: '',
-                  processDataKey: (x) => mjdToString(x),
+                  processDataKey: (x) => mjdToUTCString(x),
                 },
                 {
                   name: 'Last Time TX',
@@ -2601,7 +2601,7 @@ export default {
                   dataKey: 'device_tcv_txutc_000',
                   timeDataKey: 'device_tcv_utc_000',
                   unit: '',
-                  processDataKey: (x) => mjdToString(x),
+                  processDataKey: (x) => mjdToUTCString(x),
                 },
                 {
                   name: 'Last Packet RX',
@@ -2812,7 +2812,7 @@ export default {
                   dataKey: 'device_gps_utc_000',
                   timeDataKey: 'device_gps_utc_000',
                   unit: '',
-                  processDataKey: (x) => mjdToString(x),
+                  processDataKey: (x) => mjdToUTCString(x),
                 },
               ],
             },
@@ -2835,7 +2835,7 @@ export default {
                   dataKey: 'device_gps_utc_000',
                   timeDataKey: 'device_gps_utc_000',
                   unit: '',
-                  processDataKey: (x) => mjdToString(x),
+                  processDataKey: (x) => mjdToUTCString(x),
                 },
                 {
                   name: 'Latitude',
@@ -2867,7 +2867,7 @@ export default {
                   dataKey: 'placeholder',
                   timeDataKey: 'device_gps_utc_000',
                   unit: '',
-                  processDataKey: (x) => mjdToString(x),
+                  processDataKey: (x) => mjdToUTCString(x),
                 },
               ],
             },
@@ -4123,7 +4123,7 @@ export default {
               name: 'Solar Panel Temperature',
               defaultRange: [0, 80],
               XDataKey: 'node_utc',
-              processXDataKey: (x) => mjdToString(x),
+              processXDataKey: (x) => mjdToUTCString(x),
               plots: [
                 {
                   x: [],
@@ -4972,7 +4972,7 @@ export default {
             props: {
               name: 'EPS PDM Switch Amp',
               XDataKey: 'node_utc',
-              processXDataKey: (x) => mjdToString(x),
+              processXDataKey: (x) => mjdToUTCString(x),
               plots: [
                 {
                   x: [],
@@ -5139,7 +5139,7 @@ export default {
             props: {
               name: 'EPS PDM Switch Voltage',
               XDataKey: 'node_utc',
-              processXDataKey: (x) => mjdToString(x),
+              processXDataKey: (x) => mjdToUTCString(x),
               plots: [
                 {
                   x: [],
@@ -5513,7 +5513,7 @@ export default {
                   dataKey: 'device_imu_utc_000',
                   timeDataKey: 'device_imu_utc_000',
                   unit: '',
-                  processDataKey: (x) => mjdToString(x),
+                  processDataKey: (x) => mjdToUTCString(x),
                 },
                 {
                   name: 'Last Logged Event',
@@ -5521,7 +5521,7 @@ export default {
                   dataKey: 'event_utc_000',
                   timeDataKey: 'device_imu_utc_000',
                   unit: '',
-                  processDataKey: (x) => mjdToString(x),
+                  processDataKey: (x) => mjdToUTCString(x),
                 },
                 {
                   name: 'SRAM Latchup Counters',
@@ -6127,7 +6127,7 @@ export default {
                   dataKey: 'device_gps_utc_001',
                   timeDataKey: 'device_gps_utc_000',
                   unit: '',
-                  processDataKey: (x) => mjdToString(x),
+                  processDataKey: (x) => mjdToUTCString(x),
                 },
                 {
                   name: 'X, Y, Z',
