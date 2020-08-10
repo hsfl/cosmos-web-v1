@@ -8,7 +8,7 @@ export function powerMode(value) {
 }
 
 export function tempCAndK(tempK) {
-  return `${(tempK - 273.15).toFixed(2)}C (${tempK}K)`;
+  return `${(tempK - 273.15).toFixed(2)}C (${tempK.toFixed(2)}K)`;
 }
 
 export function callConnected(value) {

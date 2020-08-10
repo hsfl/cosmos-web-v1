@@ -235,7 +235,7 @@ export default {
                 dataKey: 'device_tsen_temp_001',
                 dataKeyUpperThreshold: 60,
                 timeDataKey: 'device_tsen_utc_001',
-                unit: 'RC',
+                unit: '',
                 processDataKey: (x) => tempCAndK(x),
               },
               {
@@ -348,7 +348,7 @@ export default {
                 dataKey: 'device_batt_volt_000',
                 timeDataKey: 'device_batt_utc_000',
                 unit: 'V',
-                processDataKey: (x) => x.toFixed(4),
+                processDataKey: (x) => x.toFixed(2),
               },
               {
                 name: 'Power Gen',
