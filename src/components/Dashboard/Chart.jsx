@@ -52,7 +52,6 @@ function Chart({
   // const globalQueue = useSelector((s) => s.globalQueue);
   const realm = useSelector((s) => s.realm);
   const queriedData = useSelector((s) => s.queriedData);
-  const test = useSelector((s) => s);
 
   /** Storage for global form values */
   const [plotsForm] = Form.useForm();
@@ -276,17 +275,19 @@ function Chart({
   };
 
   useEffect(() => {
-    console.log(xAxis, layout.xaxis.range);
-    if (xAxis && (layout.xaxis.range[0] !== xAxis[0] || layout.xaxis.range[1] !== xAxis[1])) {
+    if (xAxis[0] && xAxis[1] && layout.xaxis.range
+      && (layout.xaxis.range[0] !== xAxis[0] || layout.xaxis.range[1] !== xAxis[1])) {
       layout.xaxis.range = xAxis;
       layout.xaxis.autorange = false;
+      layout.datarevision += 1;
+      layout.uirevision += 1;
+      setDataRevision(dataRevision + 1);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [xAxis]);
 
   const syncXAxis = () => {
-    console.log('working', layout.xaxis.range, xAxis);
     dispatch(set('xAxis', layout.xaxis.range));
-    console.log(test);
   };
 
   return (

@@ -9,6 +9,7 @@ export default function reducer(state = {
   namespace: {},
   file_list: {},
   list: {},
+  xAxis: [null, null],
   data: {},
   realm: null,
   activity: [],

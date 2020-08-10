@@ -132,6 +132,7 @@ function GetHistoricalData({
         }
 
         dispatch(set('queriedData', fields));
+        dispatch(set('xAxis', [from, to]));
       } catch (error) {
         message.destroy();
         message.error(error.message);
