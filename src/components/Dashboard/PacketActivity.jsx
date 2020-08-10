@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { Badge, Form, Button } from 'antd';
 import { highlight, languages } from 'prismjs/components/prism-core';
 
-import { mjdToString } from '../../utility/time';
+import { mjdToUTCString } from '../../utility/time';
 
 import BaseComponent from '../BaseComponent';
 
@@ -77,7 +77,7 @@ function Activity() {
                 </td>
                 <td className="pr-4 text-gray-500">
                   {
-                    mjdToString(node_utc)
+                    mjdToUTCString(node_utc)
                   }
                 </td>
                 <td>

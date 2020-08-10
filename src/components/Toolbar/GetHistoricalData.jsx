@@ -26,8 +26,6 @@ function GetHistoricalData({
       dispatch(resetQueue());
       dispatch(set('globalHistoricalDate', null));
       dispatch(set('queriedData', null));
-
-      setGlobalHistoricalDate(null);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [retrievedQuery]);

@@ -1,4 +1,4 @@
-import { mjdToString } from '../../utility/time';
+import { mjdToUTCString } from '../../utility/time';
 
 export default {
   name: 'hiapo',
@@ -295,7 +295,7 @@ export default {
           props: {
             name: 'CPU',
             XDataKey: 'node_utc',
-            processXDataKey: (x) => mjdToString(x),
+            processXDataKey: (x) => mjdToUTCString(x),
             plots: [
               {
                 x: [],
@@ -338,7 +338,7 @@ export default {
           props: {
             name: 'Thermal',
             XDataKey: 'node_utc',
-            processXDataKey: (x) => mjdToString(x),
+            processXDataKey: (x) => mjdToUTCString(x),
             plots: [
               {
                 x: [],
@@ -433,7 +433,7 @@ export default {
           props: {
             name: 'EPS Bus Aux',
             XDataKey: 'node_utc',
-            processXDataKey: (x) => mjdToString(x),
+            processXDataKey: (x) => mjdToUTCString(x),
             plots: [
               {
                 x: [],
@@ -503,7 +503,7 @@ export default {
           props: {
             name: 'EPS Bus Power',
             XDataKey: 'node_utc',
-            processXDataKey: (x) => mjdToString(x),
+            processXDataKey: (x) => mjdToUTCString(x),
             plots: [
               {
                 x: [],
@@ -572,7 +572,7 @@ export default {
           props: {
             name: 'EPS Battery Charge Regulator Power',
             XDataKey: 'node_utc',
-            processXDataKey: (x) => mjdToString(x),
+            processXDataKey: (x) => mjdToUTCString(x),
             plots: [
               {
                 x: [],
@@ -628,7 +628,7 @@ export default {
           props: {
             name: 'EPS PDM Switch Power',
             XDataKey: 'node_utc',
-            processXDataKey: (x) => mjdToString(x),
+            processXDataKey: (x) => mjdToUTCString(x),
             plots: [
               {
                 x: [],

@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
  * @param {Number} mjd MJD to convert
  * @returns {String} UTC date string
  */
-export function mjdToString(mjd) {
+export function mjdToUTCString(mjd) {
   return dayjs
     .unix((((mjd + 2400000.5) - 2440587.5) * 86400.0))
     .utc()
@@ -17,6 +17,18 @@ export function secondsToMinute(seconds) {
   const second = seconds % 60;
   const minute = Math.floor(seconds / 60);
   return `${minute}:${dayjs().second(second).format('ss')}`;
+}
+
+/**
+ * Convert MJD to human readable date
+ *
+ * @param {Number} mjd MJD to convert
+ * @returns {String} UTC date string
+ */
+export function mjdToString(mjd) {
+  return dayjs
+    .unix((((mjd + 2400000.5) - 2440587.5) * 86400.0))
+    .format('YYYY-MM-DDTHH:mm:ss');
 }
 
 /**
