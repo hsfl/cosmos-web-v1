@@ -133,6 +133,7 @@ function GetHistoricalData({
           message.warning(`No data between ${from.format('YYYY-MM-DD HH:mm:ss')} - ${to.format('YYYY-MM-DD HH:mm:ss')}`, 10);
         }
 
+        console.log(fields);
         dispatch(set('queriedData', fields));
       } catch (error) {
         message.destroy();

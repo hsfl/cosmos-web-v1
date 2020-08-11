@@ -131,7 +131,6 @@ export default {
                 name: 'Last Event Name',
                 nodeProcess: 'any',
                 dataKey: 'node_lastevent',
-                dataKeyUpperThreshold: 1,
                 timeDataKey: 'node_utc',
                 unit: '',
                 processDataKey: (x) => x,
