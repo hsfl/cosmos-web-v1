@@ -258,41 +258,6 @@ function Dashboard({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
 
-  const initializeQuery = async () => {
-    try {
-      const { data } = await axios.post(`/query/${realm}/any`, {
-        multiple: true,
-        query: {
-        },
-        options: {
-          projection: {
-            node_downtime: 1,
-            node_utc: 1,
-          },
-          sort: {
-            node_utc: -1,
-          },
-          limit: 10,
-        },
-      });
-
-      console.log(data);
-
-      if (data.length !== 0) {
-        message.destroy();
-        message.success('Done retrieving data.');
-      } else {
-        message.destroy();
-        message.warning('No data found.', 10);
-      }
-
-      // dispatch(set('queriedData', fields));
-    } catch (error) {
-      message.destroy();
-      message.error(error.message);
-    }
-  };
-
   /** Retrieve default layout for page */
   useEffect(() => {
     // By default, set the defaultLayout prop as a flive.ack if child doesn't have a layout set
@@ -411,8 +376,6 @@ function Dashboard({
     });
 
     dispatch(set('keys', tabStatus));
-
-    initializeQuery();
 
     // Set timeout to let the grid initialize; won't work otherwise.
     setTimeout(() => {
