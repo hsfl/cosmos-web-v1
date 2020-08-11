@@ -13,6 +13,12 @@ export function mjdToUTCString(mjd) {
     .format('YYYY-MM-DDTHH:mm:ss');
 }
 
+export function secondsToMinute(seconds) {
+  const second = seconds % 60;
+  const minute = Math.floor(seconds / 60);
+  return `${minute}:${dayjs().second(second).format('ss')}`;
+}
+
 /**
  * Convert MJD to human readable date
  *
