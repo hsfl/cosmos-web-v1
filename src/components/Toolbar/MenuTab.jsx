@@ -7,12 +7,12 @@ import { Badge } from 'antd';
  */
 function MenuTab({
   name,
-  status,
+  layout,
 }) {
   return (
     <>
       {
-        status != null ? <Badge status={status} />
+        layout != null ? <Badge status={layout.status} />
           : <Badge status="default" />
       }
       {name}
@@ -22,11 +22,11 @@ function MenuTab({
 
 MenuTab.propTypes = {
   name: PropTypes.string.isRequired,
-  status: PropTypes.string,
+  layout: PropTypes.objectOf(PropTypes.any),
 };
 
 MenuTab.defaultProps = {
-  status: null,
+  layout: null,
 };
 
 export default MenuTab;

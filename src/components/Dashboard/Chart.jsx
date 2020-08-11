@@ -28,7 +28,7 @@ import { set, incrementQueue } from '../../store/actions';
 import BaseComponent from '../BaseComponent';
 import ChartValues from './Chart/ChartValues';
 
-import { mjdToUTCString, dateToMJD, mjdToString } from '../../utility/time';
+import { mjdToUTCString, dateToMJD } from '../../utility/time';
 
 /**
  * Display data on a chart using plot.ly. Allows for various plot.ly configurations.
@@ -210,7 +210,7 @@ function Chart({
           } else {
             message.success(`Retrieved ${queriedData[YDataKey].length} records in ${YDataKey}/${timeDataKey}.`);
 
-            plotsState[i].x = queriedData[timeDataKey].map((x) => mjdToString(x));
+            plotsState[i].x = queriedData[timeDataKey].map((x) => mjdToUTCString(x));
             plotsState[i].y = processYDataKey
               ? queriedData[YDataKey].map((y) => processYDataKey(y))
               : queriedData[YDataKey];

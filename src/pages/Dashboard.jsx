@@ -137,7 +137,13 @@ function Dashboard({
     live.onmessage = ({ data }) => {
       try {
         const json = JSON.parse(data);
-        const [node, process] = json.node_type.split(':');
+
+        let node;
+        let process;
+
+        if (typeof json.node_type === 'string' && json.node_type) {
+          [node, process] = json.node_type.split(':');
+        }
 
         if (json.node_type === 'list') {
           dispatch(set('list', json));
@@ -145,55 +151,17 @@ function Dashboard({
         // OW if not flight mode don't send soh
         } else if (json.node_type === 'file') {
           dispatch(set('file_list', json));
-        } else if (realms[id].includes(node) && ((flightMode === 'true') || (!(flightMode === 'true') && process !== 'soh'))) {
-          dispatch(set('lastDate', dayjs()));
-
-          const aliases = {
-            device_bcreg_power_000: json.device_bcreg_volt_000 && json.device_bcreg_amp_000
-              ? json.device_bcreg_volt_000 * json.device_bcreg_amp_000 : undefined,
-            device_bcreg_power_001: json.device_bcreg_volt_001 && json.device_bcreg_amp_001
-              ? json.device_bcreg_volt_001 * json.device_bcreg_amp_001 : undefined,
-            device_bcreg_power_002: json.device_bcreg_volt_002 && json.device_bcreg_amp_002
-              ? json.device_bcreg_volt_002 * json.device_bcreg_amp_002 : undefined,
-            device_bcreg_power_003: json.device_bcreg_volt_003 && json.device_bcreg_amp_003
-              ? json.device_bcreg_volt_003 * json.device_bcreg_amp_003 : undefined,
-            device_bcreg_power_004: json.device_bcreg_volt_004 && json.device_bcreg_amp_004
-              ? json.device_bcreg_volt_004 * json.device_bcreg_amp_004 : undefined,
-            device_bcreg_power_005: json.device_bcreg_volt_005 && json.device_bcreg_amp_005
-              ? json.device_bcreg_volt_005 * json.device_bcreg_amp_005 : undefined,
-            device_swch_power_000: json.device_swch_volt_000 && json.device_swch_amp_000
-              ? json.device_swch_volt_000 * json.device_swch_amp_000 : undefined,
-            device_swch_power_001: json.device_swch_volt_001 && json.device_swch_amp_001
-              ? json.device_swch_volt_001 * json.device_swch_amp_001 : undefined,
-            device_swch_power_002: json.device_swch_volt_002 && json.device_swch_amp_002
-              ? json.device_swch_volt_002 * json.device_swch_amp_002 : undefined,
-            device_swch_power_003: json.device_swch_volt_003 && json.device_swch_amp_003
-              ? json.device_swch_volt_003 * json.device_swch_amp_003 : undefined,
-            device_swch_power_004: json.device_swch_volt_004 && json.device_swch_amp_004
-              ? json.device_swch_volt_004 * json.device_swch_amp_004 : undefined,
-            device_swch_power_005: json.device_swch_volt_005 && json.device_swch_amp_005
-              ? json.device_swch_volt_005 * json.device_swch_amp_005 : undefined,
-            device_swch_power_006: json.device_swch_volt_006 && json.device_swch_amp_006
-              ? json.device_swch_volt_006 * json.device_swch_amp_006 : undefined,
-            device_swch_power_007: json.device_swch_volt_007 && json.device_swch_amp_007
-              ? json.device_swch_volt_007 * json.device_swch_amp_007 : undefined,
-            device_swch_power_008: json.device_swch_volt_008 && json.device_swch_amp_008
-              ? json.device_swch_volt_008 * json.device_swch_amp_008 : undefined,
-            device_swch_power_009: json.device_swch_volt_009 && json.device_swch_amp_009
-              ? json.device_swch_volt_009 * json.device_swch_amp_009 : undefined,
-            recorded_time: dateToMJD(dayjs().utc()),
-          };
-
+        } else if ((realms[id].includes(node) || realms[id].includes(json.node_name)) && ((flightMode === 'true') || (!(flightMode === 'true') && process !== 'soh'))) {
           // Store in realm object
           dispatch(setData(id, {
             ...json,
-            ...aliases,
+            recorded_time: dateToMJD(dayjs().utc()),
           }));
 
           dispatch(setActivity({
             status: 'success',
             summary: 'Data received',
-            scope: `from ${json.node_type}`,
+            scope: `from ${json.node_name || json.node_type}`,
           }));
         }
       } catch (error) {

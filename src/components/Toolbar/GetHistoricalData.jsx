@@ -125,8 +125,12 @@ function GetHistoricalData({
               fields[key].push(entry.y);
             });
           });
+
+          message.destroy();
+          message.success('Done retrieving data.');
         } else {
-          message.warning('No data during this time');
+          message.destroy();
+          message.warning(`No data between ${from.format('YYYY-MM-DD HH:mm:ss')} - ${to.format('YYYY-MM-DD HH:mm:ss')}`, 10);
         }
 
         dispatch(set('queriedData', fields));
@@ -136,9 +140,6 @@ function GetHistoricalData({
         message.destroy();
         message.error(error.message);
       }
-
-      message.destroy();
-      message.success('Done retrieving data.');
     }
   };
 
@@ -163,14 +164,14 @@ function GetHistoricalData({
         &nbsp;
         <Button
           size="small"
-          onClick={() => queryData(dayjs().subtract(1, 'hour'), dayjs())}
+          onClick={() => queryData(dayjs().subtract(1, 'hour').utc(), dayjs().utc())}
         >
           Past Hour
         </Button>
         &nbsp;
         <Button
           size="small"
-          onClick={() => queryData(dayjs().subtract(6, 'hour'), dayjs())}
+          onClick={() => queryData(dayjs().subtract(6, 'hour').utc(), dayjs().utc())}
         >
           Past 6 Hours
         </Button>
