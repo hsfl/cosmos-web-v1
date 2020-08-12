@@ -151,6 +151,8 @@ function Dashboard({
         // OW if not flight mode don't send soh
         } else if (json.node_type === 'file') {
           dispatch(set('file_list', json));
+        } else if (json.node_type === 'event_queue') {
+          dispatch(set('event_queue', json.queue));
         } else if ((realms[id].includes(node) || realms[id].includes(json.node_name)) && ((flightMode === 'true') || (!(flightMode === 'true') && process !== 'soh'))) {
           // Store in realm object
           dispatch(setData(id, {
@@ -375,6 +377,7 @@ function Dashboard({
     });
 
     dispatch(set('keys', tabStatus));
+
     // Set timeout to let the grid initialize; won't work otherwise.
     setTimeout(() => {
       setLayouts(layout);
@@ -382,6 +385,7 @@ function Dashboard({
       // Initialize JSON editor
       setJsonEdit(JSON.stringify(layout.lg, null, 2));
     }, 100);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [defaultLayout, id, path]);
 

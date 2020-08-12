@@ -131,7 +131,6 @@ export default {
                 name: 'Last Event Name',
                 nodeProcess: 'any',
                 dataKey: 'node_lastevent',
-                dataKeyUpperThreshold: 1,
                 timeDataKey: 'node_utc',
                 unit: '',
                 processDataKey: (x) => x,
@@ -153,7 +152,7 @@ export default {
                 processDataKey: (x) => secondsToMinute(x),
               },
               {
-                name: 'Battery Percent',
+                name: 'Batt %',
                 nodeProcess: 'any',
                 dataKey: 'device_batt_percentage_000',
                 dataKeyLowerThreshold: 0.05,
@@ -162,7 +161,7 @@ export default {
                 processDataKey: (x) => (x * 100).toFixed(4),
               },
               {
-                name: 'Power Mode',
+                name: 'Pwr Mode',
                 nodeProcess: 'any',
                 dataKey: 'node_powmode',
                 timeDataKey: 'node_utc',
@@ -326,7 +325,7 @@ export default {
             name: 'EPS',
             displayValues: [
               {
-                name: 'Battery Capacity',
+                name: 'Batt Cap',
                 nodeProcess: 'any',
                 dataKey: 'node_battcap',
                 timeDataKey: 'node_utc',
@@ -334,7 +333,7 @@ export default {
                 processDataKey: (x) => x.toFixed(2),
               },
               {
-                name: 'Battery Percent',
+                name: 'Batt %',
                 nodeProcess: 'any',
                 dataKey: 'device_batt_percentage_000',
                 dataKeyLowerThreshold: 0.05,
@@ -343,7 +342,7 @@ export default {
                 processDataKey: (x) => (x * 100).toFixed(4),
               },
               {
-                name: 'Battery Voltage',
+                name: 'Batt V',
                 nodeProcess: 'any',
                 dataKey: 'device_batt_volt_000',
                 timeDataKey: 'device_batt_utc_000',
@@ -351,7 +350,7 @@ export default {
                 processDataKey: (x) => x.toFixed(2),
               },
               {
-                name: 'Power Gen',
+                name: 'Pwr Gen',
                 nodeProcess: 'any',
                 dataKey: 'node_powgen',
                 timeDataKey: 'node_utc',
@@ -359,7 +358,7 @@ export default {
                 processDataKey: (x) => x.toFixed(2),
               },
               {
-                name: 'Power Use',
+                name: 'Pwr Use',
                 nodeProcess: 'any',
                 dataKey: 'node_powuse',
                 timeDataKey: 'node_utc',
@@ -367,7 +366,7 @@ export default {
                 processDataKey: (x) => Math.abs(x.toFixed(2)),
               },
               {
-                name: 'Power Mode',
+                name: 'Pwr Mode',
                 nodeProcess: 'any',
                 dataKey: 'node_powmode',
                 timeDataKey: 'node_utc',
@@ -611,7 +610,7 @@ export default {
                 marker: {
                   color: 'orange',
                 },
-                name: 'Batt Power (W)',
+                name: 'Batt Pwr (W)',
                 YDataKey: 'device_batt_power_000',
                 timeDataKey: 'device_batt_utc_000',
                 processYDataKey: (x) => x,
@@ -631,7 +630,7 @@ export default {
         component: {
           name: 'Chart',
           props: {
-            name: 'EPS Bus Power',
+            name: 'EPS Bus Pwr',
             XDataKey: 'node_utc',
             processXDataKey: (x) => mjdToUTCString(x),
             plots: [
@@ -643,7 +642,7 @@ export default {
                 marker: {
                   color: 'red',
                 },
-                name: 'Power 000 (W)',
+                name: 'Pwr 000 (W)',
                 YDataKey: 'device_bus_power_000',
                 timeDataKey: 'device_bus_utc_000',
                 processYDataKey: (x) => x,
@@ -658,7 +657,7 @@ export default {
                 marker: {
                   color: 'orange',
                 },
-                name: 'Power 001 (W)',
+                name: 'Pwr 001 (W)',
                 YDataKey: 'device_bus_power_001',
                 timeDataKey: 'device_bus_utc_001',
                 processYDataKey: (x) => x,
@@ -673,7 +672,7 @@ export default {
                 marker: {
                   color: 'blue',
                 },
-                name: 'Power 002 (W)',
+                name: 'Pwr 002 (W)',
                 YDataKey: 'device_bus_power_002',
                 timeDataKey: 'device_bus_utc_002',
                 processYDataKey: (x) => x,
@@ -688,7 +687,7 @@ export default {
                 marker: {
                   color: 'gray',
                 },
-                name: 'Power 003 (W)',
+                name: 'Pwr 003 (W)',
                 YDataKey: 'device_bus_power_003',
                 timeDataKey: 'device_bus_utc_003',
                 processYDataKey: (x) => x,
@@ -723,7 +722,7 @@ export default {
         component: {
           name: 'Chart',
           props: {
-            name: 'EPS Power',
+            name: 'EPS Pwr',
             XDataKey: 'node_utc',
             processXDataKey: (x) => mjdToUTCString(x),
             plots: [
@@ -735,7 +734,7 @@ export default {
                 marker: {
                   color: 'green',
                 },
-                name: 'Power Generation (W)',
+                name: 'Pwr Generation (W)',
                 YDataKey: 'node_powgen',
                 timeDataKey: 'node_utc',
                 processYDataKey: (x) => x,
@@ -750,7 +749,7 @@ export default {
                 marker: {
                   color: 'blue',
                 },
-                name: 'Power Usage (W)',
+                name: 'Pwr Usage (W)',
                 YDataKey: 'node_powuse',
                 timeDataKey: 'node_utc',
                 processYDataKey: (x) => Math.abs(x.toFixed(2)),
@@ -770,7 +769,7 @@ export default {
         component: {
           name: 'Chart',
           props: {
-            name: 'EPS Power Mode',
+            name: 'EPS Pwr Mode',
             showZero: true,
             plots: [
               {
@@ -781,7 +780,7 @@ export default {
                 marker: {
                   color: 'green',
                 },
-                name: 'Power Mode',
+                name: 'Pwr Mode',
                 YDataKey: 'node_powmode',
                 timeDataKey: 'node_utc',
                 processYDataKey: (x) => x,
@@ -1459,7 +1458,7 @@ export default {
                   processDataKey: (x) => tempCAndK(x),
                 },
                 {
-                  name: 'Solar Power Supply X-',
+                  name: 'Solar Pwr Supply X-',
                   nodeProcess: 'any',
                   dataKey: 'device_breg_temp_004',
                   dataKeyUpperThreshold: 60,
@@ -1468,7 +1467,7 @@ export default {
                   processDataKey: (x) => tempCAndK(x),
                 },
                 {
-                  name: 'Solar Power Supply X+',
+                  name: 'Solar Pwr Supply X+',
                   nodeProcess: 'any',
                   dataKey: 'device_breg_temp_005',
                   dataKeyUpperThreshold: 60,
@@ -2200,7 +2199,7 @@ export default {
                   marker: {
                     color: 'brown',
                   },
-                  name: 'Solar Power Supply X- (C)',
+                  name: 'Solar Pwr Supply X- (C)',
                   YDataKey: 'device_bcreg_temp_004',
                   timeDataKey: 'device_bcreg_utc_000',
                   processYDataKey: (x) => (x - 273.15).toFixed(2),
@@ -2214,7 +2213,7 @@ export default {
                   marker: {
                     color: 'cyan',
                   },
-                  name: 'Solar Power Supply X+ (C)',
+                  name: 'Solar Pwr Supply X+ (C)',
                   YDataKey: 'device_bcreg_temp_005',
                   timeDataKey: 'device_bcreg_utc_000',
                   processYDataKey: (x) => (x - 273.15).toFixed(2),
@@ -2771,7 +2770,7 @@ export default {
               name: 'Duplex Status',
               displayValues: [
                 {
-                  name: 'Power Mode',
+                  name: 'Pwr Mode',
                   nodeProcess: 'any',
                   dataKey: 'device_swch_volt_004',
                   timeDataKey: 'device_swch_utc_000',
@@ -3100,10 +3099,10 @@ export default {
           component: {
             name: 'DisplayValue',
             props: {
-              name: 'Payload Power',
+              name: 'Payload Pwr',
               displayValues: [
                 {
-                  name: 'Power',
+                  name: 'Pwr',
                   nodeProcess: 'any',
                   dataKey: 'device_pload_power_000',
                   timeDataKey: 'device_pload_utc_000',
@@ -3168,7 +3167,7 @@ export default {
               name: 'EPS Battery',
               displayValues: [
                 {
-                  name: 'Battery Capacity',
+                  name: 'Batt Cap',
                   nodeProcess: 'any',
                   dataKey: 'node_battcap',
                   timeDataKey: 'node_utc',
@@ -3176,7 +3175,7 @@ export default {
                   processDataKey: (x) => x.toFixed(2),
                 },
                 {
-                  name: 'Battery Percent',
+                  name: 'Batt %',
                   nodeProcess: 'any',
                   dataKey: 'device_batt_percentage_000',
                   dataKeyLowerThreshold: 0.05,
@@ -3185,7 +3184,7 @@ export default {
                   processDataKey: (x) => (x * 100).toFixed(4),
                 },
                 {
-                  name: 'Power Gen',
+                  name: 'Pwr Gen',
                   nodeProcess: 'any',
                   timeDataKey: 'node_utc',
                   dataKey: 'node_powgen',
@@ -3193,7 +3192,7 @@ export default {
                   processDataKey: (x) => x.toFixed(2),
                 },
                 {
-                  name: 'Power Use',
+                  name: 'Pwr Use',
                   nodeProcess: 'any',
                   timeDataKey: 'node_utc',
                   dataKey: 'node_powuse',
@@ -3201,7 +3200,7 @@ export default {
                   processDataKey: (x) => Math.abs(x.toFixed(2)),
                 },
                 {
-                  name: 'Power Mode',
+                  name: 'Pwr Mode',
                   nodeProcess: 'any',
                   timeDataKey: 'node_utc',
                   dataKey: 'node_powmode',
@@ -3217,7 +3216,7 @@ export default {
                   processDataKey: (x) => x.toFixed(2),
                 },
                 {
-                  name: 'Battery Voltage',
+                  name: 'Batt V',
                   nodeProcess: 'any',
                   dataKey: 'device_batt_volt_000',
                   timeDataKey: 'node_utc',
@@ -3458,7 +3457,7 @@ export default {
                   marker: {
                     color: 'red',
                   },
-                  name: 'Battery Percentage',
+                  name: 'Batt %',
                   YDataKey: 'device_batt_percentage_000',
                   timeDataKey: 'device_batt_utc_000',
                   processYDataKey: (x) => (x * 100).toFixed(4),
@@ -3508,7 +3507,7 @@ export default {
           component: {
             name: 'Chart',
             props: {
-              name: 'EPS Battery Voltage',
+              name: 'EPS Batt V',
               plots: [
                 {
                   x: [],
@@ -3593,7 +3592,7 @@ export default {
                   live: true,
                 },
                 {
-                  name: 'Power',
+                  name: 'Pwr',
                   nodeProcess: 'any',
                   dataKey: 'device_bcreg_power_000',
                   timeDataKey: 'device_bcreg_utc_000',
@@ -3644,7 +3643,7 @@ export default {
                   live: true,
                 },
                 {
-                  name: 'Power',
+                  name: 'Pwr',
                   nodeProcess: 'any',
                   dataKey: 'device_bcreg_power_001',
                   timeDataKey: 'device_bcreg_utc_001',
@@ -3725,7 +3724,7 @@ export default {
                   live: true,
                 },
                 {
-                  name: 'Power',
+                  name: 'Pwr',
                   nodeProcess: 'any',
                   dataKey: 'device_bcreg_power_002',
                   timeDataKey: 'device_bcreg_utc_002',
@@ -3776,7 +3775,7 @@ export default {
                   live: true,
                 },
                 {
-                  name: 'Power',
+                  name: 'Pwr',
                   nodeProcess: 'any',
                   dataKey: 'device_bcreg_power_003',
                   timeDataKey: 'device_bcreg_utc_003',
@@ -3876,7 +3875,7 @@ export default {
                   marker: {
                     color: 'cyan',
                   },
-                  name: 'Solar Power Supply X- (A)',
+                  name: 'Solar Pwr Supply X- (A)',
                   YDataKey: 'device_bcreg_amp_004',
                   timeDataKey: 'device_bcreg_utc_004',
                   processYDataKey: (x) => x,
@@ -3891,7 +3890,7 @@ export default {
                   marker: {
                     color: 'green',
                   },
-                  name: 'Solar Power Supply X+ (A)',
+                  name: 'Solar Pwr Supply X+ (A)',
                   YDataKey: 'device_bcreg_amp_005',
                   timeDataKey: 'device_bcreg_utc_005',
                   processYDataKey: (x) => x,
@@ -3981,7 +3980,7 @@ export default {
                   marker: {
                     color: 'cyan',
                   },
-                  name: 'Solar Power Supply X- (V)',
+                  name: 'Solar Pwr Supply X- (V)',
                   YDataKey: 'device_bcreg_volt_004',
                   timeDataKey: 'device_bcreg_utc_004',
                   processYDataKey: (x) => x,
@@ -3996,7 +3995,7 @@ export default {
                   marker: {
                     color: 'green',
                   },
-                  name: 'Solar Power Supply X+ (V)',
+                  name: 'Solar Pwr Supply X+ (V)',
                   YDataKey: 'device_bcreg_volt_005',
                   timeDataKey: 'device_bcreg_utc_005',
                   processYDataKey: (x) => x,
@@ -4016,7 +4015,7 @@ export default {
           component: {
             name: 'Chart',
             props: {
-              name: 'Solar Panel Power',
+              name: 'Solar Panel Pwr',
               plots: [
                 {
                   x: [],
@@ -4086,7 +4085,7 @@ export default {
                   marker: {
                     color: 'red',
                   },
-                  name: 'Solar Power Supply X- (W)',
+                  name: 'Solar Pwr Supply X- (W)',
                   YDataKey: 'device_bcreg_power_004',
                   timeDataKey: 'device_bcreg_utc_004',
                   processYDataKey: (x) => x,
@@ -4101,7 +4100,7 @@ export default {
                   marker: {
                     color: 'red',
                   },
-                  name: 'Solar Power Supply X+ (W)',
+                  name: 'Solar Pwr Supply X+ (W)',
                   YDataKey: 'device_bcreg_power_005',
                   timeDataKey: 'device_bcreg_utc_005',
                   processYDataKey: (x) => x,
@@ -4194,7 +4193,7 @@ export default {
                   marker: {
                     color: 'cyan',
                   },
-                  name: 'Solar Power Supply X- (C)',
+                  name: 'Solar Pwr Supply X- (C)',
                   YDataKey: 'device_bcreg_temp_004',
                   timeDataKey: 'device_bcreg_utc_004',
                   processYDataKey: (x) => x,
@@ -4209,7 +4208,7 @@ export default {
                   marker: {
                     color: 'green',
                   },
-                  name: 'Solar Power Supply X+ (C)',
+                  name: 'Solar Pwr Supply X+ (C)',
                   YDataKey: 'device_bcreg_temp_005',
                   timeDataKey: 'device_bcreg_utc_005',
                   processYDataKey: (x) => x,
@@ -4229,7 +4228,7 @@ export default {
           component: {
             name: 'DisplayValue',
             props: {
-              name: 'Solar Power Supply X- (BCR4)',
+              name: 'Solar Pwr Supply X- (BCR4)',
               displayValues: [
                 {
                   name: 'Current',
@@ -4250,7 +4249,7 @@ export default {
                   live: true,
                 },
                 {
-                  name: 'Power',
+                  name: 'Pwr',
                   nodeProcess: 'any',
                   dataKey: 'device_bcreg_power_004',
                   timeDataKey: 'device_bcreg_utc_004',
@@ -4280,7 +4279,7 @@ export default {
           component: {
             name: 'DisplayValue',
             props: {
-              name: 'Solar Power Supply X+ (BCR5)',
+              name: 'Solar Pwr Supply X+ (BCR5)',
               displayValues: [
                 {
                   name: 'Current',
@@ -4866,7 +4865,7 @@ export default {
           component: {
             name: 'DisplayValue',
             props: {
-              name: 'Switch Powers',
+              name: 'Switch Pwrs',
               displayValues: [
                 {
                   name: 'Switch 000',
@@ -5305,7 +5304,7 @@ export default {
           component: {
             name: 'Chart',
             props: {
-              name: 'EPS PDM Switch Power',
+              name: 'EPS PDM Switch Pwr',
               plots: [
                 {
                   x: [],
@@ -5315,7 +5314,7 @@ export default {
                   marker: {
                     color: 'darkseagreen',
                   },
-                  name: 'Power 000 (W)',
+                  name: 'Pwr 000 (W)',
                   YDataKey: 'device_swch_power_000',
                   timeDataKey: 'device_swch_utc_000',
                   processYDataKey: (x) => x,
@@ -5330,7 +5329,7 @@ export default {
                   marker: {
                     color: 'blue',
                   },
-                  name: 'Power 001 (W)',
+                  name: 'Pwr 001 (W)',
                   YDataKey: 'device_swch_power_001',
                   timeDataKey: 'device_swch_utc_001',
                   processYDataKey: (x) => x,
@@ -5345,7 +5344,7 @@ export default {
                   marker: {
                     color: 'orange',
                   },
-                  name: 'Power 002 (W)',
+                  name: 'Pwr 002 (W)',
                   YDataKey: 'device_swch_power_002',
                   timeDataKey: 'device_swch_utc_0002',
                   processYDataKey: (x) => x,
@@ -5360,7 +5359,7 @@ export default {
                   marker: {
                     color: 'green',
                   },
-                  name: 'Power 003 (W)',
+                  name: 'Pwr 003 (W)',
                   YDataKey: 'device_swch_power_003',
                   timeDataKey: 'device_swch_utc_003',
                   processYDataKey: (x) => x,
@@ -5375,7 +5374,7 @@ export default {
                   marker: {
                     color: 'brown',
                   },
-                  name: 'Power 004 (W)',
+                  name: 'Pwr 004 (W)',
                   YDataKey: 'device_swch_power_004',
                   timeDataKey: 'device_swch_utc_004',
                   processYDataKey: (x) => x,
@@ -5390,7 +5389,7 @@ export default {
                   marker: {
                     color: 'purple',
                   },
-                  name: 'Power 005 (W)',
+                  name: 'Pwr 005 (W)',
                   YDataKey: 'device_swch_power_005',
                   timeDataKey: 'device_swch_utc_005',
                   processYDataKey: (x) => x,
@@ -5405,7 +5404,7 @@ export default {
                   marker: {
                     color: 'red',
                   },
-                  name: 'Power 006 (W)',
+                  name: 'Pwr 006 (W)',
                   YDataKey: 'device_swch_power_006',
                   timeDataKey: 'device_swch_utc_006',
                   processYDataKey: (x) => x,
@@ -5420,7 +5419,7 @@ export default {
                   marker: {
                     color: 'black',
                   },
-                  name: 'Power 007 (W)',
+                  name: 'Pwr 007 (W)',
                   YDataKey: 'device_swch_power_007',
                   timeDataKey: 'device_swch_utc_007',
                   processYDataKey: (x) => x,
@@ -5435,7 +5434,7 @@ export default {
                   marker: {
                     color: 'pink',
                   },
-                  name: 'Power 008 (W)',
+                  name: 'Pwr 008 (W)',
                   YDataKey: 'device_swch_power_008',
                   timeDataKey: 'device_swch_utc_008',
                   processYDataKey: (x) => x,
@@ -5450,7 +5449,7 @@ export default {
                   marker: {
                     color: 'cyan',
                   },
-                  name: 'Power 009 (W)',
+                  name: 'Pwr 009 (W)',
                   YDataKey: 'device_swch_power_009',
                   timeDataKey: 'device_swch_utc_009',
                   processYDataKey: (x) => x,
@@ -5604,7 +5603,7 @@ export default {
                   processDataKey: (x) => tempCAndK(x),
                 },
                 {
-                  name: 'CPU Power',
+                  name: 'CPU Pwr',
                   nodeProcess: 'any',
                   dataKey: 'device_cpu_power_002',
                   timeDataKey: 'device_cpu_utc_002',
@@ -5612,7 +5611,7 @@ export default {
                   processDataKey: (x) => x.toFixed(2),
                 },
                 {
-                  name: 'Reaction Wheel Power',
+                  name: 'Reaction Wheel Pwr',
                   nodeProcess: 'any',
                   dataKey: 'device_rw_power_002',
                   timeDataKey: 'device_rw_utc_002',
@@ -5828,7 +5827,7 @@ export default {
           component: {
             name: 'DisplayValue',
             props: {
-              name: 'Power',
+              name: 'Pwr',
               displayValues: [
                 {
                   name: 'CubeSense 3V3 Current',
@@ -5847,7 +5846,7 @@ export default {
                   processDataKey: (x) => x,
                 },
                 {
-                  name: 'X Reaction Wheel Power',
+                  name: 'X Reaction Wheel Pwr',
                   nodeProcess: 'any',
                   timeDataKey: 'device_rw_utc_000',
                   dataKey: 'device_rw_power_000',
@@ -5855,7 +5854,7 @@ export default {
                   processDataKey: (x) => x.toFixed(x),
                 },
                 {
-                  name: 'Y Reaction Wheel Power',
+                  name: 'Y Reaction Wheel Pwr',
                   nodeProcess: 'any',
                   timeDataKey: 'device_rw_utc_001',
                   dataKey: 'device_rw_power_001',
@@ -5863,7 +5862,7 @@ export default {
                   processDataKey: (x) => x.toFixed(x),
                 },
                 {
-                  name: 'Z Reaction Wheel Power',
+                  name: 'Z Reaction Wheel Pwr',
                   nodeProcess: 'any',
                   dataKey: 'device_rw_power_002',
                   timeDataKey: 'device_rw_utc_002',
@@ -5871,7 +5870,7 @@ export default {
                   processDataKey: (x) => x.toFixed(x),
                 },
                 {
-                  name: 'X Magnetorquer Power',
+                  name: 'X Magnetorquer Pwr',
                   nodeProcess: 'any',
                   dataKey: 'device_mtr_power_000',
                   timeDataKey: 'device_mtr_utc_000',
@@ -5879,7 +5878,7 @@ export default {
                   processDataKey: (x) => x.toFixed(2),
                 },
                 {
-                  name: 'Y Magnetorquer Power',
+                  name: 'Y Magnetorquer Pwr',
                   nodeProcess: 'any',
                   dataKey: 'device_mtr_power_001',
                   timeDataKey: 'device_mtr_utc_001',
@@ -5887,7 +5886,7 @@ export default {
                   processDataKey: (x) => x.toFixed(2),
                 },
                 {
-                  name: 'Z Magnetorquer Power',
+                  name: 'Z Magnetorquer Pwr',
                   nodeProcess: 'any',
                   dataKey: 'device_mtr_power_002',
                   timeDataKey: 'device_mtr_utc_002',
@@ -5903,7 +5902,7 @@ export default {
                   processDataKey: (x) => JSON.stringify(x),
                 },
                 {
-                  name: 'Power',
+                  name: 'Pwr',
                   nodeProcess: 'any',
                   dataKey: 'device_imu_power_000',
                   timeDataKey: 'device_imu_utc_000',
@@ -5911,7 +5910,7 @@ export default {
                   processDataKey: (x) => x.toFixed(2),
                 },
                 {
-                  name: 'Power Control',
+                  name: 'Pwr Control',
                   nodeProcess: 'any',
                   dataKey: 'placeholder',
                   timeDataKey: 'placeholder',

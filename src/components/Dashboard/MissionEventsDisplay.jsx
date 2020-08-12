@@ -22,12 +22,16 @@ function MissionEventsDisplay({
   /** Retrieve data from the Context */
   const live = useSelector((s) => s.data);
   const realm = useSelector((s) => s.realm);
+  const queue = useSelector((s) => s.event_queue);
 
   /** The node whose events is displayed */
   const [node, setNode] = useState(nodes[0]);
 
   /** The storage of information to be stored in the table */
   const [info, setInfo] = useState([]);
+
+  /** Event queue state */
+  const [queueState, setQueueState] = useState([]);
 
   /** Columns in the table for the MED */
   const [columns] = useState([
@@ -45,6 +49,24 @@ function MissionEventsDisplay({
       title: 'Executed',
       dataIndex: 'exec',
       key: 'exec',
+    },
+  ]);
+
+  const [queueColumns] = useState([
+    {
+      title: 'Event Name',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: 'Executed',
+      dataIndex: 'exec',
+      key: 'exec',
+    },
+    {
+      title: 'Condition',
+      dataIndex: 'condition',
+      key: 'condition',
     },
   ]);
 
@@ -98,6 +120,25 @@ function MissionEventsDisplay({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [live]);
 
+  useEffect(() => {
+    if (queue && Object.keys(queue).length !== 0) {
+      try {
+        const json = JSON.parse(queue);
+
+        if (Array.isArray(json)) {
+          setQueueState(json.map((event) => ({
+            name: event.event_name,
+            exec: event.event_utcexec,
+            condition: event.event_condition,
+            log: event,
+          })));
+        }
+      } catch (error) {
+        message.error(error.message);
+      }
+    }
+  }, [queue]);
+
   return (
     <BaseComponent
       name="Mission Events Display"
@@ -129,54 +170,114 @@ function MissionEventsDisplay({
         </>
       )}
     >
-      <Table
-        columns={columns}
-        dataSource={info}
-        expandedRowRender={(record) => (
-          <table>
-            <tbody>
-              <tr className="align-top w-full pr-4">
-                <td className="w-1/2">
-                  {
-                    Object.keys(record.log).map((key) => (
-                      <tr>
-                        <td>
-                          {`${key}:`}
+      <table className="w-full">
+        <tbody>
+          <tr>
+            <td className="w-1/2">
+              <strong>Executed Events</strong>
+              <Table
+                columns={columns}
+                dataSource={info}
+                expandedRowRender={(record) => (
+                  <table>
+                    <tbody>
+                      <tr className="align-top w-full pr-4">
+                        <td className="w-1/2">
+                          {
+                            Object.keys(record.log).map((key) => (
+                              <tr>
+                                <td>
+                                  {`${key}:`}
+                                </td>
+                                <td>
+                                  {record.log[key]}
+                                </td>
+                              </tr>
+                            ))
+                          }
                         </td>
-                        <td>
-                          {record.log[key]}
+                        <td className="w-1/2 border-l pl-4">
+                          {
+                            record.log.event_utcexec != null ? (
+                              <>
+                                <p>{`➜ ${record.log.event_data}`}</p>
+                                {
+                                  record.log.output.length !== 0
+                                    ? (
+                                      <pre>
+                                        {
+                                          parseEscapedChar(JSON.stringify(record.log.output))
+                                            .substring(1, record.log.output.length)
+                                        }
+                                      </pre>
+                                    )
+                                    : null
+                                }
+                              </>
+                            )
+                              : null
+                          }
                         </td>
                       </tr>
-                    ))
-                  }
-                </td>
-                <td className="w-1/2 border-l pl-4">
-                  {
-                    record.log.event_utcexec != null ? (
-                      <>
-                        <p>{`➜ ${record.log.event_data}`}</p>
-                        {
-                          record.log.output.length !== 0
-                            ? (
-                              <pre>
+                    </tbody>
+                  </table>
+                )}
+              />
+            </td>
+            <td className="w-1/2">
+              <strong>Queued Events</strong>
+              <Table
+                columns={queueColumns}
+                dataSource={queueState}
+                expandedRowRender={(record) => (
+                  <table>
+                    <tbody>
+                      <tr className="align-top w-full pr-4">
+                        <td className="w-1/2">
+                          {
+                            Object.keys(record.log).map((key) => (
+                              <tr>
+                                <td>
+                                  {`${key}:`}
+                                </td>
+                                <td>
+                                  {record.log[key]}
+                                </td>
+                              </tr>
+                            ))
+                          }
+                        </td>
+                        <td className="w-1/2 border-l pl-4">
+                          {
+                            record.log.event_utcexec != null ? (
+                              <>
+                                <p>{`➜ ${record.log.event_data}`}</p>
                                 {
-                                  parseEscapedChar(JSON.stringify(record.log.output))
-                                    .substring(1, record.log.output.length)
+                                  record.log.output.length !== 0
+                                    ? (
+                                      <pre>
+                                        {
+                                          parseEscapedChar(JSON.stringify(record.log.output))
+                                            .substring(1, record.log.output.length)
+                                        }
+                                      </pre>
+                                    )
+                                    : null
                                 }
-                              </pre>
+                              </>
                             )
-                            : null
-                        }
-                      </>
-                    )
-                      : null
-                  }
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        )}
-      />
+                              : null
+                          }
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                )}
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </BaseComponent>
   );
 }
