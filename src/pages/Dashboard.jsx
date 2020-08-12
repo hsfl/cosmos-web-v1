@@ -152,7 +152,7 @@ function Dashboard({
         } else if (json.node_type === 'file') {
           dispatch(set('file_list', json));
         } else if (json.node_type === 'event_queue') {
-          dispatch(set('event_queue', json));
+          dispatch(set('event_queue', json.queue));
         } else if ((realms[id].includes(node) || realms[id].includes(json.node_name)) && ((flightMode === 'true') || (!(flightMode === 'true') && process !== 'soh'))) {
           // Store in realm object
           dispatch(setData(id, {
