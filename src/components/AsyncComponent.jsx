@@ -13,6 +13,7 @@ import Globe from './Dashboard/Globe';
 import Macro from './Dashboard/Macro';
 import MissionEventsDisplay from './Dashboard/MissionEventsDisplay';
 import PacketActivity from './Dashboard/PacketActivity';
+import QueuedEvents from './Dashboard/QueuedEvents';
 import Replacement from './Dashboard/Replacement';
 import SatellitePasses from './Dashboard/SatellitePasses';
 import SetValues from './Dashboard/SetValues';
@@ -40,6 +41,7 @@ export const components = {
   Macro,
   MissionEventsDisplay,
   PacketActivity,
+  QueuedEvents,
   Replacement,
   SatellitePasses,
   SetValues,
