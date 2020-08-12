@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 
@@ -71,6 +71,8 @@ function Chart({
   /** The Y Range */
   const [yAxis, setYAxis] = useState(defaultRange);
 
+  const timer = useRef(null);
+
   /**
    * Use object with keyed time
    * Nested object with key y and value x
@@ -130,6 +132,8 @@ function Chart({
   };
 
   const syncXAxis = (update = false) => {
+    clearTimeout(timer.current);
+
     dispatch(set('xMin', layout.xaxis.range[0]));
     if (update) {
       dispatch(set('xMax', dayjs().utc().format('YYYY-MM-DDTHH:mm:ss')));
@@ -290,16 +294,20 @@ function Chart({
 
   useEffect(() => {
     if (xMin) {
+      layout.xaxis.autorange = false;
       layout.xaxis.range = [xMin, xMax];
-      layout.datarevision += 1;
-      layout.uirevision += 1;
-      setDataRevision(dataRevision + 1);
     } else {
-      layout.xaxis.range = [null, xMax];
-      layout.datarevision += 1;
-      layout.uirevision += 1;
-      setDataRevision(dataRevision + 1);
+      dispatch(set('xMin', xMax));
+      layout.xaxis.range = [xMax, xMax];
     }
+
+    layout.datarevision += 1;
+    layout.uirevision += 1;
+    setDataRevision(dataRevision + 1);
+
+    timer.current = setTimeout(() => {
+      dispatch(set('xMax', dayjs().utc().format('YYYY-MM-DDTHH:mm:ss')));
+    }, 1000);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [xMax]);
 
