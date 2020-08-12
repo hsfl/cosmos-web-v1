@@ -377,6 +377,7 @@ function Dashboard({
     });
 
     dispatch(set('keys', tabStatus));
+
     // Set timeout to let the grid initialize; won't work otherwise.
     setTimeout(() => {
       setLayouts(layout);
@@ -384,6 +385,7 @@ function Dashboard({
       // Initialize JSON editor
       setJsonEdit(JSON.stringify(layout.lg, null, 2));
     }, 100);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [defaultLayout, id, path]);
 
