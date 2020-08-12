@@ -70,7 +70,6 @@ function Dashboard({
   const activities = useSelector((s) => s.activity);
   const keys = useSelector((s) => s.keys);
   const state = useSelector((s) => s.data);
-  const realm = useSelector((s) => s.realm);
 
   /** Store the default page layout in case user wants to switch to it */
   const [defaultPageLayout, setDefaultPageLayout] = useState({
