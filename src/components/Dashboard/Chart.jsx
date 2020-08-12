@@ -308,19 +308,6 @@ function Chart({
       liveOnly
       toolsSlot={(
         <>
-          <Button
-            className="mr-2"
-            onClick={() => {
-              layout.yaxis.range = returnDefaultYAxisRange(defaultYAxis);
-              layout.datarevision += 1;
-              layout.uirevision += 1;
-              setDataRevision(dataRevision + 1);
-            }}
-            disabled={!defaultYAxis}
-            size="small"
-          >
-            Revert Y Axis
-          </Button>
           {
             dataLimitState !== -1 ? (
               <Tag icon={<ExclamationCircleOutlined />} color="warning">
@@ -353,6 +340,21 @@ function Chart({
               setDataRevision(dataRevision + 1);
             }}
           />
+
+          &nbsp;
+
+          <Button
+            onClick={() => {
+              layout.yaxis.range = returnDefaultYAxisRange(defaultYAxis);
+              layout.datarevision += 1;
+              layout.uirevision += 1;
+              setDataRevision(dataRevision + 1);
+            }}
+            disabled={!defaultYAxis}
+            size="small"
+          >
+            Reset Range
+          </Button>
 
           &nbsp;
 
