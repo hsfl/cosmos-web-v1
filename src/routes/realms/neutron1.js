@@ -317,7 +317,7 @@ export default {
       {
         i: 'satellite-neutron1-e',
         x: 3,
-        y: 7,
+        y: 1,
         w: 3,
         h: 7,
         component: {
@@ -381,8 +381,8 @@ export default {
       {
         i: 'satellite-neutron1-f',
         x: 0,
-        y: 14,
-        w: 6,
+        y: 2,
+        w: 12,
         h: 18,
         component: {
           name: 'Chart',
@@ -426,9 +426,9 @@ export default {
       },
       {
         i: 'satellite-default-g',
-        x: 6,
-        y: 14,
-        w: 6,
+        x: 0,
+        y: 3,
+        w: 12,
         h: 18,
         component: {
           name: 'Chart',
@@ -593,8 +593,8 @@ export default {
       {
         i: 'satellite-neutron1-h',
         x: 0,
-        y: 32,
-        w: 6,
+        y: 4,
+        w: 12,
         h: 18,
         component: {
           name: 'Chart',
@@ -624,9 +624,9 @@ export default {
       },
       {
         i: 'satellite-neutron1-i',
-        x: 6,
-        y: 32,
-        w: 6,
+        x: 0,
+        y: 5,
+        w: 12,
         h: 18,
         component: {
           name: 'Chart',
@@ -717,8 +717,8 @@ export default {
       {
         i: 'satellite-neutron1-l',
         x: 0,
-        y: 68,
-        w: 6,
+        y: 6,
+        w: 12,
         h: 18,
         component: {
           name: 'Chart',
@@ -763,9 +763,9 @@ export default {
       },
       {
         i: 'satellite-neutron1-la',
-        x: 6,
-        y: 68,
-        w: 6,
+        x: 0,
+        y: 7,
+        w: 12,
         h: 18,
         component: {
           name: 'Chart',
@@ -795,7 +795,7 @@ export default {
       {
         i: 'satellite-neutron1-m',
         x: 6,
-        y: 86,
+        y: 8,
         w: 6,
         h: 21,
         component: {
@@ -824,7 +824,7 @@ export default {
       {
         i: 'satellite-neutron1-n',
         x: 0,
-        y: 86,
+        y: 8,
         w: 6,
         h: 21,
         component: {
