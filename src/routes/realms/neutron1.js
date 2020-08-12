@@ -7108,14 +7108,24 @@ export default {
         {
           i: 'satellite-neutron1-commands-a',
           x: 0,
-          y: 0,
-          w: 12,
+          y: 1,
+          w: 6,
           h: 10,
           component: {
             name: 'MissionEventsDisplay',
             props: {
               nodes: ['neutron1', 'beagle1'],
             },
+          },
+        },
+        {
+          i: 'satellite-neutron1-commands-ab',
+          x: 6,
+          y: 1,
+          w: 6,
+          h: 10,
+          component: {
+            name: 'QueuedEvents',
           },
         },
         {
