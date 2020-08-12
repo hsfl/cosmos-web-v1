@@ -508,7 +508,7 @@ Chart.propTypes = {
 Chart.defaultProps = {
   name: '',
   defaultYAxis: null,
-  dataLimit: 5000,
+  dataLimit: 1000,
   showZero: false,
   polar: false,
   plots: [],
