@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 
@@ -71,7 +71,7 @@ function Chart({
   /** The Y Range */
   const [yAxis, setYAxis] = useState(defaultRange);
 
-  const timer = useRef(null);
+  // const timer = useRef(null);
 
   /**
    * Use object with keyed time
@@ -131,15 +131,11 @@ function Chart({
     setPlotsState(emptyArr);
   };
 
-  const syncXAxis = (update = false) => {
-    clearTimeout(timer.current);
+  const syncXAxis = () => {
+    // clearTimeout(timer.current);
 
     dispatch(set('xMin', layout.xaxis.range[0]));
-    if (update) {
-      dispatch(set('xMax', dayjs().utc().format('YYYY-MM-DDTHH:mm:ss')));
-    } else {
-      dispatch(set('xMax', layout.xaxis.range[1]));
-    }
+    dispatch(set('xMax', layout.xaxis.range[1]));
   };
 
   /** Handle new data incoming from the Context */
@@ -199,7 +195,8 @@ function Chart({
         layout.datarevision += 1;
         setDataRevision(dataRevision + 1);
 
-        syncXAxis(true);
+        // clearTimeout(timer.current);
+        dispatch(set('xMax', dayjs().utc().format('YYYY-MM-DDTHH:mm:ss')));
       }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -207,6 +204,8 @@ function Chart({
 
   useEffect(() => {
     if (queriedData) {
+      // clearTimeout(timer.current);
+
       plotsState.forEach(({ timeDataKey, YDataKey, processYDataKey }, i) => {
         if (queriedData[YDataKey]) {
           if (queriedData[YDataKey].length === 0 || queriedData[timeDataKey].length === 0) {
@@ -221,7 +220,6 @@ function Chart({
           }
         }
       });
-
       dispatch(incrementQueue());
 
       setLayout({
@@ -294,7 +292,6 @@ function Chart({
 
   useEffect(() => {
     if (xMin) {
-      layout.xaxis.autorange = false;
       layout.xaxis.range = [xMin, xMax];
     } else {
       dispatch(set('xMin', xMax));
@@ -305,9 +302,9 @@ function Chart({
     layout.uirevision += 1;
     setDataRevision(dataRevision + 1);
 
-    timer.current = setTimeout(() => {
-      dispatch(set('xMax', dayjs().utc().format('YYYY-MM-DDTHH:mm:ss')));
-    }, 1000);
+    // timer.current = setTimeout(() => {
+    //   dispatch(set('xMax', dayjs().utc().format('YYYY-MM-DDTHH:mm:ss')));
+    // }, 1000);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [xMax]);
 
