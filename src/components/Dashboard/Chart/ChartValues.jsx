@@ -47,7 +47,7 @@ function ChartValues({
         }
         {
           plots.map((plot, i) => (
-            <span key={`${plot.nodeProcess}${plot.YDataKey}`}>
+            <span key={`${plot.name}${plot.timeDataKey}${plot.processYDataKey.toString()}${plot.nodeProcess}${plot.YDataKey}`}>
               <span
                 className="inline-block rounded-full mr-2 indicator"
                 style={
