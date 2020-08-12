@@ -82,7 +82,7 @@ function DisplayValue({
       }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [displayValues.map((v) => state[v.dataKey])]);
+  }, [state]);
 
   useEffect(() => {
     if (queriedData) {
