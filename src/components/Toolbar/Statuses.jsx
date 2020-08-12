@@ -1,15 +1,53 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 import dayjsPluginUTC from 'dayjs-plugin-utc';
+import { message } from 'antd';
 
+import { useDispatch } from 'react-redux';
+
+import { set } from '../../store/actions';
 import ActivityTable from './ActivityTable';
 import ActivityTime from './ActivityTime';
 import ShowTime from './ShowTime';
 import Downtime from './Downtime';
+import { axios } from '../../api';
 
 dayjs.extend(dayjsPluginUTC);
 
-function Statuses() {
+function Statuses({
+  realm,
+}) {
+  const dispatch = useDispatch();
+
+  /** Query database on page load */
+  useEffect(() => {
+    const initializeQuery = async () => {
+      try {
+        const { data } = await axios.post(`query/${realm}/any`, {
+          query: {},
+          options: {
+            projection: {
+              node_utc: 1,
+              node_downtime: 1,
+            },
+            sort: {
+              node_utc: -1,
+            },
+          },
+        });
+
+        // Send information to redux
+        dispatch(set('lastActivity', data));
+      } catch (err) {
+        message.error('Error initializing page.');
+      }
+    };
+
+    initializeQuery();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [realm]);
+
   return (
     <table>
       <tbody>
@@ -80,5 +118,9 @@ function Statuses() {
     </table>
   );
 }
+
+Statuses.propTypes = {
+  realm: PropTypes.string.isRequired,
+};
 
 export default Statuses;

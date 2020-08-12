@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 
-import { incrementQueue } from '../../store/actions';
 import { getDiff, MJDtoJavaScriptDate } from '../../utility/time';
 
 /**
@@ -10,10 +9,10 @@ import { getDiff, MJDtoJavaScriptDate } from '../../utility/time';
  * from the last data retrieval.
  */
 function ActivityTimer() {
-  const dispatch = useDispatch();
-
   /** Get agent list state from the Context */
   const activities = useSelector((s) => s.activity);
+  /** Last activity from database */
+  const lastActivity = useSelector((s) => s.lastActivity);
   /** List of queried data */
   const queriedData = useSelector((s) => s.queriedData);
   /** The time of the last message */
@@ -30,7 +29,7 @@ function ActivityTimer() {
   /** Retrieve last activity time */
   useEffect(() => {
     if (activities && activities.length > 0) {
-      /** Reset timer and set the new timer */
+      // Reset timer and set the new timer
       clearTimeout(timer.current);
       setElapsed(getDiff(activities[0].time));
       setLastMessage(activities[0].time);
@@ -38,31 +37,26 @@ function ActivityTimer() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activities]);
 
-  /** Upon querying historical data, calculate the last known node activity */
+  /** Initialize activity timer */
   useEffect(() => {
-    if (queriedData) {
-      if (queriedData.node_utc && queriedData.node_utc.length > 0) {
-        const lastNodeUTC = queriedData.node_utc[queriedData.node_utc.length - 1];
-        clearTimeout(timer.current);
-        setElapsed(getDiff(dayjs(MJDtoJavaScriptDate(lastNodeUTC).toISOString())));
-        setLastMessage(dayjs(MJDtoJavaScriptDate(lastNodeUTC).toISOString()));
-      }
-
-      dispatch(incrementQueue());
+    // If there is a last activity
+    if (lastActivity) {
+      // Set last message and elapsed
+      setLastMessage(dayjs(MJDtoJavaScriptDate(lastActivity.node_utc).toISOString()));
+      setElapsed(getDiff(dayjs(MJDtoJavaScriptDate(lastActivity.node_utc).toISOString())));
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [queriedData]);
+  }, [lastActivity]);
 
   /** Increments the timer */
   useEffect(() => {
-    /** Set the 1 second timer */
+    // Set the 1 second timer
     timer.current = setTimeout(() => {
       if (queriedData != null || lastMessage != null) {
         setElapsed(getDiff(lastMessageTimeRef.current));
       }
     }, 900);
 
-    /** Clear timer on unmount */
+    // Clear timer on unmount
     return () => clearTimeout(timer.current);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [elapsed, lastMessage]);
