@@ -22,7 +22,7 @@ function MissionEventsDisplay({
   /** Retrieve data from the Context */
   const live = useSelector((s) => s.data);
   const realm = useSelector((s) => s.realm);
-  const queue = useSelector((s) => s.event_queue);
+  // const queue = useSelector((s) => s.event_queue);
 
   /** The node whose events is displayed */
   const [node, setNode] = useState(nodes[0]);
@@ -31,7 +31,7 @@ function MissionEventsDisplay({
   const [info, setInfo] = useState([]);
 
   /** Event queue state */
-  const [queueState, setQueueState] = useState([]);
+  // const [queueState, setQueueState] = useState([]);
 
   /** Columns in the table for the MED */
   const [columns] = useState([
@@ -52,23 +52,23 @@ function MissionEventsDisplay({
     },
   ]);
 
-  const [queueColumns] = useState([
-    {
-      title: 'Event Name',
-      dataIndex: 'name',
-      key: 'name',
-    },
-    {
-      title: 'Executed',
-      dataIndex: 'exec',
-      key: 'exec',
-    },
-    {
-      title: 'Condition',
-      dataIndex: 'condition',
-      key: 'condition',
-    },
-  ]);
+  // const [queueColumns] = useState([
+  //   {
+  //     title: 'Event Name',
+  //     dataIndex: 'name',
+  //     key: 'name',
+  //   },
+  //   {
+  //     title: 'Executed',
+  //     dataIndex: 'exec',
+  //     key: 'exec',
+  //   },
+  //   {
+  //     title: 'Condition',
+  //     dataIndex: 'condition',
+  //     key: 'condition',
+  //   },
+  // ]);
 
   /**
    * Query the database (node:executed) for event logs.
@@ -120,24 +120,24 @@ function MissionEventsDisplay({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [live]);
 
-  useEffect(() => {
-    if (queue && Object.keys(queue).length !== 0) {
-      try {
-        const json = JSON.parse(queue);
+  // useEffect(() => {
+  //   if (queue && Object.keys(queue).length !== 0) {
+  //     try {
+  //       const json = JSON.parse(queue);
 
-        if (Array.isArray(json)) {
-          setQueueState(json.map((event) => ({
-            name: event.event_name,
-            exec: event.event_utcexec,
-            condition: event.event_condition,
-            log: event,
-          })));
-        }
-      } catch (error) {
-        message.error(error.message);
-      }
-    }
-  }, [queue]);
+  //       if (Array.isArray(json)) {
+  //         setQueueState(json.map((event) => ({
+  //           name: event.event_name,
+  //           exec: event.event_utcexec,
+  //           condition: event.event_condition,
+  //           log: event,
+  //         })));
+  //       }
+  //     } catch (error) {
+  //       message.error(error.message);
+  //     }
+  //   }
+  // }, [queue]);
 
   return (
     <BaseComponent
@@ -173,7 +173,7 @@ function MissionEventsDisplay({
       <table className="w-full">
         <tbody>
           <tr>
-            <td className="w-1/2">
+            <td className="w-full">
               <strong>Executed Events</strong>
               <Table
                 columns={columns}
@@ -224,7 +224,7 @@ function MissionEventsDisplay({
                 )}
               />
             </td>
-            <td className="w-1/2">
+            {/* <td className="w-1/2">
               <strong>Queued Events</strong>
               <Table
                 columns={queueColumns}
@@ -274,7 +274,7 @@ function MissionEventsDisplay({
                   </table>
                 )}
               />
-            </td>
+            </td> */}
           </tr>
         </tbody>
       </table>
