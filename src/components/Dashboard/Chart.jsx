@@ -292,6 +292,9 @@ function Chart({
 
   useEffect(() => {
     if (xMin) {
+      if (typeof xMin !== 'string') {
+        dispatch(set('xMin', xMax));
+      }
       layout.xaxis.range = [xMin, xMax];
     } else {
       dispatch(set('xMin', xMax));
