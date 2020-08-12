@@ -122,12 +122,20 @@ function MissionEventsDisplay({
 
   useEffect(() => {
     if (queue && Object.keys(queue).length !== 0) {
-      setQueueState(queue.map((event) => ({
-        name: event.event_name,
-        exec: event.event_utcexec,
-        condition: event.event_condition,
-        log: event,
-      })));
+      try {
+        const json = JSON.parse(queue);
+
+        if (Array.isArray(json)) {
+          setQueueState(json.map((event) => ({
+            name: event.event_name,
+            exec: event.event_utcexec,
+            condition: event.event_condition,
+            log: event,
+          })));
+        }
+      } catch (error) {
+        message.error(error.message);
+      }
     }
   }, [queue]);
 
