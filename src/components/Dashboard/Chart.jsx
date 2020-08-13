@@ -22,7 +22,7 @@ import {
 import Plot from 'react-plotly.js';
 import { saveAs } from 'file-saver';
 import { useSelector, useDispatch } from 'react-redux';
-import determineLayout from '../../utility/chart';
+import { determineRange, determineLayout } from '../../utility/chart';
 import { set, incrementQueue } from '../../store/actions';
 
 import BaseComponent from '../BaseComponent';
@@ -51,10 +51,8 @@ function Chart({
   const state = useSelector((s) => s.data);
   const xMin = useSelector((s) => s.xMin);
   const xMax = useSelector((s) => s.xMax);
-  // const globalQueue = useSelector((s) => s.globalQueue);
   const realm = useSelector((s) => s.realm);
   const queriedData = useSelector((s) => s.queriedData);
-  // const currentTab = useSelector((s) => s.tab);
 
   /** Storage for global form values */
   const [plotsForm] = Form.useForm();
@@ -68,8 +66,6 @@ function Chart({
   const [layout, setLayout] = useState(determineLayout(defaultRange, dataRevision));
   /** Plot data storage */
   const [plotsState, setPlotsState] = useState(plots);
-  /** The Y Range */
-  const [yAxis, setYAxis] = useState(defaultRange);
 
   // const timer = useRef(null);
 
@@ -279,7 +275,6 @@ function Chart({
       || (fields.YRangeMin.toString()
         && fields.YRangeMax.toString())
     ) {
-      setYAxis([fields.YRangeMin, fields.YRangeMax]);
       layout.yaxis.autorange = false;
       layout.yaxis.range = [fields.YRangeMin, fields.YRangeMax];
       layout.datarevision += 1;
@@ -355,24 +350,11 @@ function Chart({
           <Button
             className="mr-1"
             onClick={() => {
-              layout.yaxis.range = yAxis;
+              layout.yaxis.range = determineRange(defaultRange);
               layout.datarevision += 1;
               setDataRevision(dataRevision + 1);
             }}
-            disabled={!yAxis[0] && !yAxis[1]}
-            size="small"
-          >
-            Reset Range
-          </Button>
-
-          <Button
-            onClick={() => {
-              layout.yaxis.range = returnDefaultYAxisRange(defaultYAxis);
-              layout.datarevision += 1;
-              layout.uirevision += 1;
-              setDataRevision(dataRevision + 1);
-            }}
-            disabled={!defaultYAxis}
+            disabled={!defaultRange && !determineRange(defaultRange)}
             size="small"
           >
             Reset Range
@@ -408,8 +390,6 @@ function Chart({
             initialValues={{
               name,
               dataLimit,
-              YRangeMin: yAxis[0],
-              YRangeMax: yAxis[1],
             }}
           >
             <Form.Item label="Name" name="name" hasFeedback>
@@ -493,7 +473,8 @@ function Chart({
 Chart.propTypes = {
   /** Name of the component to display at the top */
   name: PropTypes.string,
-  defaultRange: PropTypes.arrayOf(PropTypes.number),
+  /** Default range */
+  defaultRange: PropTypes.string,
   /** Specify limit on how many data points can be displayed */
   dataLimit: PropTypes.number,
   /** Ability to show the zero values or not */
@@ -535,7 +516,7 @@ Chart.propTypes = {
 
 Chart.defaultProps = {
   name: '',
-  defaultRange: [null, null],
+  defaultRange: null,
   dataLimit: 500,
   showZero: false,
   polar: false,

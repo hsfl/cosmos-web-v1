@@ -387,7 +387,7 @@ export default {
           name: 'Chart',
           props: {
             name: 'CPU',
-            defaultRange: [0, 5],
+            defaultRange: 'load',
             plots: [
               {
                 x: [],
@@ -433,7 +433,7 @@ export default {
           name: 'Chart',
           props: {
             name: 'Thermal',
-            defaultRange: [0, 80],
+            defaultRange: 'temperature',
             plots: [
               {
                 x: [],
@@ -981,7 +981,7 @@ export default {
             name: 'Chart',
             props: {
               name: 'CPU',
-              defaultRange: [0, 5],
+              defaultRange: 'load',
               plots: [
                 {
                   x: [],
@@ -1173,7 +1173,7 @@ export default {
             name: 'Chart',
             props: {
               name: 'CPU',
-              defaultRange: [0, 5],
+              defaultRange: 'load',
               plots: [
                 {
                   x: [],
@@ -1834,7 +1834,7 @@ export default {
             name: 'Chart',
             props: {
               name: 'Battery',
-              defaultRange: [0, 80],
+              defaultRange: 'temperature',
               plots: [
                 {
                   x: [],
@@ -1920,7 +1920,7 @@ export default {
             name: 'Chart',
             props: {
               name: 'CPU',
-              defaultRange: [0, 80],
+              defaultRange: 'temperature',
               plots: [
                 {
                   x: [],
@@ -2006,7 +2006,7 @@ export default {
             name: 'Chart',
             props: {
               name: 'EPS Bus Temperatures',
-              defaultRange: [0, 80],
+              defaultRange: 'temperature',
               plots: [
                 {
                   x: [],
@@ -2134,7 +2134,7 @@ export default {
             name: 'Chart',
             props: {
               name: 'EPS Solar Panel Tempuratures',
-              defaultRange: [0, 80],
+              defaultRange: 'temperature',
               plots: [
                 {
                   x: [],
@@ -2234,7 +2234,7 @@ export default {
             name: 'Chart',
             props: {
               name: 'Switch Temperature',
-              defaultRange: [0, 80],
+              defaultRange: 'temperature',
               plots: [
                 {
                   x: [],
@@ -2392,7 +2392,7 @@ export default {
             name: 'Chart',
             props: {
               name: 'Switch Temperature',
-              defaultRange: [0, 80],
+              defaultRange: 'temperature',
               plots: [
                 {
                   x: [],
@@ -2465,7 +2465,7 @@ export default {
             name: 'Chart',
             props: {
               name: 'Other Temperatures',
-              defaultRange: [0, 80],
+              defaultRange: 'temperature',
               plots: [
                 {
                   x: [],
@@ -3356,7 +3356,7 @@ export default {
             name: 'Chart',
             props: {
               name: 'Battery Temperature',
-              defaultRange: [0, 80],
+              defaultRange: 'temperature',
               plots: [
                 {
                   x: [],
@@ -3447,7 +3447,7 @@ export default {
             name: 'Chart',
             props: {
               name: 'Battery Percentage',
-              defaultRange: [0, 100],
+              defaultRange: 'percentage',
               plots: [
                 {
                   x: [],
@@ -4121,7 +4121,7 @@ export default {
             name: 'Chart',
             props: {
               name: 'Solar Panel Temperature',
-              defaultRange: [0, 80],
+              defaultRange: 'temperature',
               XDataKey: 'node_utc',
               processXDataKey: (x) => mjdToUTCString(x),
               plots: [

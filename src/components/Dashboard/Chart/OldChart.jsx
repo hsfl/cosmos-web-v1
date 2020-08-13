@@ -24,7 +24,7 @@ import {
 import Plot from 'react-plotly.js';
 import { saveAs } from 'file-saver';
 import { useSelector, useDispatch } from 'react-redux';
-import { determineLayout, returnDefaultYAxisRange } from '../../../utility/chart';
+import determineLayout from '../../../utility/chart';
 import { incrementQueue } from '../../../store/actions';
 
 import BaseComponent from '../../BaseComponent';
@@ -557,7 +557,7 @@ function Chart({
           <Button
             className="mr-2"
             onClick={() => {
-              layout.yaxis.range = returnDefaultYAxisRange(defaultYAxis);
+              layout.yaxis.range = defaultYAxis;
               layout.datarevision += 1;
               layout.uirevision += 1;
               setDataRevision(dataRevision + 1);

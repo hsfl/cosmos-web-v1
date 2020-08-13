@@ -6,7 +6,7 @@ import { ArrowUpOutlined, ArrowDownOutlined, MinusOutlined } from '@ant-design/i
 function PercentDifference({
   percentDifference,
 }) {
-  if (percentDifference > 0) {
+  if (percentDifference && percentDifference > 0) {
     return (
       <strong className="text-green-500">
         <ArrowUpOutlined />
@@ -17,7 +17,7 @@ function PercentDifference({
       </strong>
     );
   // eslint-disable-next-line no-else-return
-  } else if (percentDifference < 0) {
+  } else if (percentDifference && percentDifference < 0) {
     return (
       <strong className="text-red-500">
         <ArrowDownOutlined />
@@ -37,7 +37,11 @@ function PercentDifference({
 }
 
 PercentDifference.propTypes = {
-  percentDifference: PropTypes.string.isRequired,
+  percentDifference: PropTypes.string,
+};
+
+PercentDifference.defaultProps = {
+  percentDifference: null,
 };
 
 export default PercentDifference;

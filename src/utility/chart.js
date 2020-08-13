@@ -1,4 +1,22 @@
-export default function determineLayout(defaultYAxis, dataRevision) {
+export function determineRange(defaultRange) {
+  switch (defaultRange) {
+    case 'load':
+      return [0, 5];
+    case 'temperature':
+      return [0, 80];
+    case 'percent':
+      return [0, 100];
+    case 'epsPercent':
+      return [40, 100];
+    case 'power':
+    case 'powerMode':
+      return [0, 6];
+    default:
+      return null;
+  }
+}
+
+export function determineLayout(defaultRange, dataRevision) {
   const layout = {
     autosize: true,
     uirevision: 0,
@@ -26,8 +44,8 @@ export default function determineLayout(defaultYAxis, dataRevision) {
     },
   };
 
-  if (defaultYAxis) {
-    layout.yaxis.range = defaultYAxis;
+  if (defaultRange) {
+    layout.yaxis.range = determineRange(defaultRange);
     layout.yaxis.autorange = false;
   }
 
