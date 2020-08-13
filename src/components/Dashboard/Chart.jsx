@@ -463,22 +463,12 @@ function Chart({
           showlegend: false,
           modeBarButtonsToRemove: ['resetScale2d', 'lasso2d', 'select2d'],
           displayModeBar: true,
+          doubleClick: 'autosize',
         }}
         layout={layout}
         revision={dataRevision}
         useResizeHandler
         onRelayout={syncXAxis}
-        onDoubleClick={() => {
-          console.log(layout.xaxis.range);
-          // if (layout.xaxis.range) {
-          //   dispatch(set('xMin', layout.xaxis.range[0]));
-          //   if (layout.xaxis.range.length === 1) {
-          //     dispatch(set('xMax', layout.xaxis.range[0]));
-          //   } else {
-          //     dispatch(set('xMax', layout.xaxis.range[layout.xaxis.range.length - 1]));
-          //   }
-          // }
-        }}
       />
       {children}
     </BaseComponent>
