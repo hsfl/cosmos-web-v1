@@ -49,19 +49,24 @@ function DisplayValue({
         || (process.env.FLIGHT_MODE === 'true' && state[realm][v.timeDataKey]))
       ) {
         const data = state[realm][v.dataKey];
-        const value = v.processDataKey(state[realm][v.dataKey]);
+        const value = v.processDataKey(data);
 
         // If it does, change the value
         displayValuesState[i].value = value;
 
-        if (typeof state[realm][v.dataKey] === 'number') {
+        if (typeof data === 'number') {
           const { previousValue } = displayValuesState[i];
 
-          displayValuesState[i].percentDifference = previousValue
-            ? ((Math.abs(data - previousValue) / ((data + previousValue) / 2)) * 100).toFixed(2)
-            : undefined;
+          // Prevent 0/0 case
+          if (data !== previousValue) {
+            displayValuesState[i].percentDifference = previousValue !== undefined
+              ? (((data - previousValue) / ((data + previousValue) / 2)) * 100)
+              : undefined;
+          } else {
+            displayValuesState[i].percentDifference = 0;
+          }
 
-          displayValuesState[i].previousValue = state[realm][v.dataKey];
+          displayValuesState[i].previousValue = data;
         }
 
         // If not in flight mode, use recorded_time to avoid chart jumping
