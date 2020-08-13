@@ -676,7 +676,7 @@ function Dashboard({
               document.title = 'COSMOS Web - Overview';
             }}
           >
-            <MenuTab name="Overview" layout={keys.defaultLayout ? keys.defaultLayout.status : null} />
+            <MenuTab name="Overview" layout={keys.defaultLayout} />
           </Menu.Item>
           {
             Object.keys(tabs).map((tab) => (
@@ -688,7 +688,7 @@ function Dashboard({
                   document.title = `COSMOS Web - ${tab}`;
                 }}
               >
-                <MenuTab name={tab} layout={keys[tab] ? keys[tab].status : null} />
+                <MenuTab name={tab} layout={keys[tab]} />
               </Menu.Item>
             ))
           }
