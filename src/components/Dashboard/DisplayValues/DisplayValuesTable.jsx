@@ -66,14 +66,14 @@ function DisplayValuesTable({
                     { name }
                   </td>
                 </Popover>
-                <td className="pr-2">
-                  <PercentDifference percentDifference={percentDifference} />
-                </td>
                 <td className={`pr-2 ${(dataKeyLowerThreshold || dataKeyUpperThreshold) && ((value <= dataKeyLowerThreshold) || (value >= dataKeyUpperThreshold)) ? 'text-red-700' : ''}`}>
                   {
                       value !== undefined
                         ? `${value}${unit}` : '-'
                     }
+                </td>
+                <td className="pr-2">
+                  <PercentDifference percentDifference={percentDifference} />
                 </td>
                 <td className="text-gray-500">
                   { time || '-' }
