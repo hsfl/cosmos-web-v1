@@ -9,8 +9,11 @@ export default function determineLayout(defaultYAxis, dataRevision) {
     legend: {
       orientation: 'h',
     },
+    modebar: {
+      orientation: 'v',
+    },
     margin: {
-      r: 10,
+      r: 60,
       t: 20,
       b: 15,
     },
