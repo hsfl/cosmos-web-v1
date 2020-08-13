@@ -48,13 +48,19 @@ function DisplayValue({
         && ((!(process.env.FLIGHT_MODE === 'true') && state[realm].recorded_time)
         || (process.env.FLIGHT_MODE === 'true' && state[realm][v.timeDataKey]))
       ) {
+        const data = state[realm][v.dataKey];
         const value = v.processDataKey(state[realm][v.dataKey]);
 
         // If it does, change the value
         displayValuesState[i].value = value;
 
         if (typeof state[realm][v.dataKey] === 'number') {
-          displayValuesState[i].percentDifference = displayValuesState[i].previousValue && typeof displayValuesState[i].previousValue === 'number' ? ((Math.abs(state[realm][v.dataKey] - displayValuesState[i].previousValue) / ((state[realm][v.dataKey] + displayValuesState[i].previousValue) / 2)) * 100).toFixed(2) : undefined;
+          const { previousValue } = displayValuesState[i];
+
+          displayValuesState[i].percentDifference = previousValue
+            ? ((Math.abs(data - previousValue) / ((data + previousValue) / 2)) * 100).toFixed(2)
+            : undefined;
+
           displayValuesState[i].previousValue = state[realm][v.dataKey];
         }
 
