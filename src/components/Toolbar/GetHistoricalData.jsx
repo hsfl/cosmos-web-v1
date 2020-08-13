@@ -55,34 +55,6 @@ function GetHistoricalData({
         projection[key] = 1;
       });
 
-      // If node_downtime or node_utc aren't already included
-      // To populate the activity/downtime in toolbar
-      if (!('node_downtime' in keys.dataKeys)) {
-        query.push({
-          node_downtime: {
-            $gt: dateToMJD(from),
-            $lt: dateToMJD(to),
-          },
-        });
-
-        projection.node_downtime = 1;
-
-        nodeDowntime.node_downtime = {
-          timeDataKey: 'node_utc',
-        };
-      }
-
-      if (!('node_utc' in keys.dataKeys)) {
-        query.push({
-          node_utc: {
-            $gt: dateToMJD(from),
-            $lt: dateToMJD(to),
-          },
-        });
-
-        projection.node_utc = 1;
-      }
-
       try {
         const { data } = await axios.post(`/query/${realm}/any`, {
           multiple: true,

@@ -365,6 +365,21 @@ function Chart({
             Reset Range
           </Button>
 
+          <Button
+            onClick={() => {
+              layout.yaxis.range = returnDefaultYAxisRange(defaultYAxis);
+              layout.datarevision += 1;
+              layout.uirevision += 1;
+              setDataRevision(dataRevision + 1);
+            }}
+            disabled={!defaultYAxis}
+            size="small"
+          >
+            Reset Range
+          </Button>
+
+          &nbsp;
+
           <Popconfirm
             title="Are you sure you want to clear the chart of all values?"
             onConfirm={() => clearAll()}

@@ -48,10 +48,26 @@ function DisplayValue({
         && ((!(process.env.FLIGHT_MODE === 'true') && state[realm].recorded_time)
         || (process.env.FLIGHT_MODE === 'true' && state[realm][v.timeDataKey]))
       ) {
-        const value = v.processDataKey(state[realm][v.dataKey]);
+        const data = state[realm][v.dataKey];
+        const value = v.processDataKey(data);
 
         // If it does, change the value
         displayValuesState[i].value = value;
+
+        if (typeof data === 'number') {
+          const { previousValue } = displayValuesState[i];
+
+          // Prevent 0/0 case
+          if (data !== previousValue) {
+            displayValuesState[i].percentDifference = previousValue !== undefined
+              ? (((data - previousValue) / ((data + previousValue) / 2)) * 100)
+              : undefined;
+          } else {
+            displayValuesState[i].percentDifference = 0;
+          }
+
+          displayValuesState[i].previousValue = data;
+        }
 
         // If not in flight mode, use recorded_time to avoid chart jumping
         if (process.env.FLIGHT_MODE === 'true' && state[realm][v.timeDataKey]) {
@@ -82,7 +98,7 @@ function DisplayValue({
       }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [displayValues.map((v) => state[v.dataKey])]);
+  }, [state]);
 
   useEffect(() => {
     if (queriedData) {

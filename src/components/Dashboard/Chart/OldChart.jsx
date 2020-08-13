@@ -24,14 +24,14 @@ import {
 import Plot from 'react-plotly.js';
 import { saveAs } from 'file-saver';
 import { useSelector, useDispatch } from 'react-redux';
-import determineLayout from '../../../utility/chart';
+import { determineLayout, returnDefaultYAxisRange } from '../../../utility/chart';
 import { incrementQueue } from '../../../store/actions';
 
 import BaseComponent from '../../BaseComponent';
 import ChartValues from './ChartValues';
 
 import { axios } from '../../../api';
-import { mjdToString, dateToMJD } from '../../../utility/time';
+import { mjdToUTCString, dateToMJD } from '../../../utility/time';
 
 const { RangePicker } = DatePicker;
 const { Panel } = Collapse;
@@ -51,7 +51,6 @@ function Chart({
   showZero,
   polar,
   children,
-  height,
 }) {
   const dispatch = useDispatch();
 
@@ -61,6 +60,7 @@ function Chart({
   // const globalQueue = useSelector((s) => s.globalQueue);
   const realm = useSelector((s) => s.realm);
   const queriedData = useSelector((s) => s.queriedData);
+  // const currentTab = useSelector((s) => s.tab);
 
   /** Storage for global form values */
   const [plotsForm] = Form.useForm();
@@ -199,9 +199,9 @@ function Chart({
           // Check if polar or not
           if (polar) {
             if (process.env.FLIGHT_MODE === 'true' && state[realm][p.timeDataKey]) {
-              plotsState[i].r.push(mjdToString(state[realm][p.timeDataKey]));
+              plotsState[i].r.push(mjdToUTCString(state[realm][p.timeDataKey]));
             } else {
-              plotsState[i].r.push(mjdToString(state[realm].recorded_time));
+              plotsState[i].r.push(mjdToUTCString(state[realm].recorded_time));
             }
 
             plotsState[i]
@@ -213,9 +213,9 @@ function Chart({
               );
           } else {
             if (process.env.FLIGHT_MODE === 'true' && state[realm][p.timeDataKey]) {
-              plotsState[i].x.push(mjdToString(state[realm][p.timeDataKey]));
+              plotsState[i].x.push(mjdToUTCString(state[realm][p.timeDataKey]));
             } else {
-              plotsState[i].x.push(mjdToString(state[realm].recorded_time));
+              plotsState[i].x.push(mjdToUTCString(state[realm].recorded_time));
             }
 
             plotsState[i]
@@ -293,7 +293,7 @@ function Chart({
           // Insert past data into chart
           data.forEach((d) => {
             if (showZero || (!showZero && d[plotsState[plot.YDataKey]])) {
-              plotsState[plot].x.push(mjdToString(d[timeDataKey]));
+              plotsState[plot].x.push(mjdToUTCString(d[timeDataKey]));
               plotsState[plot]
                 .y
                 .push(
@@ -369,7 +369,7 @@ function Chart({
           } else {
             message.success(`Retrieved ${queriedData[YDataKey].length} records in ${YDataKey}/${timeDataKey}.`);
 
-            plotsState[i].x = queriedData[timeDataKey].map((x) => mjdToString(x));
+            plotsState[i].x = queriedData[timeDataKey].map((x) => mjdToUTCString(x));
             plotsState[i].y = processYDataKey
               ? queriedData[YDataKey].map((y) => processYDataKey(y))
               : queriedData[YDataKey];
@@ -386,7 +386,7 @@ function Chart({
 
       setDataRevision(dataRevision + 1);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [queriedData]);
 
   /** Process edit value form */
@@ -534,9 +534,9 @@ function Chart({
     const fields = plotsForm.getFieldsValue();
 
     if ((fields.YRangeMin
-          && fields.YRangeMax)
-          || (fields.YRangeMin.toString()
-          && fields.YRangeMax.toString())
+      && fields.YRangeMax)
+      || (fields.YRangeMin.toString()
+        && fields.YRangeMax.toString())
     ) {
       layout.yaxis.range = [fields.YRangeMin, fields.YRangeMax];
       layout.datarevision += 1;
@@ -552,13 +552,12 @@ function Chart({
       name={nameState}
       subheader={<ChartValues plots={plotsState} />}
       liveOnly
-      height={height}
       toolsSlot={(
         <>
           <Button
             className="mr-2"
             onClick={() => {
-              layout.yaxis.range = defaultYAxis;
+              layout.yaxis.range = returnDefaultYAxisRange(defaultYAxis);
               layout.datarevision += 1;
               layout.uirevision += 1;
               setDataRevision(dataRevision + 1);
@@ -1046,12 +1045,13 @@ function Chart({
 }
 
 Chart.propTypes = {
-  /** Name of the component to display at the time */
+  /** Name of the component to display at the top */
   name: PropTypes.string,
+  /** Axis range view of the chart */
   defaultYAxis: PropTypes.string,
-  /** Specify limit on how many data points can be displayed */
+  /** Specify limit on how many data points can be displayed per key */
   dataLimit: PropTypes.number,
-  /** Show the zero values or not */
+  /** Ability to show the zero values or not */
   showZero: PropTypes.bool,
   /** Plot options for each chart */
   plots: PropTypes.arrayOf(
@@ -1076,6 +1076,8 @@ Chart.propTypes = {
       YDataKey: PropTypes.string,
       /** Function to modify the Y Data key */
       processYDataKey: PropTypes.func,
+      /** Time data key of Y Data Key */
+      timeDataKey: PropTypes.string,
       /** Whether the chart displays live values */
       live: PropTypes.bool,
     }),
@@ -1084,7 +1086,6 @@ Chart.propTypes = {
   polar: PropTypes.bool,
   /** Children node */
   children: PropTypes.node,
-  height: PropTypes.number.isRequired,
 };
 
 Chart.defaultProps = {
