@@ -350,7 +350,6 @@ function Chart({
           <Button
             className="mr-1"
             onClick={() => {
-              console.log(defaultRange);
               layout.yaxis.autorange = false;
               layout.yaxis.range = determineRange(defaultRange);
               layout.datarevision += 1;
