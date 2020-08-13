@@ -53,12 +53,8 @@ function DisplayValue({
         // If it does, change the value
         displayValuesState[i].value = value;
 
-        if (displayValuesState[i].percentDifference === undefined) {
-          displayValuesState[i].percentDifference = '-';
-        }
-
         if (typeof state[realm][v.dataKey] === 'number') {
-          displayValuesState[i].percentDifference = displayValuesState[i].previousValue && typeof displayValuesState[i].previousValue === 'number' ? ((Math.abs(state[realm][v.dataKey] - displayValuesState[i].previousValue) / ((state[realm][v.dataKey] + displayValuesState[i].previousValue) / 2)) * 100).toFixed(2) : 0;
+          displayValuesState[i].percentDifference = displayValuesState[i].previousValue && typeof displayValuesState[i].previousValue === 'number' ? ((Math.abs(state[realm][v.dataKey] - displayValuesState[i].previousValue) / ((state[realm][v.dataKey] + displayValuesState[i].previousValue) / 2)) * 100).toFixed(2) : undefined;
           displayValuesState[i].previousValue = state[realm][v.dataKey];
         }
 

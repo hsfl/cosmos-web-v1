@@ -69,7 +69,7 @@ function DisplayValuesTable({
                 </Popover>
                 <td className={`pr-2 ${percentDifference >= 0 ? 'text-green-500' : 'text-red-500'}`}>
                   {
-                    typeof Number(percentDifference) === 'number' ? (
+                    percentDifference && typeof Number(percentDifference) === 'number' ? (
                       <>
                         {
                           percentDifference >= 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />
