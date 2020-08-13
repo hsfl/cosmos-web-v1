@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
-
 import { Popover } from 'antd';
+import PercentDifference from './PercentDifference';
 
 function DisplayValuesTable({
   displayValues,
@@ -67,20 +66,8 @@ function DisplayValuesTable({
                     { name }
                   </td>
                 </Popover>
-                <td className={`pr-2 ${percentDifference >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                  {
-                    percentDifference !== undefined ? (
-                      <>
-                        {
-                          percentDifference >= 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />
-                        }
-                        <strong>
-                          { percentDifference.toFixed(2) }
-                          %
-                        </strong>
-                      </>
-                    ) : '-'
-                  }
+                <td className="pr-2">
+                  <PercentDifference percentDifference={percentDifference} />
                 </td>
                 <td className={`pr-2 ${(dataKeyLowerThreshold || dataKeyUpperThreshold) && ((value <= dataKeyLowerThreshold) || (value >= dataKeyUpperThreshold)) ? 'text-red-700' : ''}`}>
                   {
