@@ -1,6 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
+
+import { Popover } from 'antd';
+
 function DisplayValuesTable({
   displayValues,
 }) {
@@ -15,23 +19,74 @@ function DisplayValuesTable({
             displayValues.map((
               {
                 name,
+                nodeProcess,
+                dataKey,
+                processDataKey,
                 dataKeyLowerThreshold,
                 dataKeyUpperThreshold,
+                timeDataKey,
                 value,
+                percentDifference,
                 unit,
                 time,
               },
-              i,
             ) => (
-              <tr key={JSON.stringify(displayValues[i])}>
-                <td className="pr-2 text-gray-500 text-right">
-                  { name }
+              <tr className="whitespace-no-wrap" key={`${name}${nodeProcess}${dataKey}${timeDataKey}${processDataKey.toString()}${unit}`}>
+                <Popover
+                  className="cursor-pointer"
+                  title={name}
+                  trigger="click"
+                  placement="left"
+                  content={(
+                    <>
+                      <div className="text-xs text-gray-500">
+                        Node
+                      </div>
+                      { nodeProcess }
+                      <div className="text-xs text-gray-500 pt-2">
+                        Namespace Key
+                      </div>
+                      { dataKey }
+                      <div className="text-xs text-gray-500 pt-2">
+                        Namespace Time Key
+                      </div>
+                      { timeDataKey }
+                      <div className="text-xs text-gray-500 pt-2">
+                        Limits
+                      </div>
+                      { dataKeyLowerThreshold || '-∞' }
+                      &nbsp;
+                      &le;&nbsp;
+                      x&nbsp;
+                      &le;&nbsp;
+                      { dataKeyUpperThreshold || '∞' }
+                    </>
+                  )}
+                >
+                  <td className="pr-2 text-gray-500 text-right">
+                    { name }
+                  </td>
+                </Popover>
+                <td className={`pr-2 ${percentDifference >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                  {
+                    typeof Number(percentDifference) === 'number' ? (
+                      <>
+                        {
+                          percentDifference >= 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />
+                        }
+                        <strong>
+                          { percentDifference }
+                          %
+                        </strong>
+                      </>
+                    ) : '-'
+                  }
                 </td>
                 <td className={`pr-2 ${(dataKeyLowerThreshold || dataKeyUpperThreshold) && ((value <= dataKeyLowerThreshold) || (value >= dataKeyUpperThreshold)) ? 'text-red-700' : ''}`}>
                   {
-                    value !== undefined
-                      ? `${value}${unit}` : '-'
-                  }
+                      value !== undefined
+                        ? `${value}${unit}` : '-'
+                    }
                 </td>
                 <td className="text-gray-500">
                   { time || '-' }

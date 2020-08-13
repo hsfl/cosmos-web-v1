@@ -128,10 +128,10 @@ export default {
             name: 'Event Triggers',
             displayValues: [
               {
-                name: 'Last Event Name',
+                name: 'Last Event',
                 nodeProcess: 'any',
                 dataKey: 'node_lastevent',
-                timeDataKey: 'node_utc',
+                timeDataKey: 'node_lasteventutc',
                 unit: '',
                 processDataKey: (x) => x,
               },
@@ -7108,7 +7108,7 @@ export default {
         {
           i: 'satellite-neutron1-commands-a',
           x: 0,
-          y: 0,
+          y: 1,
           w: 12,
           h: 10,
           component: {
@@ -7116,6 +7116,16 @@ export default {
             props: {
               nodes: ['neutron1', 'beagle1'],
             },
+          },
+        },
+        {
+          i: 'satellite-neutron1-commands-ab',
+          x: 0,
+          y: 2,
+          w: 12,
+          h: 10,
+          component: {
+            name: 'QueuedEvents',
           },
         },
         {
