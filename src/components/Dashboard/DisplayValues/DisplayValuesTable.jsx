@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
+
 import { Popover } from 'antd';
 
 function DisplayValuesTable({
@@ -24,11 +26,12 @@ function DisplayValuesTable({
                 dataKeyUpperThreshold,
                 timeDataKey,
                 value,
+                percentDifference,
                 unit,
                 time,
               },
             ) => (
-              <tr key={`${name}${nodeProcess}${dataKey}${timeDataKey}${processDataKey.toString()}${unit}`}>
+              <tr className="whitespace-no-wrap" key={`${name}${nodeProcess}${dataKey}${timeDataKey}${processDataKey.toString()}${unit}`}>
                 <Popover
                   className="cursor-pointer"
                   title={name}
@@ -64,6 +67,21 @@ function DisplayValuesTable({
                     { name }
                   </td>
                 </Popover>
+                <td className={`pr-2 ${percentDifference >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                  {
+                    typeof Number(percentDifference) === 'number' ? (
+                      <>
+                        {
+                          percentDifference >= 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />
+                        }
+                        <strong>
+                          { percentDifference }
+                          %
+                        </strong>
+                      </>
+                    ) : '-'
+                  }
+                </td>
                 <td className={`pr-2 ${(dataKeyLowerThreshold || dataKeyUpperThreshold) && ((value <= dataKeyLowerThreshold) || (value >= dataKeyUpperThreshold)) ? 'text-red-700' : ''}`}>
                   {
                       value !== undefined
