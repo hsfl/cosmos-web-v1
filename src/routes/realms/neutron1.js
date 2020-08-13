@@ -316,7 +316,7 @@ export default {
       {
         i: 'satellite-neutron1-e',
         x: 3,
-        y: 7,
+        y: 1,
         w: 3,
         h: 7,
         component: {
@@ -380,14 +380,14 @@ export default {
       {
         i: 'satellite-neutron1-f',
         x: 0,
-        y: 14,
-        w: 6,
+        y: 2,
+        w: 12,
         h: 18,
         component: {
           name: 'Chart',
           props: {
             name: 'CPU',
-            defaultYAxis: 'load',
+            defaultRange: 'load',
             plots: [
               {
                 x: [],
@@ -425,15 +425,15 @@ export default {
       },
       {
         i: 'satellite-default-g',
-        x: 6,
-        y: 14,
-        w: 6,
+        x: 0,
+        y: 3,
+        w: 12,
         h: 18,
         component: {
           name: 'Chart',
           props: {
             name: 'Thermal',
-            defaultYAxis: 'temperature',
+            defaultRange: 'temperature',
             plots: [
               {
                 x: [],
@@ -592,8 +592,8 @@ export default {
       {
         i: 'satellite-neutron1-h',
         x: 0,
-        y: 32,
-        w: 6,
+        y: 4,
+        w: 12,
         h: 18,
         component: {
           name: 'Chart',
@@ -623,9 +623,9 @@ export default {
       },
       {
         i: 'satellite-neutron1-i',
-        x: 6,
-        y: 32,
-        w: 6,
+        x: 0,
+        y: 5,
+        w: 12,
         h: 18,
         component: {
           name: 'Chart',
@@ -716,8 +716,8 @@ export default {
       {
         i: 'satellite-neutron1-l',
         x: 0,
-        y: 68,
-        w: 6,
+        y: 6,
+        w: 12,
         h: 18,
         component: {
           name: 'Chart',
@@ -762,9 +762,9 @@ export default {
       },
       {
         i: 'satellite-neutron1-la',
-        x: 6,
-        y: 68,
-        w: 6,
+        x: 0,
+        y: 7,
+        w: 12,
         h: 18,
         component: {
           name: 'Chart',
@@ -794,7 +794,7 @@ export default {
       {
         i: 'satellite-neutron1-m',
         x: 6,
-        y: 86,
+        y: 8,
         w: 6,
         h: 21,
         component: {
@@ -823,7 +823,7 @@ export default {
       {
         i: 'satellite-neutron1-n',
         x: 0,
-        y: 86,
+        y: 8,
         w: 6,
         h: 21,
         component: {
@@ -981,7 +981,7 @@ export default {
             name: 'Chart',
             props: {
               name: 'CPU',
-              defaultYAxis: 'load',
+              defaultRange: 'load',
               plots: [
                 {
                   x: [],
@@ -1173,7 +1173,7 @@ export default {
             name: 'Chart',
             props: {
               name: 'CPU',
-              defaultYAxis: 'load',
+              defaultRange: 'load',
               plots: [
                 {
                   x: [],
@@ -1834,7 +1834,7 @@ export default {
             name: 'Chart',
             props: {
               name: 'Battery',
-              defaultYAxis: 'temperature',
+              defaultRange: 'temperature',
               plots: [
                 {
                   x: [],
@@ -1920,7 +1920,7 @@ export default {
             name: 'Chart',
             props: {
               name: 'CPU',
-              defaultYAxis: 'temperature',
+              defaultRange: 'temperature',
               plots: [
                 {
                   x: [],
@@ -2006,7 +2006,7 @@ export default {
             name: 'Chart',
             props: {
               name: 'EPS Bus Temperatures',
-              defaultYAxis: 'temperature',
+              defaultRange: 'temperature',
               plots: [
                 {
                   x: [],
@@ -2134,7 +2134,7 @@ export default {
             name: 'Chart',
             props: {
               name: 'EPS Solar Panel Tempuratures',
-              defaultYAxis: 'temperature',
+              defaultRange: 'temperature',
               plots: [
                 {
                   x: [],
@@ -2234,7 +2234,7 @@ export default {
             name: 'Chart',
             props: {
               name: 'Switch Temperature',
-              defaultYAxis: 'temperature',
+              defaultRange: 'temperature',
               plots: [
                 {
                   x: [],
@@ -2392,7 +2392,7 @@ export default {
             name: 'Chart',
             props: {
               name: 'Switch Temperature',
-              defaultYAxis: 'temperature',
+              defaultRange: 'temperature',
               plots: [
                 {
                   x: [],
@@ -2465,7 +2465,7 @@ export default {
             name: 'Chart',
             props: {
               name: 'Other Temperatures',
-              defaultYAxis: 'temperature',
+              defaultRange: 'temperature',
               plots: [
                 {
                   x: [],
@@ -3356,7 +3356,7 @@ export default {
             name: 'Chart',
             props: {
               name: 'Battery Temperature',
-              defaultYAxis: 'temperature',
+              defaultRange: 'temperature',
               plots: [
                 {
                   x: [],
@@ -3446,8 +3446,8 @@ export default {
           component: {
             name: 'Chart',
             props: {
-              name: 'Batt %age',
-              defaultYAxis: 'batteryCharge',
+              name: 'Battery Percentage',
+              defaultRange: 'percentage',
               plots: [
                 {
                   x: [],
@@ -3457,7 +3457,7 @@ export default {
                   marker: {
                     color: 'red',
                   },
-                  name: 'Batt %age',
+                  name: 'Batt %',
                   YDataKey: 'device_batt_percentage_000',
                   timeDataKey: 'device_batt_utc_000',
                   processYDataKey: (x) => (x * 100).toFixed(4),
@@ -4121,7 +4121,7 @@ export default {
             name: 'Chart',
             props: {
               name: 'Solar Panel Temperature',
-              defaultYAxis: 'temperature',
+              defaultRange: 'temperature',
               XDataKey: 'node_utc',
               processXDataKey: (x) => mjdToUTCString(x),
               plots: [

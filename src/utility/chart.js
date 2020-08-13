@@ -1,17 +1,22 @@
-export function returnDefaultYAxisRange(defaultYAxis) {
-  switch (defaultYAxis) {
-    case 'temperature':
-      return [0, 80];
+export function determineRange(defaultRange) {
+  switch (defaultRange) {
     case 'load':
       return [0, 5];
-    case 'batteryCharge':
-      return [0, 110];
+    case 'temperature':
+      return [0, 80];
+    case 'percent':
+      return [0, 100];
+    case 'epsPercent':
+      return [40, 100];
+    case 'power':
+    case 'powerMode':
+      return [0, 6];
     default:
       return null;
   }
 }
 
-export function determineLayout(defaultYAxis, dataRevision) {
+export function determineLayout(defaultRange, dataRevision) {
   const layout = {
     autosize: true,
     uirevision: 0,
@@ -22,12 +27,16 @@ export function determineLayout(defaultYAxis, dataRevision) {
     legend: {
       orientation: 'h',
     },
+    modebar: {
+      orientation: 'v',
+    },
     margin: {
-      r: 10,
+      r: 60,
       t: 20,
       b: 15,
     },
     xaxis: {
+      autorange: false,
       fixedrange: false,
     },
     yaxis: {
@@ -35,9 +44,8 @@ export function determineLayout(defaultYAxis, dataRevision) {
     },
   };
 
-  const range = returnDefaultYAxisRange(defaultYAxis);
-  if (range) {
-    layout.yaxis.range = range;
+  if (defaultRange) {
+    layout.yaxis.range = determineRange(defaultRange);
     layout.yaxis.autorange = false;
   }
 

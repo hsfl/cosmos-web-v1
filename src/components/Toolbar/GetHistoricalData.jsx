@@ -106,6 +106,8 @@ function GetHistoricalData({
         }
 
         dispatch(set('queriedData', fields));
+        dispatch(set('xMin', from.format('YYYY-MM-DDTHH:mm:ss')));
+        dispatch(set('xMax', to.format('YYYY-MM-DDTHH:mm:ss')));
       } catch (error) {
         message.destroy();
         message.error(error.message);

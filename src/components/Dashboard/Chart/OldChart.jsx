@@ -24,7 +24,7 @@ import {
 import Plot from 'react-plotly.js';
 import { saveAs } from 'file-saver';
 import { useSelector, useDispatch } from 'react-redux';
-import { determineLayout, returnDefaultYAxisRange } from '../../../utility/chart';
+import determineLayout from '../../../utility/chart';
 import { incrementQueue } from '../../../store/actions';
 
 import BaseComponent from '../../BaseComponent';
@@ -189,7 +189,7 @@ function Chart({
       // Upon context change, see if changes affect this chart's values
       if (state && realm && state[realm]
         && ((!(process.env.FLIGHT_MODE === 'true') && state[realm].recorded_time)
-          || (process.env.FLIGHT_MODE === 'true' && state[realm][p.timeDataKey]))
+        || (process.env.FLIGHT_MODE === 'true' && state[realm][p.timeDataKey]))
         && state[realm][p.YDataKey] != null
         && p.live
       ) {
@@ -557,7 +557,7 @@ function Chart({
           <Button
             className="mr-2"
             onClick={() => {
-              layout.yaxis.range = returnDefaultYAxisRange(defaultYAxis);
+              layout.yaxis.range = defaultYAxis;
               layout.datarevision += 1;
               layout.uirevision += 1;
               setDataRevision(dataRevision + 1);
@@ -730,7 +730,7 @@ function Chart({
                     extra={(
                       <div
                         onClick={(event) => event.stopPropagation()}
-                        onKeyDown={() => { }}
+                        onKeyDown={() => {}}
                         role="button"
                         tabIndex={0}
                       >
@@ -751,7 +751,7 @@ function Chart({
                         <span
                           role="button"
                           tabIndex={0}
-                          onKeyDown={() => { }}
+                          onKeyDown={() => {}}
                           onClick={(event) => {
                             event.stopPropagation();
 

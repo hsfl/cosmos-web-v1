@@ -22,8 +22,8 @@ import {
 import Plot from 'react-plotly.js';
 import { saveAs } from 'file-saver';
 import { useSelector, useDispatch } from 'react-redux';
-import { determineLayout, returnDefaultYAxisRange } from '../../utility/chart';
-import { incrementQueue } from '../../store/actions';
+import { determineRange, determineLayout } from '../../utility/chart';
+import { set, incrementQueue } from '../../store/actions';
 
 import BaseComponent from '../BaseComponent';
 import ChartValues from './Chart/ChartValues';
@@ -38,7 +38,7 @@ import { mjdToUTCString, dateToMJD } from '../../utility/time';
  */
 function Chart({
   name,
-  defaultYAxis,
+  defaultRange,
   dataLimit,
   plots,
   showZero,
@@ -49,17 +49,13 @@ function Chart({
 
   /** Accessing the neutron1 node process context and drilling down */
   const state = useSelector((s) => s.data);
-  // const globalHistoricalDate = useSelector((s) => s.globalHistoricalDate);
-  // const globalQueue = useSelector((s) => s.globalQueue);
+  const xMin = useSelector((s) => s.xMin);
+  const xMax = useSelector((s) => s.xMax);
   const realm = useSelector((s) => s.realm);
   const queriedData = useSelector((s) => s.queriedData);
-  // const currentTab = useSelector((s) => s.tab);
 
   /** Storage for global form values */
   const [plotsForm] = Form.useForm();
-  /** Form for editing values */
-  const [editForm] = Form.useForm();
-
   /** The state that manages the component's title */
   const [nameState, setNameState] = useState(name);
   /** Specify a limit on the number of data poitns displayed */
@@ -67,11 +63,11 @@ function Chart({
   /** Counter determining when the plot should be updated */
   const [dataRevision, setDataRevision] = useState(0);
   /** Layout parameters for the plot */
-  const [layout, setLayout] = useState(determineLayout(defaultYAxis, dataRevision));
+  const [layout, setLayout] = useState(determineLayout(defaultRange, dataRevision));
   /** Plot data storage */
   const [plotsState, setPlotsState] = useState(plots);
-  /** Variable to update to force component update */
-  const [updateComponent, setUpdateComponent] = useState(false);
+
+  // const timer = useRef(null);
 
   /**
    * Use object with keyed time
@@ -131,6 +127,13 @@ function Chart({
     setPlotsState(emptyArr);
   };
 
+  const syncXAxis = () => {
+    // clearTimeout(timer.current);
+
+    dispatch(set('xMin', layout.xaxis.range[0]));
+    dispatch(set('xMax', layout.xaxis.range[1]));
+  };
+
   /** Handle new data incoming from the Context */
   useEffect(() => {
     plotsState.forEach((p, i) => {
@@ -180,13 +183,16 @@ function Chart({
         // If so, shift out the #points in the graph - #data limit oldest values
         const dataPoints = plotsState[i].y.length;
         if (dataPoints >= dataLimitState && dataLimitState !== -1) {
-          plotsState[i].x.splice(0, dataPoints - dataLimitState + 1);
-          plotsState[i].y.splice(0, dataPoints - dataLimitState + 1);
+          plotsState[i].x.splice(dataPoints - dataLimitState + 1, dataPoints + 1);
+          plotsState[i].y.splice(dataPoints - dataLimitState + 1, dataPoints + 1);
         }
 
         // Trigger the chart to update
         layout.datarevision += 1;
         setDataRevision(dataRevision + 1);
+
+        // clearTimeout(timer.current);
+        dispatch(set('xMax', dayjs().utc().format('YYYY-MM-DDTHH:mm:ss')));
       }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -194,6 +200,8 @@ function Chart({
 
   useEffect(() => {
     if (queriedData) {
+      // clearTimeout(timer.current);
+
       plotsState.forEach(({ timeDataKey, YDataKey, processYDataKey }, i) => {
         if (queriedData[YDataKey]) {
           if (queriedData[YDataKey].length === 0 || queriedData[timeDataKey].length === 0) {
@@ -208,7 +216,6 @@ function Chart({
           }
         }
       });
-
       dispatch(incrementQueue());
 
       setLayout({
@@ -224,7 +231,7 @@ function Chart({
   /** Process edit value form */
   const processForm = (id) => {
     // Destructure form, field, index to retrieve changed field
-    const [form, field, index] = id.split('_');
+    const [form, field] = id.split('_');
     // Check type of form
     if (form === 'plotsForm') {
       const fields = plotsForm.getFieldsValue();
@@ -237,47 +244,23 @@ function Chart({
           setDataLimitState(fields.dataLimit);
           break;
         case 'globalChartMode':
-          setPlotsState(plotsState.map((value, i) => {
-            editForm.setFieldsValue({
-              [`mode_${i}`]: fields.globalChartMode,
-            });
-
-            return {
-              x: value.x,
-              y: value.y,
-              name: value.name,
-              nodeProcess: value.nodeProcess,
-              YDataKey: value.YDataKey,
-              timeDataKey: value.timeDataKey,
-              processYDataKey: value.processYDataKey,
-              type: value.type,
-              mode: fields.globalChartMode,
-              live: value.live,
-              marker: value.marker,
-            };
-          }));
+          setPlotsState(plotsState.map((value) => ({
+            x: value.x,
+            y: value.y,
+            name: value.name,
+            nodeProcess: value.nodeProcess,
+            YDataKey: value.YDataKey,
+            timeDataKey: value.timeDataKey,
+            processYDataKey: value.processYDataKey,
+            type: value.type,
+            mode: fields.globalChartMode,
+            live: value.live,
+            marker: value.marker,
+          })));
           break;
         default:
           break;
       }
-    } else if (form === 'editForm') {
-      // Update edit form values
-      const fields = editForm.getFieldsValue();
-
-      switch (field) {
-        case 'processYDataKey':
-          plotsState[index][field] = new Function('x', fields[`${field}_${index}`]); // eslint-disable-line no-new-func
-          break;
-        case 'marker':
-          plotsState[index][field].color = fields[`${field}_${index}`];
-          break;
-        default:
-          plotsState[index][field] = fields[`${field}_${index}`];
-          break;
-      }
-
-      // Update state since we mutate it by modifying plotsState
-      setUpdateComponent(!updateComponent);
     }
   };
 
@@ -288,10 +271,11 @@ function Chart({
     const fields = plotsForm.getFieldsValue();
 
     if ((fields.YRangeMin
-          && fields.YRangeMax)
-          || (fields.YRangeMin.toString()
-          && fields.YRangeMax.toString())
+      && fields.YRangeMax)
+      || (fields.YRangeMin.toString()
+        && fields.YRangeMax.toString())
     ) {
+      layout.yaxis.autorange = false;
       layout.yaxis.range = [fields.YRangeMin, fields.YRangeMax];
       layout.datarevision += 1;
       layout.uirevision += 1;
@@ -300,6 +284,27 @@ function Chart({
       message.error('Fill in the range fields.');
     }
   };
+
+  useEffect(() => {
+    if (xMin) {
+      if (typeof xMin !== 'string') {
+        dispatch(set('xMin', xMax));
+      }
+      layout.xaxis.range = [xMin, xMax];
+    } else {
+      dispatch(set('xMin', xMax));
+      layout.xaxis.range = [xMax, xMax];
+    }
+
+    layout.datarevision += 1;
+    layout.uirevision += 1;
+    setDataRevision(dataRevision + 1);
+
+    // timer.current = setTimeout(() => {
+    //   dispatch(set('xMax', dayjs().utc().format('YYYY-MM-DDTHH:mm:ss')));
+    // }, 1000);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [xMax]);
 
   return (
     <BaseComponent
@@ -342,15 +347,16 @@ function Chart({
           />
 
           &nbsp;
-
           <Button
+            className="mr-1"
             onClick={() => {
-              layout.yaxis.range = returnDefaultYAxisRange(defaultYAxis);
+              layout.yaxis.autorange = false;
+              layout.yaxis.range = determineRange(defaultRange);
               layout.datarevision += 1;
               layout.uirevision += 1;
               setDataRevision(dataRevision + 1);
             }}
-            disabled={!defaultYAxis}
+            disabled={!defaultRange && !determineRange(defaultRange)}
             size="small"
           >
             Reset Range
@@ -439,7 +445,6 @@ function Chart({
               </Select>
             </Form.Item>
           </Form>
-          <br />
         </>
       )}
     >
@@ -453,10 +458,14 @@ function Chart({
             filename: `${name.replace(/ /g, '-').toLowerCase()}-${new Date(Date.now()).toISOString()}`,
           },
           showlegend: false,
+          modeBarButtonsToRemove: ['resetScale2d', 'lasso2d', 'select2d'],
+          displayModeBar: true,
+          doubleClick: 'autosize',
         }}
         layout={layout}
         revision={dataRevision}
         useResizeHandler
+        onRelayout={syncXAxis}
       />
       {children}
     </BaseComponent>
@@ -466,9 +475,9 @@ function Chart({
 Chart.propTypes = {
   /** Name of the component to display at the top */
   name: PropTypes.string,
-  /** Axis range view of the chart */
-  defaultYAxis: PropTypes.string,
-  /** Specify limit on how many data points can be displayed per key */
+  /** Default range */
+  defaultRange: PropTypes.string,
+  /** Specify limit on how many data points can be displayed */
   dataLimit: PropTypes.number,
   /** Ability to show the zero values or not */
   showZero: PropTypes.bool,
@@ -509,8 +518,8 @@ Chart.propTypes = {
 
 Chart.defaultProps = {
   name: '',
-  defaultYAxis: null,
-  dataLimit: 1000,
+  defaultRange: null,
+  dataLimit: 500,
   showZero: false,
   polar: false,
   plots: [],
