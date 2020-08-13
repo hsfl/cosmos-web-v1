@@ -3208,6 +3208,14 @@ export default {
                   processDataKey: (x) => powerMode(x),
                 },
                 {
+                  name: 'Pwr Mode #',
+                  nodeProcess: 'any',
+                  timeDataKey: 'node_utc',
+                  dataKey: 'node_powmode',
+                  unit: '',
+                  processDataKey: (x) => x,
+                },
+                {
                   name: 'Batt Temp',
                   nodeProcess: 'any',
                   dataKey: 'device_batt_temp_000',
