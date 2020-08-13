@@ -52,7 +52,7 @@ function BaseComponent({
         {formItems}
       </ComponentSettings>
 
-      <div className={`sticky top-0 z-50 flex justify-between px-3 py-2 dragHandle z-0 component-color ${movable ? 'cursor-move' : ''}`} ref={headerRef}>
+      <div className={`sticky top-0 z-50 flex justify-between px-3 pt-2 dragHandle z-0 component-color ${movable ? 'cursor-move' : ''}`} ref={headerRef}>
         <div className="flex justify-between w-full">
           <div className="flex">
             {showStatus ? (
@@ -100,12 +100,16 @@ function BaseComponent({
       </div>
 
       {/* A description */}
-      <div
-        className="sticky text-gray-600 text-sm preventDragHandle cursor-auto px-3 pb-2"
-        style={top}
-      >
-        {subheader}
-      </div>
+      {
+        subheader ? (
+          <div
+            className="sticky text-gray-600 text-sm preventDragHandle cursor-auto px-3 pb-2"
+            style={top}
+          >
+            {subheader}
+          </div>
+        ) : null
+      }
       {/* <div className="px-4 py-1 overflow-y-auto"
       style={{ height: headerRef && headerRef.current ?
       height - headerRef.current.clientHeight : height }}> */}
