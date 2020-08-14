@@ -33,12 +33,13 @@ function DisplayValue({
   const [nameState, setNameState] = useState(name);
 
   /** Store the display values here */
-  const [displayValuesState] = useState(displayValues);
+  const [displayValuesState, setDisplayValuesState] = useState(displayValues);
   /** Variable to update to force component update */
   const [updateComponent, setUpdateComponent] = useState(false);
 
   /** Handle new data incoming from the Context */
   useEffect(() => {
+    const newArray = displayValuesState;
     // Loop through the currently displayed values
     displayValuesState.forEach((v, i) => {
       // Check if the state change involves any of the displayed values
@@ -52,11 +53,11 @@ function DisplayValue({
         const value = v.processDataKey(data);
 
         // If it does, change the value
-        displayValuesState[i].value = value;
+        newArray[i].value = value;
 
         // Process converted raw value
         if (v.processSecondaryData) {
-          displayValuesState[i].secondaryDataKey = v.processSecondaryData(data);
+          newArray[i].secondaryDataKey = v.processSecondaryData(data);
         }
 
         // Handle percent difference
@@ -68,22 +69,22 @@ function DisplayValue({
           // Prevent 0/0 case
           if (data !== previousValue) {
             // Calculate percent difference
-            displayValuesState[i].percentDifference = previousValue !== undefined
+            newArray[i].percentDifference = previousValue !== undefined
               ? (((castedValue - previousValue) / ((castedValue + previousValue) / 2)) * 100)
               : undefined;
           } else {
-            displayValuesState[i].percentDifference = 0;
+            newArray[i].percentDifference = 0;
           }
 
           // Set previous value for next % diff calculation
-          displayValuesState[i].previousValue = castedValue;
+          newArray[i].previousValue = castedValue;
         }
 
         // If not in flight mode, use recorded_time to avoid chart jumping
         if (process.env.FLIGHT_MODE === 'true' && state[realm][v.timeDataKey]) {
-          displayValuesState[i].time = mjdToUTCString(state[realm][v.timeDataKey]);
+          newArray[i].time = mjdToUTCString(state[realm][v.timeDataKey]);
         } else {
-          displayValuesState[i].time = mjdToUTCString(state[realm].recorded_time);
+          newArray[i].time = mjdToUTCString(state[realm].recorded_time);
         }
 
         if (v.dataKeyLowerThreshold
@@ -107,6 +108,7 @@ function DisplayValue({
         }
       }
     });
+    setDisplayValuesState(newArray);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
 
