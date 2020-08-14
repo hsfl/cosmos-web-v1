@@ -54,19 +54,29 @@ function DisplayValue({
         // If it does, change the value
         displayValuesState[i].value = value;
 
-        if (typeof data === 'number') {
-          const { previousValue } = displayValuesState[i];
+        // Process converted raw value
+        if (v.processSecondaryData) {
+          displayValuesState[i].secondaryDataKey = v.processSecondaryData(data);
+        }
+
+        // Handle percent difference
+        const castedValue = Number(value);
+
+        if (typeof castedValue === 'number') {
+          const { previousValue } = v;
 
           // Prevent 0/0 case
           if (data !== previousValue) {
+            // Calculate percent difference
             displayValuesState[i].percentDifference = previousValue !== undefined
-              ? (((data - previousValue) / ((data + previousValue) / 2)) * 100)
+              ? (((castedValue - previousValue) / ((castedValue + previousValue) / 2)) * 100)
               : undefined;
           } else {
             displayValuesState[i].percentDifference = 0;
           }
 
-          displayValuesState[i].previousValue = data;
+          // Set previous value for next % diff calculation
+          displayValuesState[i].previousValue = castedValue;
         }
 
         // If not in flight mode, use recorded_time to avoid chart jumping
@@ -102,7 +112,12 @@ function DisplayValue({
 
   useEffect(() => {
     if (queriedData) {
-      displayValuesState.forEach(({ dataKey, timeDataKey, processDataKey }, i) => {
+      displayValuesState.forEach((
+        {
+          dataKey, timeDataKey, processDataKey, processSecondaryData,
+        },
+        i,
+      ) => {
         if (queriedData[dataKey]) {
           if (queriedData[dataKey].length === 0 || queriedData[timeDataKey].length === 0) {
             message.warning(`No data for specified date range in for ${dataKey}/${timeDataKey}.`);
@@ -113,6 +128,11 @@ function DisplayValue({
             const lastTimeValue = queriedData[timeDataKey][queriedData[timeDataKey].length - 1];
 
             displayValuesState[i].value = processDataKey ? processDataKey(lastValue) : lastValue;
+
+            if (processSecondaryData) {
+              displayValuesState[i].secondaryDataKey = processSecondaryData(lastValue);
+            }
+
             displayValuesState[i].time = mjdToUTCString(lastTimeValue);
           }
         }
@@ -194,6 +214,8 @@ DisplayValue.propTypes = {
       timeDataKey: PropTypes.string,
       /** The function to put the value through to manipulate it */
       processDataKey: PropTypes.func,
+      /** Provide option to show a secondary value */
+      processSecondaryDataKey: PropTypes.func,
       /** The unit of the  */
       unit: PropTypes.string,
     }),
