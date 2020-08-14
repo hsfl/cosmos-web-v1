@@ -1,5 +1,5 @@
 export function powerMode(value) {
-  const options = ['Off', 'Low Power', 'Standard Power', 'Standard ADCS', 'Standard Telecomm', 'Neutron Mission'];
+  const options = ['Off', 'Low Power', 'Standard Power', 'Standard ADCS', 'Standard Telecom', 'Neutron Mission'];
   if (value === -1) {
     return options[0];
   }
