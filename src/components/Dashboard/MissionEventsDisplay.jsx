@@ -79,6 +79,11 @@ function MissionEventsDisplay({
       const { data } = await axios.post(`/query/${realm}/${node}:executed`, {
         multiple: true,
         query: {},
+        options: {
+          sort: {
+            event_utc: -1,
+          },
+        },
       });
 
       /** Remove the _id from the retrieved logs and modify data to display on table */
