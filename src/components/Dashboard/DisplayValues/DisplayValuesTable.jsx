@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Popover } from 'antd';
+import { Popover, Divider } from 'antd';
 import PercentDifference from './PercentDifference';
 
 function DisplayValuesTable({
@@ -21,6 +21,7 @@ function DisplayValuesTable({
                 nodeProcess,
                 dataKey,
                 processDataKey,
+                secondaryDataKey,
                 dataKeyLowerThreshold,
                 dataKeyUpperThreshold,
                 timeDataKey,
@@ -45,7 +46,22 @@ function DisplayValuesTable({
                       <div className="text-xs text-gray-500 pt-2">
                         Namespace Key
                       </div>
+                      <style>
+                        {`
+                          .max-width-process {
+                            max-width: 200px;
+                            background-color: white;
+                            font-family: inherit;
+                          }
+                        `}
+                      </style>
                       { dataKey }
+                      <div className="text-xs text-gray-500 pt-2">
+                        Process Namespace Key
+                      </div>
+                      <pre className="max-width-process">
+                        { processDataKey.toString() }
+                      </pre>
                       <div className="text-xs text-gray-500 pt-2">
                         Namespace Time Key
                       </div>
@@ -71,9 +87,19 @@ function DisplayValuesTable({
                 </td>
                 <td className={`pr-2 ${(dataKeyLowerThreshold || dataKeyUpperThreshold) && ((value <= dataKeyLowerThreshold) || (value >= dataKeyUpperThreshold)) ? 'text-red-700' : ''}`}>
                   {
-                      value !== undefined
-                        ? `${value}${unit}` : '-'
-                    }
+                    value !== undefined
+                      ? `${value}${unit}` : '-'
+                  }
+                  {
+                    secondaryDataKey !== undefined ? (
+                      <>
+                        <Divider type="vertical" />
+                        {
+                          secondaryDataKey
+                        }
+                      </>
+                    ) : null
+                  }
                 </td>
                 <td className="text-gray-500">
                   { time || '-' }

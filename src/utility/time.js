@@ -16,7 +16,7 @@ export function mjdToUTCString(mjd) {
 export function secondsToMinute(seconds) {
   const second = seconds % 60;
   const minute = Math.floor(seconds / 60);
-  return `${minute}:${dayjs().second(second).format('ss')}m (${seconds}s)`;
+  return `${minute}:${dayjs().second(second).format('ss')}m`;
 }
 
 /**
