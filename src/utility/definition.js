@@ -7,6 +7,14 @@ export function powerMode(value) {
   return options[value];
 }
 
+export function onOff(value) {
+  return value ? 'On' : 'Off';
+}
+
+export function txRx(value) {
+  return value ? 'Transponder' : 'Transceiver';
+}
+
 export function callConnected(value) {
   const connected = ['Disconnected', 'Connected'];
   return connected[value & 1];
