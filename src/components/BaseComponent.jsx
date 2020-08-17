@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   Switch, Button, Badge,
 } from 'antd';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { SettingOutlined } from '@ant-design/icons';
 
@@ -31,6 +32,7 @@ function BaseComponent({
   movable,
   // height,
 }) {
+  const mode = useSelector((s) => s.mode);
   /** Handler for the widget settings modal */
   const [openSettings, setOpenSettings] = useState(false);
 
@@ -52,7 +54,7 @@ function BaseComponent({
         {formItems}
       </ComponentSettings>
 
-      <div className={`sticky top-0 z-50 flex justify-between px-3 pt-2 dragHandle z-0 component-color ${movable ? 'cursor-move' : ''}`} ref={headerRef}>
+      <div className={`${mode}-mode-component sticky top-0 z-50 flex justify-between px-3 pt-2 dragHandle z-0 ${movable ? 'cursor-move' : ''}`} ref={headerRef}>
         <div className="flex justify-between w-full">
           <div className="flex">
             {showStatus ? (
@@ -90,8 +92,8 @@ function BaseComponent({
               &nbsp;
 
               {formItems ? (
-                <Button size="small" onClick={() => setOpenSettings(true)}>
-                  <SettingOutlined />
+                <Button className={`${mode}-mode`} size="small" onClick={() => setOpenSettings(true)}>
+                  <SettingOutlined className={`${mode}-mode-text`} />
                 </Button>
               ) : null}
             </div>

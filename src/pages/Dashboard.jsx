@@ -70,6 +70,7 @@ function Dashboard({
   const activities = useSelector((s) => s.activity);
   const keys = useSelector((s) => s.keys);
   const state = useSelector((s) => s.data);
+  const mode = useSelector((s) => s.mode);
 
   /** Store the default page layout in case user wants to switch to it */
   const [defaultPageLayout, setDefaultPageLayout] = useState({
@@ -645,7 +646,7 @@ function Dashboard({
   }, [activities]);
 
   return (
-    <div>
+    <div className={`${mode}-mode h-screen`}>
       <div className="sticky z-10 top-0">
         <div
           className={`flex justify-between py-2 px-5 border-gray-200 border-solid border-b transition-all duration-500 ease-in-out ${color === 'green' ? 'bg-green-100' : ''} ${color === 'orange' ? 'bg-orange-100' : ''} ${color === 'red' ? 'bg-red-100' : ''}`}
@@ -668,7 +669,7 @@ function Dashboard({
             />
           </div>
         </div>
-        <Menu mode="horizontal">
+        <Menu theme={mode} mode="horizontal">
           <Menu.Item
             onClick={() => {
               selectLayout('defaultPageLayout');
@@ -743,7 +744,7 @@ function Dashboard({
           </Menu.Item>
         </Menu>
       </div>
-      <div className="mt-5 mx-16 mb-16">
+      <div className={`${mode}-mode mt-5 px-16 pb-16`}>
         <ResponsiveGridLayout
           className="layout"
           breakpoints={breakpoints}
@@ -765,7 +766,7 @@ function Dashboard({
                   )
                   .map((layout) => (
                     <div
-                      className="shadow overflow-y-scroll rounded component-color"
+                      className={`${mode}-mode-component shadow overflow-y-scroll rounded`}
                       key={layout.i}
                     >
                       <AsyncComponent
@@ -773,7 +774,7 @@ function Dashboard({
                         props={layout.component.props}
                       />
                       <Button
-                        className={`absolute bottom-0 left-0 z-50 mb-1 ml-1 ${visible ? 'block' : 'hidden'}`}
+                        className={`absolute ${mode}-mode bottom-0 left-0 z-50 mb-1 ml-1 ${visible ? 'block' : 'hidden'}`}
                         shape="circle"
                         layoutkey={layout.i}
                         icon={<CloseOutlined />}

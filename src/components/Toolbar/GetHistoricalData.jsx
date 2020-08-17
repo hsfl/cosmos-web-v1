@@ -18,6 +18,7 @@ function GetHistoricalData({
   const realm = useSelector((s) => s.realm);
   const keys = useSelector((s) => s.keys[tab]);
   const retrievedQuery = useSelector((s) => s.retrievedQuery);
+  const mode = useSelector((s) => s.mode);
 
   const [globalHistoricalDate, setGlobalHistoricalDate] = useState(null);
 
@@ -127,6 +128,7 @@ function GetHistoricalData({
       />
       <div className="pt-1">
         <Button
+          className={`${mode}-mode ${mode}-mode-text`}
           disabled={!globalHistoricalDate}
           size="small"
           onClick={() => queryData(globalHistoricalDate[0], globalHistoricalDate[1])}
@@ -137,11 +139,13 @@ function GetHistoricalData({
         <Button
           size="small"
           onClick={() => queryData(dayjs().subtract(1, 'hour').utc(), dayjs().utc())}
+          className={`${mode}-mode ${mode}-mode-text`}
         >
           Past Hour
         </Button>
         &nbsp;
         <Button
+          className={`${mode}-mode ${mode}-mode-text`}
           size="small"
           onClick={() => queryData(dayjs().subtract(6, 'hour').utc(), dayjs().utc())}
         >

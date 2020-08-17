@@ -17,6 +17,8 @@ import {
   CloseOutlined,
 } from '@ant-design/icons';
 
+import { useSelector } from 'react-redux';
+
 import { axios } from '../../api';
 
 import BaseComponent from '../BaseComponent';
@@ -27,6 +29,8 @@ import BaseComponent from '../BaseComponent';
 function CommandEditor({
   nodes,
 }) {
+  const mode = useSelector((s) => s.mode);
+
   /** List of commands stored in the node */
   const [commands, setCommands] = useState([]);
   /** Form to create a new command */
@@ -238,7 +242,8 @@ function CommandEditor({
               </td>
               <td>
                 <Table
-                  className="border-l pl-4"
+                  theme="dark"
+                  className={`${mode}-mode border-l pl-4`}
                   columns={columns}
                   dataSource={commands}
                   size="small"

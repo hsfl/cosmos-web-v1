@@ -22,6 +22,7 @@ const overflowWrap = {
 function CEO() {
   const dispatch = useDispatch();
   const namespace = useSelector((state) => state.namespace);
+  const mode = useSelector((s) => s.mode);
 
   /** Store the default page layout in case user wants to switch to it */
   const [, setSocketStatus] = useState('error');
@@ -134,7 +135,7 @@ function CEO() {
   };
 
   return (
-    <div className="flex flex-wrap mt-5 mx-16 mb-16">
+    <div className={`${mode}-mode flex flex-wrap mt-5 mx-16 mb-16`}>
       {/* For copying values */}
       <textarea
         className="w-1 h-1 opacity-0"
