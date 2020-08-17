@@ -45,7 +45,7 @@ function BaseComponent({
   }, [handleLiveSwitchChange]);
 
   return (
-    <div>
+    <div className={`${mode}-mode-text`}>
       <ComponentSettings
         visible={openSettings}
         /** Closes the modal. */

@@ -242,8 +242,7 @@ function CommandEditor({
               </td>
               <td>
                 <Table
-                  theme="dark"
-                  className={`${mode}-mode border-l pl-4`}
+                  className="border-l pl-4"
                   columns={columns}
                   dataSource={commands}
                   size="small"

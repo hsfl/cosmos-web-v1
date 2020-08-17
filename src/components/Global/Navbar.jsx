@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from '@reach/router';
-import { Button, Menu } from 'antd';
+import { Menu } from 'antd';
 import { Icon } from '@ant-design/compatible';
 
-import { useSelector, useDispatch } from 'react-redux';
-import { set } from '../../store/actions';
+import { useSelector } from 'react-redux';
 
 import routes from '../../routes';
 
@@ -12,24 +11,12 @@ import routes from '../../routes';
  * Automatically generated navgation bar, configured in the routes/index file.
  */
 function Navbar() {
-  const dispatch = useDispatch();
   const mode = useSelector((s) => s.mode);
   /** Route that the user is currently on to display an accent denoting it as such */
   const [currentRoute] = useState('home');
 
   return (
     <>
-      <Button
-        onClick={() => {
-          if (mode === 'dark') {
-            dispatch(set('mode', 'light'));
-          } else {
-            dispatch(set('mode', 'dark'));
-          }
-        }}
-      >
-        Test
-      </Button>
       <Menu
         mode="horizontal"
         selectedKeys={[currentRoute]}

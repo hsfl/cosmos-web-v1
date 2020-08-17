@@ -646,7 +646,7 @@ function Dashboard({
   }, [activities]);
 
   return (
-    <div className={`${mode}-mode h-screen`}>
+    <div className={`${mode}-mode`}>
       <div className="sticky z-10 top-0">
         <div
           className={`flex justify-between py-2 px-5 border-gray-200 border-solid border-b transition-all duration-500 ease-in-out ${color === 'green' ? 'bg-green-100' : ''} ${color === 'orange' ? 'bg-orange-100' : ''} ${color === 'red' ? 'bg-red-100' : ''}`}

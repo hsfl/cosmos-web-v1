@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { DatePicker, Button, message } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import dayjs from 'dayjs';
+import { FormatPainterOutlined } from '@ant-design/icons';
 
 import { set, resetQueue } from '../../store/actions';
 import { axios } from '../../api';
@@ -151,6 +152,21 @@ function GetHistoricalData({
         >
           Past 6 Hours
         </Button>
+        <Button
+          className={`${mode}-mode ${mode}-mode-text ml-3`}
+          size="small"
+          shape="circle"
+          icon={<FormatPainterOutlined />}
+          onClick={() => {
+            if (mode === 'dark') {
+              dispatch(set('mode', 'light'));
+              window.localStorage.setItem('mode', 'light');
+            } else {
+              dispatch(set('mode', 'dark'));
+              window.localStorage.setItem('mode', 'dark');
+            }
+          }}
+        />
       </div>
     </>
   );

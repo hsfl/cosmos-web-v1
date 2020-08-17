@@ -74,6 +74,7 @@ function CesiumGlobe({
   /** Accessing the neutron1 messages from the socket */
   const state = useSelector((s) => s.data);
   const realm = useSelector((s) => s.realm);
+  const mode = useSelector((s) => s.mode);
 
   /** Storage for global; form values */
   const [orbitsForm] = Form.useForm();
@@ -721,7 +722,7 @@ function CesiumGlobe({
       <div className="overflow-x-auto">
         <table className="mt-4 w-full">
           <tbody className="w-10">
-            <tr className="bg-gray-200 border-b border-gray-400">
+            <tr className={`${mode}-mode-text ${mode}-mode-bg border-b border-gray-400`}>
               <td className="p-2 pr-8">Name</td>
               <td className="p-2 pr-8">x (m)</td>
               <td className="p-2 pr-8">y (m)</td>
@@ -732,7 +733,7 @@ function CesiumGlobe({
             </tr>
             {
             orbitsState.map((orbit) => (
-              <tr className="text-gray-700 border-b border-gray-400" key={orbit.name}>
+              <tr className={`${mode}-mode-text border-b border-gray-400`} key={orbit.name}>
                 <td className="p-2 pr-8">{orbit.name}</td>
                 <td className="p-2 pr-8">{orbit.position[0]}</td>
                 <td className="p-2 pr-8">{orbit.position[1]}</td>

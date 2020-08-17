@@ -22,6 +22,7 @@ function SOH({
   const state = useSelector((s) => s.data);
   const namespace = useSelector((s) => s.namespace);
   const realm = useSelector((s) => s.realm);
+  const mode = useSelector((s) => s.mode);
 
   /** Initialize settings */
   const [init, setInit] = useState(true);
@@ -291,7 +292,7 @@ function SOH({
         </>
       )}
     >
-      <pre className="pt-1">
+      <pre className={`${mode}-mode-text pt-1`}>
         {
           Object.keys(display).length !== 0 ? JSON.stringify(display, null, 2)
             : JSON.stringify(soh, null, 2)

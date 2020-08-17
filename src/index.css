@@ -40,6 +40,14 @@ svg {
   background-color: #4a5568;
 }
 
+.dark-mode-bg {
+  -webkit-transition: background-color 1s ease-out;
+  -moz-transition: background-color 1s ease-out;
+  -o-transition: background-color 1s ease-out;
+  transition: background-color 1s ease-out;
+  background-color: #2d3748;
+}
+
 .dark-mode-text {
   color: #f7fafc;
 }
@@ -67,6 +75,14 @@ svg {
 
 .light-mode-text {
   color: #4a5568;
+}
+
+.light-mode-bg {
+  -webkit-transition: background-color 1s ease-out;
+  -moz-transition: background-color 1s ease-out;
+  -o-transition: background-color 1s ease-out;
+  transition: background-color 1s ease-out;
+  background-color: #edf2f7;
 }
 
 /* width */
