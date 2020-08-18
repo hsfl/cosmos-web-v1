@@ -138,5 +138,19 @@ export default {
         },
       },
     },
+    {
+      i: 'satellite-neutron1-commands-e',
+      x: 0,
+      y: 1,
+      w: 12,
+      h: 14,
+      component: {
+        name: 'Commands',
+        props: {
+          defaultNodeProcess: 'neutron1:radio_isis',
+          nodes: ['neutron1', 'beagle1'],
+        },
+      },
+    },
   ],
 };
