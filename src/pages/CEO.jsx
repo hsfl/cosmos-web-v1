@@ -147,7 +147,7 @@ function CEO() {
           namespace && !(namespace.length === 0)
             ? Object.entries(namespace).map(([node, { pieces, agents }]) => (
               <div
-                className="block shadow overflow-y-auto p-4 m-4 bg-white"
+                className={`${mode}-mode-component block shadow overflow-y-auto p-4 m-4`}
                 style={overflowWrap}
                 key={node}
               >

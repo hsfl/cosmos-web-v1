@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from '@reach/router';
 import { Menu } from 'antd';
 import { Icon } from '@ant-design/compatible';
@@ -14,6 +14,12 @@ function Navbar() {
   const mode = useSelector((s) => s.mode);
   /** Route that the user is currently on to display an accent denoting it as such */
   const [currentRoute] = useState('home');
+
+  useEffect(() => {
+    if (mode === 'dark') {
+      document.body.classList.add('dark-mode');
+    }
+  }, []);
 
   return (
     <>

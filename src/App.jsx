@@ -21,7 +21,7 @@ const components = {
 };
 
 const App = () => (
-  <div className="dark-mode">
+  <div>
     <header>
       <Navbar current="home" />
     </header>

@@ -161,9 +161,11 @@ function GetHistoricalData({
             if (mode === 'dark') {
               dispatch(set('mode', 'light'));
               window.localStorage.setItem('mode', 'light');
+              document.body.classList.remove('dark-mode');
             } else {
               dispatch(set('mode', 'dark'));
               window.localStorage.setItem('mode', 'dark');
+              document.body.classList.add('dark-mode');
             }
           }}
         />
