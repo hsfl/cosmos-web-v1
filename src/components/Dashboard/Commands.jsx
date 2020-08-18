@@ -12,9 +12,10 @@ import {
   Button,
   Popconfirm,
   DatePicker,
+  Radio,
 } from 'antd';
 import {
-  CloseOutlined, SendOutlined, RetweetOutlined,
+  CloseOutlined, RetweetOutlined,
 } from '@ant-design/icons';
 import dayjs from 'dayjs';
 
@@ -35,6 +36,7 @@ const minWidth = {
  * Allows for running agent commands. Logs inputs and ouputs in the white box above the input box.
  */
 function Commands({
+  defaultNodeProcess,
   nodes,
 }) {
   /** Agents */
@@ -83,11 +85,11 @@ function Commands({
   const commandHistoryEl = useRef(null);
   commandHistoryEl.current = commandHistory;
 
-  const queryCommands = async (query = false, timeToSend = null) => {
+  const queryCommands = async (query = false, timeToSend = null, type = 'exec') => {
     try {
       if (query) {
         try {
-          await axios.post(`/exec/${commandNode}`, {
+          await axios.post(`/${type}/${commandNode}`, {
             event: {
               event_data: sending.event_data,
               event_utc: timeToSend != null ? dateToMJD(dayjs()) : timeToSend,
@@ -113,11 +115,6 @@ function Commands({
       message.error('Could not query commands from database.');
     }
   };
-
-  useEffect(() => {
-    queryCommands();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     const incomingInfo = Object.keys(incoming).find((el) => el.split(':')[1] === 'executed');
@@ -267,6 +264,15 @@ function Commands({
     }
   };
 
+  useEffect(() => {
+    queryCommands();
+
+    if (defaultNodeProcess) {
+      getRequests(defaultNodeProcess.split(':'));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   /** Update height of the history log to go to the bottom */
   useEffect(() => {
     cliEl.current.scrollTop = cliEl.current.scrollHeight;
@@ -329,6 +335,7 @@ function Commands({
             dropdownMatchSelectWidth={false}
             onChange={(value) => getRequests(value.split(':'))}
             placeholder="Select agent node and process"
+            defaultValue={defaultNodeProcess}
           >
             {
               list ? list.map(({ agent }) => (
@@ -390,21 +397,35 @@ function Commands({
               showTime
               onChange={(val) => setTimeSend(val)}
             />
-            <Popconfirm
-              placement="topRight"
-              title={`Send '${commandNode} ➜ ${sending.event_data}'?`}
-              onConfirm={() => queryCommands('send', timeSend)}
-              okText="Yes"
-              cancelText="No"
-            >
-              <Button
-                icon={<SendOutlined />}
-                className="mr-2"
-                disabled={timeSend === null || macroCommand === null}
+            <Radio.Group>
+              <Popconfirm
+                placement="top"
+                title={`Send '${commandNode} ➜ ${sending.event_data}'?`}
+                onConfirm={() => queryCommands('send', timeSend)}
+                okText="Yes"
+                cancelText="No"
               >
-                Send
-              </Button>
-            </Popconfirm>
+                <Radio.Button
+                  disabled={timeSend === null || macroCommand === null}
+                >
+                  Direct Send
+                </Radio.Button>
+              </Popconfirm>
+              <Popconfirm
+                placement="top"
+                title={`Send '${commandNode} ➜ ${sending.event_data}'?`}
+                onConfirm={() => queryCommands('send', timeSend, 'command')}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Radio.Button
+                  className="mr-2"
+                  disabled={timeSend === null || macroCommand === null}
+                >
+                  File Send
+                </Radio.Button>
+              </Popconfirm>
+            </Radio.Group>
             <RetweetOutlined className="mt-2 mr-2" />
             <InputNumber
               className="h-8 mr-2 w-12"
@@ -414,21 +435,35 @@ function Commands({
               max={60}
               onChange={(val) => setElapsedTime(val)}
             />
-            <Popconfirm
-              placement="topRight"
-              title={`Send '${commandNode} ➜ ${sending.event_data}' ${elapsedTime} seconds from now?`}
-              onConfirm={() => queryCommands('send', dayjs().add(elapsedTime, 's'))}
-              okText="Yes"
-              cancelText="No"
-            >
-              <Button
-                icon={<SendOutlined />}
-                className="mr-2"
-                disabled={macroCommand === null || elapsedTime === null}
+            <Radio.Group>
+              <Popconfirm
+                placement="top"
+                title={`Send '${commandNode} ➜ ${sending.event_data}' ${elapsedTime} seconds from now?`}
+                onConfirm={() => queryCommands('send', dayjs().add(elapsedTime, 's'))}
+                okText="Yes"
+                cancelText="No"
               >
-                Send
-              </Button>
-            </Popconfirm>
+                <Radio.Button
+                  disabled={elapsedTime === null || macroCommand === null}
+                >
+                  Direct Send
+                </Radio.Button>
+              </Popconfirm>
+              <Popconfirm
+                placement="top"
+                title={`Send '${commandNode} ➜ ${sending.event_data}' ${elapsedTime} seconds from now?`}
+                onConfirm={() => queryCommands('send', dayjs().add(elapsedTime, 's'), 'command')}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Radio.Button
+                  className="mr-2"
+                  disabled={elapsedTime === null || macroCommand === null}
+                >
+                  File Send
+                </Radio.Button>
+              </Popconfirm>
+            </Radio.Group>
             <div className="border-l mr-2 h-8" />
             <Button
               onClick={() => {
@@ -563,8 +598,14 @@ function Commands({
 }
 
 Commands.propTypes = {
+  /** Default node:process */
+  defaultNodeProcess: PropTypes.string,
   /** List of nodes available to be able to send commands to */
   nodes: PropTypes.arrayOf(PropTypes.string).isRequired,
+};
+
+Commands.defaultProps = {
+  defaultNodeProcess: null,
 };
 
 export default React.memo(Commands);
