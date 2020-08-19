@@ -476,6 +476,15 @@ function Commands({
             >
               Re-query Command List
             </Button>
+            &nbsp;
+            <Button
+              onClick={() => {
+                sendCommandApi(`${process.env.COSMOS_BIN}agent neutron1 radio_trxvu_ground_sim send_cmd 1 ***REMOVED*** ${sending.event_data}`);
+              }}
+              disabled={macroCommand === null}
+            >
+              Send Agent Request
+            </Button>
           </div>
         </div>
         {/* <div className="w-full py-2">
