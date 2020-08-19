@@ -147,7 +147,7 @@ export default {
       component: {
         name: 'Commands',
         props: {
-          defaultNodeProcess: 'neutron1:isis_sim',
+          defaultNodeProcess: 'neutron1:radio_trxvu_ground_sim',
           nodes: ['neutron1', 'beagle1'],
         },
       },
