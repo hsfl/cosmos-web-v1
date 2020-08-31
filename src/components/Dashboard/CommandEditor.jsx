@@ -26,6 +26,7 @@ import BaseComponent from '../BaseComponent';
  */
 function CommandEditor({
   nodes,
+  entries,
 }) {
   /** List of commands stored in the node */
   const [commands, setCommands] = useState([]);
@@ -238,6 +239,8 @@ function CommandEditor({
               </td>
               <td>
                 <Table
+                  pagination={{ pageSize: entries }}
+                  scroll={{ y: 240 }}
                   className="border-l pl-4"
                   columns={columns}
                   dataSource={commands}
@@ -255,6 +258,11 @@ function CommandEditor({
 CommandEditor.propTypes = {
   /** List of nodes available to be able to add commands to */
   nodes: PropTypes.arrayOf(PropTypes.string).isRequired,
+  entries: PropTypes.number,
+};
+
+CommandEditor.defaultProps = {
+  entries: 3,
 };
 
 export default CommandEditor;

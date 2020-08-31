@@ -9,7 +9,7 @@ function AgentListEntry({
   utc,
 }) {
   return (
-    <tr key={agent}>
+    <tr className="whitespace-no-wrap" key={agent}>
       <td>
         {
         utc >= 0 ? <Badge status="success" />
