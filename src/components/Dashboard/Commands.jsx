@@ -479,7 +479,7 @@ function Commands({
             &nbsp;
             <Button
               onClick={() => {
-                sendCommandApi(`${process.env.COSMOS_BIN}agent neutron1 radio_trxvu_ground_sim send_cmd 1 ***REMOVED*** ${sending.event_data}`);
+                sendCommandApi(`${process.env.COSMOS_BIN}agent neutron1 radio_trxvu_ground_sim send_cmd 1 ${process.env.TRXVU_PASS} ${sending.event_data}`);
               }}
               disabled={macroCommand === null}
             >
