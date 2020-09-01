@@ -799,9 +799,40 @@ export default {
       },
     },
     {
+      i: 'satellite-neutron1-lb',
+      x: 0,
+      y: 8,
+      w: 12,
+      h: 18,
+      component: {
+        name: 'Chart',
+        props: {
+          name: 'Event History',
+          showZero: true,
+          plots: [
+            {
+              x: [],
+              y: [],
+              type: 'scatter',
+              mode: 'lines+markers',
+              marker: {
+                color: 'green',
+              },
+              name: 'Event',
+              YDataKey: 'node_lastevent',
+              timeDataKey: 'node_lasteventutc',
+              processYDataKey: (x) => x,
+              nodeProcess: 'any',
+              live: true,
+            },
+          ],
+        },
+      },
+    },
+    {
       i: 'satellite-neutron1-m',
       x: 6,
-      y: 8,
+      y: 9,
       w: 6,
       h: 21,
       component: {
@@ -830,7 +861,7 @@ export default {
     {
       i: 'satellite-neutron1-n',
       x: 0,
-      y: 8,
+      y: 9,
       w: 6,
       h: 21,
       component: {
