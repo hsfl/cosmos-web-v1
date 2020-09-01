@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-
 import { Switch } from 'antd';
+import compare from '../../utility/sort';
 
 import BaseComponent from '../BaseComponent';
 import AgentListTable from './AgentList/AgentListTable';
@@ -29,10 +29,11 @@ function AgentList({
 
     /** If there is a specified node, filter out those agents */
     if (node !== '' && list != null) {
-      setAgentList(list.filter((item) => item.agent.split(':')[0] === node));
+      const filtered = list.filter((item) => item.agent.split(':')[0] === node);
+      setAgentList(filtered.sort(compare));
     } else if (list != null) {
       /** Otherwise, show all agents */
-      setAgentList(list);
+      setAgentList(list.sort(compare));
     }
   }, [list, node]);
 
