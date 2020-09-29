@@ -40,7 +40,7 @@ function ActivityTimer() {
   /** Initialize activity timer */
   useEffect(() => {
     // If there is a last activity
-    if (lastActivity) {
+    if (lastActivity && lastActivity.node_utc) {
       // Set last message and elapsed
       setLastMessage(dayjs(MJDtoJavaScriptDate(lastActivity.node_utc).toISOString()));
       setElapsed(getDiff(dayjs(MJDtoJavaScriptDate(lastActivity.node_utc).toISOString())));
