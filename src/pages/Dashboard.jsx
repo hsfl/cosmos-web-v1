@@ -18,6 +18,7 @@ import {
   Row,
   InputNumber,
   Menu,
+  DatePicker,
 } from 'antd';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import {
@@ -36,7 +37,7 @@ import { axios, socket } from '../api';
 import routes from '../routes';
 import defaultComponent from '../components/Default/Default';
 import { set, setData, setActivity } from '../store/actions';
-import { dateToMJD } from '../utility/time';
+import { dateToMJD, MJDtoJavaScriptDate } from '../utility/time';
 
 import AsyncComponent, { components } from '../components/AsyncComponent';
 import MenuTab from '../components/Toolbar/MenuTab';
@@ -70,6 +71,9 @@ function Dashboard({
   const activities = useSelector((s) => s.activity);
   const keys = useSelector((s) => s.keys);
   const state = useSelector((s) => s.data);
+  const xMin = useSelector((s) => s.xMin);
+  const xMax = useSelector((s) => s.xMax);
+  const selectedDate = useSelector((s) => s.selectedDate);
 
   /** Store the default page layout in case user wants to switch to it */
   const [defaultPageLayout, setDefaultPageLayout] = useState({
@@ -647,27 +651,50 @@ function Dashboard({
   return (
     <div>
       <div className="sticky z-10 top-0">
-        <div
-          className={`flex justify-between py-2 px-5 border-gray-200 border-solid border-b transition-all duration-500 ease-in-out ${color === 'green' ? 'bg-green-100' : ''} ${color === 'orange' ? 'bg-orange-100' : ''} ${color === 'red' ? 'bg-red-100' : ''}`}
+        <table
+          className={`flex justify-between py-2 px-5 border-gray-200 border-solid border-b transition-all
+            duration-500 ease-in-out ${color === 'green' ? 'bg-green-100' : ''} 
+            ${color === 'orange' ? 'bg-orange-100' : ''} ${color === 'red' ? 'bg-red-100' : ''}`}
         >
-          <div>
+          <td>
             <Statuses realm={id} />
-          </div>
-
-          <div className="pt-4">
-            <SocketStatus
-              status={socketStatus}
-            />
-            <FlightStatus />
-          </div>
-
-          <div className="pt-4">
+          </td>
+          <td
+            className="w-2/4 pt-2"
+          >
+            <div className="text-center">
+              <SocketStatus
+                status={socketStatus}
+              />
+              <FlightStatus />
+            </div>
+            <div className="flex flex-wrap pt-2">
+              <Slider
+                className="flex-1"
+                disabled={!xMax}
+                min={dateToMJD(xMin)}
+                max={dateToMJD(xMax)}
+                tooltipVisible={false}
+                onChange={(value) => dispatch(set('selectedDate', MJDtoJavaScriptDate(value)))}
+                value={dateToMJD(selectedDate)}
+              />
+              <DatePicker
+                showTime
+                disabled={!xMax}
+                format="YYYY-MM-DD HH:mm:ss"
+                onChange={(value) => dispatch(set('selectedDate', value))}
+                value={selectedDate}
+                size="small"
+              />
+            </div>
+          </td>
+          <td>
             <GetHistoricalData
               tab={currentTab}
               amountOfComponents={layouts.lg.filter((el) => el.component.name === 'Chart' || el.component.name === 'DisplayValue').length + 2}
             />
-          </div>
-        </div>
+          </td>
+        </table>
         <Menu mode="horizontal">
           <Menu.Item
             onClick={() => {

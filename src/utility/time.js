@@ -7,10 +7,13 @@ import dayjs from 'dayjs';
  * @returns {String} UTC date string
  */
 export function mjdToUTCString(mjd) {
-  return dayjs
-    .unix((((mjd + 2400000.5) - 2440587.5) * 86400.0))
-    .utc()
-    .format('YYYY-MM-DDTHH:mm:ss');
+  if (mjd) {
+    return dayjs
+      .unix((((mjd + 2400000.5) - 2440587.5) * 86400.0))
+      .utc()
+      .format('YYYY-MM-DDTHH:mm:ss');
+  }
+  return mjd;
 }
 
 export function secondsToMinute(seconds) {
@@ -26,9 +29,12 @@ export function secondsToMinute(seconds) {
  * @returns {String} UTC date string
  */
 export function mjdToString(mjd) {
-  return dayjs
-    .unix((((mjd + 2400000.5) - 2440587.5) * 86400.0))
-    .format('YYYY-MM-DDTHH:mm:ss');
+  if (mjd) {
+    return dayjs
+      .unix((((mjd + 2400000.5) - 2440587.5) * 86400.0))
+      .format('YYYY-MM-DDTHH:mm:ss');
+  }
+  return mjd;
 }
 
 /**
@@ -38,7 +44,10 @@ export function mjdToString(mjd) {
  * @returns {Number} MJD date
  */
 export function dateToMJD(date) {
-  return (date.unix() / 86400.0) + 2440587.5 - 2400000.5;
+  if (date) {
+    return (date.unix() / 86400.0) + 2440587.5 - 2400000.5;
+  }
+  return date;
 }
 
 /**
@@ -48,9 +57,12 @@ export function dateToMJD(date) {
  * @returns {Date} JavaScript date object
  */
 export function MJDtoJavaScriptDate(mjd) {
-  return dayjs
-    .unix((((mjd + 2400000.5) - 2440587.5) * 86400.0))
-    .toDate();
+  if (mjd) {
+    return dayjs
+      .unix((((mjd + 2400000.5) - 2440587.5) * 86400.0))
+      .toDate();
+  }
+  return mjd;
 }
 
 /**
