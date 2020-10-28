@@ -783,151 +783,155 @@ function Dashboard({
                   )) : null
             }
         </ResponsiveGridLayout>
-        <Drawer
-          placement="bottom"
-          onClose={() => setVisible(false)}
-          visible={visible}
-          key="bottom"
-          mask={false}
-          height={height}
-        >
-          {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-          {/* <div
-            className="handlebar fixed z-30 w-full h-2"
-            style={{ top: -5, left: -10 }}
-            onMouseDown={(e) => {
-              setOrigMouseY(e.clientY);
-              window.addEventListener('mousemove', getMousePosition);
-              window.addEventListener('mouseup', () => {
-                setOrigMouseY(0);
-                window.removeEventListener('mousemove', getMousePosition);
-              });
-            }}
-          >
-            &nbsp;
-          </div> */}
-          <Tabs defaultActiveKey="1">
-            <TabPane tab="Add Components" key="1">
-              <Divider orientation="left">1. Choose component</Divider>
-              {
-                Object.keys(components).map((piece) => (
-                  <Button
-                    key={piece}
-                    className="mr-1"
-                    keyid={piece}
-                    onClick={(e) => retrieveInfo(e)}
-                  >
-                    {piece}
-                  </Button>
-                ))
-              }
-              <Divider orientation="left">
-                <Space>2. Edit component&apos;s properties</Space>
-              </Divider>
-              <div className="flex">
-                <pre className="flex-none language-json mb-2 h-64 w-2/4 overflow-y-scroll overflow-x-scroll resize-y cursor-text text-white">
-                  <Editor
-                    className="font-mono"
-                    value={componentEditor}
-                    onValueChange={(value) => setComponentEditor(value)}
-                    highlight={(code) => highlight(code, languages.json)}
-                    padding={10}
-                  />
-                </pre>
-                <div className="flex-1 m-auto text-center">
-                  <div>Height</div>
-                  <Row justify="center">
-                    <Col span={12}>
-                      <Slider
-                        min={2}
-                        max={18}
-                        onChange={(value) => changeDimensions(value, 'h')}
-                        value={dimensions[1]}
+        {
+          process.env.PUBLIC_MODE === 'true' ? (
+            <Drawer
+              placement="bottom"
+              onClose={() => setVisible(false)}
+              visible={visible}
+              key="bottom"
+              mask={false}
+              height={height}
+            >
+              {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+              {/* <div
+                className="handlebar fixed z-30 w-full h-2"
+                style={{ top: -5, left: -10 }}
+                onMouseDown={(e) => {
+                  setOrigMouseY(e.clientY);
+                  window.addEventListener('mousemove', getMousePosition);
+                  window.addEventListener('mouseup', () => {
+                    setOrigMouseY(0);
+                    window.removeEventListener('mousemove', getMousePosition);
+                  });
+                }}
+              >
+                &nbsp;
+              </div> */}
+              <Tabs defaultActiveKey="1">
+                <TabPane tab="Add Components" key="1">
+                  <Divider orientation="left">1. Choose component</Divider>
+                  {
+                    Object.keys(components).map((piece) => (
+                      <Button
+                        key={piece}
+                        className="mr-1"
+                        keyid={piece}
+                        onClick={(e) => retrieveInfo(e)}
+                      >
+                        {piece}
+                      </Button>
+                    ))
+                  }
+                  <Divider orientation="left">
+                    <Space>2. Edit component&apos;s properties</Space>
+                  </Divider>
+                  <div className="flex">
+                    <pre className="flex-none language-json mb-2 h-64 w-2/4 overflow-y-scroll overflow-x-scroll resize-y cursor-text text-white">
+                      <Editor
+                        className="font-mono"
+                        value={componentEditor}
+                        onValueChange={(value) => setComponentEditor(value)}
+                        highlight={(code) => highlight(code, languages.json)}
+                        padding={10}
                       />
-                    </Col>
-                    <Col span={4}>
-                      <InputNumber
-                        min={2}
-                        max={18}
-                        value={dimensions[1]}
-                        onChange={(value) => changeDimensions(value, 'h')}
-                      />
-                    </Col>
-                  </Row>
-                  <br />
-                  <div>Width</div>
+                    </pre>
+                    <div className="flex-1 m-auto text-center">
+                      <div>Height</div>
+                      <Row justify="center">
+                        <Col span={12}>
+                          <Slider
+                            min={2}
+                            max={18}
+                            onChange={(value) => changeDimensions(value, 'h')}
+                            value={dimensions[1]}
+                          />
+                        </Col>
+                        <Col span={4}>
+                          <InputNumber
+                            min={2}
+                            max={18}
+                            value={dimensions[1]}
+                            onChange={(value) => changeDimensions(value, 'h')}
+                          />
+                        </Col>
+                      </Row>
+                      <br />
+                      <div>Width</div>
 
-                  <Row justify="center">
-                    <Col span={12}>
-                      <Slider
-                        min={1}
-                        max={12}
-                        onChange={(value) => changeDimensions(value, 'w')}
-                        value={dimensions[0]}
-                      />
-                    </Col>
+                      <Row justify="center">
+                        <Col span={12}>
+                          <Slider
+                            min={1}
+                            max={12}
+                            onChange={(value) => changeDimensions(value, 'w')}
+                            value={dimensions[0]}
+                          />
+                        </Col>
 
-                    <Col span={4}>
-                      <InputNumber
-                        min={1}
-                        max={12}
-                        value={dimensions[0]}
-                        onChange={(value) => changeDimensions(value, 'w')}
-                      />
-                    </Col>
-                  </Row>
+                        <Col span={4}>
+                          <InputNumber
+                            min={1}
+                            max={12}
+                            value={dimensions[0]}
+                            onChange={(value) => changeDimensions(value, 'w')}
+                          />
+                        </Col>
+                      </Row>
 
-                  <br />
+                      <br />
 
-                  <Button type="primary" onClick={() => addToLayout()}>Add Component to Layout</Button>
-                </div>
-              </div>
-
-              <Divider orientation="left">Preview</Divider>
-
-              {
-                checkComponentJson() && JSON.parse(componentEditor).component.name
-                  ? (
-                    <div
-                      className="shadow mt-5 mx-16 mb-16 overflow-y-scroll rounded component-color"
-                      style={{ width: `${(dimensions[0] / 12) * 100}%`, height: `${dimensions[1] * 30}px` }}
-                      draggable
-                    >
-                      <AsyncComponent
-                        component={JSON.parse(componentEditor).component.name}
-                        props={JSON.parse(componentEditor).component.props}
-                        height={JSON.parse(componentEditor).h}
-                      />
+                      <Button type="primary" onClick={() => addToLayout()}>Add Component to Layout</Button>
                     </div>
-                  )
-                  : null
-              }
-            </TabPane>
-            <TabPane tab="JSON Editor" key="2">
-              <Button
-                onClick={() => processLayoutObject()}
-              >
-                Update Layout
-              </Button>
+                  </div>
 
-              <span className="text-red-500 ml-3 mb-3">
-                {formError}
-              </span>
+                  <Divider orientation="left">Preview</Divider>
 
-              <pre
-                className="language-json mb-2 h-64 overflow-y-scroll overflow-x-scroll resize-y cursor-text text-white"
-              >
-                <Editor
-                  className="font-mono"
-                  value={jsonEdit}
-                  onValueChange={(value) => setJsonEdit(value)}
-                  highlight={(code) => highlight(code, languages.json)}
-                  padding={10}
-                />
-              </pre>
-            </TabPane>
-          </Tabs>
-        </Drawer>
+                  {
+                    checkComponentJson() && JSON.parse(componentEditor).component.name
+                      ? (
+                        <div
+                          className="shadow mt-5 mx-16 mb-16 overflow-y-scroll rounded component-color"
+                          style={{ width: `${(dimensions[0] / 12) * 100}%`, height: `${dimensions[1] * 30}px` }}
+                          draggable
+                        >
+                          <AsyncComponent
+                            component={JSON.parse(componentEditor).component.name}
+                            props={JSON.parse(componentEditor).component.props}
+                            height={JSON.parse(componentEditor).h}
+                          />
+                        </div>
+                      )
+                      : null
+                  }
+                </TabPane>
+                <TabPane tab="JSON Editor" key="2">
+                  <Button
+                    onClick={() => processLayoutObject()}
+                  >
+                    Update Layout
+                  </Button>
+
+                  <span className="text-red-500 ml-3 mb-3">
+                    {formError}
+                  </span>
+
+                  <pre
+                    className="language-json mb-2 h-64 overflow-y-scroll overflow-x-scroll resize-y cursor-text text-white"
+                  >
+                    <Editor
+                      className="font-mono"
+                      value={jsonEdit}
+                      onValueChange={(value) => setJsonEdit(value)}
+                      highlight={(code) => highlight(code, languages.json)}
+                      padding={10}
+                    />
+                  </pre>
+                </TabPane>
+              </Tabs>
+            </Drawer>
+          ) : null
+        }
         <Button
           className="fixed right-0 bottom-0 mb-5 mr-5"
           icon={<EditOutlined />}
