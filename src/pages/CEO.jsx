@@ -42,29 +42,23 @@ function CEO() {
 
   /** Get socket data from the agent */
   useEffect(() => {
-    const live = socket('/live/all');
-
-    /** Get latest data from neutron1_exec */
-    live.onmessage = ({ data }) => {
-      try {
-        const json = JSON.parse(data);
-
-        dispatch(setData(json.node_type, json));
-      } catch (err) {
-        // console.log(err);
-      }
+    const live = socket();
+    live.onopen = () => {
+      setSocketStatus('success');
     };
-
     live.onclose = () => {
       setSocketStatus('error');
     };
-
     live.onerror = () => {
       setSocketStatus('error');
     };
-
-    live.onopen = () => {
-      setSocketStatus('success');
+    live.onmessage = ({ data }) => {
+      try {
+        const json = JSON.parse(data);
+        dispatch(setData(json.node_type, json));
+      } catch (err) {
+        message.error(err.message);
+      }
     };
 
     return () => {

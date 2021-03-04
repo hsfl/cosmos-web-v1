@@ -125,26 +125,25 @@ function Dashboard({
 
   /** Get socket data from the agent */
   useEffect(() => {
-    const live = socket('/live/all');
-
-    // Set current realm
-    dispatch(set('realm', id));
-    document.title = 'COSMOS Web - Overview';
-
     const flightMode = process.env.FLIGHT_MODE;
-
-    /** Get latest data from neutron1_exec */
-    live.onmessage = ({ data }) => {
+    const live = socket();
+    live.onopen = () => {
+      setSocketStatus('success');
+    };
+    live.onclose = () => {
+      setSocketStatus('error');
+    };
+    live.onerror = () => {
+      setSocketStatus('error');
+    };
+    live.onmessage = ({ data }) => { // onMessage callback
       try {
         const json = JSON.parse(data);
-
         let node;
         let process;
-
         if (typeof json.node_type === 'string' && json.node_type) {
           [node, process] = json.node_type.split(':');
         }
-
         if (json.node_type === 'list') {
           dispatch(set('list', json));
         // Send data if allowed node AND if flight mode and soh, send,
@@ -159,7 +158,6 @@ function Dashboard({
             ...json,
             recorded_time: dateToMJD(dayjs().utc()),
           }));
-
           dispatch(setActivity({
             status: 'success',
             summary: 'Data received',
@@ -170,19 +168,9 @@ function Dashboard({
         message.error(error.message);
       }
     };
-
-    /** Update statuses on error/connection */
-    live.onclose = () => {
-      setSocketStatus('error');
-    };
-
-    live.onerror = () => {
-      setSocketStatus('error');
-    };
-
-    live.onopen = () => {
-      setSocketStatus('success');
-    };
+    // Set current realm
+    dispatch(set('realm', id));
+    document.title = 'COSMOS Web - Overview';
 
     return () => {
       live.close(1000);
