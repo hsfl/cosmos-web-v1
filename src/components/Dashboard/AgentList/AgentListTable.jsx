@@ -15,9 +15,9 @@ function AgentListTable({
         <tbody>
           {
             list ? list.map(({
-              agent, utc,
+              agent, node, utc,
             }) => (
-              <AgentListEntry agent={agent} utc={utc} key={agent + utc} />
+              <AgentListEntry agent={agent} node={node} utc={utc} key={node+':'+agent + utc} />
             )) : null
           }
         </tbody>

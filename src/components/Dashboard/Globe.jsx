@@ -149,6 +149,7 @@ function CesiumGlobe({
   /** Retrieve live orbit data */
   useEffect(() => {
     orbitsState.forEach(({
+	  nodeProcess,
       XDataKey,
       YDataKey,
       ZDataKey,
@@ -162,6 +163,7 @@ function CesiumGlobe({
         && state[realm][XDataKey]
         && state[realm][YDataKey]
         && state[realm][ZDataKey]
+		&& (nodeProcess === 'any' || nodeProcess === [state[realm].node_name, state[realm].agent_name].join(':'))
         && ((!(process.env.FLIGHT_MODE === 'true') && state[realm].recorded_time)
         || (process.env.FLIGHT_MODE === 'true' && state[realm][timeDataKey]))
         && live

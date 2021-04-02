@@ -109,7 +109,6 @@ function Commands({
       }
 
       const { data } = await axios.get(`/commands/${commandNode}`);
-
       setCommands(data);
     } catch (error) {
       message.error('Could not query commands from database.');
@@ -381,13 +380,13 @@ function Commands({
                 placeholder="Command List"
               >
                 {
-                  commands.map((command) => (
+                  Array.isArray(commands) ? commands.map((command) => (
                     <Select.Option
                       key={command.event_name}
                     >
                       {command.event_name}
                     </Select.Option>
-                  ))
+                  )) : null
                 }
               </Select>
             </div>
