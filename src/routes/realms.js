@@ -1,8 +1,17 @@
 import defaultLayout from './realms/defaultLayout';
-import neutron1 from './realms/neutron1/index';
-import hiapo from './realms/hiapo/index';
-import hyti from './realms/hyti/index';
+import { Layout as neutron1 } from './realms/neutron1/index';
+import { Layout as hiapo } from './realms/hiapo/index';
+import { Layout as hyti } from './realms/hyti/index';
 
+const realms = {
+  layout : [],
+  realms :{}
+}
+async function importRealm(realmID) {
+  let { Layout, NodeList } = await import(`./realms/${realmID}/index`);
+  realms.layout.push(layout);
+  realms.realms[realmID] = NodeList;
+}
 export default {
   name: 'Realms',
   icon: 'rocket',
