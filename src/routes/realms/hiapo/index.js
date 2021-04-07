@@ -1,6 +1,6 @@
-import { mjdToUTCString } from '../../utility/time';
+import { mjdToUTCString } from '../../../utility/time';
 
-export default {
+export const Layout = {
   name: 'hiapo',
   icon: 'radar-chart',
   defaultLayout: {
@@ -767,3 +767,5 @@ export default {
     ],
   },
 };
+
+export const NodeList = ['cubesat'];

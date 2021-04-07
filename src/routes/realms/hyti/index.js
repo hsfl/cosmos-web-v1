@@ -1,6 +1,6 @@
-import { mjdToUTCString } from '../../utility/time';
+import { mjdToUTCString } from '../../../utility/time';
 
-export default {
+export const Layout = {
   name: 'hyti',
   icon: 'camera',
   defaultLayout: {
@@ -336,3 +336,5 @@ export default {
     ],
   },
 };
+
+export const NodeList = ['hyti', 'unibap', 'virtualhost.hsfl.hawaii.edu'];
