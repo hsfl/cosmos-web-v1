@@ -1,8 +1,21 @@
-import defaultLayout from './realms/defaultLayout';
-import neutron1 from './realms/neutron1';
-import hiapo from './realms/hiapo';
-import hyti from './realms/hyti';
-import sttr_2020 from './realms/sttr_2020';
+import defaultLayout from './realms/defaultLayouts/defaultLayout';
+
+// Use require.context to get an array of file paths to .js files in the ./realms subdirectory, no recursion
+const importRealms = require.context('./realms', false, /\w+\.js$/);
+// import specified file at the filepaths
+const realms = importRealms.keys().map((filePath) => {
+	const realm = importRealms(filePath);
+	return realm.default;
+});
+
+// Create an object where the keys are the realm names and the values are their nodes
+const nodes = Object.fromEntries(realms.map((realm) => {
+	if(realm.hasOwnProperty('nodes')) {
+		return [realm.name, realm.nodes];
+	} else {
+		return [realm.name, []];
+	}
+}));
 
 export default {
   name: 'Realms',
@@ -11,17 +24,7 @@ export default {
   component: 'Dashboard',
   props: {
     defaultLayout,
-    realms: {
-      neutron1: ['neutron1', 'beagle1', 'virtualhost.hsfl.hawaii.edu', 'cubesat1'],
-      hiapo: [],
-      hyti: [],
-	  sttr_2020: ['mothership', 'daughter_01', 'daughter_02', 'daughter_03', 'daughter_04'],
-    },
+    realms: nodes,
   },
-  children: [
-    neutron1,
-    hiapo,
-    hyti,
-	sttr_2020,
-  ],
+  children: realms,
 };

@@ -16,6 +16,7 @@ import Commands from './neutron1/Commands';
 export default {
   name: 'neutron1',
   icon: 'qrcode',
+  nodes: ['neutron1', 'beagle1', 'virtualhost.hsfl.hawaii.edu', 'cubesat1'],
   defaultLayout,
   tabs: {
     BBB,

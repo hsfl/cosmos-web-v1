@@ -1,6 +1,7 @@
 export default {
   name: 'sttr_2020',
   icon: 'radar-chart',
+  nodes: ['mothership', 'daughter_01', 'daughter_02', 'daughter_03', 'daughter_04'],
   defaultLayout: {
     lg: [
       {
