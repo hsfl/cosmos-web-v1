@@ -937,11 +937,11 @@ Dashboard.propTypes = {
   /** The default layout for the path */
   defaultLayout: PropTypes.shape({}).isRequired,
   /** The realm that the layout is in */
-  realms: PropTypes.shape(PropTypes.arrayOf(PropTypes.string)),
+  realms: PropTypes.shape({}),
 };
 
 Dashboard.defaultProps = {
-  realms: [],
+  realms: {},
 };
 
 export default React.memo(Dashboard);

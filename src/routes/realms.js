@@ -1,13 +1,13 @@
-import defaultLayout from './realms/defaultLayout';
-
 const nodeList = {};
 const realms = [];
 const importRealms = (requireContext) => {
   requireContext.keys().forEach((key) => {
-    nodeList[key] = requireContext(key).NodeList;
+    const realmName = key.split('/')[1];
+    nodeList[realmName] = requireContext(key).NodeList;
     realms.push(requireContext(key).Layout);
   });
 };
+// import index.js in realms directory
 importRealms(require.context('./realms', true, /index\.js$/));
 
 export default {
@@ -16,7 +16,7 @@ export default {
   path: '/realm/:id',
   component: 'Dashboard',
   props: {
-    defaultLayout,
+    defaultLayout: {},
     realms: nodeList,
   },
   children: realms,
