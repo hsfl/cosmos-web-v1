@@ -19,7 +19,7 @@ function Image({
     >
       <img
         className="mx-auto w-full"
-        src={`/${node}/${file}`}
+        src={`/${node}/resources/${file}`}
         alt={file}
       />
     </BaseComponent>
