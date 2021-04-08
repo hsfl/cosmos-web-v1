@@ -8,7 +8,7 @@ const importRealms = (requireContext) => {
   });
 };
 // import index.js in realms directory
-importRealms(require.context('./realms', true, /index\.js$/));
+importRealms(require.context('../../external', true, /index\.js$/));
 
 export default {
   name: 'Realms',

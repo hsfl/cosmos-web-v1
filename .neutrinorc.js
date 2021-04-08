@@ -92,7 +92,7 @@ module.exports = {
           to: "cesium",
         },
         {
-          from: 'src/routes/realms',
+          from: 'external/',
           to: '',
         }
       ]
