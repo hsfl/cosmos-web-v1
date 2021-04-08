@@ -128,6 +128,8 @@ function Dashboard({
     const flightMode = process.env.FLIGHT_MODE;
     const live = socket();
     live.onopen = () => {
+      // send node list
+      live.send(JSON.stringify({ nodes: realms[id] }));
       setSocketStatus('success');
     };
     live.onclose = () => {
