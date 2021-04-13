@@ -150,31 +150,38 @@ function Commands({
   const sendCommandApi = async (route, command) => {
     setCommandHistory([
       ...commandHistoryEl.current,
-      `➜ ${dayjs.utc().format()} ${command}`,
+      `➜ ${dayjs.utc().format()} ${route} ${command}`,
     ]);
 
     setUpdateLog(true);
     try {
       const { data } = await axios.post(`/commands/${route}`, { command });
       if (data) {
-        const json = JSON.parse(data);
-        if (json.output && json.output.requests) {
-          loadAgentRequests(json.output.requests);
-          message.destroy();
-          message.success('Retrieved agent requests.');
-        } else if (json.error) {
-          throw new Error(data.error);
-        } else {
+        try {
+          let obj = {};
+          if (typeof data === 'object') {
+            obj = data;
+          } else if (typeof data === 'string') {
+            obj = JSON.parse(data);
+          }
+          if (obj.output && obj.output.requests) {
+            loadAgentRequests(obj.output.requests);
+            message.destroy();
+            message.success('Retrieved agent requests.');
+          } else if (obj.error) {
+            throw new Error(obj.error);
+          } else {
+            setCommandHistory([
+              ...commandHistoryEl.current,
+              `${dayjs.utc().format()} ${JSON.stringify(obj.output)}`,
+            ]);
+          }
+        } catch (error) {
           setCommandHistory([
             ...commandHistoryEl.current,
-            `${dayjs.utc().format()} ${data.output}`,
+            `${dayjs.utc().format()} ${data}`,
           ]);
         }
-      } else {
-        setCommandHistory([
-          ...commandHistoryEl.current,
-          `${dayjs.utc().format()} ${data}`,
-        ]);
       }
       setUpdateLog(true);
     } catch (error) {
