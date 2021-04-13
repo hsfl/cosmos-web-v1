@@ -3,8 +3,11 @@ const realms = [];
 const importRealms = (requireContext) => {
   requireContext.keys().forEach((key) => {
     const realmName = key.split('/')[1];
-    nodeList[realmName] = requireContext(key).NodeList;
-    realms.push(requireContext(key).Layout);
+	const realm = requireContext(key);
+	if(realm.hasOwnProperty('Layout')) {
+		realms.push(realm.Layout);
+		nodeList[realmName] = realm.NodeList;
+	}
   });
 };
 // import index.js in realms directory
