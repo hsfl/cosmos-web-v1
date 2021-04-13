@@ -132,7 +132,6 @@ function Commands({
 
     // Clear agent requests for new agent
     req.forEach((request) => {
-      console.log(request);
       sortedRequests.push(
         request.token,
       );
