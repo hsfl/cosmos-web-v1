@@ -126,65 +126,51 @@ function Commands({
     }
   }, [incoming]);
 
-  /** Manages requests for agent list and agent [node] [process] */
-  const sendCommandApi = async (command) => {
+  const loadAgentRequests = (req) => {
+    const sortedRequests = [];
+    const requests = {};
+
+    // Clear agent requests for new agent
+    req.forEach((request) => {
+      console.log(request);
+      sortedRequests.push(
+        request.token,
+      );
+
+      // Make commands mapped into an object
+      requests[request.token] = {
+        ...request,
+      };
+    });
+
+    // Set agent requests
+    setAgentRequests(requests);
+    setSortedAgentRequests(sortedRequests);
+  };
+
+  const sendCommandApi = async (route, command) => {
     setCommandHistory([
       ...commandHistoryEl.current,
       `➜ ${dayjs.utc().format()} ${command}`,
     ]);
 
     setUpdateLog(true);
-
-    // retrieve command output
     try {
-      const { data } = await axios.post('/command', {
-        data: {
-          command,
-        },
-      });
-
-      // json checking for json.output, json.error
-      if (data && data.output && data.output.requests) {
-        const sortedRequests = [];
-        const requests = {};
-
-        // Clear agent requests for new agent
-        data.output.requests.forEach((request) => {
-          sortedRequests.push(
-            request.token,
-          );
-
-          // Make commands mapped into an object
-          requests[request.token] = {
-            ...request,
-          };
-        });
-
-        // Alphabetical order
-        sortedRequests.sort();
-
-        // Set agent requests
-        setAgentRequests(requests);
-        setSortedAgentRequests(sortedRequests);
-
-        message.destroy();
-        message.success('Retrieved agent requests.');
-      } else if (data && data.output) {
-        // agent node proc cmd
-        setCommandHistory([
-          ...commandHistoryEl.current,
-          `${dayjs.utc().format()} ${data.output}`,
-        ]);
-        message.destroy();
-      } else if (data && data.error) {
-        throw new Error(data.error);
-      } else if (data && typeof data === 'object') {
-        message.destroy();
-        // non-json
-        setCommandHistory([
-          ...commandHistoryEl.current,
-          `${dayjs.utc().format()} ${JSON.stringify(data, null, 2)}`,
-        ]);
+      const { data } = await axios.post(`/commands/${route}`, { command });
+      if (data) {
+        const json = JSON.parse(data);
+        if (json.output && json.output.requests) {
+          loadAgentRequests(json.output.requests);
+          message.destroy();
+          message.success('Retrieved agent requests.');
+        } else if (json.error) {
+          throw new Error(data.error);
+        } else {
+          setCommandHistory([
+            ...commandHistoryEl.current,
+            `${dayjs.utc().format()} ${data.output}`,
+          ]);
+        }
       } else {
         setCommandHistory([
           ...commandHistoryEl.current,
@@ -204,13 +190,13 @@ function Commands({
 
     switch (selectedRequest) {
       case '> agent':
-        sendCommandApi(`${process.env.COSMOS_BIN}agent ${commandArguments}`);
+        sendCommandApi('agent', commandArguments);
         break;
       case '> command_generator':
-        sendCommandApi(`${process.env.COSMOS_BIN}command_generator ${commandArguments.replace(/"/g, "'")}`);
+        sendCommandApi('command_generator', commandArguments.replace(/"/g, "'"));
         break;
       default:
-        sendCommandApi(`${process.env.COSMOS_BIN}agent ${selectedAgent[0]} ${selectedAgent[1]} ${selectedRequest} ${macro ? `${macro} ` : ''}${commandArguments}`);
+        sendCommandApi('agent', `${selectedAgent[0]} ${selectedAgent[1]} ${selectedRequest} ${macro ? `${macro} ` : ''}${commandArguments}`);
         break;
     }
 
@@ -260,7 +246,7 @@ function Commands({
     setAgentRequests({});
 
     if (agent.length > 0) {
-      sendCommandApi(`${process.env.COSMOS_BIN}agent ${agent[0]} ${agent[1]} help_json`);
+      sendCommandApi('agent', `${agent[0]} ${agent[1]} help_json`);
     }
   };
 
@@ -333,7 +319,7 @@ function Commands({
           <Select
             className="block mb-2"
             dropdownMatchSelectWidth={false}
-            onChange={(value) => getRequests(value.split(':'))}
+            onChange={(value) => getRequests([commandNode, value])}
             placeholder="Select agent node and process"
             defaultValue={defaultNodeProcess}
           >
@@ -479,7 +465,7 @@ function Commands({
             &nbsp;
             <Button
               onClick={() => {
-                sendCommandApi(`${process.env.COSMOS_BIN}agent neutron1 radio_trxvu_ground_sim send_cmd 1 ${process.env.TRXVU_PASS} ${sending.event_data}`);
+                sendCommandApi('agent', `neutron1 radio_trxvu_ground_sim send_cmd 1 ${process.env.TRXVU_PASS} ${sending.event_data}`);
               }}
               disabled={macroCommand === null}
             >
