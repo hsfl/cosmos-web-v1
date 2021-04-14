@@ -325,16 +325,16 @@ function Commands({
           <Select
             className="block mb-2"
             dropdownMatchSelectWidth={false}
-            onChange={(value) => getRequests([commandNode, value])}
+            onChange={(value) => getRequests(value.split(':'))}
             placeholder="Select agent node and process"
             defaultValue={defaultNodeProcess}
           >
             {
-              list ? list.map(({ agent }) => (
+              list ? list.map(({ agent, node }) => (
                 <Select.Option
-                  key={agent}
+                  key={[node, agent].join(':')}
                 >
-                  {agent}
+                  {[node, agent].join(':')}
                 </Select.Option>
               )) : null
             }
