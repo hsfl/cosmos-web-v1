@@ -20,7 +20,7 @@ import {
 import dayjs from 'dayjs';
 
 // import Search from 'antd/lib/input/Search';
-import { axios } from '../../api';
+import { axios, COSMOSAPI } from '../../api';
 import { dateToMJD } from '../../utility/time';
 
 import BaseComponent from '../BaseComponent';
@@ -108,9 +108,7 @@ function Commands({
         }
       }
 
-      const { data } = await axios.get(`/commands/${commandNode}`);
-
-      setCommands(data);
+      await COSMOSAPI.getNodeCommands(commandNode, setCommands);
     } catch (error) {
       message.error('Could not query commands from database.');
     }
@@ -147,6 +145,36 @@ function Commands({
     setSortedAgentRequests(sortedRequests);
   };
 
+  const parseCommandResponse = (data) => {
+    if (data) {
+      try {
+        let obj = {};
+        if (typeof data === 'object') {
+          obj = data;
+        } else if (typeof data === 'string') {
+          obj = JSON.parse(data);
+        }
+        if (obj.output && obj.output.requests) {
+          loadAgentRequests(obj.output.requests);
+          message.destroy();
+          message.success('Retrieved agent requests.');
+        } else if (obj.error) {
+          throw new Error(obj.error);
+        } else {
+          setCommandHistory([
+            ...commandHistoryEl.current,
+            `${dayjs.utc().format()} ${JSON.stringify(obj.output)}`,
+          ]);
+        }
+      } catch (error) {
+        setCommandHistory([
+          ...commandHistoryEl.current,
+          `${dayjs.utc().format()} ${data}`,
+        ]);
+      }
+    }
+  };
+
   const sendCommandApi = async (route, command) => {
     setCommandHistory([
       ...commandHistoryEl.current,
@@ -155,34 +183,12 @@ function Commands({
 
     setUpdateLog(true);
     try {
-      const { data } = await axios.post(`/commands/${route}`, { command });
-      if (data) {
-        try {
-          let obj = {};
-          if (typeof data === 'object') {
-            obj = data;
-          } else if (typeof data === 'string') {
-            obj = JSON.parse(data);
-          }
-          if (obj.output && obj.output.requests) {
-            loadAgentRequests(obj.output.requests);
-            message.destroy();
-            message.success('Retrieved agent requests.');
-          } else if (obj.error) {
-            throw new Error(obj.error);
-          } else {
-            setCommandHistory([
-              ...commandHistoryEl.current,
-              `${dayjs.utc().format()} ${JSON.stringify(obj.output)}`,
-            ]);
-          }
-        } catch (error) {
-          setCommandHistory([
-            ...commandHistoryEl.current,
-            `${dayjs.utc().format()} ${data}`,
-          ]);
-        }
+      if (route === 'agent') {
+        await COSMOSAPI.runAgentCommand(command, parseCommandResponse);
+      } else {
+        await COSMOSAPI.runCommand({ command: `${route} ${command}` }, parseCommandResponse);
       }
+
       setUpdateLog(true);
     } catch (error) {
       message.destroy();
@@ -217,14 +223,14 @@ function Commands({
     ]);
 
     // retrieve autocompletions
-    const { data } = await axios.post('/command', {
+    await COSMOSAPI.runCommand({
       responseType: 'text',
       data: {
         command: `compgen -c ${autocomplete}`,
       },
+    }, (data) => {
+      setAutocompletions(data.split('\n'));
     });
-
-    setAutocompletions(data.split('\n'));
   };
 
   /** Autocomplete automatically if it's the only one in the array */
