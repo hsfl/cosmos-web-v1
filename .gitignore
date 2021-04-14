@@ -31,4 +31,4 @@ src/routes/realms/
 
 external/*/*
 
-!external/example/index.js
+!external/example/realm.js

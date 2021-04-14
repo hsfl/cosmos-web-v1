@@ -4,14 +4,14 @@ const importRealms = (requireContext) => {
   requireContext.keys().forEach((key) => {
     const realmName = key.split('/')[1];
     const realm = requireContext(key);
-    if (realm.Layout) {
+    if (realm.Layout && realm.NodeList) {
       realms.push(realm.Layout);
       nodeList[realmName] = realm.NodeList;
     }
   });
 };
 // import index.js in realms directory
-importRealms(require.context('../../external', true, /index\.js$/));
+importRealms(require.context('../../external', true, /realm\.js$/));
 
 export default {
   name: 'Realms',
