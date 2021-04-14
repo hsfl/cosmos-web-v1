@@ -180,7 +180,7 @@ function Dashboard({
       document.title = 'COSMOS Web';
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     async function fetchNamespace() {
