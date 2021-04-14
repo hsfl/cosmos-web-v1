@@ -32,7 +32,7 @@ import 'react-resizable/css/styles.css';
 import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 
-import { axios, socket } from '../api';
+import { COSMOSAPI, socket } from '../api';
 import routes from '../routes';
 import defaultComponent from '../components/Default/Default';
 import { set, setData, setActivity } from '../store/actions';
@@ -185,9 +185,9 @@ function Dashboard({
   useEffect(() => {
     async function fetchNamespace() {
       try {
-        const agents = await axios.get('/namespace/all');
-
-        dispatch(set('namespace', agents.data));
+        await COSMOSAPI.getNamespaceAll((agents) => {
+          dispatch(set('namespace', agents.data));
+        });
       } catch (error) {
         message.error(error.message);
       }

@@ -108,7 +108,7 @@ function Commands({
         }
       }
 
-      await COSMOSAPI.getNodeCommands(commandNode, setCommands);
+      await COSMOSAPI.findNodeCommands(commandNode, setCommands);
     } catch (error) {
       message.error('Could not query commands from database.');
     }
