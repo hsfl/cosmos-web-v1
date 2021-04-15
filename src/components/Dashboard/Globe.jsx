@@ -203,6 +203,7 @@ function CesiumGlobe({
             );
           tempOrbit[i].path.addSample(date, pos);
           tempOrbit[i].position = [x, y, z];
+		  tempOrbit[i].posGeod = Cesium.Cartographic.fromCartesian(pos);
         }
         // else if (coordinateSystem === 'geodetic') {
         //   pos = Cesium.Cartesian3.fromDegrees(
@@ -739,9 +740,9 @@ function CesiumGlobe({
                 <td className="p-2 pr-8">{orbit.position[0]}</td>
                 <td className="p-2 pr-8">{orbit.position[1]}</td>
                 <td className="p-2 pr-8">{orbit.position[2]}</td>
-                <td className="p-2 pr-8">{orbit.geodetic ? orbit.geodetic.latitude : 0}</td>
-                <td className="p-2 pr-8">{orbit.geodetic ? orbit.geodetic.longitude : 0}</td>
-                <td className="p-2 pr-8">{orbit.geodetic ? orbit.geodetic.altitude : 0}</td>
+                <td className="p-2 pr-8">{orbit.geodetic ? orbit.geodetic.latitude : (orbit.posGeod) ? orbit.posGeod.latitude : 0}</td>
+                <td className="p-2 pr-8">{orbit.geodetic ? orbit.geodetic.longitude : (orbit.posGeod) ? orbit.posGeod.longitude : 0}</td>
+                <td className="p-2 pr-8">{orbit.geodetic ? orbit.geodetic.altitude : (orbit.posGeod) ? orbit.posGeod.height : 0}</td>
               </tr>
             ))
           }
