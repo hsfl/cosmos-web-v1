@@ -149,7 +149,7 @@ function CesiumGlobe({
   /** Retrieve live orbit data */
   useEffect(() => {
     orbitsState.forEach(({
-	  nodeProcess,
+      nodeProcess,
       XDataKey,
       YDataKey,
       ZDataKey,
@@ -163,7 +163,7 @@ function CesiumGlobe({
         && state[realm][XDataKey]
         && state[realm][YDataKey]
         && state[realm][ZDataKey]
-		&& (nodeProcess === 'any' || nodeProcess === [state[realm].node_name, state[realm].agent_name].join(':'))
+        && (nodeProcess === 'any' || nodeProcess === [state[realm].node_name, state[realm].agent_name].join(':'))
         && ((!(process.env.FLIGHT_MODE === 'true') && state[realm].recorded_time)
         || (process.env.FLIGHT_MODE === 'true' && state[realm][timeDataKey]))
         && live
@@ -203,7 +203,7 @@ function CesiumGlobe({
             );
           tempOrbit[i].path.addSample(date, pos);
           tempOrbit[i].position = [x, y, z];
-		  tempOrbit[i].posGeod = Cesium.Cartographic.fromCartesian(pos);
+          tempOrbit[i].posGeod = Cesium.Cartographic.fromCartesian(pos);
         }
         // else if (coordinateSystem === 'geodetic') {
         //   pos = Cesium.Cartesian3.fromDegrees(
@@ -315,6 +315,16 @@ function CesiumGlobe({
       }
     }
   };
+
+  /** Return whichever geodetic coordinates are defined */
+  function GetGeodetic(orbit) {
+    if (orbit.geodetic) {
+      return orbit.geodetic;
+    } if (orbit.posGeod) {
+      return orbit.posGeod;
+    }
+    return 0;
+  }
 
   /** Handle the collection of historical data */
   /** TODO: UPDATE RETRIEVAL FOR GEODETIC COORDINATES */
@@ -740,9 +750,9 @@ function CesiumGlobe({
                 <td className="p-2 pr-8">{orbit.position[0]}</td>
                 <td className="p-2 pr-8">{orbit.position[1]}</td>
                 <td className="p-2 pr-8">{orbit.position[2]}</td>
-                <td className="p-2 pr-8">{orbit.geodetic ? orbit.geodetic.latitude : (orbit.posGeod) ? orbit.posGeod.latitude : 0}</td>
-                <td className="p-2 pr-8">{orbit.geodetic ? orbit.geodetic.longitude : (orbit.posGeod) ? orbit.posGeod.longitude : 0}</td>
-                <td className="p-2 pr-8">{orbit.geodetic ? orbit.geodetic.altitude : (orbit.posGeod) ? orbit.posGeod.height : 0}</td>
+                <td className="p-2 pr-8">{GetGeodetic(orbit) && GetGeodetic(orbit).latitude}</td>
+                <td className="p-2 pr-8">{GetGeodetic(orbit) && GetGeodetic(orbit).longitude}</td>
+                <td className="p-2 pr-8">{GetGeodetic(orbit) && GetGeodetic(orbit).height}</td>
               </tr>
             ))
           }

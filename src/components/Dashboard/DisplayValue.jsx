@@ -45,7 +45,7 @@ function DisplayValue({
       // by checking the node process and the key it is watching
       if (state && realm && state[realm]
         && state[realm][v.dataKey] !== undefined
-		&& (v.nodeProcess === 'any' || v.nodeProcess === [state[realm].node_name, state[realm].agent_name].join(':'))
+        && (v.nodeProcess === 'any' || v.nodeProcess === [state[realm].node_name, state[realm].agent_name].join(':'))
         && ((!(process.env.FLIGHT_MODE === 'true') && state[realm].recorded_time)
         || (process.env.FLIGHT_MODE === 'true' && state[realm][v.timeDataKey]))
       ) {
