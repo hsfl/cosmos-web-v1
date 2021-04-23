@@ -655,6 +655,7 @@ function Dashboard({
             <GetHistoricalData
               tab={currentTab}
               amountOfComponents={layouts.lg.filter((el) => el.component.name === 'Chart' || el.component.name === 'DisplayValue').length + 2}
+              nodes={realms[id]}
             />
           </div>
         </div>

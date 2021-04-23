@@ -13,6 +13,7 @@ const { RangePicker } = DatePicker;
 function GetHistoricalData({
   tab,
   amountOfComponents,
+  nodes,
 }) {
   const dispatch = useDispatch();
   const realm = useSelector((s) => s.realm);
@@ -155,6 +156,7 @@ function GetHistoricalData({
 GetHistoricalData.propTypes = {
   tab: PropTypes.string.isRequired,
   amountOfComponents: PropTypes.number.isRequired,
+  nodes: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default GetHistoricalData;
