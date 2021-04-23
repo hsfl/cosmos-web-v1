@@ -36,8 +36,20 @@ export const COSMOSAPI = {
     callback();
   },
   getQuery: async (db, collection, query, callback) => {
-    const { data } = await axios.get(`/query/${db}/${collection}`, query);
-    callback(data);
+    axios.get(`/query/${db}/${collection}`, query)
+      .then((res) => {
+        callback(res.data);
+      })
+      .catch((e) => { callback({ error: e.response.status }); });
+  },
+  querySOHData: (node, request, callback) => {
+    axios.post(`/query/soh/${node}`, request)
+      .then((res) => {
+        callback(res.data);
+      })
+      .catch((e) => {
+        callback({ error: e.response.status, message: e.response.message });
+      });
   },
   getNodes: async (callback) => {
     const { data } = await axios.get('//nodes');

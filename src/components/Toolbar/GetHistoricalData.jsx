@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 
 import { set, resetQueue } from '../../store/actions';
-import { axios } from '../../api';
+import { COSMOSAPI } from '../../api';
 import { dateToMJD } from '../../utility/time';
 
 const { RangePicker } = DatePicker;
@@ -16,7 +16,7 @@ function GetHistoricalData({
   nodes,
 }) {
   const dispatch = useDispatch();
-  const realm = useSelector((s) => s.realm);
+  // const realm = useSelector((s) => s.realm);
   const keys = useSelector((s) => s.keys[tab]);
   const retrievedQuery = useSelector((s) => s.retrievedQuery);
 
@@ -45,74 +45,85 @@ function GetHistoricalData({
     // Generate mongodb query based on keys
     if (keys && keys.dataKeys) {
       Object.entries(keys.dataKeys).forEach(([key, entry]) => {
-        query.push({
-          [entry.timeDataKey]: {
-            $gt: dateToMJD(from),
-            $lt: dateToMJD(to),
-          },
-        });
-
-        projection[entry.timeDataKey] = 1;
-        projection[key] = 1;
+        if (entry.timeDataKey) {
+          query.push({
+            [entry.timeDataKey]: {
+              $gt: dateToMJD(from),
+              $lt: dateToMJD(to),
+            },
+          });
+          projection[entry.timeDataKey] = 1;
+          projection[key] = 1;
+        }
       });
+      projection['node_name'] = 1;
+      projection['agent_name'] = 1;
 
-      try {
-        const { data } = await axios.post(`/query/${realm}/any`, {
-          multiple: true,
+      const ingestQuery = (data) => {
+        try {
+          if (data.error) {
+            throw new Error(data.error);
+          }
+          // Coerce data into array according to retrieved data
+          const fields = {};
+          if (data.length !== 0) {
+            // Go through data keys and sort based on time
+            Object.entries({
+              ...keys.dataKeys,
+              ...nodeDowntime,
+            }).forEach(([key, { timeDataKey }]) => {
+              // Filter out corresponding data key and time data key, insert into x,y object to sort
+              const unsorted = data.reduce((filter, entry) => {
+                if (key in entry && timeDataKey in entry && entry[key] && entry[timeDataKey]) {
+                  filter.push({
+                    x: entry[timeDataKey],
+                    y: entry[key],
+                  });
+                }
+                return filter;
+              }, []);
+
+              // Sort based on date
+              const sorted = unsorted.sort((a, b) => a.x - b.x);
+
+              // Store values in array according to key in an object
+              fields[timeDataKey] = [];
+              fields[key] = [];
+
+              sorted.forEach((entry) => {
+                fields[timeDataKey].push(entry.x);
+                fields[key].push(entry.y);
+              });
+            });
+
+            message.destroy();
+            message.success('Done retrieving data.');
+          } else {
+            message.destroy();
+            message.warning(`No data between ${from.format('YYYY-MM-DD HH:mm:ss')} - ${to.format('YYYY-MM-DD HH:mm:ss')}`, 10);
+          }
+
+          dispatch(set('queriedData', fields));
+          dispatch(set('xMin', from.format('YYYY-MM-DDTHH:mm:ss')));
+          dispatch(set('xMax', to.format('YYYY-MM-DDTHH:mm:ss')));
+        } catch (error) {
+          message.destroy();
+          message.error(error.message);
+        }
+      };
+
+      nodes.forEach((node) => {
+        COSMOSAPI.querySOHData(node, {
           query: {
             $or: query,
           },
           options: {
             projection,
           },
-        });
-
-        // Coerce data into array according to retrieved data
-        const fields = {};
-        if (data.length !== 0) {
-          // Go through data keys and sort based on time
-          Object.entries({
-            ...keys.dataKeys,
-            ...nodeDowntime,
-          }).forEach(([key, { timeDataKey }]) => {
-            // Filter out corresponding data key and time data key, insert into x,y object to sort
-            const unsorted = data.reduce((filter, entry) => {
-              if (key in entry && timeDataKey in entry && entry[key] && entry[timeDataKey]) {
-                filter.push({
-                  x: entry[timeDataKey],
-                  y: entry[key],
-                });
-              }
-              return filter;
-            }, []);
-
-            // Sort based on date
-            const sorted = unsorted.sort((a, b) => a.x - b.x);
-
-            // Store values in array according to key in an object
-            fields[timeDataKey] = [];
-            fields[key] = [];
-
-            sorted.forEach((entry) => {
-              fields[timeDataKey].push(entry.x);
-              fields[key].push(entry.y);
-            });
-          });
-
-          message.destroy();
-          message.success('Done retrieving data.');
-        } else {
-          message.destroy();
-          message.warning(`No data between ${from.format('YYYY-MM-DD HH:mm:ss')} - ${to.format('YYYY-MM-DD HH:mm:ss')}`, 10);
-        }
-
-        dispatch(set('queriedData', fields));
-        dispatch(set('xMin', from.format('YYYY-MM-DDTHH:mm:ss')));
-        dispatch(set('xMax', to.format('YYYY-MM-DDTHH:mm:ss')));
-      } catch (error) {
-        message.destroy();
-        message.error(error.message);
-      }
+          beginDate: dateToMJD(from),
+          endDate: dateToMJD(to),
+        }, ingestQuery);
+      });
     }
   };
 
