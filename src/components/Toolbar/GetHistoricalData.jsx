@@ -56,8 +56,8 @@ function GetHistoricalData({
           projection[key] = 1;
         }
       });
-      projection['node_name'] = 1;
-      projection['agent_name'] = 1;
+      projection.node_name = 1;
+      projection.agent_name = 1;
 
       const ingestQuery = (data) => {
         try {
