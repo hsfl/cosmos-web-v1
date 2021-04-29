@@ -6,7 +6,7 @@ import {
 } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 
-import { axios } from '../../api';
+import { COSMOSAPI } from '../../api';
 import BaseComponent from '../BaseComponent';
 
 function UploadFile({
@@ -77,14 +77,12 @@ function UploadFile({
   useEffect(() => {
     async function sendCommand() {
       try {
-        const { data } = await axios.post('/command', {
+        await COSMOSAPI.runCommand({
           command: `${process.env.COSMOS_BIN}/agent ${node} ${proc} ${command} ${fileContentUpload}`,
-        });
-
-        if (data) {
+        },
+        () => {
           message.success('Successfully uploaded all files!');
-        }
-
+        });
         setFileContentUpload(null);
       } catch (error) {
         message.error('Error while attempting to upload files.');

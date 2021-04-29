@@ -17,7 +17,7 @@ import {
   CloseOutlined,
 } from '@ant-design/icons';
 
-import { axios } from '../../api';
+import { COSMOSAPI } from '../../api';
 
 import BaseComponent from '../BaseComponent';
 
@@ -40,20 +40,14 @@ function CommandEditor({
     try {
       if (query) {
         try {
-          await axios.delete(`/commands/${globalNode}`, {
-            data: {
-              event_name: query,
-            },
+          await COSMOSAPI.deleteNodeCommand(query, globalNode, () => {
+            message.success(`${query} deleted successfully.`);
           });
-          message.success(`${query} deleted successfully.`);
         } catch (err) {
           message.error(`Error deleting ${query}.`);
         }
       }
-
-      const { data } = await axios.get(`/commands/${globalNode}`);
-
-      setCommands(data);
+      await COSMOSAPI.findNodeCommands(globalNode, setCommands);
     } catch (error) {
       message.error('Could not query commands from database.');
     }
@@ -111,15 +105,18 @@ function CommandEditor({
       message.error('Duplicate command cannot be created.');
     } else {
       try {
-        await axios.post(`/commands/${globalNode}`, {
+        await COSMOSAPI.insertNodeCommand({
           command: {
             event_name: name,
             event_type: type,
             event_flag: flag,
             event_data: command,
           },
+        },
+        globalNode,
+        () => {
+          message.success(`Successfully created ${name}!`);
         });
-        message.success(`Successfully created ${name}!`);
       } catch {
         message.error(`Error creating ${name}`);
       }

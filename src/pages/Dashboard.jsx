@@ -185,8 +185,8 @@ function Dashboard({
   useEffect(() => {
     async function fetchNamespace() {
       try {
-        await COSMOSAPI.getNamespaceAll((agents) => {
-          dispatch(set('namespace', agents.data));
+        await COSMOSAPI.getNamespaceAll((data) => {
+          dispatch(set('namespace', data));
         });
       } catch (error) {
         message.error(error.message);
@@ -641,7 +641,7 @@ function Dashboard({
           className={`flex justify-between py-2 px-5 border-gray-200 border-solid border-b transition-all duration-500 ease-in-out ${color === 'green' ? 'bg-green-100' : ''} ${color === 'orange' ? 'bg-orange-100' : ''} ${color === 'red' ? 'bg-red-100' : ''}`}
         >
           <div>
-            <Statuses realm={id} />
+            <Statuses nodes={realms[id]} />
           </div>
 
           <div className="pt-4">
