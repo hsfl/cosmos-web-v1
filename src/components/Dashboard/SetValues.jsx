@@ -8,7 +8,7 @@ import {
 } from 'antd';
 
 import BaseComponent from '../BaseComponent';
-import { axios } from '../../api';
+import { COSMOSAPI } from '../../api';
 
 const minWidth = {
   minWidth: '5em',
@@ -75,14 +75,15 @@ function SetValues({
 
       setUpdateLog(true);
 
-      const { data } = await axios.post('/command', {
+      await COSMOSAPI.runCommand({
         command: `${process.env.COSMOS_BIN}/agent ${node} ${proc} ${selectedComponent === 'USRP_UHD_Device' || selectedComponent === 'USRP_Device_Tx' || selectedComponent === 'USRP_Device_Rx' ? 'configure_device' : 'app_configure_component'} ${macro ? `${macro} ` : ''}${selectedComponent} ${selectedProperty} ${form.value}`,
+      },
+      (data) => {
+        setCommandHistory([
+          ...commandHistory,
+          data,
+        ]);
       });
-
-      setCommandHistory([
-        ...commandHistory,
-        data,
-      ]);
 
       setUpdateLog(true);
 
@@ -109,14 +110,15 @@ function SetValues({
           `➜ agent ${node} ${proc} doppler ${dopplerSwitch}`,
         ]);
 
-        const { data } = await axios.post('/command', {
+        await COSMOSAPI.runCommand({
           command: `${process.env.COSMOS_BIN}/agent ${node} ${proc} doppler ${dopplerSwitch}`,
+        },
+        (data) => {
+          setCommandHistory([
+            ...commandHistory,
+            data,
+          ]);
         });
-
-        setCommandHistory([
-          ...commandHistory,
-          data,
-        ]);
 
         setUpdateLog(true);
       } catch (error) {
@@ -131,17 +133,18 @@ function SetValues({
   /** Get the live values from the agent */
   const getValue = async () => {
     try {
-      const { data } = await axios.post('/command', {
+      await COSMOSAPI.runCommand({
         command: `${process.env.COSMOS_BIN}/agent ${node} ${proc} ${selectedComponent === 'USRP_UHD_Device' || selectedComponent === 'USRP_Device_Tx' || selectedComponent === 'USRP_Device_Rx' ? 'device_properties' : 'app_component'} ${macro && !(selectedComponent === 'USRP_UHD_Device' || selectedComponent === 'USRP_Device_Tx' || selectedComponent === 'USRP_Device_Rx') ? `${macro} ` : ''}${selectedComponent}`,
+      },
+      (data) => {
+        const json = JSON.parse(data);
+
+        if (json.output && json.output.properties) {
+          setLiveValues(json.output.properties);
+        } else if (json.output && json.output.error) {
+          setLiveValues([{ id: json.output.error }]);
+        }
       });
-
-      const json = JSON.parse(data);
-
-      if (json.output && json.output.properties) {
-        setLiveValues(json.output.properties);
-      } else if (json.output && json.output.error) {
-        setLiveValues([{ id: json.output.error }]);
-      }
     } catch (error) {
       setLiveValues([{ id: 'Unable to retrieve component properties.' }]);
 

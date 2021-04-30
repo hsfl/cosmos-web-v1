@@ -7,7 +7,7 @@ import {
 import { QuestionOutlined } from '@ant-design/icons';
 
 import BaseComponent from '../BaseComponent';
-import { axios } from '../../api';
+import { COSMOSAPI } from '../../api';
 
 /**
  * Component to handle pre-defined sequences of commands to run agent commands.
@@ -31,21 +31,22 @@ function Sequence({
      */
     await Promise.all(sequence.map(async (command) => {
       try {
-        const { data } = await axios.post('/command', {
-          commands: `${process.env.COSMOS_BIN}/agent ${command}`,
+        await COSMOSAPI.runCommand({
+          command: `${process.env.COSMOS_BIN}/agent ${command}`,
+        },
+        (data) => {
+          // User feedback indicating command just sent
+          commandHistory.push(`➜ agent ${command}`);
+
+          // Force scroll to bottom
+          setUpdateLog(true);
+
+          // Add to command history for reusing in future
+          commandHistory.push(data);
+
+          // Force scroll to bottom
+          setUpdateLog(true);
         });
-
-        // User feedback indicating command just sent
-        commandHistory.push(`➜ agent ${command}`);
-
-        // Force scroll to bottom
-        setUpdateLog(true);
-
-        // Add to command history for reusing in future
-        commandHistory.push(data);
-
-        // Force scroll to bottom
-        setUpdateLog(true);
       } catch (error) {
         message.error(error.message);
       }
