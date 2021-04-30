@@ -51,6 +51,15 @@ export const COSMOSAPI = {
         callback({ error: e.response.status, message: e.response.message });
       });
   },
+  queryCurrentSOHData: (node, request, callback) => {
+    axios.post(`/query/soh/current/${node}`, request)
+      .then((res) => {
+        callback(res.data);
+      })
+      .catch((e) => {
+        callback({ error: e.response.status, message: e.response.message });
+      });
+  },
   getNodes: async (callback) => {
     const { data } = await axios.get('//nodes');
     callback(data);
