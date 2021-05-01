@@ -25,7 +25,7 @@ function Statuses({
     const initializeQuery = async () => {
       try {
         // todo: check if nodes exists, and also if other nodes might be active if nodes[0] is not
-        COSMOSAPI.querySOHData(nodes[0], {
+        COSMOSAPI.queryCurrentSOHData(nodes[0], {
           query: {},
           options: {
             projection: {
@@ -36,7 +36,6 @@ function Statuses({
               node_utc: -1,
             },
           },
-          beginDate: 'current',
         }, (data) => {
           // Send information to redux
           dispatch(set('lastActivity', data));
