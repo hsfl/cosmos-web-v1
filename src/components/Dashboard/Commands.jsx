@@ -167,11 +167,29 @@ function Commands({
           ]);
         }
       } catch (error) {
+        message.destroy();
+        message.error(error);
         setCommandHistory([
           ...commandHistoryEl.current,
           `${dayjs.utc().format()} ${data}`,
         ]);
       }
+    }
+  };
+
+  const sendAgentCommandApi = async (nodeName, agentName, command) => {
+    setCommandHistory([
+      ...commandHistoryEl.current,
+      `➜ ${dayjs.utc().format()} agent ${nodeName} ${agentName} ${command}`,
+    ]);
+
+    setUpdateLog(true);
+    try {
+      await COSMOSAPI.runAgentCommand(nodeName, agentName, command, parseCommandResponse);
+      setUpdateLog(true);
+    } catch (error) {
+      message.destroy();
+      message.error(error.message);
     }
   };
 
@@ -183,12 +201,7 @@ function Commands({
 
     setUpdateLog(true);
     try {
-      if (route === 'agent') {
-        await COSMOSAPI.runAgentCommand(command, parseCommandResponse);
-      } else {
-        await COSMOSAPI.runCommand({ command: `${route} ${command}` }, parseCommandResponse);
-      }
-
+      await COSMOSAPI.runCommand({ command: `${route} ${command}` }, parseCommandResponse);
       setUpdateLog(true);
     } catch (error) {
       message.destroy();
@@ -208,7 +221,7 @@ function Commands({
         sendCommandApi('command_generator', commandArguments.replace(/"/g, "'"));
         break;
       default:
-        sendCommandApi('agent', `${selectedAgent[0]} ${selectedAgent[1]} ${selectedRequest} ${macro ? `${macro} ` : ''}${commandArguments}`);
+        sendAgentCommandApi(selectedAgent[0], selectedAgent[1], `${selectedRequest} ${macro ? `${macro} ` : ''}${commandArguments}`);
         break;
     }
 
@@ -258,7 +271,7 @@ function Commands({
     setAgentRequests({});
 
     if (agent.length > 0) {
-      sendCommandApi('agent', `${agent[0]} ${agent[1]} help_json`);
+      sendAgentCommandApi(agent[0], agent[1], 'help_json');
     }
   };
 
@@ -477,7 +490,7 @@ function Commands({
             &nbsp;
             <Button
               onClick={() => {
-                sendCommandApi('agent', `neutron1 radio_trxvu_ground_sim send_cmd 1 ${process.env.TRXVU_PASS} ${sending.event_data}`);
+                sendAgentCommandApi('neutron1', 'radio_trxvu_ground_sim', `send_cmd 1 ${process.env.TRXVU_PASS} ${sending.event_data}`);
               }}
               disabled={macroCommand === null}
             >

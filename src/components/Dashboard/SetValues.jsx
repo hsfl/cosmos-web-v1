@@ -75,9 +75,7 @@ function SetValues({
 
       setUpdateLog(true);
 
-      await COSMOSAPI.runCommand({
-        command: `${process.env.COSMOS_BIN}/agent ${node} ${proc} ${selectedComponent === 'USRP_UHD_Device' || selectedComponent === 'USRP_Device_Tx' || selectedComponent === 'USRP_Device_Rx' ? 'configure_device' : 'app_configure_component'} ${macro ? `${macro} ` : ''}${selectedComponent} ${selectedProperty} ${form.value}`,
-      },
+      await COSMOSAPI.runAgentCommand(node, proc,`${selectedComponent === 'USRP_UHD_Device' || selectedComponent === 'USRP_Device_Tx' || selectedComponent === 'USRP_Device_Rx' ? 'configure_device' : 'app_configure_component'} ${macro ? `${macro} ` : ''}${selectedComponent} ${selectedProperty} ${form.value}`,
       (data) => {
         setCommandHistory([
           ...commandHistory,
@@ -110,14 +108,12 @@ function SetValues({
           `➜ agent ${node} ${proc} doppler ${dopplerSwitch}`,
         ]);
 
-        await COSMOSAPI.runCommand({
-          command: `${process.env.COSMOS_BIN}/agent ${node} ${proc} doppler ${dopplerSwitch}`,
-        },
-        (data) => {
-          setCommandHistory([
-            ...commandHistory,
-            data,
-          ]);
+        await COSMOSAPI.runAgentCommand(node, proc ,`doppler ${dopplerSwitch}`,
+          (data) => {
+            setCommandHistory([
+              ...commandHistory,
+              data,
+            ]);
         });
 
         setUpdateLog(true);
@@ -133,9 +129,7 @@ function SetValues({
   /** Get the live values from the agent */
   const getValue = async () => {
     try {
-      await COSMOSAPI.runCommand({
-        command: `${process.env.COSMOS_BIN}/agent ${node} ${proc} ${selectedComponent === 'USRP_UHD_Device' || selectedComponent === 'USRP_Device_Tx' || selectedComponent === 'USRP_Device_Rx' ? 'device_properties' : 'app_component'} ${macro && !(selectedComponent === 'USRP_UHD_Device' || selectedComponent === 'USRP_Device_Tx' || selectedComponent === 'USRP_Device_Rx') ? `${macro} ` : ''}${selectedComponent}`,
-      },
+      await COSMOSAPI.runAgentCommand(node, proc, `${selectedComponent === 'USRP_UHD_Device' || selectedComponent === 'USRP_Device_Tx' || selectedComponent === 'USRP_Device_Rx' ? 'device_properties' : 'app_component'} ${macro && !(selectedComponent === 'USRP_UHD_Device' || selectedComponent === 'USRP_Device_Tx' || selectedComponent === 'USRP_Device_Rx') ? `${macro} ` : ''}${selectedComponent}`,
       (data) => {
         const json = JSON.parse(data);
 

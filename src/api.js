@@ -11,8 +11,8 @@ export const axios = rest.create({
 
 // api requests supported
 export const COSMOSAPI = {
-  runAgentCommand: async (command, callback) => {
-    const { data } = await axios.post('/commands/agent', { command });
+  runAgentCommand: async (node, agent, command, callback) => {
+    const { data } = await axios.post(`/commands/agent/${node}/${agent}`, { command });
     callback(data);
   },
   runCommand: async (req, callback) => {
@@ -66,5 +66,9 @@ export const COSMOSAPI = {
   getNamespacePieces: async (callback) => {
     const { data } = await axios.get('/namespace/pieces');
     callback(data);
+  },
+  postEvent: async (commandNode, event, callback) => {
+    await axios.post(`/events/${commandNode}`, { event });
+    callback();
   },
 };

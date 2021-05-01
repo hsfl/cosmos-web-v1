@@ -77,9 +77,7 @@ function UploadFile({
   useEffect(() => {
     async function sendCommand() {
       try {
-        await COSMOSAPI.runCommand({
-          command: `${process.env.COSMOS_BIN}/agent ${node} ${proc} ${command} ${fileContentUpload}`,
-        },
+        await COSMOSAPI.runAgentCommand(node, proc, `${command} ${fileContentUpload}`,
         () => {
           message.success('Successfully uploaded all files!');
         });

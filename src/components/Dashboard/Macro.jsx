@@ -35,9 +35,7 @@ function Macro() {
      */
     async function getValue() {
       try {
-        await COSMOSAPI.runCommand({
-          command: 'agent masdr nordiasoft list_applications',
-        },
+        await COSMOSAPI.runAgentCommand('masdr', 'nordiasoft', 'list_applications',
         (data) => {
           const json = JSON.parse(data);
 
