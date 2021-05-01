@@ -78,9 +78,9 @@ function UploadFile({
     async function sendCommand() {
       try {
         await COSMOSAPI.runAgentCommand(node, proc, `${command} ${fileContentUpload}`,
-        () => {
-          message.success('Successfully uploaded all files!');
-        });
+          () => {
+            message.success('Successfully uploaded all files!');
+          });
         setFileContentUpload(null);
       } catch (error) {
         message.error('Error while attempting to upload files.');
