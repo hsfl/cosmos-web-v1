@@ -8,12 +8,13 @@ function ChartValues({
 }) {
   const namespace = useSelector((s) => s.namespace);
 
-  const findPiece = (dataKey) => {
-    if (namespace && namespace.neutron1) {
+  const findPiece = (dataKey, nodeProcess) => {
+    const node = nodeProcess.split(':')[0];
+    if (namespace && namespace[node]) {
       let piece;
       let pieceName = null;
 
-      Object.entries(namespace.neutron1.values).some(([k, v]) => {
+      Object.entries(namespace[node].values).some(([k, v]) => {
         const contains = v.includes(dataKey);
 
         if (contains) {
@@ -23,7 +24,7 @@ function ChartValues({
         return contains;
       });
 
-      Object.entries(namespace.neutron1.pieces).some(([k, v]) => {
+      Object.entries(namespace[node].pieces).some(([k, v]) => {
         const contains = v === piece;
 
         if (contains) {
@@ -32,8 +33,9 @@ function ChartValues({
 
         return contains;
       });
-
-      return pieceName;
+      if (pieceName !== null) {
+        return pieceName;
+      }
     }
 
     return 'any';
@@ -61,7 +63,7 @@ function ChartValues({
               />
               <span className="font-semibold">
                 {
-                  findPiece(plot.YDataKey)
+                  findPiece(plot.YDataKey, plot.nodeProcess)
                 }
               </span>
               &nbsp;-&nbsp;
