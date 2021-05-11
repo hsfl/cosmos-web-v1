@@ -13,7 +13,7 @@ import {
 import BaseComponent from '../BaseComponent';
 import model from '../../public/cubesat.glb';
 import { axios } from '../../api';
-import { MJDtoJavaScriptDate } from '../../utility/time';
+import { MJDtoJavaScriptDate, dateToMJD } from '../../utility/time';
 
 const { Panel } = Collapse;
 const { RangePicker } = DatePicker;
@@ -235,8 +235,8 @@ function CesiumGlobe({
     // Check to see if user chose a range of dates
     if (dates && dates.length === 2) {
       // Unix time to modified julian date
-      const from = (dates[0].unix() / 86400.0) + 2440587.5 - 2400000.5;
-      const to = (dates[1].unix() / 86400.0) + 2440587.5 - 2400000.5;
+      const from = dateToMJD(dates[0]);
+      const to = dateToMJD(dates[1]);
 
       try {
         const { data } = await axios.post(`/query/${realm}/${nodeProcess}`, {
@@ -331,13 +331,14 @@ function CesiumGlobe({
   useEffect(() => {
     if (retrieveOrbitHistory !== null) {
       const fields = editForm.getFieldsValue();
-
       const dates = fields[`dateRange_${retrieveOrbitHistory}`];
       const dataKey = fields[`dataKey_${retrieveOrbitHistory}`];
+      const timeDataKey = fields[`timeDataKey_${retrieveOrbitHistory}`];
 
       queryHistoricalData(
         dates,
         dataKey,
+        timeDataKey,
         orbitsState[retrieveOrbitHistory].nodeProcess,
         retrieveOrbitHistory,
       );
@@ -347,6 +348,13 @@ function CesiumGlobe({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [retrieveOrbitHistory]);
+
+  /** Process rangepicker changes */
+  const processRangePicker = (dateRange, elementName) => {
+    // Destructure field and index for storage
+    const [field, index] = elementName.split('_');
+    orbitsState[index][field] = dateRange.map((date) => dateToMJD(date));
+  };
 
   /** Process edit value form */
   const processForm = (id) => {
@@ -391,7 +399,6 @@ function CesiumGlobe({
       processZDataKey,
       position: [0, 0, 0],
     });
-
     setUpdateComponent(!updateComponent);
 
     // Set edit value default form values
@@ -518,14 +525,14 @@ function CesiumGlobe({
                         showTime
                         format="YYYY-MM-DD HH:mm:ss"
                         disabled={editForm && editForm.getFieldsValue()[`live_${i}`]}
-                        onBlur={({ target: { id } }) => processForm(id)}
+                        onChange={(id) => processRangePicker(id, `dateRange_${i}`)}
                       />
                     </Form.Item>
 
                     <Button
                       type="primary"
                       onClick={() => setRetrieveOrbitHistory(i)}
-                      disabled={editForm && editForm.getFieldsValue()[`live_${i}`]}
+                      disabled={editForm && editForm.getFieldValue(`live_${i}`)}
                     >
                       Show
                     </Button>
