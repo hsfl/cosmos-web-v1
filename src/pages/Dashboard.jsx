@@ -141,30 +141,31 @@ function Dashboard({
     live.onmessage = ({ data }) => { // onMessage callback
       try {
         const json = JSON.parse(data);
-        let node;
-        let process;
         if (typeof json.node_type === 'string' && json.node_type) {
-          [node, process] = json.node_type.split(':');
-        }
-        if (json.node_type === 'list') {
-          dispatch(set('list', json));
-        // Send data if allowed node AND if flight mode and soh, send,
-        // OW if not flight mode don't send soh
-        } else if (json.node_type === 'file') {
-          dispatch(set('file_list', json));
-        } else if (json.node_type === 'event_queue') {
-          dispatch(set('event_queue', json.queue));
-        } else if ((realms[id].includes(node) || realms[id].includes(json.node_name)) && ((flightMode === 'true') || (!(flightMode === 'true') && process !== 'soh'))) {
-          // Store in realm object
-          dispatch(setData(id, {
-            ...json,
-            recorded_time: dateToMJD(dayjs().utc()),
-          }));
-          dispatch(setActivity({
-            status: 'success',
-            summary: 'Data received',
-            scope: `from ${json.node_name || json.node_type}`,
-          }));
+          if (json.node_type === 'list') {
+            dispatch(set('list', json));
+          // Send data if allowed node AND if flight mode and soh, send,
+          // OW if not flight mode don't send soh
+          } else if (json.node_type === 'file') {
+            dispatch(set('file_list', json));
+          } else if (json.node_type === 'event_queue') {
+            dispatch(set('event_queue', json.queue));
+          } else {
+            const [node, process] = json.node_type.split(':');
+            if ((realms[id].includes(node) || realms[id].includes(json.node_name))
+              && ((flightMode === 'true') || (!(flightMode === 'true') && process !== 'soh'))) {
+              // Store in realm object
+              dispatch(setData(id, {
+                ...json,
+                recorded_time: dateToMJD(dayjs().utc()),
+              }));
+              dispatch(setActivity({
+                status: 'success',
+                summary: 'Data received',
+                scope: `from ${json.node_name || json.node_type}`,
+              }));
+            }
+          }
         }
       } catch (error) {
         message.error(error.message);
