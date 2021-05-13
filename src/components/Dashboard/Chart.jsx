@@ -143,9 +143,9 @@ function Chart({
         || (process.env.FLIGHT_MODE === 'true' && state[realm][p.timeDataKey]))
         && state[realm][p.YDataKey] != null
         && p.live
+        && (state[realm].node_name && p.node == state[realm].node_name)
       ) {
         // If so, push to arrays and update state
-
         if (showZero || (!showZero && state[realm][p.YDataKey])) {
           // Check if polar or not
           if (polar) {
@@ -249,6 +249,7 @@ function Chart({
             y: value.y,
             name: value.name,
             nodeProcess: value.nodeProcess,
+            node: value.node,
             YDataKey: value.YDataKey,
             timeDataKey: value.timeDataKey,
             processYDataKey: value.processYDataKey,
@@ -500,6 +501,8 @@ Chart.propTypes = {
       name: PropTypes.string,
       /** Name of the node:process to listen to */
       nodeProcess: PropTypes.string,
+      /** Name of the node to listen to */
+      node: PropTypes.string,
       /** Data key to plot on the y-axis */
       YDataKey: PropTypes.string,
       /** Function to modify the Y Data key */

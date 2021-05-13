@@ -8,8 +8,7 @@ function ChartValues({
 }) {
   const namespace = useSelector((s) => s.namespace);
 
-  const findPiece = (dataKey, nodeProcess) => {
-    const node = nodeProcess.split(':')[0];
+  const findPiece = (dataKey, node) => {
     if (namespace && namespace[node]) {
       let piece;
       let pieceName = null;
@@ -49,7 +48,7 @@ function ChartValues({
         }
         {
           plots.map((plot, i) => (
-            <span key={`${plot.name}${plot.timeDataKey}${plot.processYDataKey.toString()}${plot.nodeProcess}${plot.YDataKey}`}>
+            <span key={`${plot.name}${plot.timeDataKey}${plot.processYDataKey.toString()}${plot.node}${plot.YDataKey}`}>
               <span
                 className="inline-block rounded-full mr-2 indicator"
                 style={
@@ -63,7 +62,7 @@ function ChartValues({
               />
               <span className="font-semibold">
                 {
-                  findPiece(plot.YDataKey, plot.nodeProcess)
+                  findPiece(plot.YDataKey, plot.node)
                 }
               </span>
               &nbsp;-&nbsp;
