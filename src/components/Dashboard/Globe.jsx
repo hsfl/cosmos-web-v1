@@ -12,7 +12,7 @@ import {
 
 import BaseComponent from '../BaseComponent';
 import model from '../../public/cubesat.glb';
-import { axios } from '../../api';
+import { COSMOSAPI } from '../../api';
 import { MJDtoJavaScriptDate, dateToMJD } from '../../utility/time';
 
 const { Panel } = Collapse;
@@ -231,7 +231,17 @@ function CesiumGlobe({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
 
-  const queryHistoricalData = async (dates, dataKey, timeDataKey, nodeProcess, orbit) => {
+  /**
+  * Query database for historical data
+  * @param {Array} dates length 2 array of dayjs or moments dates
+  * @param {Array} dataKeys array of [xDataKey, yDataKey, zDataKey]
+  * @param {Array} processDataKeys array of [processXDataKey, processYDataKey, processZDataKey]
+  * @param {String} timeDataKey time data key to use to sort query
+  * @param {String} nodeProcess name of the node
+  * @param {Number} orbit node index
+  */
+  const queryHistoricalData = async (dates, dataKeys, processDataKeys,
+    timeDataKey, nodeProcess, orbit) => {
     // Check to see if user chose a range of dates
     if (dates && dates.length === 2) {
       // Unix time to modified julian date
@@ -239,7 +249,8 @@ function CesiumGlobe({
       const to = dateToMJD(dates[1]);
 
       try {
-        const { data } = await axios.post(`/query/${realm}/${nodeProcess}`, {
+        const node = nodeProcess.split(':')[0];
+        COSMOSAPI.querySOHData(node, {
           multiple: true,
           query: {
             [timeDataKey]: {
@@ -249,67 +260,82 @@ function CesiumGlobe({
           },
           options: {
             projection: {
-              [dataKey]: 1,
+              [dataKeys[0]]: 1,
+              [dataKeys[1]]: 1,
+              [dataKeys[2]]: 1,
               [timeDataKey]: 1,
             },
           },
-        });
+          beginDate: from,
+          endDate: to,
+        }, (data) => {
+          message.destroy();
 
-        message.destroy();
+          if (data.length === 0) {
+            message.warning('No data for specified date range.');
+          } else {
+            message.success(`Retrieved ${data.length} records.`);
 
-        if (data.length === 0) {
-          message.warning('No data for specified date range.');
-        } else {
-          message.success(`Retrieved ${data.length} records.`);
+            const tempOrbit = [...orbitsState];
 
-          const tempOrbit = [...orbitsState];
+            let startOrbit;
+            let stopOrbit;
+            let startOrbitPosition;
 
-          let startOrbit;
-          let stopOrbit;
-          let startOrbitPosition;
+            tempOrbit[orbit].live = false;
 
-          tempOrbit[orbit].live = false;
+            const processXDataKey = new Function('x', processDataKeys[0]);
+            const processYDataKey = new Function('x', processDataKeys[1]);
+            const processZDataKey = new Function('x', processDataKeys[2]);
 
-          if (data.length > 0) {
-            startOrbit = Cesium
-              .JulianDate
-              .fromDate(MJDtoJavaScriptDate(data[0][timeDataKey]));
-
-            stopOrbit = Cesium
-              .JulianDate
-              .fromDate(MJDtoJavaScriptDate(data[data.length - 1][timeDataKey]));
-
-            startOrbitPosition = data[0][dataKey].pos;
-          }
-
-          const sampledPosition = new Cesium.SampledPositionProperty();
-
-          data.forEach((o) => {
-            const p = o[dataKey].pos;
-
-            if (o[timeDataKey] && o[dataKey]) {
-              const date = Cesium
+            if (data.length > 0) {
+              startOrbit = Cesium
                 .JulianDate
-                .fromDate(MJDtoJavaScriptDate(o[timeDataKey]));
+                .fromDate(MJDtoJavaScriptDate(data[0][timeDataKey]));
 
-              const pos = Cesium.Cartesian3.fromArray(p);
+              stopOrbit = Cesium
+                .JulianDate
+                .fromDate(MJDtoJavaScriptDate(data[data.length - 1][timeDataKey]));
 
-              sampledPosition.addSample(date, pos);
+              const x = processXDataKey(data[0][dataKeys[0]]);
+              const y = processYDataKey(data[0][dataKeys[1]]);
+              const z = processZDataKey(data[0][dataKeys[2]]);
+
+              startOrbitPosition = [x, y, z];
             }
-          });
 
-          tempOrbit[orbit].position = sampledPosition;
+            const sampledPosition = new Cesium.SampledPositionProperty();
 
-          setStart(startOrbit);
-          setStop(stopOrbit);
-          setOrbitsState(tempOrbit);
+            data.forEach((o) => {
+              const x = processXDataKey(o[dataKeys[0]]);
+              const y = processYDataKey(o[dataKeys[1]]);
+              const z = processZDataKey(o[dataKeys[2]]);
+              const p = [x, y, z];
 
-          setCameraFlyTo(Cesium.Cartesian3.fromArray([
-            startOrbitPosition[0] * 3,
-            startOrbitPosition[1] * 3,
-            startOrbitPosition[2] * 3,
-          ]));
-        }
+              if (o[timeDataKey] && o[dataKeys[0]]) {
+                const date = Cesium
+                  .JulianDate
+                  .fromDate(MJDtoJavaScriptDate(o[timeDataKey]));
+
+                const pos = Cesium.Cartesian3.fromArray(p);
+
+                sampledPosition.addSample(date, pos);
+              }
+            });
+
+            tempOrbit[orbit].position = sampledPosition;
+
+            setStart(startOrbit);
+            setStop(stopOrbit);
+            setOrbitsState(tempOrbit);
+
+            setCameraFlyTo(Cesium.Cartesian3.fromArray([
+              startOrbitPosition[0] * 3,
+              startOrbitPosition[1] * 3,
+              startOrbitPosition[2] * 3,
+            ]));
+          }
+        });
       } catch (error) {
         message.error(error.message);
       }
@@ -332,12 +358,14 @@ function CesiumGlobe({
     if (retrieveOrbitHistory !== null) {
       const fields = editForm.getFieldsValue();
       const dates = fields[`dateRange_${retrieveOrbitHistory}`];
-      const dataKey = fields[`dataKey_${retrieveOrbitHistory}`];
+      const dataKeys = [fields[`XDataKey_${retrieveOrbitHistory}`], fields[`YDataKey_${retrieveOrbitHistory}`], fields[`ZDataKey_${retrieveOrbitHistory}`]];
+      const processDataKeys = [fields[`processXDataKey_${retrieveOrbitHistory}`], fields[`processYDataKey_${retrieveOrbitHistory}`], fields[`processZDataKey_${retrieveOrbitHistory}`]];
       const timeDataKey = fields[`timeDataKey_${retrieveOrbitHistory}`];
 
       queryHistoricalData(
         dates,
-        dataKey,
+        dataKeys,
+        processDataKeys,
         timeDataKey,
         orbitsState[retrieveOrbitHistory].nodeProcess,
         retrieveOrbitHistory,
