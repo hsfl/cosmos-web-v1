@@ -143,7 +143,7 @@ function Chart({
         || (process.env.FLIGHT_MODE === 'true' && state[realm][p.timeDataKey]))
         && state[realm][p.YDataKey] != null
         && p.live
-        && (state[realm].node_name && p.node == state[realm].node_name)
+        && (state[realm].node_name && p.node === state[realm].node_name)
       ) {
         // If so, push to arrays and update state
         if (showZero || (!showZero && state[realm][p.YDataKey])) {

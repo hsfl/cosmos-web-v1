@@ -692,7 +692,14 @@ function CesiumGlobe({
       )}
     >
       <Viewer
+        animation={false}
+        baseLayerPicker={false}
         fullscreenButton={false}
+        geocoder={false}
+        homeButton={false}
+        infoBox={false}
+        navigationHelpButton={false}
+        timeline={false}
       >
         <ImageryLayer imageryProvider={imageryProvider} />
         {overlaysState.map((overlay, i) => (
