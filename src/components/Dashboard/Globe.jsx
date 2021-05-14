@@ -16,6 +16,8 @@ import model from '../../public/cubesat.glb';
 import { COSMOSAPI } from '../../api';
 import { MJDtoJavaScriptDate, dateToMJD } from '../../utility/time';
 
+import GlobeToolbar from './Globe/GlobeToolbar';
+
 const { Panel } = Collapse;
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
@@ -702,6 +704,7 @@ function CesiumGlobe({
         fullscreenButton={false}
         geocoder={false}
         homeButton={false}
+        id="cesium-container-id"
         infoBox={false}
         navigationHelpButton={false}
         timeline={false}
@@ -800,6 +803,7 @@ function CesiumGlobe({
             );
           })
         }
+        <GlobeToolbar orbitsState={orbitsState} />
       </Viewer>
       <div className="overflow-x-auto">
         <table className="mt-4 w-full">
