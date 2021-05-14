@@ -225,7 +225,8 @@ function CesiumGlobe({
             altitude: state[realm].target_loc_pos_geod_s_h,
           };
         }
-        const targetPos = { ...tempOrbit[i].posGeod, height: 0 };
+        // temporary default targetting, to change later to some soh value
+        const targetPos = { ...tempOrbit[0].posGeod, height: 0 };
         tempOrbit[i].targetPos = Object.values(
           Cesium.Cartesian3.fromRadians(...Object.values(targetPos)),
         );
@@ -729,7 +730,7 @@ function CesiumGlobe({
                       Cesium.Cartesian3.fromArray(orbit.position),
                       Cesium.Cartesian3.fromArray(orbit.targetPos),
                     ]}
-                    width={3}
+                    width={2}
                     material={Cesium.Color.BLUE}
                   />
                 </Entity>,
