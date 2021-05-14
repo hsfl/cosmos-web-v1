@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
   Viewer, Entity, Model, Globe, Clock, CameraFlyTo, PathGraphics, GeoJsonDataSource, ImageryLayer,
+  PolylineGraphics,
 } from 'resium';
 import Cesium from 'cesium';
 
@@ -224,7 +225,10 @@ function CesiumGlobe({
             altitude: state[realm].target_loc_pos_geod_s_h,
           };
         }
-
+        const targetPos = { ...tempOrbit[i].posGeod, height: 0 };
+        tempOrbit[i].targetPos = Object.values(
+          Cesium.Cartesian3.fromRadians(...Object.values(targetPos)),
+        );
         setOrbitsState(tempOrbit);
       }
     });
@@ -711,6 +715,29 @@ function CesiumGlobe({
             key={i}
           />
         ))}
+        {
+          orbitsState.reduce((result, orbit) => {
+            if (orbit.targetting && orbit.targetPos
+              && orbit.position[0] !== orbit.position[1] && orbit.position[1] !== orbit.position[2]
+            ) {
+              result.push(
+                <Entity
+                  key={orbit.name}
+                >
+                  <PolylineGraphics
+                    positions={[
+                      Cesium.Cartesian3.fromArray(orbit.position),
+                      Cesium.Cartesian3.fromArray(orbit.targetPos),
+                    ]}
+                    width={3}
+                    material={Cesium.Color.BLUE}
+                  />
+                </Entity>,
+              );
+            }
+            return result;
+          }, [])
+        }
         <Globe enableLighting />
         <Clock
           startTime={start}
@@ -833,6 +860,8 @@ CesiumGlobe.propTypes = {
       timeDataKey: PropTypes.string,
       /** Whether or not the orbit is live */
       live: PropTypes.bool,
+      /** Whether or not to enable targetting feature  */
+      targetting: PropTypes.bool,
     }),
   ),
   /** Store overlays on map (geocoloring) */
