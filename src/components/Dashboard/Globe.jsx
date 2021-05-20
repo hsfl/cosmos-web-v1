@@ -228,10 +228,13 @@ function CesiumGlobe({
           };
         }
         // temporary default targetting, to change later to some soh value
-        const targetPos = { ...tempOrbit[0].posGeod, height: 0 };
-        tempOrbit[i].targetPos = Object.values(
-          Cesium.Cartesian3.fromRadians(...Object.values(targetPos)),
+        const targetPosLLA = { ...tempOrbit[0].posGeod, height: 0 };
+        const targetPos = Object.values(
+          Cesium.Cartesian3.fromRadians(...Object.values(targetPosLLA)),
         );
+        if (!targetPos.includes(NaN)) {
+          tempOrbit[i].targetPos = targetPos;
+        }
         setOrbitsState(tempOrbit);
       }
     });
