@@ -28,6 +28,7 @@ import dayjs from 'dayjs';
 
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
+import '../components/component.css';
 
 import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
