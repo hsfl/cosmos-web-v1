@@ -1,0 +1,113 @@
+#cesium-container-id {
+	position: relative;
+}
+ 
+.globetoolbar-container {
+	display: block;
+	position: absolute;
+	top: 5px;
+	left: 5px;
+}
+ 
+.gt-menu-container {
+	position: relative;
+}
+ 
+.gt-menu {
+	background: #fff;
+	border-radius: 8px;
+	position: relative;
+	top: 0px;
+	left: 0px;
+	width: auto;
+	box-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
+	opacity: 0;
+	visibility: hidden;
+	transform: translateY(-20px);
+	transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s;
+}
+ 
+.gt-menu.active {
+	opacity: 1;
+	visibility: visible;
+	transform: translateY(0);
+}
+ 
+.gt-menu ul {
+	list-style: none;
+	padding: 2px;
+	margin: 0;
+}
+ 
+.gt-menu li {
+	text-decoration: none;
+	color: #333333;
+	padding: 0;
+	display: block;
+}
+ 
+.gt-menu li:hover {
+	background: #cef;
+}
+
+.gt-menu li:active {
+	background: #bdf
+}
+
+
+
+.gt-menu li button {
+	color: inherit;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+	width: auto;
+}
+ 
+.gt-menu-trigger {
+	width: 32px;
+	height: 32px;
+	border-radius: 14%;
+	padding: 0;
+	cursor: pointer;
+	vertical-align: middle;
+	background-color: #303336;
+	border: 1px solid #444;
+	color: #edffff;
+	align-items: center;
+	justify-content: space-between;
+	display: flex;
+	vertical-align: middle;
+	transition: box-shadow 0.4s ease;
+}
+ 
+.gt-menu-trigger:hover {
+	color: #fff;
+	fill: #fff;
+	background: #48b;
+	border-color: #aef;
+	box-shadow: 0 0 8px #fff;
+}
+.gt-menu-trigger:active {
+	color: #000;
+	fill: #000;
+	background: #adf;
+	border-color: #fff;
+	box-shadow: 0 0 8px #fff;
+ }
+ 
+.gt-menu-trigger:focus {
+	color: #fff;
+	fill: #fff;
+	border-color: #ea4;
+	outline: none;
+ }
+ 
+.gt-menu-trigger span {
+	font-weight: 600;
+	vertical-align: middle;
+	font-size: 14px;
+	margin: auto;
+}
