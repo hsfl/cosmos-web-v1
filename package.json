@@ -50,7 +50,7 @@
     "reconnecting-websocket": "4.2.0",
     "redux": "^3.7.2",
     "regl-worldview": "0.7.3",
-    "resium": "1.5.0",
+    "resium": "^1.13.1",
     "styled-jsx": "3.3.0",
     "typescript": "^4.1.3",
     "websocket": "^1.0.33"
