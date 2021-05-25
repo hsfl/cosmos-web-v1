@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import Cesium from 'cesium';
-import { CesiumContext } from 'resium';
+import { useCesium } from 'resium';
 
 const DropdownMenu = ({ list, dataKey, callBack }) => {
   const dropdownRef = useRef(null);
@@ -70,12 +70,23 @@ const GlobeToolbar = ({
 }) => {
   const list = useSelector((s) => s.list.agent_list);
 
-  const cesium = React.useContext(CesiumContext);
+  const [trackNode, setTrackNode] = useState('');
+
+  const { viewer } = useCesium();
+
+  useEffect(() => {
+    if (trackNode && trackNode !== '') {
+      const pos = orbitsState.find((orbit) => orbit.name === trackNode).posGeod;
+      pos.height += 100000;
+      viewer.camera.flyTo({
+        destination: Cesium.Cartesian3.fromRadians(pos.longitude, pos.latitude, pos.height),
+      });
+    }
+  }, [trackNode, orbitsState, viewer]);
 
   /** Track selected node with camera */
   const handleNodeDropDownClick = (nodeName) => {
-    console.log(nodeName);
-	console.log(orbitsState);
+    setTrackNode(nodeName);
   };
 
   return (
