@@ -33,7 +33,7 @@ function AgentList({
       setAgentList(filtered.sort(compare));
     } else if (list != null) {
       /** Otherwise, show all agents */
-      setAgentList(list.sort(compare));
+      setAgentList([...list].sort(compare));
     }
   }, [list, node]);
 
