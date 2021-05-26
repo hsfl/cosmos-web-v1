@@ -1,5 +1,5 @@
 import {
-  SET_KEY, SET_DATA, SET_ACTIVITY, INCREMENT_QUEUE, RESET_QUEUE,
+  SET_KEY, SET_DATA, SET_KEY_ERROR, SET_ACTIVITY, INCREMENT_QUEUE, RESET_QUEUE,
 } from '../actions';
 
 /**
@@ -31,6 +31,17 @@ export default function reducer(state = {
           ...state.data,
           [key]: {
             ...state.data[key],
+            ...payload,
+          },
+        },
+      };
+    case SET_KEY_ERROR:
+      return {
+        ...state,
+        keys: {
+          ...state.keys,
+          [key]: {
+            ...state.keys[key],
             ...payload,
           },
         },

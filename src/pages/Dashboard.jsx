@@ -36,7 +36,9 @@ import { highlight, languages } from 'prismjs/components/prism-core';
 import { COSMOSAPI, socket } from '../api';
 import routes from '../routes';
 import defaultComponent from '../components/Default/Default';
-import { set, setData, setActivity } from '../store/actions';
+import {
+  set, setData, setKeyError, setActivity,
+} from '../store/actions';
 import { dateToMJD } from '../utility/time';
 
 import AsyncComponent, { components } from '../components/AsyncComponent';
@@ -240,11 +242,21 @@ function Dashboard({
       // Check if there's any errors flagged in each tab. If so, indicate error
       Object.keys(keys).forEach((tab) => {
         if (flags[tab][0]) {
-          keys[tab].status = 'error';
-          keys[tab].timer = setTimeout(() => { keys[tab].status = 'default'; }, 120000);
+          dispatch(setKeyError(
+            tab,
+            {
+              status: 'error',
+              timer: setTimeout(() => { keys[tab].status = 'default'; }, 120000),
+            },
+          ));
         } else if (flags[tab][1]) {
-          keys[tab].status = 'success';
-          keys[tab].timer = setTimeout(() => { keys[tab].status = 'default'; }, 120000);
+          dispatch(setKeyError(
+            tab,
+            {
+              status: 'success',
+              timer: setTimeout(() => { keys[tab].status = 'default'; }, 120000),
+            },
+          ));
         }
       });
     }
