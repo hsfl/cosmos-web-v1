@@ -748,11 +748,11 @@ function CesiumGlobe({
                     pixelSize={5}
                     color={Cesium.Color.WHITE}
                   />
-                </Entity>
+                </Entity>,
               );
             }
             return result;
-          }, [])   
+          }, [])
         }
         {
           /** Add line to target */
