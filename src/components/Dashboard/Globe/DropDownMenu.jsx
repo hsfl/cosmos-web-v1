@@ -62,5 +62,4 @@ DropdownMenu.propTypes = {
   callBack: PropTypes.func.isRequired,
 };
 
-
 export default DropdownMenu;

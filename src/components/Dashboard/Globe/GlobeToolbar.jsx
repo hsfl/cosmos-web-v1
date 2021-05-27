@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import Cesium from 'cesium';
@@ -19,7 +19,7 @@ const GlobeToolbar = ({
   useEffect(() => {
     if (trackNode && trackNode !== '') {
       const pos = orbitsState.find((orbit) => orbit.name === trackNode).posGeod;
-      pos.height = Math.max(pos.height+5000, cameraHeight);
+      pos.height = Math.max(pos.height + 5000, cameraHeight);
       viewer.camera.flyTo({
         destination: Cesium.Cartesian3.fromRadians(pos.longitude, pos.latitude, pos.height),
         duration: 1,
