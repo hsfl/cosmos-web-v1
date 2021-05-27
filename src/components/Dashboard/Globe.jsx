@@ -228,9 +228,9 @@ function CesiumGlobe({
           };
         }
         // temporary default targetting, to change later to some soh value
-        const targetPosLLA = { ...tempOrbit[0].posGeod, height: 0 };
+        const targetPosLLA = { longitude: 21.3069, latitude: 157.8583, height: 0 };
         const targetPos = Object.values(
-          Cesium.Cartesian3.fromRadians(...Object.values(targetPosLLA)),
+          Cesium.Cartesian3.fromDegrees(...Object.values(targetPosLLA)),
         );
         if (!targetPos.includes(NaN)) {
           tempOrbit[i].targetPos = targetPos;
@@ -771,6 +771,7 @@ function CesiumGlobe({
                     ]}
                     width={2}
                     material={Cesium.Color.BLUE}
+                    arcType="NONE"
                   />
                 </Entity>,
               );

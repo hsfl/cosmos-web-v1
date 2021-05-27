@@ -77,7 +77,7 @@ const GlobeToolbar = ({
   useEffect(() => {
     if (trackNode && trackNode !== '') {
       const pos = orbitsState.find((orbit) => orbit.name === trackNode).posGeod;
-      pos.height += 100000;
+      pos.height += 10000;
       viewer.camera.flyTo({
         destination: Cesium.Cartesian3.fromRadians(pos.longitude, pos.latitude, pos.height),
       });
@@ -86,7 +86,11 @@ const GlobeToolbar = ({
 
   /** Track selected node with camera */
   const handleNodeDropDownClick = (nodeName) => {
-    setTrackNode(nodeName);
+    if (trackNode === nodeName) {
+      setTrackNode('');
+    } else {
+      setTrackNode(nodeName);
+    }
   };
 
   return (
