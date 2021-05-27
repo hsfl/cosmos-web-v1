@@ -4,66 +4,7 @@ import PropTypes from 'prop-types';
 import Cesium from 'cesium';
 import { useCesium } from 'resium';
 
-const DropdownMenu = ({ list, dataKey, callBack }) => {
-  const dropdownRef = useRef(null);
-  const [isActive, setIsActive] = useState(false);
-  const onClick = () => setIsActive(!isActive);
-
-  useEffect(() => {
-    const pageClickEvent = (e) => {
-      // toggle active off if active and clicked outside
-      if (dropdownRef.current !== null && !dropdownRef.current.contains(e.target)) {
-        setIsActive(!isActive);
-      }
-    };
-
-    // If the item is active then listen for clicks
-    if (isActive) {
-      window.addEventListener('click', pageClickEvent);
-    }
-
-    return () => {
-      window.removeEventListener('click', pageClickEvent);
-    };
-  }, [isActive]);
-
-  /** Call callback function with name */
-  const handleClick = (event) => {
-    callBack(event.target.name);
-  };
-
-  const mapListToListItems = () => {
-    if (list !== undefined && dataKey !== undefined) {
-      return list.map((li) => (
-        <li key={`li_${li[dataKey]}`}>
-          <button name={li[dataKey]} type="button" onClick={handleClick}>{li[dataKey]}</button>
-        </li>
-      ));
-    }
-    return (null);
-  };
-
-  return (
-    <div className="gt-menu-container">
-      <button type="button" onClick={onClick} className="gt-menu-trigger">
-        <span>Sat</span>
-      </button>
-      <div ref={dropdownRef} className={`gt-menu ${isActive ? 'active' : 'inactive'}`}>
-        <ul>
-          {
-            mapListToListItems()
-          }
-        </ul>
-      </div>
-    </div>
-  );
-};
-
-DropdownMenu.propTypes = {
-  list: PropTypes.arrayOf(PropTypes.any).isRequired,
-  dataKey: PropTypes.string.isRequired,
-  callBack: PropTypes.func.isRequired,
-};
+import DropdownMenu from './DropDownMenu';
 
 const GlobeToolbar = ({
   orbitsState,
@@ -78,7 +19,7 @@ const GlobeToolbar = ({
   useEffect(() => {
     if (trackNode && trackNode !== '') {
       const pos = orbitsState.find((orbit) => orbit.name === trackNode).posGeod;
-      pos.height = Math.max(pos.height+20000, cameraHeight);
+      pos.height = Math.max(pos.height+5000, cameraHeight);
       viewer.camera.flyTo({
         destination: Cesium.Cartesian3.fromRadians(pos.longitude, pos.latitude, pos.height),
         duration: 1,
