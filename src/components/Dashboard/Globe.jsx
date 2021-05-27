@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
   Viewer, Entity, Model, Globe, Clock, CameraFlyTo, PathGraphics, GeoJsonDataSource, ImageryLayer,
-  PolylineGraphics,
+  PolylineGraphics, PointGraphics,
 } from 'resium';
 import Cesium from 'cesium';
 
@@ -235,6 +235,17 @@ function CesiumGlobe({
         if (!targetPos.includes(NaN)) {
           tempOrbit[i].targetPos = targetPos;
         }
+
+        // Attractor points
+        if (state[realm].sim_params !== undefined) {
+          const attrPointPos = [
+            state[realm].sim_params.x_attractor,
+            state[realm].sim_params.y_attractor,
+            state[realm].sim_params.z_attractor,
+          ];
+          tempOrbit[i].attrPointPos = attrPointPos;
+        }
+
         setOrbitsState(tempOrbit);
       }
     });
@@ -723,6 +734,28 @@ function CesiumGlobe({
           />
         ))}
         {
+          /** Add attractor points */
+          orbitsState.reduce((result, orbit) => {
+            if (orbit.attrPointPos
+              && orbit.position[0] !== orbit.position[1] && orbit.position[1] !== orbit.position[2]
+            ) {
+              result.push(
+                <Entity
+                  key={orbit.name}
+                  position={Cesium.Cartesian3.fromArray(orbit.attrPointPos)}
+                >
+                  <PointGraphics
+                    pixelSize={5}
+                    color={Cesium.Color.WHITE}
+                  />
+                </Entity>
+              );
+            }
+            return result;
+          }, [])   
+        }
+        {
+          /** Add line to target */
           orbitsState.reduce((result, orbit) => {
             if (orbit.targetting && orbit.targetPos
               && orbit.position[0] !== orbit.position[1] && orbit.position[1] !== orbit.position[2]
