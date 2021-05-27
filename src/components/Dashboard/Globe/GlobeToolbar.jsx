@@ -73,22 +73,25 @@ const GlobeToolbar = ({
   const [trackNode, setTrackNode] = useState('');
 
   const { viewer } = useCesium();
+  const [cameraHeight, setCameraHeight] = useState(100000);
 
   useEffect(() => {
     if (trackNode && trackNode !== '') {
       const pos = orbitsState.find((orbit) => orbit.name === trackNode).posGeod;
-      pos.height += 10000;
+      pos.height = Math.max(pos.height+20000, cameraHeight);
       viewer.camera.flyTo({
         destination: Cesium.Cartesian3.fromRadians(pos.longitude, pos.latitude, pos.height),
+        duration: 1,
       });
     }
-  }, [trackNode, orbitsState, viewer]);
+  }, [trackNode, orbitsState, viewer, cameraHeight]);
 
   /** Track selected node with camera */
   const handleNodeDropDownClick = (nodeName) => {
     if (trackNode === nodeName) {
       setTrackNode('');
     } else {
+      setCameraHeight(viewer.camera.positionCartographic.height);
       setTrackNode(nodeName);
     }
   };
