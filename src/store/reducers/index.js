@@ -50,8 +50,9 @@ export default function reducer(state = {
       return {
         ...state,
         activity: [
+          // limit activity to latest 20
           payload,
-          ...state.activity,
+          ...state.activity.slice(0, 19),
         ],
       };
     case INCREMENT_QUEUE:
