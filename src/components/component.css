@@ -28,7 +28,8 @@
 	position: relative;
 	top: 42px;
 	right: 0px;
-	height: 100px;
+	height: 80px;
+	text-align: center;
 }
  
 .gt-menu-container {

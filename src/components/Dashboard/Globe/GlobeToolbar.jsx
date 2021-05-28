@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Cesium from 'cesium';
 import { useCesium } from 'resium';
 import { Slider } from 'antd';
+import { ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
 
 import { COSMOSAPI } from '../../../api';
 
@@ -66,6 +67,7 @@ const GlobeToolbar = ({
       </div>
       <div className="globetoolbar-container-right">
         <div className="zoomslider">
+          <ZoomInOutlined style={{ color: '#fff' }} />
           <Slider
             defaultValue={8000}
             min={1000}
@@ -73,6 +75,7 @@ const GlobeToolbar = ({
             vertical
             onChange={handleZoomChange}
           />
+          <ZoomOutOutlined style={{ color: '#fff' }} />
         </div>
       </div>
     </div>
