@@ -3,11 +3,32 @@
 }
  
 .globetoolbar-container {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+}
+.globetoolbar-container-left {
 	display: flex;
 	flex-direction: row;
 	position: absolute;
 	top: 5px;
 	left: 5px;
+}
+
+.globetoolbar-container-right {
+	display: block;
+	flex-direction: row-reverse;
+	position: absolute;
+	top: 5px;
+	right: 5px;
+}
+
+.globetoolbar-container-right .zoomslider {
+	position: relative;
+	top: 42px;
+	right: 0px;
+	height: 100px;
 }
  
 .gt-menu-container {

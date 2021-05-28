@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import Cesium from 'cesium';
 import { useCesium } from 'resium';
+import { Slider } from 'antd';
 
 import { COSMOSAPI } from '../../../api';
 
@@ -14,6 +15,7 @@ const GlobeToolbar = ({
   const list = useSelector((s) => s.list.agent_list);
 
   const [trackNode, setTrackNode] = useState('');
+  const [zoom, setZoom] = useState(1000);
 
   const { viewer, entityCollection } = useCesium();
   const [cameraHeight, setCameraHeight] = useState(100000);
@@ -27,11 +29,11 @@ const GlobeToolbar = ({
       viewer.camera.lookAt(
         nodePos,
         new Cesium.HeadingPitchRange(
-          viewer.camera.heading, viewer.camera.pitch, 1000,
+          viewer.camera.heading, viewer.camera.pitch, zoom,
         ),
       );
     }
-  }, [trackNode, viewer, orbitsState, cameraHeight, entityCollection]);
+  }, [trackNode, viewer, orbitsState, cameraHeight, entityCollection, zoom]);
 
   /** Track selected node with camera */
   const handleNodeDropDownClick = (nodeName) => {
@@ -43,7 +45,7 @@ const GlobeToolbar = ({
     }
   };
 
-  /** Send request to switch flying formations */
+  /** Send request to switch flying formations, hardcoded for now */
   const handleFormationDropDownClick = (formation) => {
     if (formation === 'Line') {
       COSMOSAPI.runAgentCommand('sim', 'simulator', 'set_shape_type 0', () => {});
@@ -52,10 +54,27 @@ const GlobeToolbar = ({
     }
   };
 
+  const handleZoomChange = (newZoom) => {
+    setZoom(newZoom);
+  };
+
   return (
     <div className="globetoolbar-container">
-      <DropdownMenu list={list !== undefined ? list : []} dataKey="node" callBack={handleNodeDropDownClick} spanText="Sat" />
-      <DropdownMenu list={formationsList} dataKey="formation" callBack={handleFormationDropDownClick} spanText="F" />
+      <div className="globetoolbar-container-left">
+        <DropdownMenu list={list !== undefined ? list : []} dataKey="node" callBack={handleNodeDropDownClick} spanText="Sat" />
+        <DropdownMenu list={formationsList} dataKey="formation" callBack={handleFormationDropDownClick} spanText="F" />
+      </div>
+      <div className="globetoolbar-container-right">
+        <div className="zoomslider">
+          <Slider
+            defaultValue={8000}
+            min={1000}
+            max={100000}
+            vertical
+            onChange={handleZoomChange}
+          />
+        </div>
+      </div>
     </div>
   );
 };
