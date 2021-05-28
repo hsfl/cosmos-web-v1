@@ -18,15 +18,15 @@ const GlobeToolbar = ({
 
   useEffect(() => {
     if (trackNode && trackNode !== '') {
-	  const nodePos = entityCollection.getById(trackNode + "_model").position.getValue();
-	  viewer.camera.lookAt(
-	    nodePos,
-		new Cesium.HeadingPitchRange(
-		  viewer.camera.heading, viewer.camera.pitch, 1000
-		)
-	  );
+      const nodePos = entityCollection.getById(`${trackNode}_model`).position.getValue();
+      viewer.camera.lookAt(
+        nodePos,
+        new Cesium.HeadingPitchRange(
+          viewer.camera.heading, viewer.camera.pitch, 1000,
+        ),
+      );
     }
-  }, [trackNode, viewer, orbitsState, cameraHeight]);
+  }, [trackNode, viewer, orbitsState, cameraHeight, entityCollection]);
 
   /** Track selected node with camera */
   const handleNodeDropDownClick = (nodeName) => {

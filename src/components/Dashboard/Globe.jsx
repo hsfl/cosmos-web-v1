@@ -786,16 +786,16 @@ function CesiumGlobe({
           currentTime={start}
         />
         {/* <CzmlDataSource data={Attitude} /> */}
-		{
-		  /** Model */
-		  orbitsState.map((orbit) => {
-		    if (orbit.live) {
-		  	  return (
-			  	<Entity
-				  key={orbit.name}
-				  position={Cesium.Cartesian3.fromArray(orbit.position)}
-				  id={`${orbit.name}_model`}
-			    >
+        {
+          /** Model */
+          orbitsState.map((orbit) => {
+            if (orbit.live) {
+              return (
+                <Entity
+                  key={orbit.name}
+                  position={Cesium.Cartesian3.fromArray(orbit.position)}
+                  id={`${orbit.name}_model`}
+                >
                   <Model
                     modelMatrix={
                       coordinateSystem === 'cartesian'
@@ -809,21 +809,22 @@ function CesiumGlobe({
                     url={model}
                     minimumPixelSize={35}
                   />
-				</Entity>
-			  );
-		    };
-		  })
-		}
+                </Entity>
+              );
+            }
+            /** todo */
+            return null;
+          })
+        }
         {
-		  /** Path */
+          /** Path */
           orbitsState.map((orbit) => {
             if (orbit.live) {
               return (
                 <Entity
                   key={orbit.name}
                   position={orbit.path}
-				  //position={Cesium.Cartesian3.fromArray(orbit.position)}
-				  id={`${orbit.name}_path`}
+                  id={`${orbit.name}_path`}
                 >
                   <PathGraphics
                     width={3}
