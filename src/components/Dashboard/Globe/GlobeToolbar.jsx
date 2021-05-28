@@ -4,7 +4,9 @@ import PropTypes from 'prop-types';
 import Cesium from 'cesium';
 import { useCesium } from 'resium';
 import { Slider } from 'antd';
-import { ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
+import {
+  PlusSquareOutlined, MinusSquareOutlined, ZoomInOutlined, ZoomOutOutlined,
+} from '@ant-design/icons';
 
 import { COSMOSAPI } from '../../../api';
 
@@ -59,6 +61,11 @@ const GlobeToolbar = ({
     setZoom(newZoom);
   };
 
+  // For controlling separation of nodes, hardcoded in temporarily
+  const handleSeparationChange = (newSep) => {
+    COSMOSAPI.runAgentCommand('sim', 'simulator', `set_shape_separation ${newSep}`, () => {});
+  };
+
   return (
     <div className="globetoolbar-container">
       <div className="globetoolbar-container-left">
@@ -66,16 +73,30 @@ const GlobeToolbar = ({
         <DropdownMenu list={formationsList} dataKey="formation" callBack={handleFormationDropDownClick} spanText="F" />
       </div>
       <div className="globetoolbar-container-right">
-        <div className="zoomslider">
+        <div className="slider">
           <ZoomInOutlined style={{ color: '#fff' }} />
           <Slider
             defaultValue={8000}
             min={1000}
-            max={100000}
+            max={30000}
+            step={1000}
             vertical
+            reverse
             onChange={handleZoomChange}
           />
           <ZoomOutOutlined style={{ color: '#fff' }} />
+        </div>
+        <div className="slider">
+          <PlusSquareOutlined style={{ color: '#fff' }} />
+          <Slider
+            defaultValue={1000}
+            min={500}
+            max={5000}
+            step={100}
+            vertical
+            onAfterChange={handleSeparationChange}
+          />
+          <MinusSquareOutlined style={{ color: '#fff' }} />
         </div>
       </div>
     </div>

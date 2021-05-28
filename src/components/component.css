@@ -17,14 +17,14 @@
 }
 
 .globetoolbar-container-right {
-	display: block;
+	display: flex;
 	flex-direction: row-reverse;
 	position: absolute;
 	top: 5px;
 	right: 5px;
 }
 
-.globetoolbar-container-right .zoomslider {
+.globetoolbar-container-right .slider {
 	position: relative;
 	top: 42px;
 	right: 0px;
