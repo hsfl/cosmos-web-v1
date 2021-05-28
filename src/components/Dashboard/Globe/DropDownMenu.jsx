@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
-const DropdownMenu = ({ list, dataKey, callBack }) => {
+const DropdownMenu = ({
+  list, dataKey, callBack, spanText,
+}) => {
   const dropdownRef = useRef(null);
   const [isActive, setIsActive] = useState(false);
   const onClick = () => setIsActive(!isActive);
@@ -43,7 +45,7 @@ const DropdownMenu = ({ list, dataKey, callBack }) => {
   return (
     <div className="gt-menu-container">
       <button type="button" onClick={onClick} className="gt-menu-trigger">
-        <span>Sat</span>
+        <span>{spanText}</span>
       </button>
       <div ref={dropdownRef} className={`gt-menu ${isActive ? 'active' : 'inactive'}`}>
         <ul>
@@ -60,6 +62,7 @@ DropdownMenu.propTypes = {
   list: PropTypes.arrayOf(PropTypes.any).isRequired,
   dataKey: PropTypes.string.isRequired,
   callBack: PropTypes.func.isRequired,
+  spanText: PropTypes.string.isRequired,
 };
 
 export default DropdownMenu;

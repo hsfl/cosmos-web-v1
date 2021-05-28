@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import Cesium from 'cesium';
 import { useCesium } from 'resium';
 
+import { COSMOSAPI } from '../../../api';
+
 import DropdownMenu from './DropDownMenu';
 
 const GlobeToolbar = ({
@@ -15,6 +17,9 @@ const GlobeToolbar = ({
 
   const { viewer, entityCollection } = useCesium();
   const [cameraHeight, setCameraHeight] = useState(100000);
+
+  // List of formations, hardcoded for now
+  const formationsList = [{ formation: 'Line' }, { formation: 'Diamond' }];
 
   useEffect(() => {
     if (trackNode && trackNode !== '') {
@@ -38,9 +43,19 @@ const GlobeToolbar = ({
     }
   };
 
+  /** Send request to switch flying formations */
+  const handleFormationDropDownClick = (formation) => {
+    if (formation === 'Line') {
+      COSMOSAPI.runAgentCommand('sim', 'simulator', 'set_shape_type 0', () => {});
+    } else if (formation === 'Diamond') {
+      COSMOSAPI.runAgentCommand('sim', 'simulator', 'set_shape_type 1', () => {});
+    }
+  };
+
   return (
     <div className="globetoolbar-container">
-      <DropdownMenu list={list !== undefined ? list : []} dataKey="node" callBack={handleNodeDropDownClick} />
+      <DropdownMenu list={list !== undefined ? list : []} dataKey="node" callBack={handleNodeDropDownClick} spanText="Sat" />
+      <DropdownMenu list={formationsList} dataKey="formation" callBack={handleFormationDropDownClick} spanText="F" />
     </div>
   );
 };
