@@ -482,6 +482,15 @@ function CesiumGlobe({
     }
   };
 
+  const calculateVectors = (p1, p2) => {
+    const dist = Cesium.Cartesian3.distance(p1, p2);
+    const vec = Cesium.Cartesian3.subtract(p2, p1, new Cesium.Cartesian3());
+    const unitvec = Cesium.Cartesian3.divideByScalar(vec, dist, new Cesium.Cartesian3());
+    const scaledVec = Cesium.Cartesian3.multiplyByScalar(unitvec, 1000, new Cesium.Cartesian3());
+    const newPoint = Cesium.Cartesian3.add(p1, scaledVec, new Cesium.Cartesian3());
+    return [p1, newPoint];
+  };
+
   return (
     <BaseComponent
       name={nameState}
@@ -765,12 +774,12 @@ function CesiumGlobe({
                   key={orbit.name}
                 >
                   <PolylineGraphics
-                    positions={[
+                    positions={calculateVectors(
                       Cesium.Cartesian3.fromArray(orbit.position),
                       Cesium.Cartesian3.fromArray(orbit.targetPos),
-                    ]}
+                    )}
                     width={2}
-                    material={Cesium.Color.BLUE}
+                    material={new Cesium.PolylineArrowMaterialProperty(Cesium.Color.BLUE)}
                     arcType="NONE"
                   />
                 </Entity>,
