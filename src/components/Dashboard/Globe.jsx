@@ -164,8 +164,8 @@ function CesiumGlobe({
       processXDataKey,
       processYDataKey,
       processZDataKey,
-      // VDataKey,
-      // ADataKey,
+      VDataKey,
+      ADataKey,
       timeDataKey,
       live,
     }, i) => {
@@ -242,6 +242,14 @@ function CesiumGlobe({
         if (!targetPos.includes(NaN)) {
           tempOrbit[i].targetPos = targetPos;
         }
+
+        // Velocity vector
+        const vVector = parseDataKey(VDataKey, state[realm]);
+        tempOrbit[i].vVector = Cesium.Cartesian3.fromArray(vVector);
+
+        // Acceleration vector
+        const aVector = parseDataKey(ADataKey, state[realm]);
+        tempOrbit[i].aVector = Cesium.Cartesian3.fromArray(aVector);
 
         // Attractor points
         if (state[realm].sim_params !== undefined) {
@@ -504,6 +512,10 @@ function CesiumGlobe({
     return [p1, newPoint];
   };
 
+  const calculatePointsFromPointAndVector = (p, v) => (
+    [p, Cesium.Cartesian3.add(p, v, new Cesium.Cartesian3())]
+  );
+
   return (
     <BaseComponent
       name={nameState}
@@ -759,9 +771,9 @@ function CesiumGlobe({
           /** Add attractor points */
           orbitsState.reduce((result, orbit) => {
             if (orbit.attrPointPos
-              && orbit.position.x === undefined
-              && orbit.position.y === undefined
-              && orbit.position.z === undefined
+              && orbit.position.x !== undefined
+              && orbit.position.y !== undefined
+              && orbit.position.z !== undefined
             ) {
               result.push(
                 <Entity
@@ -778,7 +790,60 @@ function CesiumGlobe({
             return result;
           }, [])
         }
-
+        {
+          /** Add velocity vector */
+          orbitsState.reduce((result, orbit) => {
+            if (orbit.vVector !== undefined
+              && orbit.position.x !== undefined
+              && orbit.position.y !== undefined
+              && orbit.position.z !== undefined
+            ) {
+              result.push(
+                <Entity
+                  key={orbit.name}
+                >
+                  <PolylineGraphics
+                    positions={calculatePointsFromPointAndVector(
+                      orbit.position,
+                      orbit.vVector,
+                    )}
+                    width={2}
+                    material={new Cesium.PolylineArrowMaterialProperty(Cesium.Color.GREEN)}
+                    arcType="NONE"
+                  />
+                </Entity>,
+              );
+            }
+            return result;
+          }, [])
+        }
+        {
+          /** Add acceleration vector */
+          orbitsState.reduce((result, orbit) => {
+            if (orbit.aVector !== undefined
+              && orbit.position.x !== undefined
+              && orbit.position.y !== undefined
+              && orbit.position.z !== undefined
+            ) {
+              result.push(
+                <Entity
+                  key={orbit.name}
+                >
+                  <PolylineGraphics
+                    positions={calculatePointsFromPointAndVector(
+                      orbit.position,
+                      orbit.aVector,
+                    )}
+                    width={2}
+                    material={new Cesium.PolylineArrowMaterialProperty(Cesium.Color.RED)}
+                    arcType="NONE"
+                  />
+                </Entity>,
+              );
+            }
+            return result;
+          }, [])
+        }
         {
           /** Add line to target */
           orbitsState.reduce((result, orbit) => {
