@@ -122,6 +122,8 @@ function CesiumGlobe({
       processXDataKey,
       processYDataKey,
       processZDataKey,
+      VDataKey,
+      ADataKey,
       timeDataKey,
       live,
     }, i) => {
@@ -141,6 +143,8 @@ function CesiumGlobe({
         [`processZDataKey_${i}`]: processZDataKey
           ? processZDataKey.toString().replace(/^(.+\s?=>\s?)/, 'return ').replace(/^(\s*function\s*.*\([\s\S]*\)\s*{)([\s\S]*)(})/, '$2').trim()
           : 'return x',
+        [`VDataKey_${i}`]: VDataKey,
+        [`ADataKey_${i}`]: ADataKey,
         [`timeDataKey_${i}`]: timeDataKey || 'node_utc',
         [`live_${i}`]: live,
       };
@@ -160,11 +164,12 @@ function CesiumGlobe({
       processXDataKey,
       processYDataKey,
       processZDataKey,
+      // VDataKey,
+      // ADataKey,
       timeDataKey,
       live,
     }, i) => {
       if (state && realm && state[realm]
-        // && state[realm][XDataKey]
         && parseDataKey(XDataKey, state[realm])
         && parseDataKey(YDataKey, state[realm])
         && parseDataKey(ZDataKey, state[realm])
@@ -207,7 +212,7 @@ function CesiumGlobe({
               ],
             );
           tempOrbit[i].path.addSample(date, pos);
-          tempOrbit[i].position = [x, y, z];
+          tempOrbit[i].position = pos;
           tempOrbit[i].posGeod = Cesium.Cartographic.fromCartesian(pos);
         }
         // else if (coordinateSystem === 'geodetic') {
@@ -436,6 +441,8 @@ function CesiumGlobe({
     processXDataKey,
     processYDataKey,
     processZDataKey,
+    VDataKey,
+    ADataKey,
     live,
   }) => {
     // Append new value to array
@@ -448,6 +455,8 @@ function CesiumGlobe({
       processXDataKey,
       processYDataKey,
       processZDataKey,
+      VDataKey,
+      ADataKey,
       position: [0, 0, 0],
     });
     setUpdateComponent(!updateComponent);
@@ -470,6 +479,8 @@ function CesiumGlobe({
       [`processZDataKey_${newIndex}`]: processZDataKey
         ? processZDataKey.toString().replace(/^(.+\s?=>\s?)/, 'return ').replace(/^(\s*function\s*.*\([\s\S]*\)\s*{)([\s\S]*)(})/, '$2').trim()
         : 'return x',
+      [`VDataKey_${newIndex}`]: VDataKey,
+      [`ADataKey_${newIndex}`]: ADataKey,
       [`live_${newIndex}`]: live,
       [`dateRange_${newIndex}`]: dateRange,
     });
@@ -748,7 +759,9 @@ function CesiumGlobe({
           /** Add attractor points */
           orbitsState.reduce((result, orbit) => {
             if (orbit.attrPointPos
-              && orbit.position[0] !== orbit.position[1] && orbit.position[1] !== orbit.position[2]
+              && (orbit.position.x === undefined
+              || orbit.position.y === undefined
+              || orbit.position.z === undefined)
             ) {
               result.push(
                 <Entity
@@ -769,7 +782,9 @@ function CesiumGlobe({
           /** Add line to target */
           orbitsState.reduce((result, orbit) => {
             if (orbit.targetting && orbit.targetPos
-              && orbit.position[0] !== orbit.position[1] && orbit.position[1] !== orbit.position[2]
+              && (orbit.position.x === undefined
+              || orbit.position.y === undefined
+              || orbit.position.z === undefined)
             ) {
               result.push(
                 <Entity
@@ -777,7 +792,7 @@ function CesiumGlobe({
                 >
                   <PolylineGraphics
                     positions={calculateVectors(
-                      Cesium.Cartesian3.fromArray(orbit.position),
+                      orbit.position,
                       Cesium.Cartesian3.fromArray(orbit.targetPos),
                     )}
                     width={2}
@@ -800,17 +815,22 @@ function CesiumGlobe({
         {
           /** Model */
           orbitsState.map((orbit) => {
+            if (orbit.position.x === undefined
+              || orbit.position.y === undefined
+              || orbit.position.z === undefined) {
+              return null;
+            }
             if (orbit.live) {
               return (
                 <Entity
                   key={orbit.name}
-                  position={Cesium.Cartesian3.fromArray(orbit.position)}
+                  position={orbit.position}
                   id={`${orbit.name}_model`}
                 >
                   <Model
                     modelMatrix={
                       coordinateSystem === 'cartesian'
-                        ? getPos(orbit.position[0], orbit.position[1], orbit.position[2])
+                        ? getPos(orbit.position.x, orbit.position.y, orbit.position.z)
                         : getPosFromSpherical(
                           orbit.geodetic.longitude * (180 / Math.PI),
                           orbit.geodetic.latitude * (180 / Math.PI),
@@ -888,9 +908,9 @@ function CesiumGlobe({
             orbitsState.map((orbit) => (
               <tr className="text-gray-700 border-b border-gray-400" key={orbit.name}>
                 <td className="p-2 pr-8">{orbit.name}</td>
-                <td className="p-2 pr-8">{orbit.position[0]}</td>
-                <td className="p-2 pr-8">{orbit.position[1]}</td>
-                <td className="p-2 pr-8">{orbit.position[2]}</td>
+                <td className="p-2 pr-8">{orbit.position.x}</td>
+                <td className="p-2 pr-8">{orbit.position.y}</td>
+                <td className="p-2 pr-8">{orbit.position.z}</td>
                 <td className="p-2 pr-8">{GetGeodetic(orbit) && GetGeodetic(orbit).latitude}</td>
                 <td className="p-2 pr-8">{GetGeodetic(orbit) && GetGeodetic(orbit).longitude}</td>
                 <td className="p-2 pr-8">{GetGeodetic(orbit) && GetGeodetic(orbit).height}</td>
@@ -928,6 +948,10 @@ CesiumGlobe.propTypes = {
       processYDataKey: PropTypes.func,
       /** Process Z function */
       processZDataKey: PropTypes.func,
+      /** Velocity array of values */
+      VDataKey: PropTypes.string,
+      /** Acceleration array of values */
+      ADataKey: PropTypes.string,
       /** Time data key to look at for data */
       timeDataKey: PropTypes.string,
       /** Whether or not the orbit is live */
