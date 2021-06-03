@@ -495,7 +495,7 @@ function CesiumGlobe({
     }
   };
 
-  const calculateVectors = (p1, p2) => {
+  const scalePoints = (p1, p2) => {
     const dist = Cesium.Cartesian3.distance(p1, p2);
     const vec = Cesium.Cartesian3.subtract(p2, p1, new Cesium.Cartesian3());
     const unitvec = Cesium.Cartesian3.divideByScalar(vec, dist, new Cesium.Cartesian3());
@@ -759,9 +759,9 @@ function CesiumGlobe({
           /** Add attractor points */
           orbitsState.reduce((result, orbit) => {
             if (orbit.attrPointPos
-              && (orbit.position.x === undefined
-              || orbit.position.y === undefined
-              || orbit.position.z === undefined)
+              && orbit.position.x === undefined
+              && orbit.position.y === undefined
+              && orbit.position.z === undefined
             ) {
               result.push(
                 <Entity
@@ -778,20 +778,21 @@ function CesiumGlobe({
             return result;
           }, [])
         }
+
         {
           /** Add line to target */
           orbitsState.reduce((result, orbit) => {
             if (orbit.targetting && orbit.targetPos
-              && (orbit.position.x === undefined
-              || orbit.position.y === undefined
-              || orbit.position.z === undefined)
+              && orbit.position.x !== undefined
+              && orbit.position.y !== undefined
+              && orbit.position.z !== undefined
             ) {
               result.push(
                 <Entity
                   key={orbit.name}
                 >
                   <PolylineGraphics
-                    positions={calculateVectors(
+                    positions={scalePoints(
                       orbit.position,
                       Cesium.Cartesian3.fromArray(orbit.targetPos),
                     )}
