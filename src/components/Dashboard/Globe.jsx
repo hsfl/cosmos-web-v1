@@ -106,6 +106,8 @@ function CesiumGlobe({
   const [updateComponent, setUpdateComponent] = useState(false);
   /** State to store switch denoting whether added value is live or not */
   const [addOrbitLive, setAddOrbitLive] = useState(true);
+  /** Turn path visualization on or off */
+  const [showPath, setShowPath] = useState(true);
 
   /** Initialize form slots for each orbit */
   useEffect(() => {
@@ -516,6 +518,8 @@ function CesiumGlobe({
     [p, Cesium.Cartesian3.add(p, v, new Cesium.Cartesian3())]
   );
 
+  const handleShowPathChange = (val) => (setShowPath(val));
+
   return (
     <BaseComponent
       name={nameState}
@@ -916,6 +920,9 @@ function CesiumGlobe({
         {
           /** Path */
           orbitsState.map((orbit) => {
+            if (!showPath) {
+              return null;
+            }
             if (orbit.live) {
               return (
                 <Entity
@@ -956,7 +963,7 @@ function CesiumGlobe({
             );
           })
         }
-        <GlobeToolbar orbitsState={orbitsState} />
+        <GlobeToolbar orbitsState={orbitsState} handleShowPathChange={handleShowPathChange} />
       </Viewer>
       <div className="overflow-x-auto">
         <table className="mt-4 w-full">

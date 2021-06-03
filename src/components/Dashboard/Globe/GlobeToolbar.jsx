@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import Cesium from 'cesium';
 import { useCesium } from 'resium';
-import { Slider } from 'antd';
+import { Slider, Switch } from 'antd';
 import {
   PlusSquareOutlined, MinusSquareOutlined, ZoomInOutlined, ZoomOutOutlined,
 } from '@ant-design/icons';
@@ -14,6 +14,7 @@ import DropdownMenu from './DropDownMenu';
 
 const GlobeToolbar = ({
   orbitsState,
+  handleShowPathChange,
 }) => {
   const list = useSelector((s) => s.list.agent_list);
 
@@ -57,10 +58,6 @@ const GlobeToolbar = ({
     }
   };
 
-  const handleZoomChange = (newZoom) => {
-    setZoom(newZoom);
-  };
-
   // For controlling separation of nodes, hardcoded in temporarily
   const handleSeparationChange = (newSep) => {
     COSMOSAPI.runAgentCommand('sim', 'simulator', `set_shape_separation ${newSep}`, () => {});
@@ -71,6 +68,7 @@ const GlobeToolbar = ({
       <div className="globetoolbar-container-left">
         <DropdownMenu list={list !== undefined ? list : []} dataKey="node" callBack={handleNodeDropDownClick} spanText="Sat" />
         <DropdownMenu list={formationsList} dataKey="formation" callBack={handleFormationDropDownClick} spanText="F" />
+        <Switch className="gt-c-l-child" defaultChecked size="small" onChange={handleShowPathChange} />
       </div>
       <div className="globetoolbar-container-right">
         <div className="slider">
@@ -82,7 +80,7 @@ const GlobeToolbar = ({
             step={1000}
             vertical
             reverse
-            onChange={handleZoomChange}
+            onChange={setZoom}
           />
           <ZoomOutOutlined style={{ color: '#fff' }} />
         </div>
@@ -105,6 +103,7 @@ const GlobeToolbar = ({
 
 GlobeToolbar.propTypes = {
   orbitsState: PropTypes.arrayOf(PropTypes.any).isRequired,
+  handleShowPathChange: PropTypes.func.isRequired,
 };
 
 export default GlobeToolbar;

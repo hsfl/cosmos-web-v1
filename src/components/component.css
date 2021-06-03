@@ -15,6 +15,10 @@
 	top: 5px;
 	left: 5px;
 }
+.globetoolbar-container-left .gt-c-l-child {
+	margin: 5px 4px 0px 0px;
+	flex: auto;
+}
 
 .globetoolbar-container-right {
 	display: flex;
@@ -34,6 +38,7 @@
  
 .gt-menu-container {
 	flex: 0;
+	margin: 0px 4px 0px 0px;
 }
  
 .gt-menu {
