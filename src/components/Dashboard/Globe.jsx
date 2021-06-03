@@ -15,6 +15,7 @@ import BaseComponent from '../BaseComponent';
 import model from '../../public/cubesat.glb';
 import { COSMOSAPI } from '../../api';
 import { MJDtoJavaScriptDate, dateToMJD } from '../../utility/time';
+import parseDataKey from '../../utility/data';
 
 import GlobeToolbar from './Globe/GlobeToolbar';
 
@@ -163,9 +164,10 @@ function CesiumGlobe({
       live,
     }, i) => {
       if (state && realm && state[realm]
-        && state[realm][XDataKey]
-        && state[realm][YDataKey]
-        && state[realm][ZDataKey]
+        // && state[realm][XDataKey]
+        && parseDataKey(XDataKey, state[realm])
+        && parseDataKey(YDataKey, state[realm])
+        && parseDataKey(ZDataKey, state[realm])
         && (nodeProcess === 'any' || nodeProcess === [state[realm].node_name, state[realm].agent_name].join(':'))
         && ((!(process.env.FLIGHT_MODE === 'true') && state[realm].recorded_time)
         || (process.env.FLIGHT_MODE === 'true' && state[realm][timeDataKey]))
@@ -190,9 +192,9 @@ function CesiumGlobe({
         }
 
         let pos;
-        const x = typeof processXDataKey === 'function' ? processXDataKey(state[realm][XDataKey]) : state[realm][XDataKey];
-        const y = typeof processYDataKey === 'function' ? processYDataKey(state[realm][YDataKey]) : state[realm][YDataKey];
-        const z = typeof processZDataKey === 'function' ? processZDataKey(state[realm][ZDataKey]) : state[realm][ZDataKey];
+        const x = typeof processXDataKey === 'function' ? processXDataKey(parseDataKey(XDataKey, state[realm])) : parseDataKey(XDataKey, state[realm]);
+        const y = typeof processYDataKey === 'function' ? processYDataKey(parseDataKey(YDataKey, state[realm])) : parseDataKey(YDataKey, state[realm]);
+        const z = typeof processZDataKey === 'function' ? processZDataKey(parseDataKey(ZDataKey, state[realm])) : parseDataKey(ZDataKey, state[realm]);
 
         if (coordinateSystem === 'cartesian') {
           pos = Cesium
@@ -755,7 +757,7 @@ function CesiumGlobe({
                 >
                   <PointGraphics
                     pixelSize={5}
-                    color={Cesium.Color.WHITE}
+                    color={Cesium.Color.RED}
                   />
                 </Entity>,
               );
@@ -836,7 +838,7 @@ function CesiumGlobe({
                   id={`${orbit.name}_path`}
                 >
                   <PathGraphics
-                    width={3}
+                    width={2}
                     leadTime={86400}
                     trailTime={86400}
                     material={Cesium.Color.CHARTREUSE}
