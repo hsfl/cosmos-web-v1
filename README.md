@@ -13,7 +13,7 @@ See https://github.com/spjy/cosmos-mongodb for the server component of COSMOS We
 Open a terminal and change directories to the location you want to install the repository.
 
 ```
-git clone https://github.com/spjy/cosmos-web.git
+git clone https://github.com/hsfl/cosmos-web.git
 cd cosmos-web
 npm install
 ```
