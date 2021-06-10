@@ -23,7 +23,7 @@
     "axios": "^0.21.1",
     "babylonjs": "4.1.0",
     "babylonjs-loaders": "4.1.0",
-    "cesium": "1.59.0",
+    "cesium": "^1.82.1",
     "core-js": "^3.8.3",
     "dayjs": "1.8.29",
     "dayjs-plugin-utc": "0.1.2",
