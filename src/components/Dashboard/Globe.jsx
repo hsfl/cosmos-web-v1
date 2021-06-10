@@ -2,10 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
-  Viewer, Entity, Model, Globe, Clock, CameraFlyTo, PathGraphics, GeoJsonDataSource, ImageryLayer,
+  Viewer, Entity, Model, Globe, Clock, CameraFlyTo, PathGraphics, GeoJsonDataSource,
   PolylineGraphics, PointGraphics,
 } from 'resium';
-import Cesium from 'cesium';
+import {
+  Cartesian3, Cartographic, Color, OpenStreetMapImageryProvider,
+  JulianDate, PolylineArrowMaterialProperty, SampledPositionProperty,
+  Transforms,
+} from 'cesium';
 
 import {
   Form, Input, Collapse, Button, Switch, DatePicker, message,
@@ -23,13 +27,8 @@ const { Panel } = Collapse;
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 
-// Set Cesium Ion token only if it is defined in the .env file
-if (process.env.CESIUM_ION_TOKEN) {
-  Cesium.Ion.defaultAccessToken = process.env.CESIUM_ION_TOKEN;
-}
-
-const imageryProvider = new Cesium.ArcGisMapServerImageryProvider({
-  url: '//services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer',
+const osm = new OpenStreetMapImageryProvider({
+  url: 'https://a.tile.openstreetmap.org/',
 });
 
 const pixelSize = {
@@ -43,9 +42,9 @@ const pixelSize = {
  * @param {*} z meters
  */
 function getPos(x, y, z) {
-  const pos = Cesium.Cartesian3.fromArray([x, y, z]);
+  const pos = Cartesian3.fromArray([x, y, z]);
 
-  return Cesium.Transforms.northUpEastToFixedFrame(pos);
+  return Transforms.northUpEastToFixedFrame(pos);
 }
 
 /**
@@ -55,9 +54,9 @@ function getPos(x, y, z) {
  * @param {Number} altitude meters
  */
 function getPosFromSpherical(longitude, latitude, altitude) {
-  const pos = Cesium.Cartesian3.fromDegrees(longitude, latitude, altitude);
+  const pos = Cartesian3.fromDegrees(longitude, latitude, altitude);
 
-  return Cesium.Transforms.northUpEastToFixedFrame(pos);
+  return Transforms.northUpEastToFixedFrame(pos);
 }
 
 /**
@@ -97,7 +96,7 @@ function CesiumGlobe({
   /** Store to retrieve orbit history by request from Mongo */
   const [retrieveOrbitHistory, setRetrieveOrbitHistory] = useState(null);
   /** Clock start time */
-  const [start, setStart] = useState(Cesium.JulianDate.now);
+  const [start, setStart] = useState(JulianDate.now);
   /** Clock end time */
   const [stop, setStop] = useState(null);
   /** Location for camera to fly to */
@@ -183,18 +182,16 @@ function CesiumGlobe({
         const tempOrbit = [...orbitsState];
 
         if (!tempOrbit[i].path) {
-          tempOrbit[i].path = new Cesium.SampledPositionProperty();
+          tempOrbit[i].path = new SampledPositionProperty();
         }
 
         let date;
 
         if (process.env.FLIGHT_MODE === 'true' && state[realm][timeDataKey]) {
-          date = Cesium
-            .JulianDate
+          date = JulianDate
             .fromDate(MJDtoJavaScriptDate(state[realm][timeDataKey]));
         } else {
-          date = Cesium
-            .JulianDate
+          date = JulianDate
             .fromDate(MJDtoJavaScriptDate(state[realm].recorded_time));
         }
 
@@ -204,8 +201,7 @@ function CesiumGlobe({
         const z = typeof processZDataKey === 'function' ? processZDataKey(parseDataKey(ZDataKey, state[realm])) : parseDataKey(ZDataKey, state[realm]);
 
         if (coordinateSystem === 'cartesian') {
-          pos = Cesium
-            .Cartesian3
+          pos = Cartesian3
             .fromArray(
               [
                 x,
@@ -215,10 +211,10 @@ function CesiumGlobe({
             );
           tempOrbit[i].path.addSample(date, pos);
           tempOrbit[i].position = pos;
-          tempOrbit[i].posGeod = Cesium.Cartographic.fromCartesian(pos);
+          tempOrbit[i].posGeod = Cartographic.fromCartesian(pos);
         }
         // else if (coordinateSystem === 'geodetic') {
-        //   pos = Cesium.Cartesian3.fromDegrees(
+        //   pos = Cartesian3.fromDegrees(
         //     state[realm].target_loc_pos_geod_s_lat * (180 / Math.PI),
         //     state[realm].target_loc_pos_geod_s_lon * (180 / Math.PI),
         //     state[realm].target_loc_pos_geod_s_h,
@@ -239,7 +235,7 @@ function CesiumGlobe({
         // temporary default targetting, to change later to some soh value
         const targetPosLLA = { longitude: 21.3069, latitude: 157.8583, height: 0 };
         const targetPos = Object.values(
-          Cesium.Cartesian3.fromDegrees(...Object.values(targetPosLLA)),
+          Cartesian3.fromDegrees(...Object.values(targetPosLLA)),
         );
         if (!targetPos.includes(NaN)) {
           tempOrbit[i].targetPos = targetPos;
@@ -247,11 +243,11 @@ function CesiumGlobe({
 
         // Velocity vector
         const vVector = parseDataKey(VDataKey, state[realm]);
-        tempOrbit[i].vVector = Cesium.Cartesian3.fromArray(vVector);
+        tempOrbit[i].vVector = Cartesian3.fromArray(vVector);
 
         // Acceleration vector
         const aVector = parseDataKey(ADataKey, state[realm]);
-        tempOrbit[i].aVector = Cesium.Cartesian3.fromArray(aVector);
+        tempOrbit[i].aVector = Cartesian3.fromArray(aVector);
 
         // Attractor points
         if (state[realm].sim_params !== undefined) {
@@ -327,12 +323,10 @@ function CesiumGlobe({
             const processZDataKey = new Function('x', processDataKeys[2]);
 
             if (data.length > 0) {
-              startOrbit = Cesium
-                .JulianDate
+              startOrbit = JulianDate
                 .fromDate(MJDtoJavaScriptDate(data[0][timeDataKey]));
 
-              stopOrbit = Cesium
-                .JulianDate
+              stopOrbit = JulianDate
                 .fromDate(MJDtoJavaScriptDate(data[data.length - 1][timeDataKey]));
 
               const x = processXDataKey(data[0][dataKeys[0]]);
@@ -342,7 +336,7 @@ function CesiumGlobe({
               startOrbitPosition = [x, y, z];
             }
 
-            const sampledPosition = new Cesium.SampledPositionProperty();
+            const sampledPosition = new SampledPositionProperty();
 
             data.forEach((o) => {
               const x = processXDataKey(o[dataKeys[0]]);
@@ -351,11 +345,10 @@ function CesiumGlobe({
               const p = [x, y, z];
 
               if (o[timeDataKey] && o[dataKeys[0]]) {
-                const date = Cesium
-                  .JulianDate
+                const date = JulianDate
                   .fromDate(MJDtoJavaScriptDate(o[timeDataKey]));
 
-                const pos = Cesium.Cartesian3.fromArray(p);
+                const pos = Cartesian3.fromArray(p);
 
                 sampledPosition.addSample(date, pos);
               }
@@ -367,7 +360,7 @@ function CesiumGlobe({
             setStop(stopOrbit);
             setOrbitsState(tempOrbit);
 
-            setCameraFlyTo(Cesium.Cartesian3.fromArray([
+            setCameraFlyTo(Cartesian3.fromArray([
               startOrbitPosition[0] * 3,
               startOrbitPosition[1] * 3,
               startOrbitPosition[2] * 3,
@@ -506,16 +499,16 @@ function CesiumGlobe({
   };
 
   const scalePoints = (p1, p2) => {
-    const dist = Cesium.Cartesian3.distance(p1, p2);
-    const vec = Cesium.Cartesian3.subtract(p2, p1, new Cesium.Cartesian3());
-    const unitvec = Cesium.Cartesian3.divideByScalar(vec, dist, new Cesium.Cartesian3());
-    const scaledVec = Cesium.Cartesian3.multiplyByScalar(unitvec, 1000, new Cesium.Cartesian3());
-    const newPoint = Cesium.Cartesian3.add(p1, scaledVec, new Cesium.Cartesian3());
+    const dist = Cartesian3.distance(p1, p2);
+    const vec = Cartesian3.subtract(p2, p1, new Cartesian3());
+    const unitvec = Cartesian3.divideByScalar(vec, dist, new Cartesian3());
+    const scaledVec = Cartesian3.multiplyByScalar(unitvec, 1000, new Cartesian3());
+    const newPoint = Cartesian3.add(p1, scaledVec, new Cartesian3());
     return [p1, newPoint];
   };
 
   const calculatePointsFromPointAndVector = (p, v) => (
-    [p, Cesium.Cartesian3.add(p, v, new Cesium.Cartesian3())]
+    [p, Cartesian3.add(p, v, new Cartesian3())]
   );
 
   const handleShowPathChange = (val) => (setShowPath(val));
@@ -757,16 +750,16 @@ function CesiumGlobe({
         geocoder={false}
         homeButton={false}
         id="cesium-container-id"
+        imageryProvider={osm}
         infoBox={false}
         navigationHelpButton={false}
         timeline={false}
       >
-        <ImageryLayer imageryProvider={imageryProvider} />
         {overlaysState.map((overlay, i) => (
           <GeoJsonDataSource
             data={overlay.geoJson}
-            fill={Cesium.Color.fromAlpha(Cesium.Color[overlay.color ? overlay.color.toUpperCase() : 'BLACK'], 0.2)}
-            stroke={Cesium.Color[overlay.color ? overlay.color.toUpperCase() : 'BLACK']}
+            fill={Color.fromAlpha(Color[overlay.color ? overlay.color.toUpperCase() : 'BLACK'], 0.2)}
+            stroke={Color[overlay.color ? overlay.color.toUpperCase() : 'BLACK']}
             // eslint-disable-next-line
             key={i}
           />
@@ -782,11 +775,11 @@ function CesiumGlobe({
               result.push(
                 <Entity
                   key={orbit.name}
-                  position={Cesium.Cartesian3.fromArray(orbit.attrPointPos)}
+                  position={Cartesian3.fromArray(orbit.attrPointPos)}
                 >
                   <PointGraphics
                     pixelSize={5}
-                    color={Cesium.Color.RED}
+                    color={Color.RED}
                   />
                 </Entity>,
               );
@@ -812,7 +805,7 @@ function CesiumGlobe({
                       orbit.vVector,
                     )}
                     width={2}
-                    material={new Cesium.PolylineArrowMaterialProperty(Cesium.Color.GREEN)}
+                    material={new PolylineArrowMaterialProperty(Color.GREEN)}
                     arcType="NONE"
                   />
                 </Entity>,
@@ -839,7 +832,7 @@ function CesiumGlobe({
                       orbit.aVector,
                     )}
                     width={2}
-                    material={new Cesium.PolylineArrowMaterialProperty(Cesium.Color.RED)}
+                    material={new PolylineArrowMaterialProperty(Color.RED)}
                     arcType="NONE"
                   />
                 </Entity>,
@@ -863,10 +856,10 @@ function CesiumGlobe({
                   <PolylineGraphics
                     positions={scalePoints(
                       orbit.position,
-                      Cesium.Cartesian3.fromArray(orbit.targetPos),
+                      Cartesian3.fromArray(orbit.targetPos),
                     )}
                     width={2}
-                    material={new Cesium.PolylineArrowMaterialProperty(Cesium.Color.BLUE)}
+                    material={new PolylineArrowMaterialProperty(Color.BLUE)}
                     arcType="NONE"
                   />
                 </Entity>,
@@ -934,7 +927,7 @@ function CesiumGlobe({
                     width={2}
                     leadTime={86400}
                     trailTime={86400}
-                    material={Cesium.Color.CHARTREUSE}
+                    material={Color.CHARTREUSE}
                   />
                 </Entity>
               );
@@ -956,7 +949,7 @@ function CesiumGlobe({
                     width={3}
                     leadTime={600}
                     trailTime={600}
-                    material={Cesium.Color.CRIMSON}
+                    material={Color.CRIMSON}
                   />
                 </Entity>
               </span>
