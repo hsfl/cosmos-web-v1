@@ -23,6 +23,7 @@ function Attitude({
 }) {
   /** Accessing the neutron1 messages from the socket */
   const state = useSelector((s) => s.data);
+  const realm = useSelector((s) => s.realm);
 
   /** Storage for form values */
   const [attitudesForm] = Form.useForm();
@@ -45,12 +46,12 @@ function Attitude({
 
     // Initialize form values for each value
     attitudes.forEach(({
-      name: nameVal, nodeProcess, dataKey: dataKeyVal, live,
+      name: nameVal, node, dataKey: dataKeyVal, live,
     }, i) => {
       accumulate = {
         ...accumulate,
         [`name_${i}`]: nameVal,
-        [`nodeProcess_${i}`]: nodeProcess,
+        [`node_${i}`]: node,
         [`dataKey_${i}`]: dataKeyVal,
         [`live_${i}`]: live,
       };
@@ -62,15 +63,16 @@ function Attitude({
 
   /** Update the live attitude display */
   useEffect(() => {
-    attitudesState.forEach(({ nodeProcess, dataKey, live }, i) => {
-      if (state && state[nodeProcess]
-        && state[nodeProcess][dataKey]
-        && state[nodeProcess][dataKey].pos
+    attitudesState.forEach(({ node, dataKey, live }, i) => {
+      if (state && realm && state[realm]
+        && (state[realm].node_name && node === state[realm].node_name)
+        && state[realm][dataKey]
+        && state[realm][dataKey].s
         && live
       ) {
         const tempAttitude = [...attitudesState];
 
-        tempAttitude[i].quaternions = state[nodeProcess][dataKey].pos;
+        tempAttitude[i].quaternions = state[realm][dataKey].s;
 
         setAttitudesState(tempAttitude);
       }
@@ -133,7 +135,7 @@ function Attitude({
                     header={(
                       <span className="text-gray-600">
                         <strong>
-                          {attitude.nodeProcess}
+                          {attitude.node}
                         </strong>
                       &nbsp;
                         <span>
@@ -141,13 +143,13 @@ function Attitude({
                         </span>
                       </span>
                     )}
-                    key={`${attitude.name}${attitude.nodeProcess}${attitude.dataKey}`}
+                    key={`${attitude.name}${attitude.node}${attitude.dataKey}`}
                   >
                     <Form.Item label="Name" name={`name_${i}`} hasFeedback>
                       <Input placeholder="Name" onBlur={({ target: { id } }) => processForm(id)} />
                     </Form.Item>
 
-                    <Form.Item label="Node Process" name={`nodeProcess_${i}`} hasFeedback>
+                    <Form.Item label="Node Process" name={`node_${i}`} hasFeedback>
                       <Input placeholder="Node Process" onBlur={({ target: { id } }) => processForm(id)} />
                     </Form.Item>
 
@@ -179,10 +181,10 @@ function Attitude({
             attitudesState.map((attitude) => (
               <tr className="text-gray-700 border-b border-gray-400" key={attitude.name}>
                 <td className="p-2 pr-8">{attitude.name}</td>
-                <td className="p-2 pr-8">{attitude.quaternions.d && attitude.quaternions.d.x ? attitude.quaternions.d.x : '-'}</td>
-                <td className="p-2 pr-8">{attitude.quaternions.d && attitude.quaternions.d.y ? attitude.quaternions.d.y : '-'}</td>
-                <td className="p-2 pr-8">{attitude.quaternions.d && attitude.quaternions.d.z ? attitude.quaternions.d.z : '-'}</td>
-                <td className="p-2 pr-8">{attitude.quaternions.d && attitude.quaternions.w ? attitude.quaternions.w : '-'}</td>
+                <td className="p-2 pr-8">{attitude.quaternions.d && (attitude.quaternions.d.x || attitude.quaternions.d.x === 0) ? attitude.quaternions.d.x : '-'}</td>
+                <td className="p-2 pr-8">{attitude.quaternions.d && (attitude.quaternions.d.y || attitude.quaternions.d.y === 0) ? attitude.quaternions.d.y : '-'}</td>
+                <td className="p-2 pr-8">{attitude.quaternions.d && (attitude.quaternions.d.z || attitude.quaternions.d.z === 0) ? attitude.quaternions.d.z : '-'}</td>
+                <td className="p-2 pr-8">{attitude.quaternions.d && (attitude.quaternions.w || attitude.quaternions.w === 0) ? attitude.quaternions.w : '-'}</td>
               </tr>
             ))
           }
@@ -201,8 +203,8 @@ Attitude.propTypes = {
     PropTypes.shape({
       /** Name of the attitude display */
       name: PropTypes.string,
-      /** node:process to look at for retrieving attitude data */
-      nodeProcess: PropTypes.string,
+      /** node name to look at for retrieving attitude data */
+      node: PropTypes.string,
       /** Data key to retrieve data from */
       dataKey: PropTypes.string,
     }),
