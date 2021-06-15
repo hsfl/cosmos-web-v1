@@ -1,4 +1,4 @@
-export default function parseDataKey(dataKey, data) {
+export const parseDataKey = (dataKey, data) => {
   let firstKey = '';
   const dataKeySplit = dataKey.split('.');
   dataKeySplit.some((elem) => {
@@ -25,4 +25,20 @@ export default function parseDataKey(dataKey, data) {
     ),
     data[firstKey],
   );
-}
+};
+
+/** Compute result of a function fx that can use multiple variables */
+export const MultiVarFx = (
+  // Array of dataKeys to access data
+  vars,
+  // Function using values of data
+  fx,
+  // Object containing data
+  data,
+) => {
+  if (Array.isArray(vars)) {
+    return fx(vars.map((v) => data[v]));
+  }
+
+  return fx(data[vars]);
+};

@@ -19,7 +19,7 @@ import BaseComponent from '../BaseComponent';
 import model from '../../public/cubesat.glb';
 import { COSMOSAPI } from '../../api';
 import { MJDtoJavaScriptDate, dateToMJD } from '../../utility/time';
-import parseDataKey from '../../utility/data';
+import { parseDataKey } from '../../utility/data';
 
 import GlobeToolbar from './Globe/GlobeToolbar';
 

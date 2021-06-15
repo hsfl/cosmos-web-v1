@@ -29,6 +29,7 @@ import BaseComponent from '../BaseComponent';
 import ChartValues from './Chart/ChartValues';
 
 import { mjdToUTCString, dateToMJD } from '../../utility/time';
+import { MultiVarFx } from '../../utility/data';
 
 /**
  * Display data on a chart using plot.ly. Allows for various plot.ly configurations.
@@ -173,7 +174,8 @@ function Chart({
               .y
               .push(
                 plotsState[i].processYDataKey
-                  ? plotsState[i].processYDataKey(state[realm][p.YDataKey])
+                  // ? plotsState[i].processYDataKey(state[realm][p.YDataKey])
+                  ? MultiVarFx(plotsState[i].YDataKey, plotsState[i].processYDataKey, state[realm])
                   : state[realm][p.YDataKey],
               );
           }
@@ -504,9 +506,9 @@ Chart.propTypes = {
       /** Name of the node to listen to */
       node: PropTypes.string,
       /** Data key to plot on the y-axis */
-      YDataKey: PropTypes.string,
+      YDataKeys: PropTypes.any,
       /** Function to modify the Y Data key */
-      processYDataKey: PropTypes.func,
+      processYDataKeys: PropTypes.func,
       /** Time data key of Y Data Key */
       timeDataKey: PropTypes.string,
       /** Whether the chart displays live values */
