@@ -23,6 +23,7 @@ import AgentList from './Dashboard/AgentList';
 import Subsystem from './Dashboard/Subsystem';
 import ThreeD from './Dashboard/ThreeD';
 import UploadFile from './Dashboard/UploadFile';
+import CosmosPanel from './Dashboard/CosmosPanel';
 
 /** Store all of the available dashboard components into an object
  * This should contain all components that the dashboard should be able to render in the layout.
@@ -50,6 +51,7 @@ export const components = {
   Subsystem,
   ThreeD,
   UploadFile,
+  CosmosPanel,
 };
 
 /**
