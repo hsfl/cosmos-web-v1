@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Switch } from 'antd';
-import compare from '../../utility/sort';
+import { compare } from '../../utility/sort';
 
 import BaseComponent from '../BaseComponent';
 import AgentListTable from './AgentList/AgentListTable';
