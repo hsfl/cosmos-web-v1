@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import ExpandableProperty from './ExpandableProperty';
 
 const RecursiveProperty = ({
-  data, title, isRoot, name,
+  data, title, isRoot, name, callBack,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -37,7 +37,8 @@ const RecursiveProperty = ({
           (Object.keys(data).length === 1 && !isRoot) ? (
             <>
               <span
-                onClick={() => {}}
+                role="button"
+                onClick={() => callBack(name) }
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
               >
@@ -50,7 +51,9 @@ const RecursiveProperty = ({
             <ExpandableProperty
               title={title.toString()}
               expanded={isRoot}
+              name={name}
               type={data.type_of_name}
+              callBack={callBack}
             >
               {
                 Object.keys(data).reduce((acc, key) => {
@@ -84,6 +87,7 @@ const RecursiveProperty = ({
                     title={key}
                     isRoot={false}
                     name={newName}
+                    callBack={callBack}
                   />);
 
                   // Return accumulator, continue loop
@@ -116,6 +120,7 @@ RecursiveProperty.propTypes = {
   isRoot: PropTypes.bool.isRequired,
   /** The namespace name */
   name: PropTypes.string,
+  callBack: PropTypes.func.isRequired,
 };
 
 RecursiveProperty.defaultProps = {
