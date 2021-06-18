@@ -10,12 +10,12 @@ const ExpandableProperty = ({
   const handleClick = () => {
     callBack(name);
     setIsOpen(!isOpen);
-  }
+  };
 
   return (
     <>
-      <div
-        role="button"
+      <button
+        type="button"
         onClick={() => handleClick()}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
@@ -23,7 +23,7 @@ const ExpandableProperty = ({
         {title}
         {isOpen ? '-' : '+'}
         <span className={`typeofnamespan ${isHovered ? 'isHovered' : ''}`}>{ type }</span>
-      </div>
+      </button>
       {isOpen ? children : null}
     </>
   );
@@ -35,6 +35,13 @@ ExpandableProperty.propTypes = {
   name: PropTypes.string,
   type: PropTypes.string,
   callBack: PropTypes.func.isRequired,
-}
+  children: PropTypes.node,
+};
+
+ExpandableProperty.defaultProps = {
+  name: undefined,
+  type: undefined,
+  children: undefined,
+};
 
 export default React.memo(ExpandableProperty);

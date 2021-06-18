@@ -1,8 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import {
-  Badge,
-  Button,
   Input,
   message,
   Select,
@@ -39,14 +37,16 @@ function CosmosPanel() {
     setArbitraryState(!arbitraryState);
   };
 
+  /** Send agent request to get the current value of the selected namespace name */
   const getCurrentValue = () => {
+    // Check if node and names are selected
     if (nodeProcessRef.current && name) {
       const nodeProcess = nodeProcessRef.current.split(':');
       message.info('Sending agent request...');
       COSMOSAPI.runAgentCommand(
         nodeProcess[0],
         nodeProcess[1],
-        `get_value \"${name}\"`,
+        `get_value "${name}"`,
         (data) => {
           if (data.output) {
             const key = Object.keys(data.output);
@@ -62,7 +62,7 @@ function CosmosPanel() {
     } else {
       message.error('Please select a node and a namespace name');
     }
-  }
+  };
 
   return (
     <BaseComponent
@@ -78,7 +78,7 @@ function CosmosPanel() {
           <Select
             className="inline-block mb-2 w-1/2"
             dropdownMatchSelectWidth={false}
-            onChange={(value) => nodeProcessRef.current = value}
+            onChange={(value) => { nodeProcessRef.current = value; }}
             placeholder="Select agent node and process"
           >
             {
@@ -94,36 +94,36 @@ function CosmosPanel() {
           <Input
             className="inline-block ml-2 mb-2 w-1/2"
             placeholder="Namespace name"
-            value={name ? name : ''}
+            value={name}
           />
         </div>
       </div>
       <div className="flex">
         <Input
           addonBefore={(
-            <div
-              role="button"
+            <button
+              type="button"
               onClick={getCurrentValue}
             >
               <RetweetOutlined />
-            </div>
+            </button>
           )}
           addonAfter={(
-            <div
+            <button
+              type="button"
               className="cursor-pointer text-blue-600 hover:text-blue-400"
-              onClick={() => {console.log(nodeProcessRef.current)}}
-              role="button"
+              onClick={() => {}}
               tabIndex={0}
             >
               Set
-            </div>
+            </button>
           )}
           ref={inputTextRef}
           placeholder="Value"
         />
       </div>
       <div className="flex">
-        <RecursiveProperty data={namespacenames} title="Names" isRoot callBack={setName}/>
+        <RecursiveProperty data={namespacenames} title="Names" isRoot callBack={setName} />
       </div>
     </BaseComponent>
   );

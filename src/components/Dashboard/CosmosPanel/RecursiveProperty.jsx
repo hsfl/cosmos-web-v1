@@ -36,14 +36,14 @@ const RecursiveProperty = ({
           // A leaf node, base case
           (Object.keys(data).length === 1 && !isRoot) ? (
             <>
-              <span
-                role="button"
-                onClick={() => callBack(name) }
+              <button
+                type="button"
+                onClick={() => callBack(name)}
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
               >
                 {title}
-              </span>
+              </button>
               <span className={`typeofnamespan ${isHovered ? 'isHovered' : ''}`}>{ data.type_of_name }</span>
             </>
           ) : (
