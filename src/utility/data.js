@@ -46,8 +46,8 @@ export const MultiVarFx = (
 /** Returns the object at the index of the base object,
  *   and creates a new object at the index if it does not exist
  */
-const FillObject = (currentRef, nextIdx) => {
-  if (currentRef[nextIdx] === undefined) {
+const getObjectAtIdx = (currentRef, nextIdx, createObjIfUndefined = true) => {
+  if (currentRef[nextIdx] === undefined && createObjIfUndefined) {
     const cr = currentRef;
     cr[nextIdx] = {};
   }
@@ -87,10 +87,23 @@ export const ParseNamesToJSON = (raw) => {
     // For each indexes, create new objects in parsedJson
     let currentRef = parsedJson;
     idxs.forEach((idx) => {
-      currentRef = FillObject(currentRef, idx);
+      currentRef = getObjectAtIdx(currentRef, idx);
     });
     currentRef.type_of_name = type;
   });
 
   return parsedJson;
+};
+
+/** Given an array of indexes, index the arr recursively and return the deepest object */
+export const getObjAtName = (name, arr) => {
+  let currentRef = arr;
+  // Remove ']', then split on '.' and '['
+  const idxs = name.replaceAll(']', '').split(/\.|\[/);
+  // Recursively index array, break early if undefined
+  idxs.some((idx) => {
+    currentRef = getObjectAtIdx(currentRef, idx, false);
+    return !currentRef;
+  });
+  return currentRef;
 };
