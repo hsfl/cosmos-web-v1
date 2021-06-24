@@ -64,6 +64,47 @@ function CosmosPanel() {
     }
   };
 
+  /** Validate send request data */
+  const validateSendReqData = () => {
+    try {
+      // Check that any jsons are formatted correctly
+      JSON.parse(inputTextRef.current.state.value);
+      return `{"${name}":${inputTextRef.current.state.value}}`;
+    } catch (e) {
+      // JSON.parse threw an error, value is not properly formatted
+      return undefined;
+    }
+  };
+
+  /** Send agent request to set the current value of the selected namespace name */
+  const setCurrentValue = () => {
+    // Check if node and names are selected
+    if (nodeProcessRef.current && name) {
+      const nodeProcess = nodeProcessRef.current.split(':');
+      const sendVal = validateSendReqData();
+      if (sendVal !== undefined) {
+        message.info('Sending agent request...');
+        COSMOSAPI.runAgentCommand(
+          nodeProcess[0],
+          nodeProcess[1],
+          `set_value ${sendVal}`,
+          (data) => {
+            if (data.output) {
+              message.success(`Agent request successful. Response: ${data.output}`, 5);
+              triggerRerender();
+            } else {
+              message.error('Agent request returned empty string');
+            }
+          },
+        );
+      } else {
+        message.error('New value is not formatted correctly');
+      }
+    } else {
+      message.error('Please select a node and a namespace name');
+    }
+  };
+
   return (
     <BaseComponent
       name="Cosmos Panel"
@@ -105,6 +146,7 @@ function CosmosPanel() {
               type="button"
               onClick={getCurrentValue}
             >
+              {/* Button to click to get the current value */}
               <RetweetOutlined />
             </button>
           )}
@@ -112,9 +154,10 @@ function CosmosPanel() {
             <button
               type="button"
               className="cursor-pointer text-blue-600 hover:text-blue-400"
-              onClick={() => {}}
+              onClick={setCurrentValue}
               tabIndex={0}
             >
+              {/* Button to click to set to the current value */}
               Set
             </button>
           )}
@@ -123,6 +166,7 @@ function CosmosPanel() {
         />
       </div>
       <div className="flex">
+        {/* Tree display of cosmosstruc */}
         <RecursiveProperty data={namespacenames} title="Names" isRoot callBack={setName} />
       </div>
     </BaseComponent>
