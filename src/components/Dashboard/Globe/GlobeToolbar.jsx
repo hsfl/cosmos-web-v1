@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
-	HeadingPitchRange,
+  HeadingPitchRange,
 } from 'cesium';
 import { useCesium } from 'resium';
 import { Slider, Switch } from 'antd';
