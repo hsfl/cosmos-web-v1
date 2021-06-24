@@ -19,6 +19,9 @@ export const parseDataKey = (dataKey, data) => {
 
   // Remove firstKey from the dataKey, then remove ']' and split on '.' and '['
   const dataKeyPaths = dataKey.slice(firstKey.length + 1).replaceAll(']', '').split(/\.|\[/);
+  if (dataKeyPaths.length === 1 && dataKeyPaths[0] === '') {
+    return data[firstKey];
+  }
   return dataKeyPaths.reduce(
     (obj, key) => (
       (obj && obj[key] !== 'undefined') ? obj[key] : undefined

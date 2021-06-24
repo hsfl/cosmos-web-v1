@@ -242,12 +242,16 @@ function CesiumGlobe({
         }
 
         // Velocity vector
-        const vVector = parseDataKey(VDataKey, state[realm]);
-        tempOrbit[i].vVector = Cartesian3.fromArray(vVector);
+        if (VDataKey !== undefined) {
+          const vVector = parseDataKey(VDataKey, state[realm]);
+          tempOrbit[i].vVector = Cartesian3.fromArray(vVector);
+        }
 
         // Acceleration vector
-        const aVector = parseDataKey(ADataKey, state[realm]);
-        tempOrbit[i].aVector = Cartesian3.fromArray(aVector);
+        if (ADataKey !== undefined) {
+          const aVector = parseDataKey(ADataKey, state[realm]);
+          tempOrbit[i].aVector = Cartesian3.fromArray(aVector);
+        }
 
         // Attractor points
         if (state[realm].sim_params !== undefined) {
