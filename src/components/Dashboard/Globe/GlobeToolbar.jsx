@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import Cesium from 'cesium';
+import {
+	HeadingPitchRange,
+} from 'cesium';
 import { useCesium } from 'resium';
 import { Slider, Switch } from 'antd';
 import {
@@ -32,7 +34,7 @@ const GlobeToolbar = ({
       const nodePos = entityCollection.getById(`${trackNode}_model`).position.getValue();
       viewer.camera.lookAt(
         nodePos,
-        new Cesium.HeadingPitchRange(
+        new HeadingPitchRange(
           viewer.camera.heading, viewer.camera.pitch, zoom,
         ),
       );
