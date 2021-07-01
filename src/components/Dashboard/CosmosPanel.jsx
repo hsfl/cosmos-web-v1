@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import {
   Input,
@@ -42,8 +42,8 @@ function CosmosPanel() {
         // If there is no namespace structure for selected node, request it
         const nodeProcess = currentNodeProcess.current.split(':');
         COSMOSAPI.queryNamespace(nodeProcess[0], nodeProcess[1], {}, (resp) => {
-        setNamespace({...namespace, [currentNodeProcess.current]: resp});
-      });
+          setNamespace({ ...namespace, [currentNodeProcess.current]: resp });
+        });
       }
     }
   };
