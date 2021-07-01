@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import {
   Input,
@@ -12,10 +12,6 @@ import BaseComponent from '../BaseComponent';
 
 import { COSMOSAPI } from '../../api';
 import RecursiveProperty from './CosmosPanel/RecursiveProperty';
-import testraw from './CosmosPanel/testraw';
-import { ParseNamesToJSON } from '../../utility/data';
-
-const namespacenames = ParseNamesToJSON(testraw);
 
 /**
  * View, get, and set any value in cosmosstruc
@@ -26,22 +22,37 @@ function CosmosPanel() {
   /** Value of the input text field */
   const inputTextRef = useRef(null);
   /** Value of the selected node:process */
-  const nodeProcessRef = useRef(null);
+  const currentNodeProcess = useRef(null);
   /** Full name in the namespace */
   const [name, setName] = useState('');
   /** Changed to trigger a rerender */
   const [arbitraryState, setArbitraryState] = useState(false);
+  /** JSON structure of namespace names */
+  const [namespace, setNamespace] = useState(null);
 
   /** Use to update UI based on refs */
   const triggerRerender = () => {
     setArbitraryState(!arbitraryState);
   };
 
+  const nodeChanged = (newNode) => {
+    currentNodeProcess.current = newNode;
+    if (currentNodeProcess.current != null) {
+      if (namespace?.[currentNodeProcess] == null) {
+        // If there is no namespace structure for selected node, request it
+        const nodeProcess = currentNodeProcess.current.split(':');
+        COSMOSAPI.queryNamespace(nodeProcess[0], nodeProcess[1], {}, (resp) => {
+        setNamespace({...namespace, [currentNodeProcess.current]: resp});
+      });
+      }
+    }
+  };
+
   /** Send agent request to get the current value of the selected namespace name */
   const getCurrentValue = () => {
     // Check if node and names are selected
-    if (nodeProcessRef.current && name) {
-      const nodeProcess = nodeProcessRef.current.split(':');
+    if (currentNodeProcess.current && name) {
+      const nodeProcess = currentNodeProcess.current.split(':');
       message.info('Sending agent request...');
       COSMOSAPI.runAgentCommand(
         nodeProcess[0],
@@ -79,8 +90,8 @@ function CosmosPanel() {
   /** Send agent request to set the current value of the selected namespace name */
   const setCurrentValue = () => {
     // Check if node and names are selected
-    if (nodeProcessRef.current && name) {
-      const nodeProcess = nodeProcessRef.current.split(':');
+    if (currentNodeProcess.current && name) {
+      const nodeProcess = currentNodeProcess.current.split(':');
       const sendVal = validateSendReqData();
       if (sendVal !== undefined) {
         message.info('Sending agent request...');
@@ -119,7 +130,7 @@ function CosmosPanel() {
           <Select
             className="inline-block mb-2 w-1/2"
             dropdownMatchSelectWidth={false}
-            onChange={(value) => { nodeProcessRef.current = value; }}
+            onChange={nodeChanged}
             placeholder="Select agent node and process"
           >
             {
@@ -167,7 +178,7 @@ function CosmosPanel() {
       </div>
       <div className="flex">
         {/* Tree display of cosmosstruc */}
-        <RecursiveProperty data={namespacenames} title="Names" isRoot callBack={setName} />
+        <RecursiveProperty data={namespace?.[currentNodeProcess.current]} title="Names" isRoot callBack={setName} />
       </div>
     </BaseComponent>
   );
