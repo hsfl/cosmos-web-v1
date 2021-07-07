@@ -19,16 +19,82 @@ svg {
   float: right;
 }
 
+.dark-mode {
+  -webkit-transition: background-color 1s ease-out;
+  -moz-transition: background-color 1s ease-out;
+  -o-transition: background-color 1s ease-out;
+  transition: background-color 1s ease-out;
+  background-color: #2d3748;
+  border-color: #2d3748;
+}
+
+.dark-mode-bwtext {
+  color: white;
+}
+
+.dark-mode-component {
+  -webkit-transition: background-color 1s ease-out;
+  -moz-transition: background-color 1s ease-out;
+  -o-transition: background-color 1s ease-out;
+  transition: background-color 1s ease-out;
+  background-color: #4a5568;
+}
+
+.dark-mode-bg {
+  -webkit-transition: background-color 1s ease-out;
+  -moz-transition: background-color 1s ease-out;
+  -o-transition: background-color 1s ease-out;
+  transition: background-color 1s ease-out;
+  background-color: #2d3748;
+}
+
+.dark-mode-text {
+  color: #f7fafc;
+}
+
+.light-mode {
+  -webkit-transition: background-color 1s ease-out;
+  -moz-transition: background-color 1s ease-out;
+  -o-transition: background-color 1s ease-out;
+  transition: background-color 1s ease-out;
+  background-color: white;
+  border-color: white;
+}
+
+.light-mode-component {
+  -webkit-transition: background-color 1s ease-out;
+  -moz-transition: background-color 1s ease-out;
+  -o-transition: background-color 1s ease-out;
+  transition: background-color 1s ease-out;
+  background-color: #fbfbfb;
+}
+
+.light-mode-bwtext {
+  color: #1a202c;
+}
+
+.light-mode-text {
+  color: #4a5568;
+}
+
+.light-mode-bg {
+  -webkit-transition: background-color 1s ease-out;
+  -moz-transition: background-color 1s ease-out;
+  -o-transition: background-color 1s ease-out;
+  transition: background-color 1s ease-out;
+  background-color: #edf2f7;
+}
+
 /* width */
 ::-webkit-scrollbar {
   width: 8px;
   height: 5px;
 }
 
-/* Track */
+/* Track
 ::-webkit-scrollbar-track {
   background: #fbfbfb;
-}
+} */
 
 /* Handle */
 ::-webkit-scrollbar-thumb {

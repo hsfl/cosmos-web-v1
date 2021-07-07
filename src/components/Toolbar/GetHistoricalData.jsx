@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { DatePicker, Button, message } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import dayjs from 'dayjs';
+import { FormatPainterOutlined } from '@ant-design/icons';
 
 import { set, resetQueue } from '../../store/actions';
 import { axios } from '../../api';
@@ -18,6 +19,7 @@ function GetHistoricalData({
   const realm = useSelector((s) => s.realm);
   const keys = useSelector((s) => s.keys[tab]);
   const retrievedQuery = useSelector((s) => s.retrievedQuery);
+  const mode = useSelector((s) => s.mode);
 
   const [globalHistoricalDate, setGlobalHistoricalDate] = useState(null);
 
@@ -127,6 +129,7 @@ function GetHistoricalData({
       />
       <div className="pt-1">
         <Button
+          className={`${mode}-mode ${mode}-mode-text`}
           disabled={!globalHistoricalDate}
           size="small"
           onClick={() => queryData(globalHistoricalDate[0], globalHistoricalDate[1])}
@@ -137,16 +140,35 @@ function GetHistoricalData({
         <Button
           size="small"
           onClick={() => queryData(dayjs().subtract(1, 'hour').utc(), dayjs().utc())}
+          className={`${mode}-mode ${mode}-mode-text`}
         >
           Past Hour
         </Button>
         &nbsp;
         <Button
+          className={`${mode}-mode ${mode}-mode-text`}
           size="small"
           onClick={() => queryData(dayjs().subtract(6, 'hour').utc(), dayjs().utc())}
         >
           Past 6 Hours
         </Button>
+        <Button
+          className={`${mode}-mode ${mode}-mode-text ml-3`}
+          size="small"
+          shape="circle"
+          icon={<FormatPainterOutlined />}
+          onClick={() => {
+            if (mode === 'dark') {
+              dispatch(set('mode', 'light'));
+              window.localStorage.setItem('mode', 'light');
+              document.body.classList.remove('dark-mode');
+            } else {
+              dispatch(set('mode', 'dark'));
+              window.localStorage.setItem('mode', 'dark');
+              document.body.classList.add('dark-mode');
+            }
+          }}
+        />
       </div>
     </>
   );

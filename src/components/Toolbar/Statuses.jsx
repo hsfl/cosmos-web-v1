@@ -66,33 +66,33 @@ function Statuses({
           </td>
         </tr>
         <tr>
-          <td className="pr-4">
+          <td className="pr-4 text-black">
             <ShowTime
               utc={false}
               format="YYYY-MM-DD"
             />
           </td>
-          <td className="pr-2">
+          <td className="pr-2 text-black">
             <ShowTime
               utc
               format="YYYY-MM-DD"
             />
           </td>
-          <td className="pr-2">
+          <td className="pr-2 text-black">
             <ActivityTime />
           </td>
-          <td className="pr-2">
+          <td className="pr-2 text-black">
             <Downtime />
           </td>
         </tr>
         <tr>
-          <td className="pr-4">
+          <td className="pr-4 text-black">
             <ShowTime
               utc={false}
               format="HH:mm:ss"
             />
           </td>
-          <td className="pr-2">
+          <td className="pr-2 text-black">
             <ShowTime
               utc
               format="HH:mm:ss"

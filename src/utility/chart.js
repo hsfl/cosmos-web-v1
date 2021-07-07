@@ -26,6 +26,9 @@ export function determineLayout(defaultRange, dataRevision) {
     showlegend: true,
     legend: {
       orientation: 'h',
+      font: {
+        color: '#4a5568',
+      },
     },
     modebar: {
       orientation: 'v',
@@ -36,10 +39,16 @@ export function determineLayout(defaultRange, dataRevision) {
       b: 15,
     },
     xaxis: {
+      tickfont: {
+        color: '#000000',
+      },
       autorange: false,
       fixedrange: false,
     },
     yaxis: {
+      tickfont: {
+        color: '#000000',
+      },
       fixedrange: true,
     },
   };

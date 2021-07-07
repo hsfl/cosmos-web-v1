@@ -17,6 +17,8 @@ import {
   CloseOutlined,
 } from '@ant-design/icons';
 
+import { useSelector } from 'react-redux';
+
 import { axios } from '../../api';
 
 import BaseComponent from '../BaseComponent';
@@ -28,6 +30,8 @@ function CommandEditor({
   nodes,
   entries,
 }) {
+  const mode = useSelector((s) => s.mode);
+
   /** List of commands stored in the node */
   const [commands, setCommands] = useState([]);
   /** Form to create a new command */

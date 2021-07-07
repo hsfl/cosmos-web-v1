@@ -53,6 +53,7 @@ function Chart({
   const xMax = useSelector((s) => s.xMax);
   const realm = useSelector((s) => s.realm);
   const queriedData = useSelector((s) => s.queriedData);
+  const mode = useSelector((s) => s.mode);
 
   /** Storage for global form values */
   const [plotsForm] = Form.useForm();
@@ -133,6 +134,28 @@ function Chart({
     dispatch(set('xMin', layout.xaxis.range[0]));
     dispatch(set('xMax', layout.xaxis.range[1]));
   };
+
+  useEffect(() => {
+    if (mode === 'dark') {
+      layout.plot_bgcolor = '#4a5568';
+      layout.paper_bgcolor = '#4a5568';
+      layout.xaxis.gridcolor = '#f7fafc';
+      layout.yaxis.gridcolor = '#f7fafc';
+      layout.xaxis.zerolinecolor = '#FFFFFF';
+      layout.yaxis.zerolinecolor = '#FFFFFF';
+      layout.xaxis.tickfont.color = '#FFFFFF';
+      layout.yaxis.tickfont.color = '#FFFFFF';
+    } else {
+      layout.plot_bgcolor = '#fbfbfb';
+      layout.paper_bgcolor = '#fbfbfb';
+      layout.xaxis.gridcolor = '#cbd5e0';
+      layout.yaxis.gridcolor = '#cbd5e0';
+      layout.xaxis.zerolinecolor = '#000000';
+      layout.yaxis.zerolinecolor = '#000000';
+      layout.xaxis.tickfont.color = '#000000';
+      layout.yaxis.tickfont.color = '#000000';
+    }
+  }, [mode]);
 
   /** Handle new data incoming from the Context */
   useEffect(() => {
@@ -348,7 +371,7 @@ function Chart({
 
           &nbsp;
           <Button
-            className="mr-1"
+            className={`${mode}-mode ${mode}-mode-text mr-1`}
             onClick={() => {
               layout.yaxis.autorange = false;
               layout.yaxis.range = determineRange(defaultRange);
@@ -370,14 +393,14 @@ function Chart({
             okText="Yes"
             cancelText="No"
           >
-            <Button size="small">
+            <Button className={`${mode}-mode ${mode}-mode-text`} size="small">
               <ClearOutlined />
             </Button>
           </Popconfirm>
 
           &nbsp;
 
-          <Button size="small" onClick={() => downloadDataAsCSV()}>
+          <Button className={`${mode}-mode ${mode}-mode-text`} size="small" onClick={() => downloadDataAsCSV()}>
             <DownloadOutlined />
           </Button>
         </>

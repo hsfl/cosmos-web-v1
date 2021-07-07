@@ -23,6 +23,7 @@ function Attitude({
 }) {
   /** Accessing the neutron1 messages from the socket */
   const state = useSelector((s) => s.data);
+  const mode = useSelector((s) => s.mode);
 
   /** Storage for form values */
   const [attitudesForm] = Form.useForm();
@@ -168,7 +169,7 @@ function Attitude({
       <div className="overflow-x-auto">
         <table className="mt-4 w-full">
           <tbody>
-            <tr className="bg-gray-200 border-b border-gray-400">
+            <tr className={`${mode}-mode-text ${mode}-mode-bg border-b border-gray-400`}>
               <td className="p-2 pr-8">Name</td>
               <td className="p-2 pr-8">x</td>
               <td className="p-2 pr-8">y</td>
@@ -177,7 +178,7 @@ function Attitude({
             </tr>
             {
             attitudesState.map((attitude) => (
-              <tr className="text-gray-700 border-b border-gray-400" key={attitude.name}>
+              <tr className={`${mode}-mode-text border-b border-gray-400`} key={attitude.name}>
                 <td className="p-2 pr-8">{attitude.name}</td>
                 <td className="p-2 pr-8">{attitude.quaternions.d && attitude.quaternions.d.x ? attitude.quaternions.d.x : '-'}</td>
                 <td className="p-2 pr-8">{attitude.quaternions.d && attitude.quaternions.d.y ? attitude.quaternions.d.y : '-'}</td>
