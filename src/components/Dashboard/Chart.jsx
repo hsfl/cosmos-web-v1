@@ -142,7 +142,7 @@ function Chart({
       if (state && realm && state[realm]
         && ((!(process.env.FLIGHT_MODE === 'true') && state[realm].recorded_time)
         || (process.env.FLIGHT_MODE === 'true' && state[realm][p.timeDataKey]))
-        && state[realm][p.YDataKey] != null
+        // && state[realm][p.YDataKey] != null
         && p.live
         && (state[realm].node_name && p.node === state[realm].node_name)
       ) {
@@ -169,7 +169,6 @@ function Chart({
             } else {
               plotsState[i].x.push(mjdToUTCString(state[realm].recorded_time));
             }
-
             plotsState[i]
               .y
               .push(
