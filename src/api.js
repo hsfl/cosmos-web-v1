@@ -19,6 +19,10 @@ export const COSMOSAPI = {
     const { data } = await axios.post('/commands', req);
     callback(data);
   },
+  execCommand: async (type, node, event, callback) => {
+    const { data } = await axios.post(`/commands/${type}/${node}`, event);
+    callback(data);
+  },
   findNodeCommands: async (commandNode, callback) => {
     const { data } = await axios.get(`/commands/${commandNode}`);
     callback(data);

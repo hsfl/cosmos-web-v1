@@ -20,7 +20,7 @@ import {
 import dayjs from 'dayjs';
 
 // import Search from 'antd/lib/input/Search';
-import { axios, COSMOSAPI } from '../../api';
+import { COSMOSAPI } from '../../api';
 import { dateToMJD } from '../../utility/time';
 
 import BaseComponent from '../BaseComponent';
@@ -89,14 +89,16 @@ function Commands({
     try {
       if (query) {
         try {
-          await axios.post(`/${type}/${commandNode}`, {
+          COSMOSAPI.execCommand(type, selectedAgent[0], {
             event: {
-              event_data: sending.event_data,
-              event_utc: timeToSend != null ? dateToMJD(dayjs()) : timeToSend,
-              event_type: sending.event_type,
-              event_flag: sending.event_flag,
-              event_name: sending.event_name,
+              data: sending.event_data,
+              utc: timeToSend != null ? dateToMJD(dayjs()) : timeToSend,
+              type: sending.event_type,
+              flag: sending.event_flag,
+              name: sending.event_name,
             },
+          }, (data) => {
+            console.log(data);
           });
           setCommandHistory([
             ...commandHistoryEl.current,
@@ -182,7 +184,7 @@ function Commands({
       ...commandHistoryEl.current,
       `➜ ${dayjs.utc().format()} agent ${nodeName} ${agentName} ${command}`,
     ]);
-
+    console.log('here');
     setUpdateLog(true);
     try {
       await COSMOSAPI.runAgentCommand(nodeName, agentName, command, parseCommandResponse);
@@ -194,6 +196,7 @@ function Commands({
   };
 
   const sendCommandApi = async (route, command) => {
+    console.log('here2');
     setCommandHistory([
       ...commandHistoryEl.current,
       `➜ ${dayjs.utc().format()} ${route} ${command}`,
@@ -363,7 +366,7 @@ function Commands({
               showSearch
               className="mr-2 w-32"
               onChange={(value) => setCommandNode(value)}
-              onBlur={() => queryCommands()}
+              //onBlur={() => queryCommands()}
               placeholder="Select node"
               defaultValue={commandNode}
               value={commandNode}
@@ -455,7 +458,7 @@ function Commands({
                 cancelText="No"
               >
                 <Radio.Button
-                  disabled={elapsedTime === null || macroCommand === null}
+                  disabled={elapsedTime === null || macroCommand === null || !selectedAgent.length}
                 >
                   Direct Send
                 </Radio.Button>
