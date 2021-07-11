@@ -960,7 +960,6 @@ function CesiumGlobe({
             );
           })
         }
-        <GlobeToolbar orbitsState={orbitsState} handleShowPathChange={handleShowPathChange} />
       </Viewer>
       <div className="overflow-x-auto">
         <table className="mt-4 w-full">

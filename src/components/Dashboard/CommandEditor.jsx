@@ -236,6 +236,7 @@ function CommandEditor({
               </td>
               <td>
                 <Table
+                  key="eventlisttable"
                   pagination={{ pageSize: entries }}
                   scroll={{ y: 240 }}
                   className="border-l pl-4"

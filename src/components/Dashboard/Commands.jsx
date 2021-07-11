@@ -98,7 +98,7 @@ function Commands({
               name: sending.event_name,
             },
           }, (data) => {
-            console.log(data);
+            // console.log(data);
           });
           setCommandHistory([
             ...commandHistoryEl.current,
@@ -184,7 +184,6 @@ function Commands({
       ...commandHistoryEl.current,
       `➜ ${dayjs.utc().format()} agent ${nodeName} ${agentName} ${command}`,
     ]);
-    console.log('here');
     setUpdateLog(true);
     try {
       await COSMOSAPI.runAgentCommand(nodeName, agentName, command, parseCommandResponse);
@@ -196,7 +195,6 @@ function Commands({
   };
 
   const sendCommandApi = async (route, command) => {
-    console.log('here2');
     setCommandHistory([
       ...commandHistoryEl.current,
       `➜ ${dayjs.utc().format()} ${route} ${command}`,
@@ -366,7 +364,7 @@ function Commands({
               showSearch
               className="mr-2 w-32"
               onChange={(value) => setCommandNode(value)}
-              //onBlur={() => queryCommands()}
+              // onBlur={() => queryCommands()}
               placeholder="Select node"
               defaultValue={commandNode}
               value={commandNode}
