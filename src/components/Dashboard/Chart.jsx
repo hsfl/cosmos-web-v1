@@ -139,12 +139,14 @@ function Chart({
   useEffect(() => {
     plotsState.forEach((p, i) => {
       // Upon context change, see if changes affect this chart's values
+      const [nodeName, agentName] = p.nodeProcess.split(':');
       if (state && realm && state[realm]
         && ((!(process.env.FLIGHT_MODE === 'true') && state[realm].recorded_time)
         || (process.env.FLIGHT_MODE === 'true' && state[realm][p.timeDataKey]))
         // && state[realm][p.YDataKey] != null
         && p.live
-        && (state[realm].node_name && p.node === state[realm].node_name)
+        && (state[realm].node_name && nodeName === state[realm].node_name)
+        && (state[realm].agent_name && agentName === state[realm].agent_name)
       ) {
         // If so, push to arrays and update state
         if (showZero || (!showZero && state[realm][p.YDataKey])) {

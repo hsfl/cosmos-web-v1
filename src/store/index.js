@@ -4,7 +4,7 @@ import reducer from './reducers';
 export default configureStore({
   reducer,
   middleware: getDefaultMiddleware({
-  //  serializableCheck: false,
-  //  immutableCheck: false,
+    serializableCheck: false,
+    immutableCheck: false,
   }),
 });

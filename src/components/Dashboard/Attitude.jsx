@@ -46,12 +46,12 @@ function Attitude({
 
     // Initialize form values for each value
     attitudes.forEach(({
-      name: nameVal, node, dataKey: dataKeyVal, live,
+      name: nameVal, nodeProcess, dataKey: dataKeyVal, live,
     }, i) => {
       accumulate = {
         ...accumulate,
         [`name_${i}`]: nameVal,
-        [`node_${i}`]: node,
+        [`nodeProcess_${i}`]: nodeProcess,
         [`dataKey_${i}`]: dataKeyVal,
         [`live_${i}`]: live,
       };
@@ -63,16 +63,18 @@ function Attitude({
 
   /** Update the live attitude display */
   useEffect(() => {
-    attitudesState.forEach(({ node, dataKey, live }, i) => {
+    attitudesState.forEach(({ nodeProcess, dataKey, live }, i) => {
+      const [nodeName, agentName] = nodeProcess.split(':');
       if (state && realm && state[realm]
-        && (state[realm].node_name && node === state[realm].node_name)
+        && (state[realm].node_name && nodeName === state[realm].node_name)
+        && (state[realm].agent_name && agentName === state[realm].agent_name)
         && state[realm][dataKey]
-        && state[realm][dataKey].s
+        && state[realm][dataKey].pos
         && live
       ) {
         const tempAttitude = [...attitudesState];
 
-        tempAttitude[i].quaternions = state[realm][dataKey].s;
+        tempAttitude[i].quaternions = state[realm][dataKey].pos;
 
         setAttitudesState(tempAttitude);
       }
@@ -135,7 +137,7 @@ function Attitude({
                     header={(
                       <span className="text-gray-600">
                         <strong>
-                          {attitude.node}
+                          {attitude.nodeProcess}
                         </strong>
                       &nbsp;
                         <span>
@@ -143,13 +145,13 @@ function Attitude({
                         </span>
                       </span>
                     )}
-                    key={`${attitude.name}${attitude.node}${attitude.dataKey}`}
+                    key={`${attitude.name}${attitude.nodeProcess}${attitude.dataKey}`}
                   >
                     <Form.Item label="Name" name={`name_${i}`} hasFeedback>
                       <Input placeholder="Name" onBlur={({ target: { id } }) => processForm(id)} />
                     </Form.Item>
 
-                    <Form.Item label="Node Process" name={`node_${i}`} hasFeedback>
+                    <Form.Item label="Node Process" name={`nodeProcess_${i}`} hasFeedback>
                       <Input placeholder="Node Process" onBlur={({ target: { id } }) => processForm(id)} />
                     </Form.Item>
 
@@ -204,7 +206,7 @@ Attitude.propTypes = {
       /** Name of the attitude display */
       name: PropTypes.string,
       /** node name to look at for retrieving attitude data */
-      node: PropTypes.string,
+      nodeProcess: PropTypes.string,
       /** Data key to retrieve data from */
       dataKey: PropTypes.string,
     }),

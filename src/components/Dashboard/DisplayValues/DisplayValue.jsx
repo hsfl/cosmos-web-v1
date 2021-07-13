@@ -107,6 +107,7 @@ function DisplayValue({
     displayValuesState.forEach((v, i) => {
       // Check if the state change involves any of the displayed values
       // by checking the node process and the key it is watching
+      // SCOTTNOTE: TODO: Make sure nodeprocess is checked for
       if (state && realm && state[realm]
         && state[realm][v.dataKey] !== undefined
         && ((!(process.env.FLIGHT_MODE === 'true') && state[realm].recorded_time)
