@@ -32,12 +32,13 @@ export const COSMOSAPI = {
     callback(data);
   },
   deleteNodeCommand: async (commandName, commandNode, callback) => {
-    await axios.delete(`/commands/${commandNode}`, {
+    const { data } = await axios.delete(`/commands/${commandNode}`, {
       data: {
         event_name: commandName,
+        // event_utc: ...
       },
     });
-    callback();
+    callback(data);
   },
   getQuery: async (db, collection, query, callback) => {
     axios.get(`/query/${db}/${collection}`, query)

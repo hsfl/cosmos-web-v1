@@ -36,20 +36,28 @@ function CommandEditor({
   const [globalNode, setGlobalNode] = useState(nodes[0]);
 
   /** Get commands from the database, if query is a string, it deletes the command */
-  const queryCommands = async (query = false) => {
+  const queryCommands = async () => {
     try {
-      if (query) {
-        try {
-          await COSMOSAPI.deleteNodeCommand(query, globalNode, () => {
-            message.success(`${query} deleted successfully.`);
-          });
-        } catch (err) {
-          message.error(`Error deleting ${query}.`);
-        }
-      }
       await COSMOSAPI.findNodeCommands(globalNode, setCommands);
     } catch (error) {
       message.error('Could not query commands from database.');
+    }
+  };
+
+  const deleteCommand = async (commandName) => {
+    try {
+      await COSMOSAPI.deleteNodeCommand(commandName, globalNode, (data) => {
+        if (data.error) {
+          message.error(data.error);
+        } else if (data.status === 'Success') {
+          message.success(`${commandName} deleted successfully.`);
+        } else {
+          message.error(data.status);
+        }
+      });
+      queryCommands();
+    } catch (err) {
+      message.error(`Error deleting ${commandName}.`);
     }
   };
 
@@ -80,7 +88,7 @@ function CommandEditor({
       render: (text, record) => (
         <Popconfirm
           title="Are you sure you want to delete this command?"
-          onConfirm={() => queryCommands(record.event_name)}
+          onConfirm={() => deleteCommand(record.event_name)}
           okText="Yes"
           cancelText="No"
         >
