@@ -85,35 +85,47 @@ function Commands({
   const commandHistoryEl = useRef(null);
   commandHistoryEl.current = commandHistory;
 
-  const queryCommands = async (query = false, timeToSend = null, type = 'exec') => {
+  const queryCommands = async () => {
     try {
-      if (query) {
-        try {
-          COSMOSAPI.execCommand(type, selectedAgent[0], {
-            event: {
-              data: sending.event_data,
-              utc: timeToSend != null ? dateToMJD(dayjs()) : timeToSend,
-              type: sending.event_type,
-              flag: sending.event_flag,
-              name: sending.event_name,
-            },
-          }, (data) => {
-            // console.log(data);
-          });
-          setCommandHistory([
-            ...commandHistoryEl.current,
-            `➜ ${dayjs.utc().format()} ${commandNode} ${sending.event_data}`,
-          ]);
-          message.success(`Command '${sending.event_name}' has been sent to ${commandNode}!`);
-        } catch {
-          message.error(`Error executing ${macroCommand} on ${commandNode}.`);
-        }
-      }
-
       await COSMOSAPI.findNodeCommands(commandNode, setCommands);
     } catch (error) {
       message.error('Could not query commands from database.');
     }
+  };
+
+  const sendEvent = async (type = 'exec', timeToSend = null) => {
+    try {
+      COSMOSAPI.execCommand(type, selectedAgent[0], selectedAgent[1], {
+        event: {
+          data: sending.event_data,
+          utc: timeToSend != null ? dateToMJD(dayjs()) : timeToSend,
+          type: sending.event_type,
+          flag: sending.event_flag,
+          name: sending.event_name,
+        },
+      }, (data) => {
+        if (data.status.includes('Command added to queue')) {
+          // exec send success
+          message.success(`Command '${sending.event_name}' has been sent to ${selectedAgent[0]}:${selectedAgent[1]}!`);
+        } else if (data.status === 'success') {
+          // file send success
+          message.success('Event file successfully created!');
+        } else {
+          // error
+          // SCOTTNOTE: TODO: carefully check file creation error returns
+          // also probably worth making return status data consistent
+          // console.log(data);
+          message.error('There was an error');
+        }
+      });
+      setCommandHistory([
+        ...commandHistoryEl.current,
+        `➜ ${dayjs.utc().format()} ${commandNode} ${sending.event_data}`,
+      ]);
+    } catch {
+      message.error(`Error executing ${macroCommand} on ${commandNode}.`);
+    }
+    queryCommands();
   };
 
   useEffect(() => {
@@ -413,7 +425,7 @@ function Commands({
               <Popconfirm
                 placement="top"
                 title={`Send '${commandNode} ➜ ${sending.event_data}'?`}
-                onConfirm={() => queryCommands('send', timeSend)}
+                onConfirm={() => sendEvent('exec', timeSend)}
                 okText="Yes"
                 cancelText="No"
               >
@@ -426,7 +438,7 @@ function Commands({
               <Popconfirm
                 placement="top"
                 title={`Send '${commandNode} ➜ ${sending.event_data}'?`}
-                onConfirm={() => queryCommands('send', timeSend, 'command')}
+                onConfirm={() => sendEvent('file', timeSend)}
                 okText="Yes"
                 cancelText="No"
               >
@@ -451,7 +463,7 @@ function Commands({
               <Popconfirm
                 placement="top"
                 title={`Send '${commandNode} ➜ ${sending.event_data}' ${elapsedTime} seconds from now?`}
-                onConfirm={() => queryCommands('send', dayjs().add(elapsedTime, 's'))}
+                onConfirm={() => sendEvent('exec', dayjs().add(elapsedTime, 's'))}
                 okText="Yes"
                 cancelText="No"
               >
@@ -464,7 +476,7 @@ function Commands({
               <Popconfirm
                 placement="top"
                 title={`Send '${commandNode} ➜ ${sending.event_data}' ${elapsedTime} seconds from now?`}
-                onConfirm={() => queryCommands('send', dayjs().add(elapsedTime, 's'), 'command')}
+                onConfirm={() => sendEvent('file', dayjs().add(elapsedTime, 's'), 'command')}
                 okText="Yes"
                 cancelText="No"
               >
@@ -472,7 +484,7 @@ function Commands({
                   className="mr-2"
                   disabled={elapsedTime === null || macroCommand === null}
                 >
-                  File Send
+                  File Sendx
                 </Radio.Button>
               </Popconfirm>
             </Radio.Group>
