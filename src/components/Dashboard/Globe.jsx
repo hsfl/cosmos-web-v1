@@ -12,14 +12,16 @@ import {
 } from 'cesium';
 
 import {
-  Form, Input, Collapse, Button, Switch, DatePicker, message,
+  Form, Input, Collapse, Button, Switch, DatePicker, message, Upload,
 } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
 
 import BaseComponent from '../BaseComponent';
 import model from '../../public/cubesat.glb';
 import { COSMOSAPI } from '../../api';
 import { MJDtoJavaScriptDate, dateToMJD } from '../../utility/time';
 import { parseDataKey } from '../../utility/data';
+import importCSV from './Globe/GlobeCSV';
 
 import GlobeToolbar from './Globe/GlobeToolbar';
 
@@ -517,6 +519,29 @@ function CesiumGlobe({
 
   const handleShowPathChange = (val) => (setShowPath(val));
 
+  const handleUpload = (file) => {
+    const csv = importCSV(file);
+    csv.then((paths) => {
+      const tempOrbit = [...orbitsState];
+      tempOrbit.forEach((o, i) => {
+        // TODO: check index of node
+        o.live = false;
+        // to.position = ...;
+        o.position = paths[i];
+      });
+      const startOrbit = JulianDate
+        .fromDate(MJDtoJavaScriptDate(59270.9494675926));
+      const stopOrbit = JulianDate
+        .fromDate(MJDtoJavaScriptDate(59270.9628587994));
+      setStart(startOrbit);
+      setStop(stopOrbit);
+      setOrbitsState(tempOrbit);
+      // Reset state to null to allow for detection of future orbit history requests
+      setRetrieveOrbitHistory(null);
+    });
+    return false;
+  };
+
   return (
     <BaseComponent
       name={nameState}
@@ -744,6 +769,18 @@ function CesiumGlobe({
               </Panel>
             </Collapse>
           </Form>
+
+          <br />
+          {/* Upload CSV File */}
+          <Upload.Dragger
+            multiple={false}
+            showUploadList={false}
+            beforeUpload={handleUpload}
+          >
+            <UploadOutlined />
+            &nbsp;
+            Import CSV File
+          </Upload.Dragger>
         </>
       )}
     >
@@ -918,7 +955,7 @@ function CesiumGlobe({
           /** Path */
           orbitsState.map((orbit) => {
             if (!showPath) {
-              return null;
+            //  return null;
             }
             if (orbit.live) {
               return (
