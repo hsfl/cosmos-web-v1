@@ -6,6 +6,7 @@ import Attitude from './Dashboard/Attitude';
 import Chart from './Dashboard/Chart';
 import Commands from './Dashboard/Commands';
 import CommandEditor from './Dashboard/CommandEditor';
+import CosmosPanel from './Dashboard/CosmosPanel';
 import DisplayValue from './Dashboard/DisplayValue';
 import Events from './Dashboard/Events';
 import Image from './Dashboard/Image';
@@ -23,7 +24,6 @@ import AgentList from './Dashboard/AgentList';
 import Subsystem from './Dashboard/Subsystem';
 import ThreeD from './Dashboard/ThreeD';
 import UploadFile from './Dashboard/UploadFile';
-import CosmosPanel from './Dashboard/CosmosPanel';
 
 /** Store all of the available dashboard components into an object
  * This should contain all components that the dashboard should be able to render in the layout.
@@ -35,6 +35,7 @@ export const components = {
   Chart,
   Commands,
   CommandEditor,
+  CosmosPanel,
   DisplayValue,
   Events,
   Image,
@@ -51,7 +52,6 @@ export const components = {
   Subsystem,
   ThreeD,
   UploadFile,
-  CosmosPanel,
 };
 
 /**
