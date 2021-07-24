@@ -1,7 +1,7 @@
 import { mjdToUTCString } from '../../src/utility/time';
 
 export const Layout = {
-  name: 'example',
+  name: 'cubesat1',
   icon: 'radar-chart',
   defaultLayout: {
     lg: [
@@ -136,7 +136,7 @@ export const Layout = {
                 name: 'artemis',
                 modelFileName: 'cubesat1.glb',
                 nodeProcess: 'cubesat1:propagator_simple',
-                dataKey: 'node_loc_pos_eci',
+                XDataKey: 'node_loc_pos_eci',
                 live: true,
                 position: [21.289373, 157.917480, 350000.0],
                 orientation: {
