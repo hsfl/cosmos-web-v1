@@ -2,44 +2,11 @@
 
 COSMOS Web - a web application to visualize telemetry data from a satellite. UI Repository.
 
-See https://github.com/spjy/cosmos-mongodb for the server component of COSMOS Web.
-
-## Requirements
-
-1. Node.js / NPM (NPM is installed with Node.js)
 
 ## Installing
 
-Open a terminal and change directories to the location you want to install the repository.
+Follow the instructions on the [COSMOS Web Installation page](https://hsfl.github.io/cosmos-docs/pages/2-getting_started/install/cosmos-web.html#confirm-cosmos-web-and-api-connection)
 
-```
-git clone https://github.com/hsfl/cosmos-web.git
-cd cosmos-web
-npm install
-```
-
-If you need to modify the default environment variable values (do not modify .env.defaults directly):
-
-```
-cp .env.defaults .env
-```
-
-```
-WEBSOCKET_IP=localhost # Agent Mongo IP. Set this to the IP of the Agent MongoDB instance you are trying to connect to.
-QUERY_WEBSOCKET_PORT=8080 # Port of the WebSocket to access the query endpoints
-LIVE_WEBSOCKET_PORT=8081 # Port of the WebSocket to access the live endpoints
-CESIUM_ION_TOKEN= # Token for the globe simulation (optional). Get a token here -> https://cesium.com/ion/signup?gs=true
-```
-
-If you need to run Agent Mongo, the server component of COSMOS Web, see this repository: https://github.com/spjy/cosmos-mongodb
-
-If you need to run Agent Socket, which is Agent Mongo without the database component, see this repository: https://github.com/spjy/cosmos-socket
-
-## Running
-
-```
-npm start
-```
 
 ## Docker Development Image
 
