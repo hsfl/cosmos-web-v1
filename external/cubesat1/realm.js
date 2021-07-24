@@ -133,10 +133,12 @@ export const Layout = {
             name: 'Orbit',
             orbits: [
               {
-                name: 'artemis',
+                name: 'cubesat1',
                 modelFileName: 'cubesat1.glb',
                 nodeProcess: 'cubesat1:propagator_simple',
-                XDataKey: 'node_loc_pos_eci',
+                XDataKey: 'node_loc_pos_eci.pos[0]',
+                YDataKey: 'node_loc_pos_eci.pos[1]',
+                ZDataKey: 'node_loc_pos_eci.pos[2]',
                 live: true,
                 position: [21.289373, 157.917480, 350000.0],
                 orientation: {
@@ -146,17 +148,6 @@ export const Layout = {
                     z: 0,
                   },
                   w: 0,
-                },
-              },
-            ],
-            overlays: [
-              {
-                color: 'CRIMSON',
-                geoJson: {
-                  type: 'Polygon',
-                  coordinates: [
-                    [[30, 10], [40, 40], [20, 40], [10, 20], [30, 10]],
-                  ],
                 },
               },
             ],
