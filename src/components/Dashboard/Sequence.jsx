@@ -32,7 +32,7 @@ function Sequence({
     await Promise.all(sequence.map(async (command) => {
       try {
         await COSMOSAPI.runCommand({
-          command: `${process.env.COSMOS_BIN}/agent ${command}`,
+          command: `${process.env.COSMOS_DIR}/bin/agent ${command}`,
         },
         (data) => {
           // User feedback indicating command just sent
