@@ -1,7 +1,17 @@
-import defaultLayout from './realms/defaultLayout';
-import neutron1 from './realms/neutron1';
-import hiapo from './realms/hiapo';
-import hyti from './realms/hyti';
+const nodeList = {};
+const realms = [];
+const importRealms = (requireContext) => {
+  requireContext.keys().forEach((key) => {
+    const realmName = key.split('/')[1];
+    const realm = requireContext(key);
+    if (realm.Layout && realm.NodeList) {
+      realms.push(realm.Layout);
+      nodeList[realmName] = realm.NodeList;
+    }
+  });
+};
+// import index.js in realms directory
+importRealms(require.context('../../external', true, /realm\.js$/));
 
 export default {
   name: 'Realms',
@@ -9,16 +19,8 @@ export default {
   path: '/realm/:id',
   component: 'Dashboard',
   props: {
-    defaultLayout,
-    realms: {
-      neutron1: ['neutron1', 'beagle1', 'virtualhost.hsfl.hawaii.edu', 'cubesat1'],
-      hiapo: [],
-      hyti: [],
-    },
+    defaultLayout: {},
+    realms: nodeList,
   },
-  children: [
-    neutron1,
-    hiapo,
-    hyti,
-  ],
+  children: realms,
 };

@@ -17,7 +17,7 @@ import {
   CloseOutlined,
 } from '@ant-design/icons';
 
-import { axios } from '../../api';
+import { COSMOSAPI } from '../../api';
 
 import BaseComponent from '../BaseComponent';
 
@@ -36,26 +36,28 @@ function CommandEditor({
   const [globalNode, setGlobalNode] = useState(nodes[0]);
 
   /** Get commands from the database, if query is a string, it deletes the command */
-  const queryCommands = async (query = false) => {
+  const queryCommands = async () => {
     try {
-      if (query) {
-        try {
-          await axios.delete(`/commands/${globalNode}`, {
-            data: {
-              event_name: query,
-            },
-          });
-          message.success(`${query} deleted successfully.`);
-        } catch (err) {
-          message.error(`Error deleting ${query}.`);
-        }
-      }
-
-      const { data } = await axios.get(`/commands/${globalNode}`);
-
-      setCommands(data);
+      await COSMOSAPI.findNodeCommands(globalNode, setCommands);
     } catch (error) {
       message.error('Could not query commands from database.');
+    }
+  };
+
+  const deleteCommand = async (commandName) => {
+    try {
+      await COSMOSAPI.deleteNodeCommand(commandName, globalNode, (data) => {
+        if (data.error) {
+          message.error(data.error);
+        } else if (data.status === 'Success') {
+          message.success(`${commandName} deleted successfully.`);
+        } else {
+          message.error(data.status);
+        }
+      });
+      queryCommands();
+    } catch (err) {
+      message.error(`Error deleting ${commandName}.`);
     }
   };
 
@@ -86,7 +88,7 @@ function CommandEditor({
       render: (text, record) => (
         <Popconfirm
           title="Are you sure you want to delete this command?"
-          onConfirm={() => queryCommands(record.event_name)}
+          onConfirm={() => deleteCommand(record.event_name)}
           okText="Yes"
           cancelText="No"
         >
@@ -111,15 +113,18 @@ function CommandEditor({
       message.error('Duplicate command cannot be created.');
     } else {
       try {
-        await axios.post(`/commands/${globalNode}`, {
+        await COSMOSAPI.insertNodeCommand({
           command: {
             event_name: name,
             event_type: type,
             event_flag: flag,
             event_data: command,
           },
+        },
+        globalNode,
+        () => {
+          message.success(`Successfully created ${name}!`);
         });
-        message.success(`Successfully created ${name}!`);
       } catch {
         message.error(`Error creating ${name}`);
       }
@@ -239,6 +244,7 @@ function CommandEditor({
               </td>
               <td>
                 <Table
+                  key="eventlisttable"
                   pagination={{ pageSize: entries }}
                   scroll={{ y: 240 }}
                   className="border-l pl-4"

@@ -20,7 +20,7 @@ import {
 import dayjs from 'dayjs';
 
 // import Search from 'antd/lib/input/Search';
-import { axios } from '../../api';
+import { COSMOSAPI } from '../../api';
 import { dateToMJD } from '../../utility/time';
 
 import BaseComponent from '../BaseComponent';
@@ -85,35 +85,47 @@ function Commands({
   const commandHistoryEl = useRef(null);
   commandHistoryEl.current = commandHistory;
 
-  const queryCommands = async (query = false, timeToSend = null, type = 'exec') => {
+  const queryCommands = async () => {
     try {
-      if (query) {
-        try {
-          await axios.post(`/${type}/${commandNode}`, {
-            event: {
-              event_data: sending.event_data,
-              event_utc: timeToSend != null ? dateToMJD(dayjs()) : timeToSend,
-              event_type: sending.event_type,
-              event_flag: sending.event_flag,
-              event_name: sending.event_name,
-            },
-          });
-          setCommandHistory([
-            ...commandHistoryEl.current,
-            `➜ ${dayjs.utc().format()} ${commandNode} ${sending.event_data}`,
-          ]);
-          message.success(`Command '${sending.event_name}' has been sent to ${commandNode}!`);
-        } catch {
-          message.error(`Error executing ${macroCommand} on ${commandNode}.`);
-        }
-      }
-
-      const { data } = await axios.get(`/commands/${commandNode}`);
-
-      setCommands(data);
+      await COSMOSAPI.findNodeCommands(commandNode, setCommands);
     } catch (error) {
       message.error('Could not query commands from database.');
     }
+  };
+
+  const sendEvent = async (type = 'exec', timeToSend = null) => {
+    try {
+      COSMOSAPI.execCommand(type, selectedAgent[0], selectedAgent[1], {
+        event: {
+          data: sending.event_data,
+          utc: timeToSend != null ? dateToMJD(dayjs()) : timeToSend,
+          type: sending.event_type,
+          flag: sending.event_flag,
+          name: sending.event_name,
+        },
+      }, (data) => {
+        if (data.status.includes('Command added to queue')) {
+          // exec send success
+          message.success(`Command '${sending.event_name}' has been sent to ${selectedAgent[0]}:${selectedAgent[1]}!`);
+        } else if (data.status === 'success') {
+          // file send success
+          message.success('Event file successfully created!');
+        } else {
+          // error
+          // SCOTTNOTE: TODO: carefully check file creation error returns
+          // also probably worth making return status data consistent
+          // console.log(data);
+          message.error('There was an error');
+        }
+      });
+      setCommandHistory([
+        ...commandHistoryEl.current,
+        `➜ ${dayjs.utc().format()} ${commandNode} ${sending.event_data}`,
+      ]);
+    } catch {
+      message.error(`Error executing ${macroCommand} on ${commandNode}.`);
+    }
+    queryCommands();
   };
 
   useEffect(() => {
@@ -126,71 +138,83 @@ function Commands({
     }
   }, [incoming]);
 
-  /** Manages requests for agent list and agent [node] [process] */
-  const sendCommandApi = async (command) => {
-    setCommandHistory([
-      ...commandHistoryEl.current,
-      `➜ ${dayjs.utc().format()} ${command}`,
-    ]);
+  const loadAgentRequests = (req) => {
+    const sortedRequests = [];
+    const requests = {};
 
-    setUpdateLog(true);
+    // Clear agent requests for new agent
+    req.forEach((request) => {
+      sortedRequests.push(
+        request.token,
+      );
 
-    // retrieve command output
-    try {
-      const { data } = await axios.post('/command', {
-        data: {
-          command,
-        },
-      });
+      // Make commands mapped into an object
+      requests[request.token] = {
+        ...request,
+      };
+    });
 
-      // json checking for json.output, json.error
-      if (data && data.output && data.output.requests) {
-        const sortedRequests = [];
-        const requests = {};
+    // Set agent requests
+    setAgentRequests(requests);
+    setSortedAgentRequests(sortedRequests);
+  };
 
-        // Clear agent requests for new agent
-        data.output.requests.forEach((request) => {
-          sortedRequests.push(
-            request.token,
-          );
-
-          // Make commands mapped into an object
-          requests[request.token] = {
-            ...request,
-          };
-        });
-
-        // Alphabetical order
-        sortedRequests.sort();
-
-        // Set agent requests
-        setAgentRequests(requests);
-        setSortedAgentRequests(sortedRequests);
-
+  const parseCommandResponse = (data) => {
+    if (data) {
+      try {
+        let obj = {};
+        if (typeof data === 'object') {
+          obj = data;
+        } else if (typeof data === 'string') {
+          obj = JSON.parse(data);
+        }
+        if (obj.output && obj.output.requests) {
+          loadAgentRequests(obj.output.requests);
+          message.destroy();
+          message.success('Retrieved agent requests.');
+        } else if (obj.error) {
+          throw new Error(obj.error);
+        } else {
+          setCommandHistory([
+            ...commandHistoryEl.current,
+            `${dayjs.utc().format()} ${JSON.stringify(obj.output)}`,
+          ]);
+        }
+      } catch (error) {
         message.destroy();
-        message.success('Retrieved agent requests.');
-      } else if (data && data.output) {
-        // agent node proc cmd
-        setCommandHistory([
-          ...commandHistoryEl.current,
-          `${dayjs.utc().format()} ${data.output}`,
-        ]);
-        message.destroy();
-      } else if (data && data.error) {
-        throw new Error(data.error);
-      } else if (data && typeof data === 'object') {
-        message.destroy();
-        // non-json
-        setCommandHistory([
-          ...commandHistoryEl.current,
-          `${dayjs.utc().format()} ${JSON.stringify(data, null, 2)}`,
-        ]);
-      } else {
+        message.error(error);
         setCommandHistory([
           ...commandHistoryEl.current,
           `${dayjs.utc().format()} ${data}`,
         ]);
       }
+    }
+  };
+
+  const sendAgentCommandApi = async (nodeName, agentName, command) => {
+    setCommandHistory([
+      ...commandHistoryEl.current,
+      `➜ ${dayjs.utc().format()} agent ${nodeName} ${agentName} ${command}`,
+    ]);
+    setUpdateLog(true);
+    try {
+      await COSMOSAPI.runAgentCommand(nodeName, agentName, command, parseCommandResponse);
+      setUpdateLog(true);
+    } catch (error) {
+      message.destroy();
+      message.error(error.message);
+    }
+  };
+
+  const sendCommandApi = async (route, command) => {
+    setCommandHistory([
+      ...commandHistoryEl.current,
+      `➜ ${dayjs.utc().format()} ${route} ${command}`,
+    ]);
+
+    setUpdateLog(true);
+    try {
+      await COSMOSAPI.runCommand({ command: `${route} ${command}` }, parseCommandResponse);
       setUpdateLog(true);
     } catch (error) {
       message.destroy();
@@ -204,13 +228,13 @@ function Commands({
 
     switch (selectedRequest) {
       case '> agent':
-        sendCommandApi(`${process.env.COSMOS_BIN}agent ${commandArguments}`);
+        sendCommandApi('agent', commandArguments);
         break;
       case '> command_generator':
-        sendCommandApi(`${process.env.COSMOS_BIN}command_generator ${commandArguments.replace(/"/g, "'")}`);
+        sendCommandApi('command_generator', commandArguments.replace(/"/g, "'"));
         break;
       default:
-        sendCommandApi(`${process.env.COSMOS_BIN}agent ${selectedAgent[0]} ${selectedAgent[1]} ${selectedRequest} ${macro ? `${macro} ` : ''}${commandArguments}`);
+        sendAgentCommandApi(selectedAgent[0], selectedAgent[1], `${selectedRequest} ${macro ? `${macro} ` : ''}${commandArguments}`);
         break;
     }
 
@@ -225,14 +249,14 @@ function Commands({
     ]);
 
     // retrieve autocompletions
-    const { data } = await axios.post('/command', {
+    await COSMOSAPI.runCommand({
       responseType: 'text',
       data: {
         command: `compgen -c ${autocomplete}`,
       },
+    }, (data) => {
+      setAutocompletions(data.split('\n'));
     });
-
-    setAutocompletions(data.split('\n'));
   };
 
   /** Autocomplete automatically if it's the only one in the array */
@@ -260,7 +284,7 @@ function Commands({
     setAgentRequests({});
 
     if (agent.length > 0) {
-      sendCommandApi(`${process.env.COSMOS_BIN}agent ${agent[0]} ${agent[1]} help_json`);
+      sendAgentCommandApi(agent[0], agent[1], 'help_json');
     }
   };
 
@@ -338,11 +362,11 @@ function Commands({
             defaultValue={defaultNodeProcess}
           >
             {
-              list ? list.map(({ agent }) => (
+              list ? list.map(({ agent, node }) => (
                 <Select.Option
-                  key={agent}
+                  key={[node, agent].join(':')}
                 >
-                  {agent}
+                  {[node, agent].join(':')}
                 </Select.Option>
               )) : null
             }
@@ -352,7 +376,7 @@ function Commands({
               showSearch
               className="mr-2 w-32"
               onChange={(value) => setCommandNode(value)}
-              onBlur={() => queryCommands()}
+              // onBlur={() => queryCommands()}
               placeholder="Select node"
               defaultValue={commandNode}
               value={commandNode}
@@ -381,13 +405,13 @@ function Commands({
                 placeholder="Command List"
               >
                 {
-                  commands.map((command) => (
+                  Array.isArray(commands) ? commands.map((command) => (
                     <Select.Option
                       key={command.event_name}
                     >
                       {command.event_name}
                     </Select.Option>
-                  ))
+                  )) : null
                 }
               </Select>
             </div>
@@ -401,7 +425,7 @@ function Commands({
               <Popconfirm
                 placement="top"
                 title={`Send '${commandNode} ➜ ${sending.event_data}'?`}
-                onConfirm={() => queryCommands('send', timeSend)}
+                onConfirm={() => sendEvent('exec', timeSend)}
                 okText="Yes"
                 cancelText="No"
               >
@@ -414,7 +438,7 @@ function Commands({
               <Popconfirm
                 placement="top"
                 title={`Send '${commandNode} ➜ ${sending.event_data}'?`}
-                onConfirm={() => queryCommands('send', timeSend, 'command')}
+                onConfirm={() => sendEvent('file', timeSend)}
                 okText="Yes"
                 cancelText="No"
               >
@@ -439,12 +463,12 @@ function Commands({
               <Popconfirm
                 placement="top"
                 title={`Send '${commandNode} ➜ ${sending.event_data}' ${elapsedTime} seconds from now?`}
-                onConfirm={() => queryCommands('send', dayjs().add(elapsedTime, 's'))}
+                onConfirm={() => sendEvent('exec', dayjs().add(elapsedTime, 's'))}
                 okText="Yes"
                 cancelText="No"
               >
                 <Radio.Button
-                  disabled={elapsedTime === null || macroCommand === null}
+                  disabled={elapsedTime === null || macroCommand === null || !selectedAgent.length}
                 >
                   Direct Send
                 </Radio.Button>
@@ -452,7 +476,7 @@ function Commands({
               <Popconfirm
                 placement="top"
                 title={`Send '${commandNode} ➜ ${sending.event_data}' ${elapsedTime} seconds from now?`}
-                onConfirm={() => queryCommands('send', dayjs().add(elapsedTime, 's'), 'command')}
+                onConfirm={() => sendEvent('file', dayjs().add(elapsedTime, 's'), 'command')}
                 okText="Yes"
                 cancelText="No"
               >
@@ -460,7 +484,7 @@ function Commands({
                   className="mr-2"
                   disabled={elapsedTime === null || macroCommand === null}
                 >
-                  File Send
+                  File Sendx
                 </Radio.Button>
               </Popconfirm>
             </Radio.Group>
@@ -479,7 +503,7 @@ function Commands({
             &nbsp;
             <Button
               onClick={() => {
-                sendCommandApi(`${process.env.COSMOS_BIN}agent neutron1 radio_trxvu_ground_sim send_cmd 1 ${process.env.TRXVU_PASS} ${sending.event_data}`);
+                sendAgentCommandApi('neutron1', 'radio_trxvu_ground_sim', `send_cmd 1 ${process.env.TRXVU_PASS} ${sending.event_data}`);
               }}
               disabled={macroCommand === null}
             >

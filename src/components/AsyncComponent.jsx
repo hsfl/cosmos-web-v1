@@ -6,6 +6,7 @@ import Attitude from './Dashboard/Attitude';
 import Chart from './Dashboard/Chart';
 import Commands from './Dashboard/Commands';
 import CommandEditor from './Dashboard/CommandEditor';
+import CosmosPanel from './Dashboard/CosmosPanel';
 import DisplayValue from './Dashboard/DisplayValue';
 import Events from './Dashboard/Events';
 import Image from './Dashboard/Image';
@@ -34,6 +35,7 @@ export const components = {
   Chart,
   Commands,
   CommandEditor,
+  CosmosPanel,
   DisplayValue,
   Events,
   Image,

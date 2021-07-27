@@ -7,6 +7,7 @@ import { mjdToUTCString } from '../../../utility/time';
 function AgentListEntry({
   agent,
   utc,
+  node,
 }) {
   return (
     <tr className="whitespace-no-wrap" key={agent}>
@@ -22,6 +23,9 @@ function AgentListEntry({
       <td style={{ color: utc >= 0 ? 'rgba(0, 0, 0, 0.65)' : 'lightgrey' }}>
         {agent}
       </td>
+      <td className="text-gray-500 pr-2">
+        {node}
+      </td>
     </tr>
   );
 }
@@ -29,6 +33,7 @@ function AgentListEntry({
 AgentListEntry.propTypes = {
   agent: PropTypes.string.isRequired,
   utc: PropTypes.number.isRequired,
+  node: PropTypes.string.isRequired,
 };
 
 export default AgentListEntry;

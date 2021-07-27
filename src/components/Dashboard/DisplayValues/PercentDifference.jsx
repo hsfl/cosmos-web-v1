@@ -37,11 +37,11 @@ function PercentDifference({
 }
 
 PercentDifference.propTypes = {
-  percentDifference: PropTypes.string,
+  percentDifference: PropTypes.number,
 };
 
 PercentDifference.defaultProps = {
-  percentDifference: null,
+  percentDifference: 0,
 };
 
 export default PercentDifference;

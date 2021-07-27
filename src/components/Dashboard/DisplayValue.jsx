@@ -45,6 +45,8 @@ function DisplayValue({
       // by checking the node process and the key it is watching
       if (state && realm && state[realm]
         && state[realm][v.dataKey] !== undefined
+        && (v.nodeProcess === 'any' || v.nodeProcess === [state[realm].node_name, state[realm].agent_name].join(':')
+        || v.node === state[realm].node_name)
         && ((!(process.env.FLIGHT_MODE === 'true') && state[realm].recorded_time)
         || (process.env.FLIGHT_MODE === 'true' && state[realm][v.timeDataKey]))
       ) {
@@ -204,6 +206,8 @@ DisplayValue.propTypes = {
       name: PropTypes.string,
       /** the node:process to pull the value from */
       nodeProcess: PropTypes.string,
+      /** the node:process to pull the value from */
+      node: PropTypes.string,
       /** The data key to pull the value from */
       dataKey: PropTypes.string,
       /** Emit warning if data key exceeds threshold */

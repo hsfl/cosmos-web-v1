@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Switch } from 'antd';
-import compare from '../../utility/sort';
+import { compare } from '../../utility/sort';
 
 import BaseComponent from '../BaseComponent';
 import AgentListTable from './AgentList/AgentListTable';
@@ -33,7 +33,7 @@ function AgentList({
       setAgentList(filtered.sort(compare));
     } else if (list != null) {
       /** Otherwise, show all agents */
-      setAgentList(list.sort(compare));
+      setAgentList([...list].sort(compare));
     }
   }, [list, node]);
 

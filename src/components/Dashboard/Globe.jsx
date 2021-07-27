@@ -2,30 +2,35 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
-  Viewer, Entity, Model, Globe, Clock, CameraFlyTo, PathGraphics, GeoJsonDataSource, ImageryLayer,
+  Viewer, Entity, Model, Globe, Clock, CameraFlyTo, PathGraphics, GeoJsonDataSource,
+  PolylineGraphics, PointGraphics,
 } from 'resium';
-import Cesium from 'cesium';
+import {
+  Cartesian3, Cartographic, Color, OpenStreetMapImageryProvider,
+  JulianDate, PolylineArrowMaterialProperty, SampledPositionProperty,
+  Transforms,
+} from 'cesium';
 
 import {
-  Form, Input, Collapse, Button, Switch, DatePicker, message,
+  Form, Input, Collapse, Button, Switch, DatePicker, message, Upload,
 } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
 
 import BaseComponent from '../BaseComponent';
 import model from '../../public/cubesat.glb';
-import { axios } from '../../api';
-import { MJDtoJavaScriptDate } from '../../utility/time';
+import { COSMOSAPI } from '../../api';
+import { MJDtoJavaScriptDate, dateToMJD } from '../../utility/time';
+import { parseDataKey } from '../../utility/data';
+import importCSV from './Globe/GlobeCSV';
+
+import GlobeToolbar from './Globe/GlobeToolbar';
 
 const { Panel } = Collapse;
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 
-// Set Cesium Ion token only if it is defined in the .env file
-if (process.env.CESIUM_ION_TOKEN) {
-  Cesium.Ion.defaultAccessToken = process.env.CESIUM_ION_TOKEN;
-}
-
-const imageryProvider = new Cesium.ArcGisMapServerImageryProvider({
-  url: '//services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer',
+const osm = new OpenStreetMapImageryProvider({
+  url: 'https://a.tile.openstreetmap.org/',
 });
 
 const pixelSize = {
@@ -39,9 +44,9 @@ const pixelSize = {
  * @param {*} z meters
  */
 function getPos(x, y, z) {
-  const pos = Cesium.Cartesian3.fromArray([x, y, z]);
+  const pos = Cartesian3.fromArray([x, y, z]);
 
-  return Cesium.Transforms.northUpEastToFixedFrame(pos);
+  return Transforms.northUpEastToFixedFrame(pos);
 }
 
 /**
@@ -51,9 +56,9 @@ function getPos(x, y, z) {
  * @param {Number} altitude meters
  */
 function getPosFromSpherical(longitude, latitude, altitude) {
-  const pos = Cesium.Cartesian3.fromDegrees(longitude, latitude, altitude);
+  const pos = Cartesian3.fromDegrees(longitude, latitude, altitude);
 
-  return Cesium.Transforms.northUpEastToFixedFrame(pos);
+  return Transforms.northUpEastToFixedFrame(pos);
 }
 
 /**
@@ -93,7 +98,7 @@ function CesiumGlobe({
   /** Store to retrieve orbit history by request from Mongo */
   const [retrieveOrbitHistory, setRetrieveOrbitHistory] = useState(null);
   /** Clock start time */
-  const [start, setStart] = useState(Cesium.JulianDate.now);
+  const [start, setStart] = useState(JulianDate.now);
   /** Clock end time */
   const [stop, setStop] = useState(null);
   /** Location for camera to fly to */
@@ -102,6 +107,8 @@ function CesiumGlobe({
   const [updateComponent, setUpdateComponent] = useState(false);
   /** State to store switch denoting whether added value is live or not */
   const [addOrbitLive, setAddOrbitLive] = useState(true);
+  /** Turn path visualization on or off */
+  const [showPath, setShowPath] = useState(true);
 
   /** Initialize form slots for each orbit */
   useEffect(() => {
@@ -118,6 +125,8 @@ function CesiumGlobe({
       processXDataKey,
       processYDataKey,
       processZDataKey,
+      VDataKey,
+      ADataKey,
       timeDataKey,
       live,
     }, i) => {
@@ -137,6 +146,8 @@ function CesiumGlobe({
         [`processZDataKey_${i}`]: processZDataKey
           ? processZDataKey.toString().replace(/^(.+\s?=>\s?)/, 'return ').replace(/^(\s*function\s*.*\([\s\S]*\)\s*{)([\s\S]*)(})/, '$2').trim()
           : 'return x',
+        [`VDataKey_${i}`]: VDataKey,
+        [`ADataKey_${i}`]: ADataKey,
         [`timeDataKey_${i}`]: timeDataKey || 'node_utc',
         [`live_${i}`]: live,
       };
@@ -149,19 +160,23 @@ function CesiumGlobe({
   /** Retrieve live orbit data */
   useEffect(() => {
     orbitsState.forEach(({
+      nodeProcess,
       XDataKey,
       YDataKey,
       ZDataKey,
       processXDataKey,
       processYDataKey,
       processZDataKey,
+      VDataKey,
+      ADataKey,
       timeDataKey,
       live,
     }, i) => {
       if (state && realm && state[realm]
-        && state[realm][XDataKey]
-        && state[realm][YDataKey]
-        && state[realm][ZDataKey]
+        && parseDataKey(XDataKey, state[realm])
+        && parseDataKey(YDataKey, state[realm])
+        && parseDataKey(ZDataKey, state[realm])
+        && (nodeProcess === 'any' || nodeProcess === [state[realm].node_name, state[realm].agent_name].join(':'))
         && ((!(process.env.FLIGHT_MODE === 'true') && state[realm].recorded_time)
         || (process.env.FLIGHT_MODE === 'true' && state[realm][timeDataKey]))
         && live
@@ -169,29 +184,26 @@ function CesiumGlobe({
         const tempOrbit = [...orbitsState];
 
         if (!tempOrbit[i].path) {
-          tempOrbit[i].path = new Cesium.SampledPositionProperty();
+          tempOrbit[i].path = new SampledPositionProperty();
         }
 
         let date;
 
         if (process.env.FLIGHT_MODE === 'true' && state[realm][timeDataKey]) {
-          date = Cesium
-            .JulianDate
+          date = JulianDate
             .fromDate(MJDtoJavaScriptDate(state[realm][timeDataKey]));
         } else {
-          date = Cesium
-            .JulianDate
+          date = JulianDate
             .fromDate(MJDtoJavaScriptDate(state[realm].recorded_time));
         }
 
         let pos;
-        const x = typeof processXDataKey === 'function' ? processXDataKey(state[realm][XDataKey]) : state[realm][XDataKey];
-        const y = typeof processYDataKey === 'function' ? processYDataKey(state[realm][YDataKey]) : state[realm][YDataKey];
-        const z = typeof processZDataKey === 'function' ? processZDataKey(state[realm][ZDataKey]) : state[realm][ZDataKey];
+        const x = typeof processXDataKey === 'function' ? processXDataKey(parseDataKey(XDataKey, state[realm])) : parseDataKey(XDataKey, state[realm]);
+        const y = typeof processYDataKey === 'function' ? processYDataKey(parseDataKey(YDataKey, state[realm])) : parseDataKey(YDataKey, state[realm]);
+        const z = typeof processZDataKey === 'function' ? processZDataKey(parseDataKey(ZDataKey, state[realm])) : parseDataKey(ZDataKey, state[realm]);
 
         if (coordinateSystem === 'cartesian') {
-          pos = Cesium
-            .Cartesian3
+          pos = Cartesian3
             .fromArray(
               [
                 x,
@@ -200,10 +212,11 @@ function CesiumGlobe({
               ],
             );
           tempOrbit[i].path.addSample(date, pos);
-          tempOrbit[i].position = [x, y, z];
+          tempOrbit[i].position = pos;
+          tempOrbit[i].posGeod = Cartographic.fromCartesian(pos);
         }
         // else if (coordinateSystem === 'geodetic') {
-        //   pos = Cesium.Cartesian3.fromDegrees(
+        //   pos = Cartesian3.fromDegrees(
         //     state[realm].target_loc_pos_geod_s_lat * (180 / Math.PI),
         //     state[realm].target_loc_pos_geod_s_lon * (180 / Math.PI),
         //     state[realm].target_loc_pos_geod_s_h,
@@ -221,6 +234,36 @@ function CesiumGlobe({
             altitude: state[realm].target_loc_pos_geod_s_h,
           };
         }
+        // temporary default targetting, to change later to some soh value
+        const targetPosLLA = { longitude: 21.3069, latitude: 157.8583, height: 0 };
+        const targetPos = Object.values(
+          Cartesian3.fromDegrees(...Object.values(targetPosLLA)),
+        );
+        if (!targetPos.includes(NaN)) {
+          tempOrbit[i].targetPos = targetPos;
+        }
+
+        // Velocity vector
+        if (VDataKey !== undefined) {
+          const vVector = parseDataKey(VDataKey, state[realm]);
+          tempOrbit[i].vVector = Cartesian3.fromArray(vVector);
+        }
+
+        // Acceleration vector
+        if (ADataKey !== undefined) {
+          const aVector = parseDataKey(ADataKey, state[realm]);
+          tempOrbit[i].aVector = Cartesian3.fromArray(aVector);
+        }
+
+        // Attractor points
+        if (state[realm].sim_params !== undefined) {
+          const attrPointPos = [
+            state[realm].sim_params.x_attractor,
+            state[realm].sim_params.y_attractor,
+            state[realm].sim_params.z_attractor,
+          ];
+          tempOrbit[i].attrPointPos = attrPointPos;
+        }
 
         setOrbitsState(tempOrbit);
       }
@@ -228,15 +271,26 @@ function CesiumGlobe({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
 
-  const queryHistoricalData = async (dates, dataKey, timeDataKey, nodeProcess, orbit) => {
+  /**
+  * Query database for historical data
+  * @param {Array} dates length 2 array of dayjs or moments dates
+  * @param {Array} dataKeys array of [xDataKey, yDataKey, zDataKey]
+  * @param {Array} processDataKeys array of [processXDataKey, processYDataKey, processZDataKey]
+  * @param {String} timeDataKey time data key to use to sort query
+  * @param {String} nodeProcess name of the node
+  * @param {Number} orbit node index
+  */
+  const queryHistoricalData = async (dates, dataKeys, processDataKeys,
+    timeDataKey, nodeProcess, orbit) => {
     // Check to see if user chose a range of dates
     if (dates && dates.length === 2) {
       // Unix time to modified julian date
-      const from = (dates[0].unix() / 86400.0) + 2440587.5 - 2400000.5;
-      const to = (dates[1].unix() / 86400.0) + 2440587.5 - 2400000.5;
+      const from = dateToMJD(dates[0]);
+      const to = dateToMJD(dates[1]);
 
       try {
-        const { data } = await axios.post(`/query/${realm}/${nodeProcess}`, {
+        const node = nodeProcess.split(':')[0];
+        COSMOSAPI.querySOHData(node, {
           multiple: true,
           query: {
             [timeDataKey]: {
@@ -246,85 +300,110 @@ function CesiumGlobe({
           },
           options: {
             projection: {
-              [dataKey]: 1,
+              [dataKeys[0]]: 1,
+              [dataKeys[1]]: 1,
+              [dataKeys[2]]: 1,
               [timeDataKey]: 1,
             },
           },
-        });
+          beginDate: from,
+          endDate: to,
+        }, (data) => {
+          message.destroy();
 
-        message.destroy();
+          if (data.length === 0) {
+            message.warning('No data for specified date range.');
+          } else {
+            message.success(`Retrieved ${data.length} records.`);
 
-        if (data.length === 0) {
-          message.warning('No data for specified date range.');
-        } else {
-          message.success(`Retrieved ${data.length} records.`);
+            const tempOrbit = [...orbitsState];
 
-          const tempOrbit = [...orbitsState];
+            let startOrbit;
+            let stopOrbit;
+            let startOrbitPosition;
 
-          let startOrbit;
-          let stopOrbit;
-          let startOrbitPosition;
+            tempOrbit[orbit].live = false;
 
-          tempOrbit[orbit].live = false;
+            const processXDataKey = new Function('x', processDataKeys[0]);
+            const processYDataKey = new Function('x', processDataKeys[1]);
+            const processZDataKey = new Function('x', processDataKeys[2]);
 
-          if (data.length > 0) {
-            startOrbit = Cesium
-              .JulianDate
-              .fromDate(MJDtoJavaScriptDate(data[0][timeDataKey]));
+            if (data.length > 0) {
+              startOrbit = JulianDate
+                .fromDate(MJDtoJavaScriptDate(data[0][timeDataKey]));
 
-            stopOrbit = Cesium
-              .JulianDate
-              .fromDate(MJDtoJavaScriptDate(data[data.length - 1][timeDataKey]));
+              stopOrbit = JulianDate
+                .fromDate(MJDtoJavaScriptDate(data[data.length - 1][timeDataKey]));
 
-            startOrbitPosition = data[0][dataKey].pos;
-          }
+              const x = processXDataKey(data[0][dataKeys[0]]);
+              const y = processYDataKey(data[0][dataKeys[1]]);
+              const z = processZDataKey(data[0][dataKeys[2]]);
 
-          const sampledPosition = new Cesium.SampledPositionProperty();
-
-          data.forEach((o) => {
-            const p = o[dataKey].pos;
-
-            if (o[timeDataKey] && o[dataKey]) {
-              const date = Cesium
-                .JulianDate
-                .fromDate(MJDtoJavaScriptDate(o[timeDataKey]));
-
-              const pos = Cesium.Cartesian3.fromArray(p);
-
-              sampledPosition.addSample(date, pos);
+              startOrbitPosition = [x, y, z];
             }
-          });
 
-          tempOrbit[orbit].position = sampledPosition;
+            const sampledPosition = new SampledPositionProperty();
 
-          setStart(startOrbit);
-          setStop(stopOrbit);
-          setOrbitsState(tempOrbit);
+            data.forEach((o) => {
+              const x = processXDataKey(o[dataKeys[0]]);
+              const y = processYDataKey(o[dataKeys[1]]);
+              const z = processZDataKey(o[dataKeys[2]]);
+              const p = [x, y, z];
 
-          setCameraFlyTo(Cesium.Cartesian3.fromArray([
-            startOrbitPosition[0] * 3,
-            startOrbitPosition[1] * 3,
-            startOrbitPosition[2] * 3,
-          ]));
-        }
+              if (o[timeDataKey] && o[dataKeys[0]]) {
+                const date = JulianDate
+                  .fromDate(MJDtoJavaScriptDate(o[timeDataKey]));
+
+                const pos = Cartesian3.fromArray(p);
+
+                sampledPosition.addSample(date, pos);
+              }
+            });
+
+            tempOrbit[orbit].position = sampledPosition;
+
+            setStart(startOrbit);
+            setStop(stopOrbit);
+            setOrbitsState(tempOrbit);
+
+            setCameraFlyTo(Cartesian3.fromArray([
+              startOrbitPosition[0] * 3,
+              startOrbitPosition[1] * 3,
+              startOrbitPosition[2] * 3,
+            ]));
+          }
+        });
       } catch (error) {
         message.error(error.message);
       }
     }
   };
 
+  /** Return whichever geodetic coordinates are defined */
+  function GetGeodetic(orbit) {
+    if (orbit.geodetic) {
+      return orbit.geodetic;
+    } if (orbit.posGeod) {
+      return orbit.posGeod;
+    }
+    return 0;
+  }
+
   /** Handle the collection of historical data */
   /** TODO: UPDATE RETRIEVAL FOR GEODETIC COORDINATES */
   useEffect(() => {
     if (retrieveOrbitHistory !== null) {
       const fields = editForm.getFieldsValue();
-
       const dates = fields[`dateRange_${retrieveOrbitHistory}`];
-      const dataKey = fields[`dataKey_${retrieveOrbitHistory}`];
+      const dataKeys = [fields[`XDataKey_${retrieveOrbitHistory}`], fields[`YDataKey_${retrieveOrbitHistory}`], fields[`ZDataKey_${retrieveOrbitHistory}`]];
+      const processDataKeys = [fields[`processXDataKey_${retrieveOrbitHistory}`], fields[`processYDataKey_${retrieveOrbitHistory}`], fields[`processZDataKey_${retrieveOrbitHistory}`]];
+      const timeDataKey = fields[`timeDataKey_${retrieveOrbitHistory}`];
 
       queryHistoricalData(
         dates,
-        dataKey,
+        dataKeys,
+        processDataKeys,
+        timeDataKey,
         orbitsState[retrieveOrbitHistory].nodeProcess,
         retrieveOrbitHistory,
       );
@@ -334,6 +413,13 @@ function CesiumGlobe({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [retrieveOrbitHistory]);
+
+  /** Process rangepicker changes */
+  const processRangePicker = (dateRange, elementName) => {
+    // Destructure field and index for storage
+    const [field, index] = elementName.split('_');
+    orbitsState[index][field] = dateRange.map((date) => dateToMJD(date));
+  };
 
   /** Process edit value form */
   const processForm = (id) => {
@@ -364,6 +450,8 @@ function CesiumGlobe({
     processXDataKey,
     processYDataKey,
     processZDataKey,
+    VDataKey,
+    ADataKey,
     live,
   }) => {
     // Append new value to array
@@ -376,9 +464,10 @@ function CesiumGlobe({
       processXDataKey,
       processYDataKey,
       processZDataKey,
+      VDataKey,
+      ADataKey,
       position: [0, 0, 0],
     });
-
     setUpdateComponent(!updateComponent);
 
     // Set edit value default form values
@@ -399,6 +488,8 @@ function CesiumGlobe({
       [`processZDataKey_${newIndex}`]: processZDataKey
         ? processZDataKey.toString().replace(/^(.+\s?=>\s?)/, 'return ').replace(/^(\s*function\s*.*\([\s\S]*\)\s*{)([\s\S]*)(})/, '$2').trim()
         : 'return x',
+      [`VDataKey_${newIndex}`]: VDataKey,
+      [`ADataKey_${newIndex}`]: ADataKey,
       [`live_${newIndex}`]: live,
       [`dateRange_${newIndex}`]: dateRange,
     });
@@ -411,6 +502,44 @@ function CesiumGlobe({
     if (!addOrbitLive) {
       setRetrieveOrbitHistory(newIndex);
     }
+  };
+
+  const scalePoints = (p1, p2) => {
+    const dist = Cartesian3.distance(p1, p2);
+    const vec = Cartesian3.subtract(p2, p1, new Cartesian3());
+    const unitvec = Cartesian3.divideByScalar(vec, dist, new Cartesian3());
+    const scaledVec = Cartesian3.multiplyByScalar(unitvec, 1000, new Cartesian3());
+    const newPoint = Cartesian3.add(p1, scaledVec, new Cartesian3());
+    return [p1, newPoint];
+  };
+
+  const calculatePointsFromPointAndVector = (p, v) => (
+    [p, Cartesian3.add(p, v, new Cartesian3())]
+  );
+
+  const handleShowPathChange = (val) => (setShowPath(val));
+
+  const handleUpload = (file) => {
+    const csv = importCSV(file);
+    csv.then((paths) => {
+      const tempOrbit = [...orbitsState];
+      tempOrbit.forEach((o, i) => {
+        // TODO: check index of node
+        o.live = false;
+        // to.position = ...;
+        o.position = paths[i];
+      });
+      const startOrbit = JulianDate
+        .fromDate(MJDtoJavaScriptDate(59270.9494675926));
+      const stopOrbit = JulianDate
+        .fromDate(MJDtoJavaScriptDate(59270.9628587994));
+      setStart(startOrbit);
+      setStop(stopOrbit);
+      setOrbitsState(tempOrbit);
+      // Reset state to null to allow for detection of future orbit history requests
+      setRetrieveOrbitHistory(null);
+    });
+    return false;
   };
 
   return (
@@ -505,14 +634,14 @@ function CesiumGlobe({
                         showTime
                         format="YYYY-MM-DD HH:mm:ss"
                         disabled={editForm && editForm.getFieldsValue()[`live_${i}`]}
-                        onBlur={({ target: { id } }) => processForm(id)}
+                        onChange={(id) => processRangePicker(id, `dateRange_${i}`)}
                       />
                     </Form.Item>
 
                     <Button
                       type="primary"
                       onClick={() => setRetrieveOrbitHistory(i)}
-                      disabled={editForm && editForm.getFieldsValue()[`live_${i}`]}
+                      disabled={editForm && editForm.getFieldValue(`live_${i}`)}
                     >
                       Show
                     </Button>
@@ -640,22 +769,146 @@ function CesiumGlobe({
               </Panel>
             </Collapse>
           </Form>
+
+          <br />
+          {/* Upload CSV File */}
+          <Upload.Dragger
+            multiple={false}
+            showUploadList={false}
+            beforeUpload={handleUpload}
+          >
+            <UploadOutlined />
+            &nbsp;
+            Import CSV File
+          </Upload.Dragger>
         </>
       )}
     >
       <Viewer
+        animation={false}
+        baseLayerPicker={false}
         fullscreenButton={false}
+        geocoder={false}
+        homeButton={false}
+        id="cesium-container-id"
+        imageryProvider={osm}
+        infoBox={false}
+        navigationHelpButton={false}
+        timeline={false}
       >
-        <ImageryLayer imageryProvider={imageryProvider} />
         {overlaysState.map((overlay, i) => (
           <GeoJsonDataSource
             data={overlay.geoJson}
-            fill={Cesium.Color.fromAlpha(Cesium.Color[overlay.color ? overlay.color.toUpperCase() : 'BLACK'], 0.2)}
-            stroke={Cesium.Color[overlay.color ? overlay.color.toUpperCase() : 'BLACK']}
+            fill={Color.fromAlpha(Color[overlay.color ? overlay.color.toUpperCase() : 'BLACK'], 0.2)}
+            stroke={Color[overlay.color ? overlay.color.toUpperCase() : 'BLACK']}
             // eslint-disable-next-line
             key={i}
           />
         ))}
+        {
+          /** Add attractor points */
+          orbitsState.reduce((result, orbit) => {
+            if (orbit.attrPointPos
+              && orbit.position.x !== undefined
+              && orbit.position.y !== undefined
+              && orbit.position.z !== undefined
+            ) {
+              result.push(
+                <Entity
+                  key={orbit.name}
+                  position={Cartesian3.fromArray(orbit.attrPointPos)}
+                >
+                  <PointGraphics
+                    pixelSize={5}
+                    color={Color.RED}
+                  />
+                </Entity>,
+              );
+            }
+            return result;
+          }, [])
+        }
+        {
+          /** Add velocity vector */
+          orbitsState.reduce((result, orbit) => {
+            if (orbit.vVector !== undefined
+              && orbit.position.x !== undefined
+              && orbit.position.y !== undefined
+              && orbit.position.z !== undefined
+            ) {
+              result.push(
+                <Entity
+                  key={orbit.name}
+                >
+                  <PolylineGraphics
+                    positions={calculatePointsFromPointAndVector(
+                      orbit.position,
+                      orbit.vVector,
+                    )}
+                    width={2}
+                    material={new PolylineArrowMaterialProperty(Color.GREEN)}
+                    arcType="NONE"
+                  />
+                </Entity>,
+              );
+            }
+            return result;
+          }, [])
+        }
+        {
+          /** Add acceleration vector */
+          orbitsState.reduce((result, orbit) => {
+            if (orbit.aVector !== undefined
+              && orbit.position.x !== undefined
+              && orbit.position.y !== undefined
+              && orbit.position.z !== undefined
+            ) {
+              result.push(
+                <Entity
+                  key={orbit.name}
+                >
+                  <PolylineGraphics
+                    positions={calculatePointsFromPointAndVector(
+                      orbit.position,
+                      orbit.aVector,
+                    )}
+                    width={2}
+                    material={new PolylineArrowMaterialProperty(Color.RED)}
+                    arcType="NONE"
+                  />
+                </Entity>,
+              );
+            }
+            return result;
+          }, [])
+        }
+        {
+          /** Add line to target */
+          orbitsState.reduce((result, orbit) => {
+            if (orbit.targetting && orbit.targetPos
+              && orbit.position.x !== undefined
+              && orbit.position.y !== undefined
+              && orbit.position.z !== undefined
+            ) {
+              result.push(
+                <Entity
+                  key={orbit.name}
+                >
+                  <PolylineGraphics
+                    positions={scalePoints(
+                      orbit.position,
+                      Cartesian3.fromArray(orbit.targetPos),
+                    )}
+                    width={2}
+                    material={new PolylineArrowMaterialProperty(Color.BLUE)}
+                    arcType="NONE"
+                  />
+                </Entity>,
+              );
+            }
+            return result;
+          }, [])
+        }
         <Globe enableLighting />
         <Clock
           startTime={start}
@@ -664,17 +917,24 @@ function CesiumGlobe({
         />
         {/* <CzmlDataSource data={Attitude} /> */}
         {
+          /** Model */
           orbitsState.map((orbit) => {
+            if (orbit.position.x === undefined
+              || orbit.position.y === undefined
+              || orbit.position.z === undefined) {
+              return null;
+            }
             if (orbit.live) {
               return (
                 <Entity
                   key={orbit.name}
-                  position={orbit.path}
+                  position={orbit.position}
+                  id={`${orbit.name}_model`}
                 >
                   <Model
                     modelMatrix={
                       coordinateSystem === 'cartesian'
-                        ? getPos(orbit.position[0], orbit.position[1], orbit.position[2])
+                        ? getPos(orbit.position.x, orbit.position.y, orbit.position.z)
                         : getPosFromSpherical(
                           orbit.geodetic.longitude * (180 / Math.PI),
                           orbit.geodetic.latitude * (180 / Math.PI),
@@ -684,11 +944,31 @@ function CesiumGlobe({
                     url={model}
                     minimumPixelSize={35}
                   />
+                </Entity>
+              );
+            }
+            /** todo */
+            return null;
+          })
+        }
+        {
+          /** Path */
+          orbitsState.map((orbit) => {
+            if (!showPath) {
+            //  return null;
+            }
+            if (orbit.live) {
+              return (
+                <Entity
+                  key={orbit.name}
+                  position={orbit.path}
+                  id={`${orbit.name}_path`}
+                >
                   <PathGraphics
-                    width={3}
+                    width={2}
                     leadTime={86400}
                     trailTime={86400}
-                    material={Cesium.Color.CHARTREUSE}
+                    material={Color.CHARTREUSE}
                   />
                 </Entity>
               );
@@ -710,13 +990,14 @@ function CesiumGlobe({
                     width={3}
                     leadTime={600}
                     trailTime={600}
-                    material={Cesium.Color.CRIMSON}
+                    material={Color.CRIMSON}
                   />
                 </Entity>
               </span>
             );
           })
         }
+        <GlobeToolbar orbitsState={orbitsState} handleShowPathChange={handleShowPathChange} />
       </Viewer>
       <div className="overflow-x-auto">
         <table className="mt-4 w-full">
@@ -734,12 +1015,12 @@ function CesiumGlobe({
             orbitsState.map((orbit) => (
               <tr className="text-gray-700 border-b border-gray-400" key={orbit.name}>
                 <td className="p-2 pr-8">{orbit.name}</td>
-                <td className="p-2 pr-8">{orbit.position[0]}</td>
-                <td className="p-2 pr-8">{orbit.position[1]}</td>
-                <td className="p-2 pr-8">{orbit.position[2]}</td>
-                <td className="p-2 pr-8">{orbit.geodetic ? orbit.geodetic.latitude : 0}</td>
-                <td className="p-2 pr-8">{orbit.geodetic ? orbit.geodetic.longitude : 0}</td>
-                <td className="p-2 pr-8">{orbit.geodetic ? orbit.geodetic.altitude : 0}</td>
+                <td className="p-2 pr-8">{orbit.position.x}</td>
+                <td className="p-2 pr-8">{orbit.position.y}</td>
+                <td className="p-2 pr-8">{orbit.position.z}</td>
+                <td className="p-2 pr-8">{GetGeodetic(orbit) && GetGeodetic(orbit).latitude}</td>
+                <td className="p-2 pr-8">{GetGeodetic(orbit) && GetGeodetic(orbit).longitude}</td>
+                <td className="p-2 pr-8">{GetGeodetic(orbit) && GetGeodetic(orbit).height}</td>
               </tr>
             ))
           }
@@ -774,10 +1055,16 @@ CesiumGlobe.propTypes = {
       processYDataKey: PropTypes.func,
       /** Process Z function */
       processZDataKey: PropTypes.func,
+      /** Velocity array of values */
+      VDataKey: PropTypes.string,
+      /** Acceleration array of values */
+      ADataKey: PropTypes.string,
       /** Time data key to look at for data */
       timeDataKey: PropTypes.string,
       /** Whether or not the orbit is live */
       live: PropTypes.bool,
+      /** Whether or not to enable targetting feature  */
+      targetting: PropTypes.bool,
     }),
   ),
   /** Store overlays on map (geocoloring) */

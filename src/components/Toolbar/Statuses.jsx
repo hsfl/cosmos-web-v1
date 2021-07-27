@@ -11,12 +11,12 @@ import ActivityTable from './ActivityTable';
 import ActivityTime from './ActivityTime';
 import ShowTime from './ShowTime';
 import Downtime from './Downtime';
-import { axios } from '../../api';
+import { COSMOSAPI } from '../../api';
 
 dayjs.extend(dayjsPluginUTC);
 
 function Statuses({
-  realm,
+  nodes,
 }) {
   const dispatch = useDispatch();
 
@@ -24,7 +24,8 @@ function Statuses({
   useEffect(() => {
     const initializeQuery = async () => {
       try {
-        const { data } = await axios.post(`query/${realm}/any`, {
+        // todo: check if nodes exists, and also if other nodes might be active if nodes[0] is not
+        COSMOSAPI.queryCurrentSOHData(nodes[0], {
           query: {},
           options: {
             projection: {
@@ -35,10 +36,10 @@ function Statuses({
               node_utc: -1,
             },
           },
+        }, (data) => {
+          // Send information to redux
+          dispatch(set('lastActivity', data));
         });
-
-        // Send information to redux
-        dispatch(set('lastActivity', data));
       } catch (err) {
         message.error('Error initializing page.');
       }
@@ -46,7 +47,7 @@ function Statuses({
 
     initializeQuery();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [realm]);
+  }, [nodes]);
 
   return (
     <table>
@@ -120,7 +121,7 @@ function Statuses({
 }
 
 Statuses.propTypes = {
-  realm: PropTypes.string.isRequired,
+  nodes: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default Statuses;

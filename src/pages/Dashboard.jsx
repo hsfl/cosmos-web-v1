@@ -28,14 +28,17 @@ import dayjs from 'dayjs';
 
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
+import '../components/component.css';
 
 import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 
-import { axios, socket } from '../api';
+import { COSMOSAPI, socket } from '../api';
 import routes from '../routes';
 import defaultComponent from '../components/Default/Default';
-import { set, setData, setActivity } from '../store/actions';
+import {
+  set, setData, setKeyError, setActivity,
+} from '../store/actions';
 import { dateToMJD } from '../utility/time';
 
 import AsyncComponent, { components } from '../components/AsyncComponent';
@@ -125,64 +128,55 @@ function Dashboard({
 
   /** Get socket data from the agent */
   useEffect(() => {
-    const live = socket('/live/all');
-
-    // Set current realm
-    dispatch(set('realm', id));
-    document.title = 'COSMOS Web - Overview';
-
     const flightMode = process.env.FLIGHT_MODE;
-
-    /** Get latest data from neutron1_exec */
-    live.onmessage = ({ data }) => {
+    const live = socket();
+    live.onopen = () => {
+      // send node list
+      live.send(JSON.stringify({ nodes: realms[id] }));
+      setSocketStatus('success');
+    };
+    live.onclose = () => {
+      setSocketStatus('error');
+    };
+    live.onerror = () => {
+      setSocketStatus('error');
+    };
+    live.onmessage = ({ data }) => { // onMessage callback
       try {
         const json = JSON.parse(data);
-
-        let node;
-        let process;
-
         if (typeof json.node_type === 'string' && json.node_type) {
-          [node, process] = json.node_type.split(':');
-        }
-
-        if (json.node_type === 'list') {
-          dispatch(set('list', json));
-        // Send data if allowed node AND if flight mode and soh, send,
-        // OW if not flight mode don't send soh
-        } else if (json.node_type === 'file') {
-          dispatch(set('file_list', json));
-        } else if (json.node_type === 'event_queue') {
-          dispatch(set('event_queue', json.queue));
-        } else if ((realms[id].includes(node) || realms[id].includes(json.node_name)) && ((flightMode === 'true') || (!(flightMode === 'true') && process !== 'soh'))) {
-          // Store in realm object
-          dispatch(setData(id, {
-            ...json,
-            recorded_time: dateToMJD(dayjs().utc()),
-          }));
-
-          dispatch(setActivity({
-            status: 'success',
-            summary: 'Data received',
-            scope: `from ${json.node_name || json.node_type}`,
-          }));
+          if (json.node_type === 'list') {
+            dispatch(set('list', json));
+          // Send data if allowed node AND if flight mode and soh, send,
+          // OW if not flight mode don't send soh
+          } else if (json.node_type === 'file') {
+            dispatch(set('file_list', json));
+          } else if (json.node_type === 'event_queue') {
+            dispatch(set('event_queue', json.queue));
+          } else {
+            const [node, process] = json.node_type.split(':');
+            if ((realms[id].includes(node) || realms[id].includes(json.node_name))
+              && ((flightMode === 'true') || (!(flightMode === 'true') && process !== 'soh'))) {
+              // Store in realm object
+              dispatch(setData(id, {
+                ...json,
+                recorded_time: dateToMJD(dayjs().utc()),
+              }));
+              dispatch(setActivity({
+                status: 'success',
+                summary: 'Data received',
+                scope: `from ${json.node_name || json.node_type}`,
+              }));
+            }
+          }
         }
       } catch (error) {
         message.error(error.message);
       }
     };
-
-    /** Update statuses on error/connection */
-    live.onclose = () => {
-      setSocketStatus('error');
-    };
-
-    live.onerror = () => {
-      setSocketStatus('error');
-    };
-
-    live.onopen = () => {
-      setSocketStatus('success');
-    };
+    // Set current realm
+    dispatch(set('realm', id));
+    document.title = 'COSMOS Web - Overview';
 
     return () => {
       live.close(1000);
@@ -190,14 +184,14 @@ function Dashboard({
       document.title = 'COSMOS Web';
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     async function fetchNamespace() {
       try {
-        const agents = await axios.get('/namespace/all');
-
-        dispatch(set('namespace', agents.data));
+        await COSMOSAPI.getNamespaceAll((data) => {
+          dispatch(set('namespace', data));
+        });
       } catch (error) {
         message.error(error.message);
       }
@@ -248,11 +242,21 @@ function Dashboard({
       // Check if there's any errors flagged in each tab. If so, indicate error
       Object.keys(keys).forEach((tab) => {
         if (flags[tab][0]) {
-          keys[tab].status = 'error';
-          keys[tab].timer = setTimeout(() => { keys[tab].status = 'default'; }, 120000);
+          dispatch(setKeyError(
+            tab,
+            {
+              status: 'error',
+              timer: setTimeout(() => { keys[tab].status = 'default'; }, 120000),
+            },
+          ));
         } else if (flags[tab][1]) {
-          keys[tab].status = 'success';
-          keys[tab].timer = setTimeout(() => { keys[tab].status = 'default'; }, 120000);
+          dispatch(setKeyError(
+            tab,
+            {
+              status: 'success',
+              timer: setTimeout(() => { keys[tab].status = 'default'; }, 120000),
+            },
+          ));
         }
       });
     }
@@ -651,7 +655,7 @@ function Dashboard({
           className={`flex justify-between py-2 px-5 border-gray-200 border-solid border-b transition-all duration-500 ease-in-out ${color === 'green' ? 'bg-green-100' : ''} ${color === 'orange' ? 'bg-orange-100' : ''} ${color === 'red' ? 'bg-red-100' : ''}`}
         >
           <div>
-            <Statuses realm={id} />
+            <Statuses nodes={realms[id]} />
           </div>
 
           <div className="pt-4">
@@ -665,6 +669,7 @@ function Dashboard({
             <GetHistoricalData
               tab={currentTab}
               amountOfComponents={layouts.lg.filter((el) => el.component.name === 'Chart' || el.component.name === 'DisplayValue').length + 2}
+              nodes={realms[id]}
             />
           </div>
         </div>
@@ -949,11 +954,11 @@ Dashboard.propTypes = {
   /** The default layout for the path */
   defaultLayout: PropTypes.shape({}).isRequired,
   /** The realm that the layout is in */
-  realms: PropTypes.shape(PropTypes.arrayOf(PropTypes.string)),
+  realms: PropTypes.shape({}),
 };
 
 Dashboard.defaultProps = {
-  realms: [],
+  realms: {},
 };
 
 export default React.memo(Dashboard);

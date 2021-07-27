@@ -29,6 +29,7 @@ import BaseComponent from '../BaseComponent';
 import ChartValues from './Chart/ChartValues';
 
 import { mjdToUTCString, dateToMJD } from '../../utility/time';
+import { MultiVarFx } from '../../utility/data';
 
 /**
  * Display data on a chart using plot.ly. Allows for various plot.ly configurations.
@@ -138,14 +139,16 @@ function Chart({
   useEffect(() => {
     plotsState.forEach((p, i) => {
       // Upon context change, see if changes affect this chart's values
+      const [nodeName, agentName] = p.nodeProcess.split(':');
       if (state && realm && state[realm]
         && ((!(process.env.FLIGHT_MODE === 'true') && state[realm].recorded_time)
         || (process.env.FLIGHT_MODE === 'true' && state[realm][p.timeDataKey]))
-        && state[realm][p.YDataKey] != null
+        // && state[realm][p.YDataKey] != null
         && p.live
+        && (state[realm].node_name && nodeName === state[realm].node_name)
+        && (state[realm].agent_name && agentName === state[realm].agent_name)
       ) {
         // If so, push to arrays and update state
-
         if (showZero || (!showZero && state[realm][p.YDataKey])) {
           // Check if polar or not
           if (polar) {
@@ -168,12 +171,12 @@ function Chart({
             } else {
               plotsState[i].x.push(mjdToUTCString(state[realm].recorded_time));
             }
-
             plotsState[i]
               .y
               .push(
                 plotsState[i].processYDataKey
-                  ? plotsState[i].processYDataKey(state[realm][p.YDataKey])
+                  // ? plotsState[i].processYDataKey(state[realm][p.YDataKey])
+                  ? MultiVarFx(plotsState[i].YDataKey, plotsState[i].processYDataKey, state[realm])
                   : state[realm][p.YDataKey],
               );
           }
@@ -249,6 +252,7 @@ function Chart({
             y: value.y,
             name: value.name,
             nodeProcess: value.nodeProcess,
+            node: value.node,
             YDataKey: value.YDataKey,
             timeDataKey: value.timeDataKey,
             processYDataKey: value.processYDataKey,
@@ -500,10 +504,12 @@ Chart.propTypes = {
       name: PropTypes.string,
       /** Name of the node:process to listen to */
       nodeProcess: PropTypes.string,
+      /** Name of the node to listen to */
+      node: PropTypes.string,
       /** Data key to plot on the y-axis */
-      YDataKey: PropTypes.string,
+      YDataKeys: PropTypes.any,
       /** Function to modify the Y Data key */
-      processYDataKey: PropTypes.func,
+      processYDataKeys: PropTypes.func,
       /** Time data key of Y Data Key */
       timeDataKey: PropTypes.string,
       /** Whether the chart displays live values */

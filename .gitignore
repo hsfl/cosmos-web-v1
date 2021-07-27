@@ -26,3 +26,9 @@ yarn-error.log*
 .idea
 
 .vscode
+
+src/routes/realms/
+
+external/*/*
+
+!external/example/realm.js

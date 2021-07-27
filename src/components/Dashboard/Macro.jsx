@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 
 import { message, Select, Button } from 'antd';
 
-import { axios } from '../../api';
+import { COSMOSAPI } from '../../api';
 import BaseComponent from '../BaseComponent';
 
 import { set } from '../../store/actions';
@@ -35,17 +35,16 @@ function Macro() {
      */
     async function getValue() {
       try {
-        const { data } = await axios.post('/command', {
-          command: 'agent masdr nordiasoft list_applications',
-        });
+        await COSMOSAPI.runAgentCommand('masdr', 'nordiasoft', 'list_applications',
+          (data) => {
+            const json = JSON.parse(data);
 
-        const json = JSON.parse(data);
-
-        if (json.output && json.output.installed) {
-          setMacros(json.output.installed);
-        } else {
-          throw new Error(data);
-        }
+            if (json.output && json.output.installed) {
+              setMacros(json.output.installed);
+            } else {
+              throw new Error(data);
+            }
+          });
       } catch (error) {
         message.error(error.message);
       }

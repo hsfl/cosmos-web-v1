@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 
 export const SET_KEY = 'SET_KEY';
 export const SET_DATA = 'SET_DATA';
+export const SET_KEY_ERROR = 'SET_KEY_ERROR';
 export const SET_ACTIVITY = 'SET_ACTIVITY';
 export const INCREMENT_QUEUE = 'INCREMENT_QUEUE';
 export const RESET_QUEUE = 'RESET_QUEUE';
@@ -30,6 +31,14 @@ export function setData(realm, data) {
   return {
     type: SET_DATA,
     key: realm,
+    payload: data,
+  };
+}
+
+export function setKeyError(tab, data) {
+  return {
+    type: SET_KEY_ERROR,
+    key: tab,
     payload: data,
   };
 }

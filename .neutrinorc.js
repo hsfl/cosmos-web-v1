@@ -90,6 +90,10 @@ module.exports = {
         {
           from: "node_modules/cesium/Build/Cesium",
           to: "cesium",
+        },
+        {
+          from: 'external/',
+          to: '',
         }
       ]
     }),
