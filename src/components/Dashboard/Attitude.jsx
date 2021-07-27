@@ -69,12 +69,15 @@ function Attitude({
         && (state[realm].node_name && nodeName === state[realm].node_name)
         && (state[realm].agent_name && agentName === state[realm].agent_name)
         && state[realm][dataKey]
-        && state[realm][dataKey].pos
+        && (state[realm][dataKey].s || state[realm][dataKey].pos)
         && live
       ) {
         const tempAttitude = [...attitudesState];
 
-        tempAttitude[i].quaternions = state[realm][dataKey].pos;
+        // Support both namespace 1.0 and 2.0 for now
+        tempAttitude[i].quaternions = state[realm][dataKey].s
+          ? state[realm][dataKey].s
+          : state[realm][dataKey].pos;
 
         setAttitudesState(tempAttitude);
       }
