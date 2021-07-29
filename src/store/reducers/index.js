@@ -15,6 +15,7 @@ export default function reducer(state = {
   activity: [],
   keys: {},
   retrievedQuery: null,
+  simData: null,
 }, {
   type, key, payload,
 }) {

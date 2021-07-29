@@ -6,9 +6,9 @@ import {
   PolylineGraphics, PointGraphics,
 } from 'resium';
 import {
-  Cartesian3, Cartographic, Color, OpenStreetMapImageryProvider,
+  Cartesian3, Cartographic, ClockRange, Color, OpenStreetMapImageryProvider,
   JulianDate, PolylineArrowMaterialProperty, SampledPositionProperty,
-  Transforms,
+  TimeInterval, TimeIntervalCollection, Transforms,
 } from 'cesium';
 
 import {
@@ -21,9 +21,10 @@ import model from '../../public/cubesat.glb';
 import { COSMOSAPI } from '../../api';
 import { MJDtoJavaScriptDate, dateToMJD } from '../../utility/time';
 import { parseDataKey } from '../../utility/data';
-import importCSV from './Globe/GlobeCSV';
+import createPaths from './Globe/GlobeCSV';
 
 import GlobeToolbar from './Globe/GlobeToolbar';
+import GlobeTimeline from './Globe/GlobeTimeline';
 
 const { Panel } = Collapse;
 const { RangePicker } = DatePicker;
@@ -75,10 +76,12 @@ function CesiumGlobe({
   showStatus,
   status,
   coordinateSystem,
+  simulationEnabled,
 }) {
   /** Accessing the neutron1 messages from the socket */
   const state = useSelector((s) => s.data);
   const realm = useSelector((s) => s.realm);
+  const simData = useSelector((s) => s.simData);
 
   /** Storage for global; form values */
   const [orbitsForm] = Form.useForm();
@@ -270,6 +273,27 @@ function CesiumGlobe({
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
+
+  /** Load in simulation data from CSVs */
+  useEffect(() => {
+    if (simData !== null && simulationEnabled) {
+      const [paths, newStart, newStop] = createPaths(simData);
+      const tempOrbit = [...orbitsState];
+      tempOrbit.forEach((o) => {
+        const nodeIdx = simData.sats[o.nodeProcess];
+        const oref = o;
+        oref.live = false;
+        oref.position = paths[nodeIdx];
+      });
+      const startOrbit = JulianDate.fromDate(MJDtoJavaScriptDate(newStart));
+      const stopOrbit = JulianDate.fromDate(MJDtoJavaScriptDate(newStop));
+      setStart(startOrbit);
+      setStop(stopOrbit);
+      setOrbitsState(tempOrbit);
+      // Reset state to null to allow for detection of future orbit history requests
+      setRetrieveOrbitHistory(null);
+    }
+  }, [simData]);
 
   /**
   * Query database for historical data
@@ -519,29 +543,6 @@ function CesiumGlobe({
 
   const handleShowPathChange = (val) => (setShowPath(val));
 
-  const handleUpload = (file) => {
-    const csv = importCSV(file);
-    csv.then((paths) => {
-      const tempOrbit = [...orbitsState];
-      tempOrbit.forEach((o, i) => {
-        // TODO: check index of node
-        o.live = false;
-        // to.position = ...;
-        o.position = paths[i];
-      });
-      const startOrbit = JulianDate
-        .fromDate(MJDtoJavaScriptDate(59270.9494675926));
-      const stopOrbit = JulianDate
-        .fromDate(MJDtoJavaScriptDate(59270.9628587994));
-      setStart(startOrbit);
-      setStop(stopOrbit);
-      setOrbitsState(tempOrbit);
-      // Reset state to null to allow for detection of future orbit history requests
-      setRetrieveOrbitHistory(null);
-    });
-    return false;
-  };
-
   return (
     <BaseComponent
       name={nameState}
@@ -769,23 +770,10 @@ function CesiumGlobe({
               </Panel>
             </Collapse>
           </Form>
-
-          <br />
-          {/* Upload CSV File */}
-          <Upload.Dragger
-            multiple={false}
-            showUploadList={false}
-            beforeUpload={handleUpload}
-          >
-            <UploadOutlined />
-            &nbsp;
-            Import CSV File
-          </Upload.Dragger>
         </>
       )}
     >
       <Viewer
-        animation={false}
         baseLayerPicker={false}
         fullscreenButton={false}
         geocoder={false}
@@ -794,7 +782,6 @@ function CesiumGlobe({
         imageryProvider={osm}
         infoBox={false}
         navigationHelpButton={false}
-        timeline={false}
       >
         {overlaysState.map((overlay, i) => (
           <GeoJsonDataSource
@@ -914,7 +901,9 @@ function CesiumGlobe({
           startTime={start}
           stopTime={stop}
           currentTime={start}
+          clockRange={start && stop ? ClockRange.LOOP_STOP : ClockRange.UNBOUNDED}
         />
+        <GlobeTimeline start={start} stop={stop} />
         {/* <CzmlDataSource data={Attitude} /> */}
         {
           /** Model */
@@ -985,6 +974,7 @@ function CesiumGlobe({
                   name={orbit.name}
                   position={orbit.position}
                   point={pixelSize}
+                  availability={new TimeIntervalCollection([new TimeInterval({ start, stop })])}
                 >
                   <PathGraphics
                     width={3}
@@ -1090,6 +1080,8 @@ CesiumGlobe.propTypes = {
   },
   /** Geodetic or cartesian */
   coordinateSystem: PropTypes.string,
+  /** Whether to enable csv data loading for this instance */
+  simulationEnabled: PropTypes.bool,
 };
 
 CesiumGlobe.defaultProps = {
@@ -1099,6 +1091,7 @@ CesiumGlobe.defaultProps = {
   showStatus: false,
   status: 'error',
   coordinateSystem: 'cartesian',
+  simulationEnabled: false,
 };
 
 export default React.memo(CesiumGlobe);

@@ -10,6 +10,7 @@ import CosmosPanel from './Dashboard/CosmosPanel';
 import DisplayValue from './Dashboard/DisplayValue';
 import Events from './Dashboard/Events';
 import Image from './Dashboard/Image';
+import ImportFile from './Dashboard/ImportFile';
 import Globe from './Dashboard/Globe';
 import Macro from './Dashboard/Macro';
 import MissionEventsDisplay from './Dashboard/MissionEventsDisplay';
@@ -39,6 +40,7 @@ export const components = {
   DisplayValue,
   Events,
   Image,
+  ImportFile,
   Globe,
   Macro,
   MissionEventsDisplay,
