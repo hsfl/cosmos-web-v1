@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import PropTypes from 'prop-types';
+import React from 'react';
+import { useDispatch } from 'react-redux';
 
 import { set } from '../../store/actions';
 
@@ -13,7 +12,7 @@ import BaseComponent from '../BaseComponent';
 
 const ImportFile = () => {
   const dispatch = useDispatch();
-  
+
   // Array of column names
   const colNames = [];
 
@@ -33,6 +32,9 @@ const ImportFile = () => {
       // Dictionary matching column name to the index
       // (index subtracted by 2 because node and agent names are ignored)
       nameIdx: {},
+      // Time range
+      start: Number.MAX_VALUE,
+      stop: 0,
     };
     const allLines = text.replace(/\r\n$|\n$/, '').split(/\r\n|\n/);
     const success = allLines.every((line, i) => {
@@ -50,6 +52,7 @@ const ImportFile = () => {
       }
       // Make sure number of elements match
       if (entry.length !== colNames.length) {
+        console.log(entry, colNames)
         return false;
       }
       // Create new node:process entry in data
@@ -59,7 +62,14 @@ const ImportFile = () => {
         data.data.push([]);
       }
       // Push to its array of values, after converting strings to Numbers
-      data.data[data.sats[nodeProcess]].push(entry.map(Number));
+      const newData = entry.map(Number);
+      data.data[data.sats[nodeProcess]].push(newData);
+
+      // Update time range if applicable
+      const timeStamp = newData[data.nameIdx['c->node.loc.pos.eci.utc']];
+      if (timeStamp < data.start) data.start = timeStamp;
+      else if (timeStamp > data.stop) data.stop = timeStamp;
+
       return true;
     });
 

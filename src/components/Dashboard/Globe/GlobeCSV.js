@@ -23,10 +23,6 @@ const createPaths = (data) => {
         MJDtoJavaScriptDate(time),
       );
       path.addSample(date, pos);
-
-      // Find first and last timestamps
-      if (time < start) start = time;
-      else if (time > stop) stop = time;
     });
     paths.push(path);
   });
@@ -34,7 +30,7 @@ const createPaths = (data) => {
   // Eslint will complain otherwise
   // const ret = data;
   // ret.paths = paths;
-  return [paths, start, stop];
+  return paths;
 };
 
 export default createPaths;

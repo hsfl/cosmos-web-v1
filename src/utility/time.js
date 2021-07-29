@@ -1,6 +1,15 @@
 import dayjs from 'dayjs';
 
 /**
+ * 
+ * @param {String} date ISO8601 formatted string
+ * @returns {String} MJD date string
+ */
+export function iso8601ToUTC(date) {
+  return dayjs(date).utc().format();
+}
+
+/**
  * Convert MJD to human readable UTC date
  *
  * @param {Number} mjd MJD to convert

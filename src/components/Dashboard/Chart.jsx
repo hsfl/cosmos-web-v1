@@ -45,6 +45,7 @@ function Chart({
   showZero,
   polar,
   children,
+  simulationEnabled,
 }) {
   const dispatch = useDispatch();
 
@@ -54,6 +55,8 @@ function Chart({
   const xMax = useSelector((s) => s.xMax);
   const realm = useSelector((s) => s.realm);
   const queriedData = useSelector((s) => s.queriedData);
+  const simData = useSelector((s) => s.simData);
+  const simClock = useSelector((s) => s.simClock);
 
   /** Storage for global form values */
   const [plotsForm] = Form.useForm();
@@ -134,6 +137,21 @@ function Chart({
     dispatch(set('xMin', layout.xaxis.range[0]));
     dispatch(set('xMax', layout.xaxis.range[1]));
   };
+
+  /** Initialize */
+  useEffect(() => {
+    if (simulationEnabled) {
+      layout.shapes = [{
+        type: 'line',
+        yref: 'paper',
+        y0: 0,
+        y1: 1,
+        xref: 'x',
+        x0: 0,
+        x1: 0,
+      }];
+    }
+  }, []);
 
   /** Handle new data incoming from the Context */
   useEffect(() => {
@@ -230,6 +248,45 @@ function Chart({
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [queriedData]);
+
+  /** Load in simulation data from CSVs */
+  useEffect(() => {
+    if (simData !== null && simulationEnabled) {
+      clearAll();
+      // layout.yaxis.autorange = false;
+      // layout.yaxis.range = [0, 100];
+      layout.xaxis.range = [mjdToUTCString(simData.start), mjdToUTCString(simData.stop)];
+      plotsState.forEach((p) => {
+        const satIdx = simData.sats[p.nodeProcess];
+        if (satIdx !== null) {
+          simData.data[satIdx].forEach((dataPt) => {
+            p.x.push(mjdToUTCString(
+              dataPt[simData.nameIdx['c->node.loc.pos.eci.utc']])
+            );
+            // Map YDataKeys to indices as defined in simData.nameIdx
+            let yDataKeyIdxs;
+            if (Array.isArray(p.YDataKey)) {
+              yDataKeyIdxs = p.YDataKey.map((yDataKey) => simData.nameIdx[yDataKey]);
+            } else {
+              yDataKeyIdxs = simData.nameIdx[p.YDataKey];
+            }
+            p.y.push(
+              p.processYDataKey
+                ? MultiVarFx(yDataKeyIdxs, p.processYDataKey, dataPt)
+                : dataPt[yDataKeyIdxs],
+            );
+          });
+        }
+      });
+    }
+  }, [simData]);
+
+  useEffect(() => {
+    if (layout.shapes.length !== 0) {
+      layout.shapes[0].x0 = simClock;
+      layout.shapes[0].x1 = simClock;
+    } 
+  }, [simClock]);
 
   /** Process edit value form */
   const processForm = (id) => {
@@ -520,6 +577,8 @@ Chart.propTypes = {
   polar: PropTypes.bool,
   /** Children node */
   children: PropTypes.node,
+  /** Whether to enable csv data loading for this instance */
+  simulationEnabled: PropTypes.bool,
 };
 
 Chart.defaultProps = {
@@ -530,6 +589,7 @@ Chart.defaultProps = {
   polar: false,
   plots: [],
   children: null,
+  simulationEnabled: false,
 };
 
 export default Chart;

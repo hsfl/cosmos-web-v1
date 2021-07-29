@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
   Viewer, Entity, Model, Globe, Clock, CameraFlyTo, PathGraphics, GeoJsonDataSource,
@@ -19,9 +19,10 @@ import { UploadOutlined } from '@ant-design/icons';
 import BaseComponent from '../BaseComponent';
 import model from '../../public/cubesat.glb';
 import { COSMOSAPI } from '../../api';
-import { MJDtoJavaScriptDate, dateToMJD } from '../../utility/time';
+import { MJDtoJavaScriptDate, dateToMJD, iso8601ToUTC } from '../../utility/time';
 import { parseDataKey } from '../../utility/data';
 import createPaths from './Globe/GlobeCSV';
+import { set } from '../../store/actions';
 
 import GlobeToolbar from './Globe/GlobeToolbar';
 import GlobeTimeline from './Globe/GlobeTimeline';
@@ -82,6 +83,7 @@ function CesiumGlobe({
   const state = useSelector((s) => s.data);
   const realm = useSelector((s) => s.realm);
   const simData = useSelector((s) => s.simData);
+  const dispatch = useDispatch();
 
   /** Storage for global; form values */
   const [orbitsForm] = Form.useForm();
@@ -277,7 +279,7 @@ function CesiumGlobe({
   /** Load in simulation data from CSVs */
   useEffect(() => {
     if (simData !== null && simulationEnabled) {
-      const [paths, newStart, newStop] = createPaths(simData);
+      const paths = createPaths(simData);
       const tempOrbit = [...orbitsState];
       tempOrbit.forEach((o) => {
         const nodeIdx = simData.sats[o.nodeProcess];
@@ -285,8 +287,8 @@ function CesiumGlobe({
         oref.live = false;
         oref.position = paths[nodeIdx];
       });
-      const startOrbit = JulianDate.fromDate(MJDtoJavaScriptDate(newStart));
-      const stopOrbit = JulianDate.fromDate(MJDtoJavaScriptDate(newStop));
+      const startOrbit = JulianDate.fromDate(MJDtoJavaScriptDate(simData.start));
+      const stopOrbit = JulianDate.fromDate(MJDtoJavaScriptDate(simData.stop));
       setStart(startOrbit);
       setStop(stopOrbit);
       setOrbitsState(tempOrbit);
@@ -902,8 +904,13 @@ function CesiumGlobe({
           stopTime={stop}
           currentTime={start}
           clockRange={start && stop ? ClockRange.LOOP_STOP : ClockRange.UNBOUNDED}
+          onTick={(t) => {
+            if (simulationEnabled) {
+              dispatch(set('simClock', iso8601ToUTC(JulianDate.toDate(t.currentTime))));
+            }
+          }}
         />
-        <GlobeTimeline start={start} stop={stop} />
+        { simulationEnabled ? <GlobeTimeline start={start} stop={stop} /> : null }
         {/* <CzmlDataSource data={Attitude} /> */}
         {
           /** Model */
