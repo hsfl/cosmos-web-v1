@@ -1,0 +1,63 @@
+version: "3.9"
+
+services:
+  # cosmos web
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cosmos-web
+    expose:
+      - 5000
+    ports:
+      - "5000:5000"
+    networks:
+      - app-network
+    volumes:
+      # NOTE: only bind volume for development!
+      - type: bind
+        source: ./src
+        target: /cosmos-web/src
+      - type: bind
+        source: ./external
+        target: /cosmos-web/external
+
+  # cosmos webapi
+  webapi:
+    build:
+      context: ../cosmos-webapi
+      dockerfile: Dockerfile
+    container_name: cosmos-webapi
+    expose:
+      - 8081
+      - 8082
+    ports:
+      - "8081:8081"
+      - "8082:8082"
+    networks:
+      - app-network
+    volumes:
+      # NOTE: only bind volume for development!
+      - type: bind
+        source: ../cosmos-webapi
+        target: /cosmos-webapi
+
+  # mongo db
+  db:
+    image: mongo
+    container_name: db
+    networks:
+      - app-network
+    volumes:
+      - mongodb:/data/db
+      - mongodb_config:/data/configdb
+    ports:
+      - "27017:27017"
+    command: mongod
+
+networks:
+  app-network:
+    driver: bridge
+volumes:
+  mongodb:
+  mongodb_config:
