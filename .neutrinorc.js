@@ -166,7 +166,7 @@ module.exports = {
       neutrino.config
         .plugin('Dotenv')
         .use(Dotenv, [{
-          defaults: true,
+          defaults: false,
         }])
         .end()
           .plugin('DefinePlugin')
