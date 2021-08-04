@@ -1,4 +1,4 @@
-version: "3.9"
+version: "3.3"
 
 services:
   # cosmos web
@@ -39,8 +39,8 @@ services:
     volumes:
       # NOTE: only bind volume for development!
       - type: bind
-        source: ../cosmos-webapi
-        target: /cosmos-webapi
+        source: ../cosmos-webapi/src
+        target: /cosmos-webapi/src
 
   # mongo db
   db:
