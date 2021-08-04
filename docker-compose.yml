@@ -1,5 +1,9 @@
 version: "3.3"
 
+# run 'docker-compose up -d --build' in this directory
+# make sure you are in the 'docker' user group
+# to stop, run 'docker-compose down'
+
 services:
   # cosmos web
   web:
