@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
+import { Cartesian3, Cartographic } from 'cesium';
 
 /* Manage Globe's timeline */
 const GlobeTable = ({
@@ -29,9 +30,6 @@ const GlobeTable = ({
     let x;
     let y;
     let z;
-    let lat;
-    let lon;
-    let alt;
 
     if (simulationEnabled && !orbit.live) {
       const idx = simCurrentIdx >= simData.data[simData.sats[orbit.nodeProcess]].length
@@ -40,25 +38,25 @@ const GlobeTable = ({
       x = simData.data[simData.sats[orbit.nodeProcess]][idx][simData.nameIdx[orbit.XDataKey]];
       y = simData.data[simData.sats[orbit.nodeProcess]][idx][simData.nameIdx[orbit.YDataKey]];
       z = simData.data[simData.sats[orbit.nodeProcess]][idx][simData.nameIdx[orbit.ZDataKey]];
-      lat = 0;
-      lon = 0;
-      alt = 0;
     } else {
       x = orbit.position.x;
       y = orbit.position.y;
       z = orbit.position.z;
-      lat = GetGeodetic(orbit) && GetGeodetic(orbit).latitude;
-      lon = GetGeodetic(orbit) && GetGeodetic(orbit).longitude;
-      alt = GetGeodetic(orbit) && GetGeodetic(orbit).height;
     }
+    const posGeod =
+      (x !== undefined
+        && y !== undefined
+        && z !== undefined)
+        ? Cartographic.fromCartesian(Cartesian3.fromArray([x, y, z]))
+        : undefined;
 
-    tableEntries.push(<td className="p-2 pr-8">{orbit.name}</td>);
-    tableEntries.push(<td className="p-2 pr-8">{x && x.toFixed(2)}</td>);
-    tableEntries.push(<td className="p-2 pr-8">{y && y.toFixed(2)}</td>);
-    tableEntries.push(<td className="p-2 pr-8">{z && z.toFixed(2)}</td>);
-    tableEntries.push(<td className="p-2 pr-8">{lat && lat.toFixed(2)}</td>);
-    tableEntries.push(<td className="p-2 pr-8">{lon && lon.toFixed(2)}</td>);
-    tableEntries.push(<td className="p-2 pr-8">{alt && alt.toFixed(2)}</td>);
+    tableEntries.push(<td key={`${orbit.name}_te_name`} className="p-2 pr-8">{orbit.name}</td>);
+    tableEntries.push(<td key={`${orbit.name}_te_x`} className="p-2 pr-8">{x && x.toFixed(2)}</td>);
+    tableEntries.push(<td key={`${orbit.name}_te_y`} className="p-2 pr-8">{y && y.toFixed(2)}</td>);
+    tableEntries.push(<td key={`${orbit.name}_te_z`} className="p-2 pr-8">{z && z.toFixed(2)}</td>);
+    tableEntries.push(<td key={`${orbit.name}_te_lat`} className="p-2 pr-8">{posGeod && (posGeod.latitude / Math.PI * 180).toFixed(2)}</td>);
+    tableEntries.push(<td key={`${orbit.name}_te_lon`} className="p-2 pr-8">{posGeod && (posGeod.longitude / Math.PI * 180).toFixed(2)}</td>);
+    tableEntries.push(<td key={`${orbit.name}_te_alt`} className="p-2 pr-8">{posGeod && posGeod.height.toFixed(2)}</td>);
 
     return (
       <tr className="text-gray-700 border-b border-gray-400" key={orbit.name}>
@@ -76,8 +74,8 @@ const GlobeTable = ({
             <td className="p-2 pr-8">x (m)</td>
             <td className="p-2 pr-8">y (m)</td>
             <td className="p-2 pr-8">z (m)</td>
-            <td className="p-2 pr-8">Latitude (rad)</td>
-            <td className="p-2 pr-8">Longitude (rad)</td>
+            <td className="p-2 pr-8">Latitude (deg)</td>
+            <td className="p-2 pr-8">Longitude (deg)</td>
             <td className="p-2 pr-8">Altitude (m)</td>
           </tr>
           {
