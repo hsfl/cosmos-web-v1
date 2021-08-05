@@ -10,6 +10,7 @@ import DisplayValuesTable from './DisplayValues/DisplayValuesTable';
 
 import { setActivity, incrementQueue } from '../../store/actions';
 import { mjdToUTCString } from '../../utility/time';
+import { MultiVarFx } from '../../utility/data';
 
 /**
  * Displays a specified live value from an agent.
@@ -132,9 +133,15 @@ function DisplayValue({
         const idx = simCurrentIdx >= simData.data[simData.sats[vref.nodeProcess]].length
           ? simData.data[simData.sats[vref.nodeProcess]].length - 1
           : simCurrentIdx;
-        const value = vref.processDataKey(
-          simData.data[simData.sats[vref.nodeProcess]][idx][simData.nameIdx[vref.dataKey]],
-        );
+        let dataKeyIdxs;
+        if (Array.isArray(vref.dataKey)) {
+          dataKeyIdxs = vref.dataKey.map((dkey) => simData.nameIdx[dkey]);
+        } else {
+          dataKeyIdxs = simData.nameIdx[vref.dataKey];
+        }
+        const value = v.processDataKey
+          ? MultiVarFx(dataKeyIdxs, vref.processDataKey, simData.data[simData.sats[vref.nodeProcess]][idx])
+          : simData.data[simData.sats[vref.nodeProcess]][idx][dataKeyIdxs];
         vref.value = value;
         vref.time = mjdToUTCString(
           simData.data[simData.sats[vref.nodeProcess]][idx][simData.nameIdx[vref.timeDataKey]],
@@ -263,7 +270,7 @@ DisplayValue.propTypes = {
       /** the node:process to pull the value from */
       node: PropTypes.string,
       /** The data key to pull the value from */
-      dataKey: PropTypes.string,
+      dataKey: PropTypes.any,
       /** Emit warning if data key exceeds threshold */
       dataKeyUpperThreshold: PropTypes.number,
       /** Emit warning if data key is below threshold */
