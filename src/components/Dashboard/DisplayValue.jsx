@@ -19,6 +19,7 @@ function DisplayValue({
   name,
   displayValues,
   simulationEnabled,
+  percentDifference,
 }) {
   const dispatch = useDispatch();
   const queriedData = useSelector((s) => s.queriedData);
@@ -243,6 +244,7 @@ function DisplayValue({
     >
       <DisplayValuesTable
         displayValues={displayValuesState}
+        percentDifference={percentDifference}
       />
     </BaseComponent>
   );
@@ -278,12 +280,15 @@ DisplayValue.propTypes = {
   ),
   // Whether to allow CSV data loading
   simulationEnabled: PropTypes.bool,
+  // Show percentDifference?
+  percentDifference: PropTypes.bool,
 };
 
 DisplayValue.defaultProps = {
   name: '',
   displayValues: [],
   simulationEnabled: false,
+  percentDifference: true,
 };
 
 export default React.memo(DisplayValue);
