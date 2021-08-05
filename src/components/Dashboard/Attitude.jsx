@@ -20,10 +20,13 @@ function Attitude({
   attitudes,
   showStatus,
   status,
+  simulationEnabled,
 }) {
   /** Accessing the neutron1 messages from the socket */
   const state = useSelector((s) => s.data);
   const realm = useSelector((s) => s.realm);
+  const simData = useSelector((s) => s.simData);
+  const simCurrentIdx = useSelector((s) => s.simCurrentIdx);
 
   /** Storage for form values */
   const [attitudesForm] = Form.useForm();
@@ -38,6 +41,8 @@ function Attitude({
   const [attitudesState, setAttitudesState] = useState(attitudes);
   /** Variable to update to force component update */
   const [updateComponent, setUpdateComponent] = useState(false);
+  /** Use live values from context soh */
+  // const [live, setLive] = useState(true);
 
   /** Initialize form slots for each orbit */
   useEffect(() => {
@@ -84,6 +89,26 @@ function Attitude({
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
+
+  // Use CSV Data
+  useEffect(() => {
+    if (simulationEnabled && simData !== null && simCurrentIdx !== null) {
+      attitudesState.forEach(({ nodeProcess, dataKey, live }, i) => {
+        const tempAttitude = [...attitudesState];
+        const idx = simCurrentIdx >= simData.data[simData.sats[nodeProcess]].length
+          ? simData.data[simData.sats[nodeProcess]].length - 1
+          : simCurrentIdx;
+        // Support only separate keys for now. TODO: add generic support later
+        const q = { d: { x: 0, y: 0, z: 0 }, w: 0 };
+        q.d.x = simData.data[simData.sats[nodeProcess]][idx][simData.nameIdx[dataKey[0]]];
+        q.d.y = simData.data[simData.sats[nodeProcess]][idx][simData.nameIdx[dataKey[1]]];
+        q.d.z = simData.data[simData.sats[nodeProcess]][idx][simData.nameIdx[dataKey[2]]];
+        q.w = simData.data[simData.sats[nodeProcess]][idx][simData.nameIdx[dataKey[3]]];
+        tempAttitude[i].quaternions = q;
+        setAttitudesState(tempAttitude);
+      });
+    };
+  }, [simData, simCurrentIdx, simulationEnabled]);
 
   /** Process edit value form */
   const processForm = (id) => {
@@ -211,7 +236,7 @@ Attitude.propTypes = {
       /** node name to look at for retrieving attitude data */
       nodeProcess: PropTypes.string,
       /** Data key to retrieve data from */
-      dataKey: PropTypes.string,
+      dataKey: PropTypes.any,
     }),
   ),
   /** Whether to show a circular indicator of the status of the component */
@@ -226,6 +251,8 @@ Attitude.propTypes = {
 
     return null;
   },
+  /** Enable CSV Data loading */
+  simulationEnabled: PropTypes.bool,
 };
 
 Attitude.defaultProps = {
@@ -233,6 +260,7 @@ Attitude.defaultProps = {
   attitudes: [],
   showStatus: false,
   status: 'error',
+  simulationEnabled: false,
 };
 
 export default React.memo(Attitude);
