@@ -69,3 +69,47 @@ export const getObjAtName = (name, arr) => {
   });
   return currentRef;
 };
+
+// It's essentially a normal binary search algorithm,
+// but it checks the next item in the list first before doing the whole thing
+// arr should be provided a simData. Could be made more generic
+// Also note that it's currently just taking in the first in the simData.data array,
+// it could be the shortest, longest, you may not cover every element in some arrays.
+export const modifiedBinarySearch = (arr, x, colIdx, lastidx = undefined) => {
+  let start = 0;
+  let end = arr.length - 1;
+
+  // Success condition
+  // Either it is exactly equal, or fits inbetween the current idx and the one above
+  const checkMatch = (idx) => {
+    if (idx > end) return false;
+    const oneAbove = idx + 1 > end ? end : idx + 1;
+    if (x >= arr[idx][colIdx] && x < arr[oneAbove][colIdx] || x === arr[idx][colIdx]) {
+      return true;
+    }
+      return false;
+  };
+
+  // First check around lastidx
+  if (lastidx !== null && lastidx !== undefined) {
+    if (checkMatch(lastidx)) return lastidx;
+    if (checkMatch(lastidx + 1)) return lastidx + 1;
+  }
+  let mid;
+  // Otherwise, a typical binary search implementation
+  while (start <= end) {
+    mid = Math.floor((start + end) / 2);
+
+    if (checkMatch(mid)) {
+      return mid;
+    }
+    if (arr[mid][colIdx] < x) {
+      start = mid + 1;
+    } else {
+      end = mid - 1;
+    }
+  }
+
+  // No match found (ie: not within time bounds), return closest match
+  return mid;
+};

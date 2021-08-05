@@ -12,20 +12,20 @@ import {
 } from 'cesium';
 
 import {
-  Form, Input, Collapse, Button, Switch, DatePicker, message, Upload,
+  Form, Input, Collapse, Button, Switch, DatePicker, message,
 } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
 
 import BaseComponent from '../BaseComponent';
 import model from '../../public/cubesat.glb';
 import { COSMOSAPI } from '../../api';
-import { MJDtoJavaScriptDate, dateToMJD, iso8601ToUTC } from '../../utility/time';
+import { MJDtoJavaScriptDate, dateToMJD, iso8601ToMJD } from '../../utility/time';
 import { parseDataKey } from '../../utility/data';
 import createPaths from './Globe/GlobeCSV';
 import { set } from '../../store/actions';
 
 import GlobeToolbar from './Globe/GlobeToolbar';
 import GlobeTimeline from './Globe/GlobeTimeline';
+import GlobeTable from './Globe/GlobeTable';
 
 const { Panel } = Collapse;
 const { RangePicker } = DatePicker;
@@ -404,16 +404,6 @@ function CesiumGlobe({
       }
     }
   };
-
-  /** Return whichever geodetic coordinates are defined */
-  function GetGeodetic(orbit) {
-    if (orbit.geodetic) {
-      return orbit.geodetic;
-    } if (orbit.posGeod) {
-      return orbit.posGeod;
-    }
-    return 0;
-  }
 
   /** Handle the collection of historical data */
   /** TODO: UPDATE RETRIEVAL FOR GEODETIC COORDINATES */
@@ -906,7 +896,7 @@ function CesiumGlobe({
           clockRange={start && stop ? ClockRange.LOOP_STOP : ClockRange.UNBOUNDED}
           onTick={(t) => {
             if (simulationEnabled) {
-              dispatch(set('simClock', iso8601ToUTC(JulianDate.toDate(t.currentTime))));
+              dispatch(set('simClock', iso8601ToMJD(JulianDate.toDate(t.currentTime))));
             }
           }}
         />
@@ -996,34 +986,7 @@ function CesiumGlobe({
         }
         <GlobeToolbar orbitsState={orbitsState} handleShowPathChange={handleShowPathChange} />
       </Viewer>
-      <div className="overflow-x-auto">
-        <table className="mt-4 w-full">
-          <tbody className="w-10">
-            <tr className="bg-gray-200 border-b border-gray-400">
-              <td className="p-2 pr-8">Name</td>
-              <td className="p-2 pr-8">x (m)</td>
-              <td className="p-2 pr-8">y (m)</td>
-              <td className="p-2 pr-8">z (m)</td>
-              <td className="p-2 pr-8">Latitude (rad)</td>
-              <td className="p-2 pr-8">Longitude (rad)</td>
-              <td className="p-2 pr-8">Altitude (m)</td>
-            </tr>
-            {
-            orbitsState.map((orbit) => (
-              <tr className="text-gray-700 border-b border-gray-400" key={orbit.name}>
-                <td className="p-2 pr-8">{orbit.name}</td>
-                <td className="p-2 pr-8">{orbit.position.x}</td>
-                <td className="p-2 pr-8">{orbit.position.y}</td>
-                <td className="p-2 pr-8">{orbit.position.z}</td>
-                <td className="p-2 pr-8">{GetGeodetic(orbit) && GetGeodetic(orbit).latitude}</td>
-                <td className="p-2 pr-8">{GetGeodetic(orbit) && GetGeodetic(orbit).longitude}</td>
-                <td className="p-2 pr-8">{GetGeodetic(orbit) && GetGeodetic(orbit).height}</td>
-              </tr>
-            ))
-          }
-          </tbody>
-        </table>
-      </div>
+      <GlobeTable orbitsState={orbitsState} simulationEnabled={simulationEnabled} />
     </BaseComponent>
   );
 }

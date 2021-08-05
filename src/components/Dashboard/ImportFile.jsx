@@ -1,14 +1,13 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 
-import { set } from '../../store/actions';
-
 import {
   Upload, message,
 } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 
 import BaseComponent from '../BaseComponent';
+import { set } from '../../store/actions';
 
 const ImportFile = () => {
   const dispatch = useDispatch();
@@ -26,7 +25,7 @@ const ImportFile = () => {
       // data: [
       //   [[0,0,0,...], ...], <- satellite 0 data
       //   [[0,0,0,...], ...], <- satellite 1 data
-      //   ...,
+      //   ...,                   ...etc
       // ]
       data: [],
       // Dictionary matching column name to the index
@@ -45,14 +44,13 @@ const ImportFile = () => {
         colNames.length = 0;
         colNames.push(...entry);
         // Associate name with index
-        colNames.forEach((value, i) => {
-          data.nameIdx[value] = i - 2;
+        colNames.forEach((value, ci) => {
+          data.nameIdx[value] = ci - 2;
         });
         return true;
       }
       // Make sure number of elements match
       if (entry.length !== colNames.length) {
-        console.log(entry, colNames)
         return false;
       }
       // Create new node:process entry in data
@@ -83,18 +81,18 @@ const ImportFile = () => {
 
   const importCSV = (file) => new Promise((resolve, reject) => {
     const reader = new FileReader();
-  
+
     // File load success
     reader.onload = () => {
       const data = parseFile(reader.result);
       resolve(data);
     };
-  
+
     // File read error
     reader.onerror = () => {
       reject;
     };
-  
+
     reader.readAsText(file);
   });
 
@@ -112,7 +110,7 @@ const ImportFile = () => {
       name="Upload"
       movable
     >
-	    <Upload.Dragger
+      <Upload.Dragger
         multiple={false}
         showUploadList={false}
         beforeUpload={handleUpload}

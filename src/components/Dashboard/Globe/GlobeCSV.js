@@ -4,8 +4,6 @@ import { MJDtoJavaScriptDate } from '../../../utility/time';
 // Return a new SampledPositionProperty to display
 const createPaths = (data) => {
   const paths = [];
-  let start = data.data[0][0][data.nameIdx['c->node.loc.pos.eci.utc']];
-  let stop = data.data[0][0][data.nameIdx['c->node.loc.pos.eci.utc']];
 
   // Iterate over each satelites' arrays
   data.data.forEach((satDataEntries) => {

@@ -17,6 +17,7 @@ export default function reducer(state = {
   retrievedQuery: null,
   simData: null,
   simClock: null,
+  simCurrentIdx: null,
 }, {
   type, key, payload,
 }) {

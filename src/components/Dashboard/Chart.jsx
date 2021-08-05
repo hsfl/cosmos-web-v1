@@ -151,7 +151,7 @@ function Chart({
         x1: 0,
       }];
     }
-  }, []);
+  }, [layout, simulationEnabled]);
 
   /** Handle new data incoming from the Context */
   useEffect(() => {
@@ -260,8 +260,8 @@ function Chart({
         const satIdx = simData.sats[p.nodeProcess];
         if (satIdx !== null) {
           simData.data[satIdx].forEach((dataPt) => {
-            p.x.push(mjdToUTCString(
-              dataPt[simData.nameIdx['c->node.loc.pos.eci.utc']])
+            p.x.push(
+              mjdToUTCString(dataPt[simData.nameIdx['c->node.loc.pos.eci.utc']]),
             );
             // Map YDataKeys to indices as defined in simData.nameIdx
             let yDataKeyIdxs;
@@ -283,9 +283,10 @@ function Chart({
 
   useEffect(() => {
     if (layout.shapes.length !== 0) {
-      layout.shapes[0].x0 = simClock;
-      layout.shapes[0].x1 = simClock;
-    } 
+      const newTime = mjdToUTCString(simClock);
+      layout.shapes[0].x0 = newTime;
+      layout.shapes[0].x1 = newTime;
+    }
   }, [simClock]);
 
   /** Process edit value form */

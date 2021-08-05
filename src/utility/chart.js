@@ -42,7 +42,7 @@ export function determineLayout(defaultRange, dataRevision) {
     yaxis: {
       fixedrange: true,
     },
-	shapes: [],
+    shapes: [],
   };
 
   if (defaultRange) {
