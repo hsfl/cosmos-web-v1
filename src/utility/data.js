@@ -87,7 +87,7 @@ export const modifiedBinarySearch = (arr, x, colIdx, lastidx = undefined) => {
     if (x >= arr[idx][colIdx] && x < arr[oneAbove][colIdx] || x === arr[idx][colIdx]) {
       return true;
     }
-      return false;
+    return false;
   };
 
   // First check around lastidx

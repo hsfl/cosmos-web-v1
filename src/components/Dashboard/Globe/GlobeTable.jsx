@@ -11,20 +11,6 @@ const GlobeTable = ({
   const simData = useSelector((s) => s.simData);
   const simCurrentIdx = useSelector((s) => s.simCurrentIdx);
 
-  /** Return whichever geodetic coordinates are defined */
-  function GetGeodetic(orbit) {
-    // Grab values from simData
-    if (simulationEnabled && !orbit.live) {
-
-    }
-    if (orbit.geodetic) {
-      return orbit.geodetic;
-    } if (orbit.posGeod) {
-      return orbit.posGeod;
-    }
-    return 0;
-  }
-
   const GlobeTableEntry = (orbit) => {
     const tableEntries = [];
     let x;
@@ -43,12 +29,13 @@ const GlobeTable = ({
       y = orbit.position.y;
       z = orbit.position.z;
     }
-    const posGeod =
-      (x !== undefined
-        && y !== undefined
-        && z !== undefined)
-        ? Cartographic.fromCartesian(Cartesian3.fromArray([x, y, z]))
-        : undefined;
+    const posGeod = (
+      x !== undefined
+      && y !== undefined
+      && z !== undefined
+    )
+      ? Cartographic.fromCartesian(Cartesian3.fromArray([x, y, z]))
+      : undefined;
 
     tableEntries.push(<td key={`${orbit.name}_te_name`} className="p-2 pr-8">{orbit.name}</td>);
     tableEntries.push(<td key={`${orbit.name}_te_x`} className="p-2 pr-8">{x && x.toFixed(2)}</td>);

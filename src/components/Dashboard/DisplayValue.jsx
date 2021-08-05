@@ -18,9 +18,12 @@ import { mjdToUTCString } from '../../utility/time';
 function DisplayValue({
   name,
   displayValues,
+  simulationEnabled,
 }) {
   const dispatch = useDispatch();
   const queriedData = useSelector((s) => s.queriedData);
+  const simData = useSelector((s) => s.simData);
+  const simCurrentIdx = useSelector((s) => s.simCurrentIdx);
 
   /** Accessing the neutron1 messages from the socket */
   const state = useSelector((s) => s.data);
@@ -33,9 +36,11 @@ function DisplayValue({
   const [nameState, setNameState] = useState(name);
 
   /** Store the display values here */
-  const [displayValuesState] = useState(displayValues);
+  const [displayValuesState, setDisplayValuesState] = useState(displayValues);
   /** Variable to update to force component update */
   const [updateComponent, setUpdateComponent] = useState(false);
+  /** Whether to display live values from soh */
+  const [live, setLive] = useState(true);
 
   /** Handle new data incoming from the Context */
   useEffect(() => {
@@ -49,6 +54,7 @@ function DisplayValue({
         || v.node === state[realm].node_name)
         && ((!(process.env.FLIGHT_MODE === 'true') && state[realm].recorded_time)
         || (process.env.FLIGHT_MODE === 'true' && state[realm][v.timeDataKey]))
+        && live
       ) {
         const data = state[realm][v.dataKey];
         const value = v.processDataKey(data);
@@ -111,6 +117,52 @@ function DisplayValue({
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
+
+  // Switch to simulation mode and grab values from simData
+  useEffect(() => {
+    if (simData !== null) {
+      setLive(false);
+    }
+  }, [simData]);
+  useEffect(() => {
+    if (simulationEnabled && simData !== null && simCurrentIdx !== null) {
+      displayValuesState.forEach((v) => {
+        const vref = v;
+        const idx = simCurrentIdx >= simData.data[simData.sats[vref.nodeProcess]].length
+          ? simData.data[simData.sats[vref.nodeProcess]].length - 1
+          : simCurrentIdx;
+        const value = vref.processDataKey(
+          simData.data[simData.sats[vref.nodeProcess]][idx][simData.nameIdx[vref.dataKey]],
+        );
+        vref.value = value;
+        vref.time = mjdToUTCString(
+          simData.data[simData.sats[vref.nodeProcess]][idx][simData.nameIdx[vref.timeDataKey]],
+        );
+
+        if (vref.dataKeyLowerThreshold
+          && value <= vref.dataKeyLowerThreshold
+        ) {
+          dispatch(setActivity({
+            status: 'error',
+            summary: `${value} ≤ ${vref.dataKeyLowerThreshold} ${vref.unit}`,
+            scope: `for ${vref.name}`,
+          }));
+        }
+
+        if (vref.dataKeyUpperThreshold
+          && value >= vref.dataKeyUpperThreshold
+        ) {
+          dispatch(setActivity({
+            status: 'error',
+            summary: `${value} ≥ ${vref.dataKeyUpperThreshold} ${vref.unit}`,
+            scope: `for ${vref.name}`,
+          }));
+        }
+      });
+      // I hate how hacky this is, change to reducer later
+      setDisplayValuesState((s) => [...s]);
+    }
+  }, [simData, simCurrentIdx, simulationEnabled, dispatch]);
 
   useEffect(() => {
     if (queriedData) {
@@ -224,11 +276,14 @@ DisplayValue.propTypes = {
       unit: PropTypes.string,
     }),
   ),
+  // Whether to allow CSV data loading
+  simulationEnabled: PropTypes.bool,
 };
 
 DisplayValue.defaultProps = {
   name: '',
   displayValues: [],
+  simulationEnabled: false,
 };
 
 export default React.memo(DisplayValue);

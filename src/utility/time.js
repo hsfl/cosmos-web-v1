@@ -45,7 +45,7 @@ export function dateToMJD(date) {
  * @param {String} date ISO8601 formatted string
  * @returns {Number} MJD number
  */
- export function iso8601ToMJD(date) {
+export function iso8601ToMJD(date) {
   return dateToMJD(dayjs(date));
 }
 

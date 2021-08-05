@@ -257,6 +257,7 @@ function Chart({
       // layout.yaxis.range = [0, 100];
       layout.xaxis.range = [mjdToUTCString(simData.start), mjdToUTCString(simData.stop)];
       plotsState.forEach((p) => {
+        p.live = false;
         const satIdx = simData.sats[p.nodeProcess];
         if (satIdx !== null) {
           simData.data[satIdx].forEach((dataPt) => {
