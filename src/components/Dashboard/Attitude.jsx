@@ -93,7 +93,7 @@ function Attitude({
   // Use CSV Data
   useEffect(() => {
     if (simulationEnabled && simData !== null && simCurrentIdx !== null) {
-      attitudesState.forEach(({ nodeProcess, dataKey, live }, i) => {
+      attitudesState.forEach(({ nodeProcess, dataKey }, i) => {
         const tempAttitude = [...attitudesState];
         const idx = simCurrentIdx >= simData.data[simData.sats[nodeProcess]].length
           ? simData.data[simData.sats[nodeProcess]].length - 1
@@ -107,7 +107,7 @@ function Attitude({
         tempAttitude[i].quaternions = q;
         setAttitudesState(tempAttitude);
       });
-    };
+    }
   }, [simData, simCurrentIdx, simulationEnabled]);
 
   /** Process edit value form */

@@ -1,59 +1,60 @@
-import React, { Component } from 'react';
-import * as BABYLON from 'babylonjs';
-import { message } from 'antd';
+import React, { useEffect, useRef } from 'react';
+import { Engine, Scene } from '@babylonjs/core';
+import PropTypes from 'prop-types';
 
-const canvas = HTMLCanvasElement;
+const BabylonScene = ({
+  onRender,
+  onSceneReady,
+}) => {
+  console.log('rerender')
+  const reactCanvas = useRef(null);
+  useEffect(() => {
+    console.log('effect trigger')
+    if (reactCanvas.current) {
+      const engine = new Engine(reactCanvas.current);
+      const scene = new Scene(engine);
+      if (scene.isReady()) {
+        onSceneReady(scene);
+      } else {
+        scene.onReadyObservable.addOnce((s) => onSceneReady(s));
+      }
 
-class ThreeD extends Component {
-  componentDidMount() {
-    // eslint-disable-next-line
-    const { engineOptions, adaptToDeviceRatio, onSceneMount } = this.props;
-
-    this.engine = new BABYLON.Engine(
-      this.canvas,
-      true,
-      engineOptions,
-      adaptToDeviceRatio,
-    );
-
-    const scene = new BABYLON.Scene(this.engine);
-    this.scene = scene;
-
-    if (typeof onSceneMount === 'function') {
-      onSceneMount({
-        scene,
-        engine: this.engine,
-        canvas: this.canvas,
+      engine.runRenderLoop(() => {
+        if (typeof onRender === 'function') {
+          onRender(scene);
+        }
+        scene.render();
       });
-    } else {
-      message.error('onSceneMount function not available');
+
+      const resize = () => {
+        scene.getEngine().resize();
+      };
+
+      if (window) {
+        window.addEventListener('resize', resize);
+      }
+
+      return () => {
+        scene.getEngine().dispose();
+
+        if (window) {
+          window.removeEventListener('resize', resize);
+        }
+      };
     }
+    return null;
+  }, [reactCanvas, onSceneReady, onRender]);
 
-    // Resize the babylon engine when the window is resized
-    window.addEventListener('resize', this.onResizeWindow);
-  }
+  return <canvas id="scene" ref={reactCanvas} />;
+};
 
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.onResizeWindow);
-  }
+BabylonScene.propTypes = {
+  onRender: PropTypes.func,
+  onSceneReady: PropTypes.func.isRequired,
+};
 
-  onResizeWindow = () => {
-    if (this.engine) {
-      this.engine.resize();
-    }
-  };
-
-  onCanvasLoaded = (HTMLCanvasElement) => {
-    if (HTMLCanvasElement !== null) {
-      this.canvas = HTMLCanvasElement;
-    }
-  };
-
-  render() {
-    return (
-      <canvas id="scene" ref={this.onCanvasLoaded} />
-    );
-  }
+BabylonScene.defaultProps = {
+  onRender: undefined,
 }
 
-export default ThreeD;
+export default React.memo(BabylonScene);
