@@ -195,7 +195,7 @@ function Attitude({
       )}
     >
       <AttitudeThreeD
-        data={attitudesState[0].quaternions}
+        satAttitude={attitudesState[0].quaternions}
       />
       <div className="overflow-x-auto">
         <table className="mt-4 w-full">

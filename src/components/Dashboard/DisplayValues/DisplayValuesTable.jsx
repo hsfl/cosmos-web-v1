@@ -6,7 +6,7 @@ import PercentDifference from './PercentDifference';
 
 function DisplayValuesTable({
   displayValues,
-  percentDifference,
+  showPercentDifference,
 }) {
   return (
     <>
@@ -84,7 +84,7 @@ function DisplayValuesTable({
                   </td>
                 </Popover>
                 {
-                  percentDifference
+                  showPercentDifference
                     ? (
                       <td className="pr-2">
                         <PercentDifference percentDifference={percentDifference} />
@@ -122,12 +122,12 @@ function DisplayValuesTable({
 
 DisplayValuesTable.propTypes = {
   displayValues: PropTypes.arrayOf(PropTypes.shape),
-  percentDifference: PropTypes.bool,
+  showPercentDifference: PropTypes.bool,
 };
 
 DisplayValuesTable.defaultProps = {
   displayValues: [],
-  percentDifference: true,
+  showPercentDifference: true,
 };
 
 export default DisplayValuesTable;

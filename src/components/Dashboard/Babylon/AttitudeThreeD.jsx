@@ -7,20 +7,20 @@ import BabylonScene from './BabylonScene';
 import AttitudeSceneInitializer from './AttitudeSceneInitializer';
 
 const AttitudeThreeD = ({
-  data,
+  satAttitude,
 }) => {
   const cubesatMesh = useRef(null);
 
   useEffect(() => {
     if (cubesatMesh.current !== null) {
       cubesatMesh.current.rotationQuaternion = new Quaternion(
-        data.d.x,
-        data.d.y,
-        data.d.z,
-        data.w,
+        satAttitude.d.x,
+        satAttitude.d.y,
+        satAttitude.d.z,
+        satAttitude.w,
       );
     }
-  }, [data]);
+  }, [satAttitude]);
 
   return (
     <BabylonScene onSceneReady={AttitudeSceneInitializer(cubesatMesh)} />
@@ -28,7 +28,7 @@ const AttitudeThreeD = ({
 };
 
 AttitudeThreeD.propTypes = {
-  data: PropTypes.shape({
+  satAttitude: PropTypes.shape({
     d: PropTypes.shape({
       x: PropTypes.number,
       y: PropTypes.number,
@@ -36,6 +36,18 @@ AttitudeThreeD.propTypes = {
     }),
     w: PropTypes.number,
   }).isRequired,
+  targAttitude: PropTypes.shape({
+    d: PropTypes.shape({
+      x: PropTypes.number,
+      y: PropTypes.number,
+      z: PropTypes.number,
+    }),
+    w: PropTypes.number,
+  }),
+};
+
+AttitudeThreeD.defaultProps = {
+  targAttitude: null,
 };
 
 export default AttitudeThreeD;

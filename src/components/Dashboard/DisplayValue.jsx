@@ -20,7 +20,7 @@ function DisplayValue({
   name,
   displayValues,
   simulationEnabled,
-  percentDifference,
+  showPercentDifference,
 }) {
   const dispatch = useDispatch();
   const queriedData = useSelector((s) => s.queriedData);
@@ -140,7 +140,11 @@ function DisplayValue({
           dataKeyIdxs = simData.nameIdx[vref.dataKey];
         }
         const value = v.processDataKey
-          ? MultiVarFx(dataKeyIdxs, vref.processDataKey, simData.data[simData.sats[vref.nodeProcess]][idx])
+          ? MultiVarFx(
+            dataKeyIdxs,
+            vref.processDataKey,
+            simData.data[simData.sats[vref.nodeProcess]][idx],
+          )
           : simData.data[simData.sats[vref.nodeProcess]][idx][dataKeyIdxs];
         vref.value = value;
         vref.time = mjdToUTCString(
@@ -251,7 +255,7 @@ function DisplayValue({
     >
       <DisplayValuesTable
         displayValues={displayValuesState}
-        percentDifference={percentDifference}
+        showPercentDifference={showPercentDifference}
       />
     </BaseComponent>
   );
@@ -288,14 +292,14 @@ DisplayValue.propTypes = {
   // Whether to allow CSV data loading
   simulationEnabled: PropTypes.bool,
   // Show percentDifference?
-  percentDifference: PropTypes.bool,
+  showPercentDifference: PropTypes.bool,
 };
 
 DisplayValue.defaultProps = {
   name: '',
   displayValues: [],
   simulationEnabled: false,
-  percentDifference: true,
+  showPercentDifference: true,
 };
 
 export default React.memo(DisplayValue);

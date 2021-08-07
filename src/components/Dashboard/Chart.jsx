@@ -258,23 +258,24 @@ function Chart({
       // layout.yaxis.range = [0, 100];
       layout.xaxis.range = [mjdToUTCString(simData.start), mjdToUTCString(simData.stop)];
       plotsState.forEach((p) => {
-        p.live = false;
-        const satIdx = simData.sats[p.nodeProcess];
+        const pref = p;
+        pref.live = false;
+        const satIdx = simData.sats[pref.nodeProcess];
         if (satIdx !== null) {
           simData.data[satIdx].forEach((dataPt) => {
-            p.x.push(
+            pref.x.push(
               mjdToUTCString(dataPt[simData.nameIdx['c->node.loc.pos.eci.utc']]),
             );
             // Map YDataKeys to indices as defined in simData.nameIdx
             let yDataKeyIdxs;
-            if (Array.isArray(p.YDataKey)) {
-              yDataKeyIdxs = p.YDataKey.map((yDataKey) => simData.nameIdx[yDataKey]);
+            if (Array.isArray(pref.YDataKey)) {
+              yDataKeyIdxs = pref.YDataKey.map((yDataKey) => simData.nameIdx[yDataKey]);
             } else {
-              yDataKeyIdxs = simData.nameIdx[p.YDataKey];
+              yDataKeyIdxs = simData.nameIdx[pref.YDataKey];
             }
-            p.y.push(
-              p.processYDataKey
-                ? MultiVarFx(yDataKeyIdxs, p.processYDataKey, dataPt)
+            pref.y.push(
+              pref.processYDataKey
+                ? MultiVarFx(yDataKeyIdxs, pref.processYDataKey, dataPt)
                 : dataPt[yDataKeyIdxs],
             );
           });

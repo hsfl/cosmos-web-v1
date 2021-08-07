@@ -6,10 +6,9 @@ const BabylonScene = ({
   onRender,
   onSceneReady,
 }) => {
-  console.log('rerender')
   const reactCanvas = useRef(null);
+
   useEffect(() => {
-    console.log('effect trigger')
     if (reactCanvas.current) {
       const engine = new Engine(reactCanvas.current);
       const scene = new Scene(engine);
@@ -54,7 +53,7 @@ BabylonScene.propTypes = {
 };
 
 BabylonScene.defaultProps = {
-  onRender: undefined,
-}
+  onRender: null,
+};
 
 export default React.memo(BabylonScene);
