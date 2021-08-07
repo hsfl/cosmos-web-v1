@@ -93,18 +93,28 @@ function Attitude({
   // Use CSV Data
   useEffect(() => {
     if (simulationEnabled && simData !== null && simCurrentIdx !== null) {
-      attitudesState.forEach(({ nodeProcess, dataKey }, i) => {
+      attitudesState.forEach(({ nodeProcess, dataKey, vectorDataKeys }, i) => {
         const tempAttitude = [...attitudesState];
         const idx = simCurrentIdx >= simData.data[simData.sats[nodeProcess]].length
           ? simData.data[simData.sats[nodeProcess]].length - 1
           : simCurrentIdx;
         // Support only separate keys for now. TODO: add generic support later
         const q = { d: { x: 0, y: 0, z: 0 }, w: 0 };
-        q.d.x = simData.data[simData.sats[nodeProcess]][idx][simData.nameIdx[dataKey[0]]];
-        q.d.y = simData.data[simData.sats[nodeProcess]][idx][simData.nameIdx[dataKey[1]]];
-        q.d.z = simData.data[simData.sats[nodeProcess]][idx][simData.nameIdx[dataKey[2]]];
-        q.w = simData.data[simData.sats[nodeProcess]][idx][simData.nameIdx[dataKey[3]]];
+        const dataRow = simData.data[simData.sats[nodeProcess]][idx];
+        q.d.x = dataRow[simData.nameIdx[dataKey[0]]];
+        q.d.y = dataRow[simData.nameIdx[dataKey[1]]];
+        q.d.z = dataRow[simData.nameIdx[dataKey[2]]];
+        q.w = dataRow[simData.nameIdx[dataKey[3]]];
         tempAttitude[i].quaternions = q;
+        // Target attitudes, for now. Set up to iterate through the vectorDataKeys later
+        if (Array.isArray(vectorDataKeys)) {
+          const targetQ = { d: { x: 0, y: 0, z: 0 }, w: 0 };
+          targetQ.d.x = dataRow[simData.nameIdx[vectorDataKeys[0][0]]];
+          targetQ.d.y = dataRow[simData.nameIdx[vectorDataKeys[0][1]]];
+          targetQ.d.z = dataRow[simData.nameIdx[vectorDataKeys[0][2]]];
+          targetQ.w = dataRow[simData.nameIdx[vectorDataKeys[0][3]]];
+          tempAttitude[i].targetQuaternions = targetQ;
+        }
         setAttitudesState(tempAttitude);
       });
     }
@@ -196,6 +206,7 @@ function Attitude({
     >
       <AttitudeThreeD
         satAttitude={attitudesState[0].quaternions}
+        targetAttitude={attitudesState[0].targetQuaternions}
       />
       <div className="overflow-x-auto">
         <table className="mt-4 w-full">
@@ -237,6 +248,8 @@ Attitude.propTypes = {
       nodeProcess: PropTypes.string,
       /** Data key to retrieve data from */
       dataKey: PropTypes.any,
+      /** Data keys for any additional vectors to display */
+      vectorDataKeys: PropTypes.arrayOf(PropTypes.any),
     }),
   ),
   /** Whether to show a circular indicator of the status of the component */
