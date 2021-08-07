@@ -12,11 +12,6 @@ const AttitudeThreeD = ({
   const cubesatMesh = useRef(null);
 
   useEffect(() => {
-    const timer = setInterval(() => setAttitude((a) => a + 1), 2000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
     if (cubesatMesh.current !== null) {
       cubesatMesh.current.rotationQuaternion = new Quaternion(
         data.d.x,
