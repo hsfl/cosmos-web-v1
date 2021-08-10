@@ -34,7 +34,7 @@ const GlobeTimeline = ({
   useEffect(() => {
     if (simData !== null) {
       // search through simData for closest timestamp
-      const dataIdx = modifiedBinarySearch(simData.data[0], simClock, simData.nameIdx['c->node.loc.pos.eci.utc'], simCurrentIdx);
+      const dataIdx = modifiedBinarySearch(simData.data[0], simClock, simData.nameIdx['t_pos'], simCurrentIdx);
       dispatch(set('simCurrentIdx', dataIdx));
     }
   }, [simClock, simCurrentIdx, simData, dispatch]);

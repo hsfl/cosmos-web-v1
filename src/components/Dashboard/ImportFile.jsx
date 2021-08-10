@@ -64,7 +64,7 @@ const ImportFile = () => {
       data.data[data.sats[nodeProcess]].push(newData);
 
       // Update time range if applicable
-      const timeStamp = newData[data.nameIdx['c->node.loc.pos.eci.utc']];
+      const timeStamp = newData[data.nameIdx['t_pos']];
       if (timeStamp < data.start) data.start = timeStamp;
       else if (timeStamp > data.stop) data.stop = timeStamp;
 

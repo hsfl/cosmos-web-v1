@@ -264,7 +264,7 @@ function Chart({
         if (satIdx !== null) {
           simData.data[satIdx].forEach((dataPt) => {
             pref.x.push(
-              mjdToUTCString(dataPt[simData.nameIdx['c->node.loc.pos.eci.utc']]),
+              mjdToUTCString(dataPt[simData.nameIdx[pref.timeDataKey]]),
             );
             // Map YDataKeys to indices as defined in simData.nameIdx
             let yDataKeyIdxs;
