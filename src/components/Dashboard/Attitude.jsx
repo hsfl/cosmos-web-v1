@@ -51,7 +51,7 @@ function Attitude({
 
     // Initialize form values for each value
     attitudes.forEach(({
-      name: nameVal, nodeProcess, dataKey: dataKeyVal, live,
+      name: nameVal, nodeProcess, posDataKeys: dataKeyVal, live,
     }, i) => {
       accumulate = {
         ...accumulate,
@@ -68,21 +68,26 @@ function Attitude({
 
   /** Update the live attitude display */
   useEffect(() => {
-    attitudesState.forEach(({ nodeProcess, dataKey, live }, i) => {
+    attitudesState.forEach(({
+      nodeProcess,
+      posDataKeys,
+      quaternionDataKeys,
+      live,
+    }, i) => {
       const [nodeName, agentName] = nodeProcess.split(':');
       if (state && realm && state[realm]
         && (state[realm].node_name && nodeName === state[realm].node_name)
         && (state[realm].agent_name && agentName === state[realm].agent_name)
-        && state[realm][dataKey]
-        && (state[realm][dataKey].s || state[realm][dataKey].pos)
+        && state[realm][posDataKeys]
+        && (state[realm][posDataKeys].s || state[realm][posDataKeys].pos)
         && live
       ) {
         const tempAttitude = [...attitudesState];
 
         // Support both namespace 1.0 and 2.0 for now
-        tempAttitude[i].quaternions = state[realm][dataKey].s
-          ? state[realm][dataKey].s
-          : state[realm][dataKey].pos;
+        tempAttitude[i].quaternions = state[realm][posDataKeys].s
+          ? state[realm][posDataKeys].s
+          : state[realm][posDataKeys].pos;
 
         setAttitudesState(tempAttitude);
       }
@@ -92,29 +97,54 @@ function Attitude({
 
   // Use CSV Data
   useEffect(() => {
+    /** Convert a vector into a unit vector */
+    const toUnitVector = (vec, posDataKeys, dataRow) => {
+      const fromOrigin = vec.from === 'origin';
+      const toOrigin = vec.to === 'origin';
+      const x1 = fromOrigin ? 0 : dataRow[simData.nameIdx[posDataKeys[vec.from][0]]];
+      const y1 = fromOrigin ? 0 : dataRow[simData.nameIdx[posDataKeys[vec.from][1]]];
+      const z1 = fromOrigin ? 0 : dataRow[simData.nameIdx[posDataKeys[vec.from][2]]];
+      const x2 = toOrigin ? 0 : dataRow[simData.nameIdx[posDataKeys[vec.to][0]]];
+      const y2 = toOrigin ? 0 : dataRow[simData.nameIdx[posDataKeys[vec.to][1]]];
+      const z2 = toOrigin ? 0 : dataRow[simData.nameIdx[posDataKeys[vec.to][2]]];
+      const dx = x2 - x1;
+      const dy = y2 - y1;
+      const dz = z2 - z1;
+      const norm = Math.sqrt(dx ** 2 + dy ** 2 + dz ** 2);
+      return [dx / norm, dy / norm, dz / norm];
+    };
     if (simulationEnabled && simData !== null && simCurrentIdx !== null) {
-      attitudesState.forEach(({ nodeProcess, dataKey, vectorDataKeys }, i) => {
+      attitudesState.forEach(({
+        nodeProcess,
+        vectors,
+        posDataKeys,
+        quaternionDataKeys,
+      }, i) => {
         const tempAttitude = [...attitudesState];
         const idx = simCurrentIdx >= simData.data[simData.sats[nodeProcess]].length
           ? simData.data[simData.sats[nodeProcess]].length - 1
           : simCurrentIdx;
         // Support only separate keys for now. TODO: add generic support later
-        const q = { d: { x: 0, y: 0, z: 0 }, w: 0 };
+        // For every vector defined in vectors,
+        // create a unit vector and save the quaternion to rotate it with
         const dataRow = simData.data[simData.sats[nodeProcess]][idx];
-        q.d.x = dataRow[simData.nameIdx[dataKey[0]]];
-        q.d.y = dataRow[simData.nameIdx[dataKey[1]]];
-        q.d.z = dataRow[simData.nameIdx[dataKey[2]]];
-        q.w = dataRow[simData.nameIdx[dataKey[3]]];
-        tempAttitude[i].quaternions = q;
-        // Target attitudes, for now. Set up to iterate through the vectorDataKeys later
-        if (Array.isArray(vectorDataKeys)) {
-          const targetQ = { d: { x: 0, y: 0, z: 0 }, w: 0 };
-          targetQ.d.x = dataRow[simData.nameIdx[vectorDataKeys[0][0]]];
-          targetQ.d.y = dataRow[simData.nameIdx[vectorDataKeys[0][1]]];
-          targetQ.d.z = dataRow[simData.nameIdx[vectorDataKeys[0][2]]];
-          targetQ.w = dataRow[simData.nameIdx[vectorDataKeys[0][3]]];
-          tempAttitude[i].targetQuaternions = targetQ;
-        }
+        const unitVectors = [];
+        vectors.forEach((v) => {
+          const unitVector = toUnitVector(v, posDataKeys, dataRow);
+          const unitVectorEntry = { vector: unitVector, quaternion: v.quaternion };
+          unitVectors.push(unitVectorEntry);
+        });
+        tempAttitude[i].unitVectors = unitVectors;
+        // For every rotation quaternion defined in quaternionDataKeys, retrieve its values
+        const quaternions = {};
+        Object.entries(quaternionDataKeys).forEach(([key, v]) => {
+          const qx = dataRow[simData.nameIdx[v[0]]];
+          const qy = dataRow[simData.nameIdx[v[1]]];
+          const qz = dataRow[simData.nameIdx[v[2]]];
+          const qw = dataRow[simData.nameIdx[v[3]]];
+          quaternions[key] = { d: { x: qx, y: qy, z: qz }, w: qw };
+        });
+        tempAttitude[i].quaternions = quaternions;
         setAttitudesState(tempAttitude);
       });
     }
@@ -179,11 +209,11 @@ function Attitude({
                         </strong>
                       &nbsp;
                         <span>
-                          {attitude.dataKey}
+                          {attitude.posDataKeys}
                         </span>
                       </span>
                     )}
-                    key={`${attitude.name}${attitude.nodeProcess}${attitude.dataKey}`}
+                    key={`${attitude.name}${attitude.nodeProcess}${attitude.posDataKeys}`}
                   >
                     <Form.Item label="Name" name={`name_${i}`} hasFeedback>
                       <Input placeholder="Name" onBlur={({ target: { id } }) => processForm(id)} />
@@ -205,8 +235,8 @@ function Attitude({
       )}
     >
       <AttitudeThreeD
-        satAttitude={attitudesState[0].quaternions}
-        targetAttitude={attitudesState[0].targetQuaternions}
+        vectors={attitudesState[0].unitVectors}
+        quaternions={attitudesState[0].quaternions}
       />
       <div className="overflow-x-auto">
         <table className="mt-4 w-full">
@@ -246,10 +276,16 @@ Attitude.propTypes = {
       name: PropTypes.string,
       /** node name to look at for retrieving attitude data */
       nodeProcess: PropTypes.string,
-      /** Data key to retrieve data from */
-      dataKey: PropTypes.any,
-      /** Data keys for any additional vectors to display */
-      vectorDataKeys: PropTypes.arrayOf(PropTypes.any),
+      /** Array of dicts defining vector from to, and using which quaternion to rotate */
+	  vectors: PropTypes.arrayOf(PropTypes.shape({
+		  from: PropTypes.string,
+		  to: PropTypes.string,
+		  sat: PropTypes.string,
+	  })),
+      /** Data key for position elements (eg: sat xyz) */
+      posDataKeys: PropTypes.any,
+      /** Data keys for rotation quaternions (eg: sat eci<->body frame rotation quaternion) */
+      quaternionDataKeys: PropTypes.any,
     }),
   ),
   /** Whether to show a circular indicator of the status of the component */

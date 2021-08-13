@@ -1,56 +1,94 @@
 import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { Quaternion } from '@babylonjs/core';
+import { Mesh, Quaternion, Vector3 } from '@babylonjs/core';
 import '@babylonjs/loaders';
 
 import BabylonScene from './BabylonScene';
 import AttitudeSceneInitializer from './AttitudeSceneInitializer';
 
 const AttitudeThreeD = ({
-  satAttitude,
-  targetAttitude,
+  vectors,
+  quaternions,
 }) => {
   const cubesatMesh = useRef(null);
-  const attitudeVector = useRef(null);
+  const nadirVector = useRef(null);
   const targetVector = useRef(null);
+  const targetVectorDesired = useRef(null);
 
   useEffect(() => {
-    if (cubesatMesh.current !== null) {
+    if (vectors === undefined || quaternions === undefined) {
+      return;
+    }
+    // Sat does not rotate in body frame
+    /* if (cubesatMesh.current !== null) {
       cubesatMesh.current.rotationQuaternion = new Quaternion(
         satAttitude.d.x,
         satAttitude.d.y,
         satAttitude.d.z,
         satAttitude.w,
       );
-    }
-    if (attitudeVector.current !== null) {
-      attitudeVector.current.rotationQuaternion = new Quaternion(
-        satAttitude.d.x,
-        satAttitude.d.y,
-        satAttitude.d.z,
-        satAttitude.w,
+    } */
+    // Nadir vector
+    if (nadirVector.current !== null) {
+      const points = [
+        Vector3.Zero(),
+        new Vector3(...vectors[0].vector),
+      ];
+      nadirVector.current = Mesh.CreateLines(
+        null, points, null, null, nadirVector.current,
       );
-    }
-  }, [satAttitude]);
-
-  useEffect(() => {
-    if (targetVector.current !== null && targetAttitude != null) {
-      targetVector.current.rotationQuaternion = new Quaternion(
-        targetAttitude.d.x,
-        targetAttitude.d.y,
-        targetAttitude.d.z,
-        targetAttitude.w,
+      const quaternion = new Quaternion(
+        quaternions[vectors[0].quaternion].d.x,
+        quaternions[vectors[0].quaternion].d.y,
+        quaternions[vectors[0].quaternion].d.z,
+        quaternions[vectors[0].quaternion].w,
       );
+      nadirVector.current.rotationQuaternion = Quaternion.Inverse(quaternion);
     }
-  }, [targetAttitude]);
+    // Target vector
+    if (targetVector.current !== null) {
+      const points = [
+        Vector3.Zero(),
+        new Vector3(...vectors[1].vector),
+      ];
+      targetVector.current = Mesh.CreateLines(
+        null, points, null, null, targetVector.current,
+      );
+      const quaternion = new Quaternion(
+        quaternions[vectors[1].quaternion].d.x,
+        quaternions[vectors[1].quaternion].d.y,
+        quaternions[vectors[1].quaternion].d.z,
+        quaternions[vectors[1].quaternion].w,
+      );
+      targetVector.current.rotationQuaternion = Quaternion.Inverse(quaternion);
+    }
+    // Target vector desired
+    if (targetVectorDesired.current !== null) {
+      const points = [
+        Vector3.Zero(),
+        new Vector3(...vectors[2].vector),
+      ];
+      targetVectorDesired.current = Mesh.CreateLines(
+        null, points, null, null, targetVectorDesired.current,
+      );
+      const quaternion = new Quaternion(
+        quaternions[vectors[2].quaternion].d.x,
+        quaternions[vectors[2].quaternion].d.y,
+        quaternions[vectors[2].quaternion].d.z,
+        quaternions[vectors[2].quaternion].w,
+      );
+      targetVectorDesired.current.rotationQuaternion = Quaternion.Inverse(quaternion);
+    }
+  }, [vectors, quaternions]);
 
   return (
     <BabylonScene
       onSceneReady={
         AttitudeSceneInitializer(
           cubesatMesh,
-          attitudeVector,
+          nadirVector,
           targetVector,
+          targetVectorDesired,
         )
       }
     />
@@ -58,22 +96,25 @@ const AttitudeThreeD = ({
 };
 
 AttitudeThreeD.propTypes = {
-  satAttitude: PropTypes.shape({
-    d: PropTypes.shape({
-      x: PropTypes.number,
-      y: PropTypes.number,
-      z: PropTypes.number,
+  /** Vectors to display */
+  vectors: PropTypes.arrayOf(
+    PropTypes.shape({
+      vector: PropTypes.shape({
+        d: PropTypes.shape({
+          x: PropTypes.number,
+          y: PropTypes.number,
+          z: PropTypes.number,
+        }),
+        w: PropTypes.number,
+      }),
+      quaternion: PropTypes.string,
     }),
-    w: PropTypes.number,
-  }).isRequired,
-  targetAttitude: PropTypes.shape({
-    d: PropTypes.shape({
-      x: PropTypes.number,
-      y: PropTypes.number,
-      z: PropTypes.number,
-    }),
-    w: PropTypes.number,
-  }),
+  ),
+  /** Quaternion to irotate from eci to body frame */
+  quaternions: PropTypes.shape({
+    sat: PropTypes.arrayOf(PropTypes.string),
+    // ... more quaternions to be added as specified
+  })
 };
 
 AttitudeThreeD.defaultProps = {

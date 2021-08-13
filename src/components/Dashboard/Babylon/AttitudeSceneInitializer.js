@@ -3,7 +3,7 @@ import {
   ArcRotateCamera, AssetsManager,
   Color3, Color4, DynamicTexture,
   HemisphericLight, Mesh, MeshBuilder,
-  StandardMaterial, Vector3,
+  Quaternion, StandardMaterial, Vector3,
 } from '@babylonjs/core';
 import '@babylonjs/loaders';
 
@@ -59,22 +59,6 @@ const AttitudeSceneInitializer = (cubesatMesh, ...vectors) => {
     /**
      * AXES
      */
-
-    // Reusable satellite axis settings
-    const satAxisSettings = {
-      height: 50,
-      diameterTop: 0.006,
-      diameterBottom: 0.006,
-      tessellation: 10,
-    };
-
-    const satArrowSettings = {
-      height: 0.1,
-      diameterTop: 0,
-      diameterBottom: 0.1,
-      tessellation: 10,
-    };
-
     const vectorSettings = {
       height: 0.3,
       diameterTop: 0.006,
@@ -94,85 +78,42 @@ const AttitudeSceneInitializer = (cubesatMesh, ...vectors) => {
     // the coordinate system itself (in reference to something provided)
     // then change according to whatever the reference system is using.
 
-    // cylindrical x axis
-    const satAxisX = MeshBuilder.CreateCylinder('satAxisX', {
-      ...satAxisSettings,
-      faceColors: [
-        new Color4(1, 0, 0, 1),
-        new Color4(1, 0, 0, 1),
-        new Color4(1, 0, 0, 1),
-      ],
-    }, sceneRef);
-    // create x axis arrow head
-    const satArrowX = MeshBuilder.CreateCylinder('satArrowX', {
-      ...satArrowSettings,
-      faceColors: [
-        new Color4(1, 0, 0, 1),
-        new Color4(1, 0, 0, 1),
-        new Color4(1, 0, 0, 1),
-      ],
-    }, sceneRef);
-    satAxisX.position = new Vector3(0, satAxisSettings.height / 2, 0);
-    satArrowX.position = new Vector3(0, 1, 0);
-    satArrowX.setParent(satAxisX);
-    satAxisX.setPivotPoint(new Vector3(0, -satAxisSettings.height / 2, 0));
-    satAxisX.rotation = new Vector3(0, 0, 3 * Math.PI / 2);
+    function showWorldAxis(size) {
+      var makeTextPlane = function(text, color, size) {
+        var dynamicTexture = new DynamicTexture("DynamicTexture", 50, sceneRef, true);
+        dynamicTexture.hasAlpha = true;
+        dynamicTexture.drawText(text, 5, 40, "bold 36px Arial", color , "transparent", true);
+        var plane = Mesh.CreatePlane("TextPlane", size, sceneRef, true);
+        plane.material = new StandardMaterial("TextPlaneMaterial", sceneRef);
+        plane.material.backFaceCulling = false;
+        plane.material.specularColor = new Color3(0, 0, 0);
+        plane.material.diffuseTexture = dynamicTexture;
+        return plane;
+      };
+      const axisX = Mesh.CreateLines("axisX", [ 
+        Vector3.Zero(), new Vector3(size, 0, 0), new Vector3(size * 0.95, 0.05 * size, 0), 
+        new Vector3(size, 0, 0), new Vector3(size * 0.95, -0.05 * size, 0)
+      ], sceneRef);
+      axisX.color = new Color3(1, 0, 0);
+      const xChar = makeTextPlane("X", "red", size / 10);
+      xChar.position = new Vector3(0.9 * size, -0.05 * size, 0);
+      const axisY = Mesh.CreateLines("axisY", [
+        Vector3.Zero(), new Vector3(0, size, 0), new Vector3( -0.05 * size, size * 0.95, 0), 
+        new Vector3(0, size, 0), new Vector3( 0.05 * size, size * 0.95, 0)
+      ], sceneRef);
+      axisY.color = new Color3(0, 1, 0);
+      const yChar = makeTextPlane("Y", "green", size / 10);
+      yChar.position = new Vector3(0, 0.9 * size, -0.05 * size);
+      const axisZ = Mesh.CreateLines("axisZ", [
+        Vector3.Zero(), new Vector3(0, 0, size), new Vector3( 0 , -0.05 * size, size * 0.95),
+        new Vector3(0, 0, size), new Vector3( 0, 0.05 * size, size * 0.95)
+      ], sceneRef);
+      axisZ.color = new Color3(0, 0, 1);
+      const zChar = makeTextPlane("Z", "blue", size / 10);
+      zChar.position = new Vector3(0, 0.05 * size, 0.9 * size);
+    };
 
-    // cylindrical y axis
-    const satAxisY = MeshBuilder.CreateCylinder('satAxisY', {
-      ...satAxisSettings,
-      faceColors: [
-        new Color4(0, 1, 0, 1),
-        new Color4(0, 1, 0, 1),
-        new Color4(0, 1, 0, 1),
-      ],
-    }, sceneRef);
-    // create y axis arrow head
-    const satArrowY = MeshBuilder.CreateCylinder('satArrowY', {
-      ...satArrowSettings,
-      faceColors: [
-        new Color4(0, 1, 0, 1),
-        new Color4(0, 1, 0, 1),
-        new Color4(0, 1, 0, 1),
-      ],
-    }, sceneRef);
-    satAxisY.position = new Vector3(0, satAxisSettings.height / 2, 0);
-    satArrowY.position = new Vector3(0, 1, 0);
-    satArrowY.setParent(satAxisY);
-    satAxisY.setPivotPoint(new Vector3(0, -satAxisSettings.height / 2, 0));
-
-    // cylindrical z axis
-    const satAxisZ = MeshBuilder.CreateCylinder('satAxisZ', {
-      ...satAxisSettings,
-      faceColors: [
-        new Color4(0, 0, 1, 1),
-        new Color4(0, 0, 1, 1),
-        new Color4(0, 0, 1, 1),
-      ],
-    }, sceneRef);
-    // create arrow for x axis at (0,0,1)
-    const satArrowZ = MeshBuilder.CreateCylinder('satArrowZ', {
-      ...satArrowSettings,
-      faceColors: [
-        new Color4(0, 0, 1, 1),
-        new Color4(0, 0, 1, 1),
-        new Color4(0, 0, 1, 1),
-      ],
-    }, sceneRef);
-    satAxisZ.position = new Vector3(0, satAxisSettings.height / 2, 0);
-    satArrowZ.position = new Vector3(0, 1, 0);
-    satArrowZ.setParent(satAxisZ);
-    satAxisZ.setPivotPoint(new Vector3(0, -satAxisSettings.height / 2, 0));
-    satAxisZ.rotation = new Vector3(-3 * Math.PI / 2, 0, 0);
-
-    const XCoordText = makeTextPlane('X', 'red', 1);
-    XCoordText.position = new Vector3(1.1, 0, -0.1);
-
-    const YCoordText = makeTextPlane('Y', 'green', 1);
-    YCoordText.position = new Vector3(0.05, 0.9, 0);
-
-    const ZCoordText = makeTextPlane('Z', 'blue', 1);
-    ZCoordText.position = new Vector3(0, 0.05, 0.9);
+    showWorldAxis(0.5);
 
     // Wireframe Attitude sphere
     /* const wireframe = new StandardMaterial('wireframe', sceneRef);
@@ -184,7 +125,7 @@ const AttitudeSceneInitializer = (cubesatMesh, ...vectors) => {
     // Optional Vectors such as vector to target
     vectors.forEach((v, i) => {
       // thin cylinder for vector
-      const vec = MeshBuilder.CreateCylinder(`vector_${i}`, {
+      /* const vec = MeshBuilder.CreateCylinder(`vector_${i}`, {
         ...vectorSettings,
         faceColors: [
           new Color4(...presetColors[i]),
@@ -204,7 +145,11 @@ const AttitudeSceneInitializer = (cubesatMesh, ...vectors) => {
       vec.position = new Vector3(0, vectorSettings.height / 2, 0);
       arrow.position = new Vector3(0, vectorSettings.height, 0);
       arrow.setParent(vec);
-      vec.setPivotPoint(new Vector3(0, -vectorSettings.height / 2, 0));
+      vec.setPivotPoint(new Vector3(0, -vectorSettings.height / 2, 0)); */
+      const points = [Vector3.Zero(), new Vector3(0, 0, 5)];
+      const vec = Mesh.CreateLines(`vector_${i}`, points, sceneRef, true);
+      vec.color = new Color4(...presetColors[i]);
+      vec.rotationQuaternion = Quaternion.Zero();
 
       const vref = v;
       vref.current = vec;
