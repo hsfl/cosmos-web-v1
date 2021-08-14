@@ -11,11 +11,11 @@ const createPaths = (data) => {
     // Iterate over the array of values
     satDataEntries.forEach((entry) => {
       // Add time/position point to path
-      const x = entry[data.nameIdx['x_pos']];
-      const y = entry[data.nameIdx['y_pos']];
-      const z = entry[data.nameIdx['z_pos']];
+      const x = entry[data.nameIdx.x_pos];
+      const y = entry[data.nameIdx.y_pos];
+      const z = entry[data.nameIdx.z_pos];
       const pos = Cartesian3.fromArray([x, y, z]);
-      const time = entry[data.nameIdx['t_pos']];
+      const time = entry[data.nameIdx.t_pos];
       const date = JulianDate.fromDate(
         MJDtoJavaScriptDate(time),
       );
