@@ -9,18 +9,19 @@ import '@babylonjs/loaders';
 
 // Predefine some colors for extra vectors
 const presetColors = [
-  [1, 0, 0, 1], // Red
-  [0.039, 0.729, 1, 1], // Light blue
-  [1, 0.686, 0.039, 1], // Orange
+  [0.039, 0.729, 1, 1], // Light blue, for Nadir
+  [1, 0.686, 0.039, 1], // Orange, for Target
+  [1, 1, 0.121, 1],     // Yellow, for Desired target
+  [0, 0.521, 0.043, 1], // Dark green, for velocity
   // ... make more as needed
 ];
 
-const AttitudeSceneInitializer = (cubesatMesh, satVectors, numVectors) => {
+const AttitudeSceneInitializer = (cubesatMesh, satVectors) => {
   const onSceneReady = useCallback((scene) => {
     const sceneRef = scene;
     const assetsManager = new AssetsManager(sceneRef);
 
-    const makeTextPlane = (text, color, size) => {
+    /* const makeTextPlane = (text, color, size) => {
       const dynamicTexture = new DynamicTexture('DynamicTexture', 50, sceneRef, true);
       dynamicTexture.hasAlpha = true;
       dynamicTexture.drawText(text, 5, 40, 'bold 10px Arial', color, 'transparent', true);
@@ -29,7 +30,7 @@ const AttitudeSceneInitializer = (cubesatMesh, satVectors, numVectors) => {
       plane.material.backFaceCulling = false;
       plane.material.diffuseTexture = dynamicTexture;
       return plane;
-    };
+    }; */
 
     sceneRef.clearColor = new Color3(0.15, 0.15, 0.15);
 
@@ -59,7 +60,7 @@ const AttitudeSceneInitializer = (cubesatMesh, satVectors, numVectors) => {
     /**
      * AXES
      */
-    const vectorSettings = {
+    /* const vectorSettings = {
       height: 0.3,
       diameterTop: 0.006,
       diameterBottom: 0.006,
@@ -70,7 +71,7 @@ const AttitudeSceneInitializer = (cubesatMesh, satVectors, numVectors) => {
       height: 0.05,
       diameterTop: 0,
       diameterBottom: 0.03,
-    };
+    }; */
 
     // note: babylonjs uses a left-handed coordinate system
     // babylonjs ignores rotation in favor of rotationQuaternion if the latter
@@ -124,7 +125,7 @@ const AttitudeSceneInitializer = (cubesatMesh, satVectors, numVectors) => {
 
     // Vectors such as vector to target
     const svRef = satVectors;
-    for (let i = 0; i < numVectors; i++) {
+    for (let i = 0; i < svRef.length; i++) {
       // thin cylinder for vector
       /* const vec = MeshBuilder.CreateCylinder(`vector_${i}`, {
         ...vectorSettings,
@@ -161,7 +162,7 @@ const AttitudeSceneInitializer = (cubesatMesh, satVectors, numVectors) => {
       [cref.current] = task.loadedMeshes;
     };
     assetsManager.load();
-  }, [cubesatMesh]);
+  }, [cubesatMesh, satVectors]);
 
   return onSceneReady;
 };

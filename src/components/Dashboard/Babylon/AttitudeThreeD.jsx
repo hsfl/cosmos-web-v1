@@ -57,7 +57,6 @@ const AttitudeThreeD = ({
         AttitudeSceneInitializer(
           cubesatMesh,
           satVectors,
-          vectors?.length,
         )
       }
     />
