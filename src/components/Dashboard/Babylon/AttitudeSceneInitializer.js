@@ -15,7 +15,7 @@ const presetColors = [
   // ... make more as needed
 ];
 
-const AttitudeSceneInitializer = (cubesatMesh, ...vectors) => {
+const AttitudeSceneInitializer = (cubesatMesh, satVectors, numVectors) => {
   const onSceneReady = useCallback((scene) => {
     const sceneRef = scene;
     const assetsManager = new AssetsManager(sceneRef);
@@ -122,8 +122,9 @@ const AttitudeSceneInitializer = (cubesatMesh, ...vectors) => {
     const attitudeSphere = Mesh.CreateSphere('attitudeSphere', 10, 1, sceneRef);
     attitudeSphere.material = wireframe; */
 
-    // Optional Vectors such as vector to target
-    vectors.forEach((v, i) => {
+    // Vectors such as vector to target
+    const svRef = satVectors;
+    for (let i = 0; i < numVectors; i++) {
       // thin cylinder for vector
       /* const vec = MeshBuilder.CreateCylinder(`vector_${i}`, {
         ...vectorSettings,
@@ -150,10 +151,8 @@ const AttitudeSceneInitializer = (cubesatMesh, ...vectors) => {
       const vec = Mesh.CreateLines(`vector_${i}`, points, sceneRef, true);
       vec.color = new Color4(...presetColors[i]);
       vec.rotationQuaternion = Quaternion.Zero();
-
-      const vref = v;
-      vref.current = vec;
-    });
+      svRef[i].current = vec;
+    };
 
     // load in satellite obj file
     const addCubeSatTask = assetsManager.addMeshTask('CUBESAT', '', '/', 'cubesat.obj');
