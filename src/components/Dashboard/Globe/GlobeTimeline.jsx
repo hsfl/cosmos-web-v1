@@ -34,7 +34,12 @@ const GlobeTimeline = ({
   useEffect(() => {
     if (simData !== null) {
       // search through simData for closest timestamp
-      const dataIdx = modifiedBinarySearch(simData.data[0], simClock, simData.nameIdx['t_pos'], simCurrentIdx);
+      const dataIdx = modifiedBinarySearch(
+        simData.data[0],
+        simClock,
+        simData.nameIdx.t_pos,
+        simCurrentIdx,
+      );
       dispatch(set('simCurrentIdx', dataIdx));
     }
   }, [simClock, simCurrentIdx, simData, dispatch]);
@@ -46,8 +51,12 @@ const GlobeTimeline = ({
 };
 
 GlobeTimeline.propTypes = {
-  start: PropTypes.any.isRequired,
-  stop: PropTypes.any.isRequired,
+  start: PropTypes.shape({}).isRequired,
+  stop: PropTypes.shape({}),
+};
+
+GlobeTimeline.defaultProps = {
+  stop: null,
 };
 
 export default GlobeTimeline;

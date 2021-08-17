@@ -39,8 +39,8 @@ const ImportFile = () => {
     const success = allLines.every((line, i) => {
       // Split on tabs, remove trailing tab
       const entry = line.replace(/\t$/, '').split('\t');
-	  // If splitting on commas
-      //const entry = line.replace(/,$/, '').split(',');
+      // If splitting on commas
+      // const entry = line.replace(/,$/, '').split(',');
       if (i === 0) {
         // Populate colNames with column names specified in header
         colNames.length = 0;
@@ -91,9 +91,7 @@ const ImportFile = () => {
     };
 
     // File read error
-    reader.onerror = () => {
-      reject;
-    };
+    reader.onerror = () => reject;
 
     reader.readAsText(file);
   });

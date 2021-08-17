@@ -1,4 +1,9 @@
-import React, { createRef, useEffect, useMemo, useRef } from 'react';
+import React, {
+  createRef,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react';
 import PropTypes from 'prop-types';
 import { Mesh, Quaternion, Vector3 } from '@babylonjs/core';
 import '@babylonjs/loaders';
@@ -13,10 +18,10 @@ const AttitudeThreeD = ({
   const cubesatMesh = useRef(null);
   // All vectors that are relative to the body frame
   const satVectors = useMemo(() => Array.from(
-      { length: vectors !== undefined ? vectors.length : 0 },
-    ).map(
-      () => createRef()
-    ), [vectors.length]);
+    { length: vectors !== undefined ? vectors.length : 0 },
+  ).map(
+    () => createRef(),
+  ), [vectors.length]);
 
   useEffect(() => {
     if (vectors.length === 0 || quaternions === undefined || satVectors.length === 0) {
@@ -67,22 +72,22 @@ AttitudeThreeD.propTypes = {
   /** Vectors to display */
   vectors: PropTypes.arrayOf(
     PropTypes.shape({
-      vector: PropTypes.shape({
-        d: PropTypes.shape({
-          x: PropTypes.number,
-          y: PropTypes.number,
-          z: PropTypes.number,
-        }),
-        w: PropTypes.number,
-      }),
+      vector: PropTypes.arrayOf(PropTypes.number),
       quaternion: PropTypes.string,
     }),
   ),
   /** Quaternion to irotate from eci to body frame */
   quaternions: PropTypes.shape({
-    sat: PropTypes.arrayOf(PropTypes.string),
+    sat: PropTypes.shape({
+      d: PropTypes.shape({
+        x: PropTypes.number,
+        y: PropTypes.number,
+        z: PropTypes.number,
+      }),
+      w: PropTypes.number,
+    }),
     // ... more quaternions to be added as specified
-  })
+  }),
 };
 
 AttitudeThreeD.defaultProps = {

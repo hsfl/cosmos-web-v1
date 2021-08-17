@@ -71,7 +71,6 @@ function Attitude({
     attitudesState.forEach(({
       nodeProcess,
       posDataKeys,
-      quaternionDataKeys,
       live,
     }, i) => {
       const [nodeName, agentName] = nodeProcess.split(':');
@@ -277,11 +276,11 @@ Attitude.propTypes = {
       /** node name to look at for retrieving attitude data */
       nodeProcess: PropTypes.string,
       /** Array of dicts defining vector from to, and using which quaternion to rotate */
-	  vectors: PropTypes.arrayOf(PropTypes.shape({
-		  from: PropTypes.string,
-		  to: PropTypes.string,
-		  sat: PropTypes.string,
-	  })),
+      vectors: PropTypes.arrayOf(PropTypes.shape({
+        from: PropTypes.string,
+        to: PropTypes.string,
+        sat: PropTypes.string,
+      })),
       /** Data key for position elements (eg: sat xyz) */
       posDataKeys: PropTypes.any,
       /** Data keys for rotation quaternions (eg: sat eci<->body frame rotation quaternion) */

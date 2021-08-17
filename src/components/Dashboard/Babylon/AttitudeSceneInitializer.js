@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import {
   ArcRotateCamera, AssetsManager,
   Color3, Color4, DynamicTexture,
-  HemisphericLight, Mesh, MeshBuilder,
+  HemisphericLight, Mesh,
   Quaternion, StandardMaterial, Vector3,
 } from '@babylonjs/core';
 import '@babylonjs/loaders';
@@ -11,7 +11,7 @@ import '@babylonjs/loaders';
 const presetColors = [
   [0.039, 0.729, 1, 1], // Light blue, for Nadir
   [1, 0.686, 0.039, 1], // Orange, for Target
-  [1, 1, 0.121, 1],     // Yellow, for Desired target
+  [1, 1, 0.121, 1], // Yellow, for Desired target
   [0, 0.521, 0.043, 1], // Dark green, for velocity
   // ... make more as needed
 ];
@@ -79,38 +79,38 @@ const AttitudeSceneInitializer = (cubesatMesh, satVectors) => {
     // the coordinate system itself (in reference to something provided)
     // then change according to whatever the reference system is using.
 
-    function showWorldAxis(size) {
-      var makeTextPlane = function(text, color, size) {
-        var dynamicTexture = new DynamicTexture("DynamicTexture", 50, sceneRef, true);
+    const showWorldAxis = (size) => {
+      const makeTextPlane = (text, color) => {
+        const dynamicTexture = new DynamicTexture('DynamicTexture', 50, sceneRef, true);
         dynamicTexture.hasAlpha = true;
-        dynamicTexture.drawText(text, 5, 40, "bold 36px Arial", color , "transparent", true);
-        var plane = Mesh.CreatePlane("TextPlane", size, sceneRef, true);
-        plane.material = new StandardMaterial("TextPlaneMaterial", sceneRef);
+        dynamicTexture.drawText(text, 5, 40, 'bold 36px Arial', color, 'transparent', true);
+        const plane = Mesh.CreatePlane('TextPlane', size, sceneRef, true);
+        plane.material = new StandardMaterial('TextPlaneMaterial', sceneRef);
         plane.material.backFaceCulling = false;
         plane.material.specularColor = new Color3(0, 0, 0);
         plane.material.diffuseTexture = dynamicTexture;
         return plane;
       };
-      const axisX = Mesh.CreateLines("axisX", [ 
-        Vector3.Zero(), new Vector3(size, 0, 0), new Vector3(size * 0.95, 0.05 * size, 0), 
-        new Vector3(size, 0, 0), new Vector3(size * 0.95, -0.05 * size, 0)
+      const axisX = Mesh.CreateLines('axisX', [
+        Vector3.Zero(), new Vector3(size, 0, 0), new Vector3(size * 0.95, 0.05 * size, 0),
+        new Vector3(size, 0, 0), new Vector3(size * 0.95, -0.05 * size, 0),
       ], sceneRef);
       axisX.color = new Color3(1, 0, 0);
-      const xChar = makeTextPlane("X", "red", size / 10);
+      const xChar = makeTextPlane('X', 'red', size / 10);
       xChar.position = new Vector3(0.9 * size, -0.05 * size, 0);
-      const axisY = Mesh.CreateLines("axisY", [
-        Vector3.Zero(), new Vector3(0, size, 0), new Vector3( -0.05 * size, size * 0.95, 0), 
-        new Vector3(0, size, 0), new Vector3( 0.05 * size, size * 0.95, 0)
+      const axisY = Mesh.CreateLines('axisY', [
+        Vector3.Zero(), new Vector3(0, size, 0), new Vector3(-0.05 * size, size * 0.95, 0),
+        new Vector3(0, size, 0), new Vector3(0.05 * size, size * 0.95, 0),
       ], sceneRef);
       axisY.color = new Color3(0, 1, 0);
-      const yChar = makeTextPlane("Y", "green", size / 10);
+      const yChar = makeTextPlane('Y', 'green', size / 10);
       yChar.position = new Vector3(0, 0.9 * size, -0.05 * size);
-      const axisZ = Mesh.CreateLines("axisZ", [
-        Vector3.Zero(), new Vector3(0, 0, size), new Vector3( 0 , -0.05 * size, size * 0.95),
-        new Vector3(0, 0, size), new Vector3( 0, 0.05 * size, size * 0.95)
+      const axisZ = Mesh.CreateLines('axisZ', [
+        Vector3.Zero(), new Vector3(0, 0, size), new Vector3(0, -0.05 * size, size * 0.95),
+        new Vector3(0, 0, size), new Vector3(0, 0.05 * size, size * 0.95),
       ], sceneRef);
       axisZ.color = new Color3(0, 0, 1);
-      const zChar = makeTextPlane("Z", "blue", size / 10);
+      const zChar = makeTextPlane('Z', 'blue', size / 10);
       zChar.position = new Vector3(0, 0.05 * size, 0.9 * size);
     };
 
@@ -125,7 +125,7 @@ const AttitudeSceneInitializer = (cubesatMesh, satVectors) => {
 
     // Vectors such as vector to target
     const svRef = satVectors;
-    for (let i = 0; i < svRef.length; i++) {
+    for (let i = 0; i < svRef.length; i += 1) {
       // thin cylinder for vector
       /* const vec = MeshBuilder.CreateCylinder(`vector_${i}`, {
         ...vectorSettings,
@@ -153,7 +153,7 @@ const AttitudeSceneInitializer = (cubesatMesh, satVectors) => {
       vec.color = new Color4(...presetColors[i]);
       vec.rotationQuaternion = Quaternion.Zero();
       svRef[i].current = vec;
-    };
+    }
 
     // load in satellite obj file
     const addCubeSatTask = assetsManager.addMeshTask('CUBESAT', '', '/', 'cubesat.obj');
