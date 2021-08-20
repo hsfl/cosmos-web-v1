@@ -45,6 +45,8 @@ function Chart({
   showZero,
   polar,
   children,
+  simulationEnabled,
+  showSubheader,
 }) {
   const dispatch = useDispatch();
 
@@ -313,7 +315,7 @@ function Chart({
   return (
     <BaseComponent
       name={nameState}
-      subheader={<ChartValues plots={plotsState} />}
+      subheader={showSubheader ? <ChartValues plots={plotsState} /> : null}
       liveOnly
       toolsSlot={(
         <>
@@ -520,6 +522,10 @@ Chart.propTypes = {
   polar: PropTypes.bool,
   /** Children node */
   children: PropTypes.node,
+  /** Whether to enable csv data loading for this instance */
+  simulationEnabled: PropTypes.bool,
+  /** Show subheader? */
+  showSubheader: PropTypes.bool,
 };
 
 Chart.defaultProps = {
@@ -530,6 +536,8 @@ Chart.defaultProps = {
   polar: false,
   plots: [],
   children: null,
+  simulationEnabled: false,
+  showSubheader: true,
 };
 
 export default Chart;
