@@ -6,6 +6,7 @@ import PercentDifference from './PercentDifference';
 
 function DisplayValuesTable({
   displayValues,
+  showPercentDifference,
 }) {
   return (
     <>
@@ -82,9 +83,15 @@ function DisplayValuesTable({
                     { name }
                   </td>
                 </Popover>
-                <td className="pr-2">
-                  <PercentDifference percentDifference={percentDifference} />
-                </td>
+                {
+                  showPercentDifference
+                  ? (
+                    <td className="pr-2">
+                      <PercentDifference percentDifference={percentDifference} />
+                    </td>
+                  )
+                  : (null)
+                }
                 <td className={`pr-2 ${(dataKeyLowerThreshold || dataKeyUpperThreshold) && ((value <= dataKeyLowerThreshold) || (value >= dataKeyUpperThreshold)) ? 'text-red-700' : ''}`}>
                   {
                     value !== undefined
@@ -115,10 +122,12 @@ function DisplayValuesTable({
 
 DisplayValuesTable.propTypes = {
   displayValues: PropTypes.arrayOf(PropTypes.shape),
+  showPercentDifference: PropTypes.bool,
 };
 
 DisplayValuesTable.defaultProps = {
   displayValues: [],
+  showPercentDifference: true,
 };
 
 export default DisplayValuesTable;

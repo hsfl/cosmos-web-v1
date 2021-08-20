@@ -18,6 +18,7 @@ import { mjdToUTCString } from '../../utility/time';
 function DisplayValue({
   name,
   displayValues,
+  showPercentDifference,
 }) {
   const dispatch = useDispatch();
   const queriedData = useSelector((s) => s.queriedData);
@@ -191,6 +192,7 @@ function DisplayValue({
     >
       <DisplayValuesTable
         displayValues={displayValuesState}
+        showPercentDifference={showPercentDifference}
       />
     </BaseComponent>
   );
@@ -222,6 +224,8 @@ DisplayValue.propTypes = {
       processSecondaryDataKey: PropTypes.func,
       /** The unit of the  */
       unit: PropTypes.string,
+      /** Whether to show percent differences or not */
+      showPercentDifference: PropTypes.bool,
     }),
   ),
 };
@@ -229,6 +233,7 @@ DisplayValue.propTypes = {
 DisplayValue.defaultProps = {
   name: '',
   displayValues: [],
+  showPercentDifference: true,
 };
 
 export default React.memo(DisplayValue);
