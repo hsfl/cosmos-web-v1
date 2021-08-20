@@ -45,7 +45,7 @@ function Chart({
   showZero,
   polar,
   children,
-  simulationEnabled,
+  // simulationEnabled,
   showSubheader,
 }) {
   const dispatch = useDispatch();
@@ -523,7 +523,7 @@ Chart.propTypes = {
   /** Children node */
   children: PropTypes.node,
   /** Whether to enable csv data loading for this instance */
-  simulationEnabled: PropTypes.bool,
+  // simulationEnabled: PropTypes.bool,
   /** Show subheader? */
   showSubheader: PropTypes.bool,
 };
@@ -536,7 +536,7 @@ Chart.defaultProps = {
   polar: false,
   plots: [],
   children: null,
-  simulationEnabled: false,
+  // simulationEnabled: false,
   showSubheader: true,
 };
 

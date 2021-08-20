@@ -524,10 +524,11 @@ function CesiumGlobe({
     csv.then((paths) => {
       const tempOrbit = [...orbitsState];
       tempOrbit.forEach((o, i) => {
+        const oref = o;
         // TODO: check index of node
-        o.live = false;
+        oref.live = false;
         // to.position = ...;
-        o.position = paths[i];
+        oref.position = paths[i];
       });
       const startOrbit = JulianDate
         .fromDate(MJDtoJavaScriptDate(59270.9494675926));

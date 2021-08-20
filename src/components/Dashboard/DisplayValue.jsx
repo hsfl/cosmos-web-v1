@@ -230,12 +230,16 @@ DisplayValue.propTypes = {
       showPercentDifference: PropTypes.bool,
     }),
   ),
+  /** Show percentage difference in values */
+  showPercentDifference: PropTypes.bool,
+  /** Show value update timestamp */
+  showTime: PropTypes.bool,
 };
 
 DisplayValue.defaultProps = {
   name: '',
   displayValues: [],
-  showPercentDifference: true,
+  showPercentDifference: false,
   showTime: false,
 };
 

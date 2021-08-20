@@ -86,12 +86,12 @@ function DisplayValuesTable({
                 </Popover>
                 {
                   showPercentDifference
-                  ? (
-                    <td className="pr-2">
-                      <PercentDifference percentDifference={percentDifference} />
-                    </td>
-                  )
-                  : (null)
+                    ? (
+                      <td className="pr-2">
+                        <PercentDifference percentDifference={percentDifference} />
+                      </td>
+                    )
+                    : (null)
                 }
                 <td className={`pr-2 ${(dataKeyLowerThreshold || dataKeyUpperThreshold) && ((value <= dataKeyLowerThreshold) || (value >= dataKeyUpperThreshold)) ? 'text-red-700' : ''}`}>
                   {
@@ -123,13 +123,12 @@ function DisplayValuesTable({
 
 DisplayValuesTable.propTypes = {
   displayValues: PropTypes.arrayOf(PropTypes.shape),
-  showPercentDifference: PropTypes.bool,
+  showPercentDifference: PropTypes.bool.isRequired,
   showTime: PropTypes.bool.isRequired,
 };
 
 DisplayValuesTable.defaultProps = {
   displayValues: [],
-  showPercentDifference: false,
 };
 
 export default DisplayValuesTable;

@@ -31,7 +31,7 @@ const dataFormat = [
 
 const dataFormatDict = {};
 dataFormat.forEach((value, i) => {
-  dataFormatDict[value] = i-2;
+  dataFormatDict[value] = i - 2;
 });
 
 // Return a new SampledPositionProperty to display
@@ -97,8 +97,8 @@ const importFile = (text) => {
   return data;
 };
 
-export const importCSV = (file) => {
-  return new Promise((resolve, reject) => {
+export const importCSV = (file) => (
+  new Promise((resolve, reject) => {
     const reader = new FileReader();
 
     // File load success
@@ -111,12 +111,10 @@ export const importCSV = (file) => {
     };
 
     // File read error
-    reader.onerror = () => {
-      reject;
-    };
+    reader.onerror = () => reject;
 
     reader.readAsText(file);
-  });
-};
+  })
+);
 
 export default importCSV;
