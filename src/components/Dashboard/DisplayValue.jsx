@@ -19,6 +19,7 @@ function DisplayValue({
   name,
   displayValues,
   showPercentDifference,
+  showTime,
 }) {
   const dispatch = useDispatch();
   const queriedData = useSelector((s) => s.queriedData);
@@ -193,6 +194,7 @@ function DisplayValue({
       <DisplayValuesTable
         displayValues={displayValuesState}
         showPercentDifference={showPercentDifference}
+        showTime={showTime}
       />
     </BaseComponent>
   );
@@ -234,6 +236,7 @@ DisplayValue.defaultProps = {
   name: '',
   displayValues: [],
   showPercentDifference: true,
+  showTime: false,
 };
 
 export default React.memo(DisplayValue);

@@ -7,6 +7,7 @@ import PercentDifference from './PercentDifference';
 function DisplayValuesTable({
   displayValues,
   showPercentDifference,
+  showTime,
 }) {
   return (
     <>
@@ -109,7 +110,7 @@ function DisplayValuesTable({
                   }
                 </td>
                 <td className="text-gray-500">
-                  { time || '-' }
+                  { (showTime && time) ? time : null }
                 </td>
               </tr>
             ))
@@ -123,11 +124,12 @@ function DisplayValuesTable({
 DisplayValuesTable.propTypes = {
   displayValues: PropTypes.arrayOf(PropTypes.shape),
   showPercentDifference: PropTypes.bool,
+  showTime: PropTypes.bool.isRequired,
 };
 
 DisplayValuesTable.defaultProps = {
   displayValues: [],
-  showPercentDifference: true,
+  showPercentDifference: false,
 };
 
 export default DisplayValuesTable;
