@@ -33,8 +33,15 @@ const DropdownMenu = ({
 
   const mapListToListItems = () => {
     if (list !== undefined && dataKey !== undefined) {
+      const createKey = (li) => {
+        let uniqueIdentifier = `${li[dataKey]}`;
+        if (dataKey === 'node') {
+          uniqueIdentifier = `${li.node}:${li.agent}`;
+        }
+        return uniqueIdentifier;
+      };
       return list.map((li) => (
-        <li key={`li_${li[dataKey]}_${dataKey}`}>
+        <li key={`li_${createKey(li)}`}>
           <button name={li[dataKey]} type="button" onClick={handleClick}>{li[dataKey]}</button>
         </li>
       ));
