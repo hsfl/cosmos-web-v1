@@ -537,7 +537,7 @@ Chart.defaultProps = {
   plots: [],
   children: null,
   // simulationEnabled: false,
-  showSubheader: true,
+  showSubheader: false,
 };
 
 export default Chart;
