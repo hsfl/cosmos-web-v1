@@ -10,6 +10,7 @@ import DisplayValuesTable from './DisplayValues/DisplayValuesTable';
 
 import { setActivity, incrementQueue } from '../../store/actions';
 import { mjdToUTCString } from '../../utility/time';
+import { MultiVarFx } from '../../utility/data';
 
 /**
  * Displays a specified live value from an agent.
@@ -46,14 +47,15 @@ function DisplayValue({
       // Check if the state change involves any of the displayed values
       // by checking the node process and the key it is watching
       if (state && realm && state[realm]
-        && state[realm][v.dataKey] !== undefined
+        && (state[realm][v.dataKey] !== undefined || Array.isArray(v.dataKey))
         && (v.nodeProcess === 'any' || v.nodeProcess === [state[realm].node_name, state[realm].agent_name].join(':')
         || v.node === state[realm].node_name)
         && ((!(process.env.FLIGHT_MODE === 'true') && state[realm].recorded_time)
         || (process.env.FLIGHT_MODE === 'true' && state[realm][v.timeDataKey]))
       ) {
         const data = state[realm][v.dataKey];
-        const value = v.processDataKey(data);
+        // const value = v.processDataKey(data);
+        const value = MultiVarFx(v.dataKey, v.processDataKey, state[realm]);
 
         // If it does, change the value
         displayValuesState[i].value = value;
@@ -213,7 +215,10 @@ DisplayValue.propTypes = {
       /** the node:process to pull the value from */
       node: PropTypes.string,
       /** The data key to pull the value from */
-      dataKey: PropTypes.string,
+      dataKey: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.arrayOf(PropTypes.string),
+      ]),
       /** Emit warning if data key exceeds threshold */
       dataKeyUpperThreshold: PropTypes.number,
       /** Emit warning if data key is below threshold */
