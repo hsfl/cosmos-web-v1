@@ -279,13 +279,14 @@ function CesiumGlobe({
   /** Load in simulation data from CSVs */
   useEffect(() => {
     if (simData !== null && simulationEnabled) {
-      const paths = createPaths(simData);
+      const [paths, attrPaths] = createPaths(simData);
       const tempOrbit = [...orbitsState];
       tempOrbit.forEach((o) => {
         const nodeIdx = simData.sats[o.nodeProcess];
         const oref = o;
         oref.live = false;
         oref.position = paths[nodeIdx];
+        oref.attrPointPos = attrPaths[nodeIdx];
       });
       const startOrbit = JulianDate.fromDate(MJDtoJavaScriptDate(simData.start));
       const stopOrbit = JulianDate.fromDate(MJDtoJavaScriptDate(simData.stop));
@@ -787,22 +788,38 @@ function CesiumGlobe({
         {
           /** Add attractor points */
           orbitsState.reduce((result, orbit) => {
-            if (orbit.attrPointPos
-              && orbit.position.x !== undefined
-              && orbit.position.y !== undefined
-              && orbit.position.z !== undefined
-            ) {
-              result.push(
-                <Entity
-                  key={orbit.name}
-                  position={Cartesian3.fromArray(orbit.attrPointPos)}
-                >
-                  <PointGraphics
-                    pixelSize={5}
-                    color={Color.RED}
-                  />
-                </Entity>,
-              );
+            if (orbit.attrPointPos) {
+              if (orbit.position.x !== undefined
+                && orbit.position.y !== undefined
+                && orbit.position.z !== undefined
+              ) {
+                // Live results
+                result.push(
+                  <Entity
+                    key={orbit.name}
+                    position={Cartesian3.fromArray(orbit.attrPointPos)}
+                  >
+                    <PointGraphics
+                      pixelSize={5}
+                      color={Color.RED}
+                    />
+                  </Entity>,
+                );
+              } else if (orbit.position !== undefined) {
+                // CSV Results
+                result.push(
+                  <Entity
+                    key={orbit.name}
+                    position={orbit.attrPointPos}
+                  >
+                    <PointGraphics
+                      pixelSize={10}
+                      color={Color.BLUE}
+                    />
+                  </Entity>,
+                );
+              }
+              
             }
             return result;
           }, [])
