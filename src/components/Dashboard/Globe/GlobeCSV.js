@@ -8,8 +8,8 @@ const createPaths = (data) => {
 
   // Iterate over each satelites' arrays
   data.data.forEach((satDataEntries) => {
-    const path = new SampledPositionProperty();
-    const attrPath = new SampledPositionProperty();
+    const path = new SampledPositionProperty(ReferenceFrame.INERTIAL);
+    const attrPath = new SampledPositionProperty(ReferenceFrame.INERTIAL);
     // Iterate over the array of values
     satDataEntries.forEach((entry) => {
       // Add time/position point to path
