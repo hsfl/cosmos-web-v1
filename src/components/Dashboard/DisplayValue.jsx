@@ -10,7 +10,7 @@ import DisplayValuesTable from './DisplayValues/DisplayValuesTable';
 
 import { setActivity, incrementQueue } from '../../store/actions';
 import { mjdToUTCString } from '../../utility/time';
-import { MultiVarFx } from '../../utility/data';
+import { isOnlyZeros, MultiVarFx } from '../../utility/data';
 
 /**
  * Displays a specified live value from an agent.
@@ -57,6 +57,10 @@ function DisplayValue({
         // const value = v.processDataKey(data);
         const value = MultiVarFx(v.dataKey, v.processDataKey, state[realm]);
 
+        // If showZero is explicitly disabled, don't overwrite the previous value.
+        if (v.showZero === false && !isOnlyZeros(value)) {
+          return;
+        }
         // If it does, change the value
         displayValuesState[i].value = value;
 
@@ -233,6 +237,8 @@ DisplayValue.propTypes = {
       unit: PropTypes.string,
       /** Whether to show percent differences or not */
       showPercentDifference: PropTypes.bool,
+      /** Show zero values, overwrites nonzero values */
+      showZero: PropTypes.bool,
     }),
   ),
   /** Show percentage difference in values */
