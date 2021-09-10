@@ -58,7 +58,7 @@ function DisplayValue({
         const value = MultiVarFx(v.dataKey, v.processDataKey, state[realm]);
 
         // If showZero is explicitly disabled, don't overwrite the previous value.
-        if (v.showZero === false && !isOnlyZeros(value)) {
+        if (v.showZero === false && isOnlyZeros(value)) {
           return;
         }
         // If it does, change the value
