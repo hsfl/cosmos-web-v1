@@ -69,3 +69,33 @@ export const getObjAtName = (name, arr) => {
   });
   return currentRef;
 };
+
+/** 
+ * Check if a given value is zero or only zeros.
+ * Used when a component should not showZero.
+ * Input: some value to check
+ * Output: true if value contains only zeros, otherwise false
+ */
+const isOnlyZeros = (value) => {
+  const s = JSON.stringify(value);
+  const parsed = JSON.parse(s, (k, v) => {
+    // Check if json object is an array
+    if (Array.isArray(v)) {
+      // Return true if array contains nonempty elements
+      if (v.some(() => true)) {
+        return true;
+      }
+    // Check if json object is an object
+    } else if (v.constructor === Object) {
+      // Return true if object contains nonempty values
+      if (Object.keys(v).length > 0) {
+        return true;
+      }
+    // Return true if atomic json value is nonzero
+    } else if (v !== 0) {
+      return true;
+    }
+    return undefined;
+  })
+  return !!parsed;
+}
