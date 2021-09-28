@@ -3,12 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
   Viewer, Entity, Model, Globe, Clock, CameraFlyTo, PathGraphics, GeoJsonDataSource,
-  PolylineGraphics, PointGraphics,
+  PolylineGraphics, PointGraphics, CylinderGraphics,
 } from 'resium';
 import {
   Cartesian3, Cartographic, ClockRange, Color, OpenStreetMapImageryProvider,
   JulianDate, PolylineArrowMaterialProperty, SampledPositionProperty,
-  TimeInterval, TimeIntervalCollection, Transforms,
+  TimeInterval, TimeIntervalCollection, Transforms, ConstantPositionProperty,
+  ReferenceFrame,
 } from 'cesium';
 
 import {
@@ -279,22 +280,27 @@ function CesiumGlobe({
   /** Load in simulation data from CSVs */
   useEffect(() => {
     if (simData !== null && simulationEnabled) {
-      const [paths, attrPaths] = createPaths(simData);
-      const tempOrbit = [...orbitsState];
-      tempOrbit.forEach((o) => {
-        const nodeIdx = simData.sats[o.nodeProcess];
-        const oref = o;
-        oref.live = false;
-        oref.position = paths[nodeIdx];
-        oref.attrPointPos = attrPaths[nodeIdx];
-      });
-      const startOrbit = JulianDate.fromDate(MJDtoJavaScriptDate(simData.start));
-      const stopOrbit = JulianDate.fromDate(MJDtoJavaScriptDate(simData.stop));
-      setStart(startOrbit);
-      setStop(stopOrbit);
-      setOrbitsState(tempOrbit);
-      // Reset state to null to allow for detection of future orbit history requests
-      setRetrieveOrbitHistory(null);
+      const loadCSV = async () => {
+        const [paths, attrPaths, sensorPaths, sensorOrientations] = await createPaths(simData);
+        const tempOrbit = [...orbitsState];
+        tempOrbit.forEach((o) => {
+          const nodeIdx = simData.sats[o.nodeProcess];
+          const oref = o;
+          oref.live = false;
+          oref.position = paths[nodeIdx];
+          oref.attrPointPos = attrPaths[nodeIdx];
+          oref.sensorConePos = sensorPaths[nodeIdx];
+          oref.sensorOrientation = sensorOrientations[nodeIdx];
+        });
+        const startOrbit = JulianDate.fromDate(MJDtoJavaScriptDate(simData.start));
+        const stopOrbit = JulianDate.fromDate(MJDtoJavaScriptDate(simData.stop));
+        setStart(startOrbit);
+        setStop(stopOrbit);
+        setOrbitsState(tempOrbit);
+        // Reset state to null to allow for detection of future orbit history requests
+        setRetrieveOrbitHistory(null);
+      };
+      loadCSV();
     }
   }, [simData]);
 
@@ -819,7 +825,6 @@ function CesiumGlobe({
                   </Entity>,
                 );
               }
-              
             }
             return result;
           }, [])
@@ -900,6 +905,54 @@ function CesiumGlobe({
                     arcType="NONE"
                   />
                 </Entity>,
+              );
+            }
+            return result;
+          }, [])
+        }
+        <Entity
+          key="Targetlocation"
+          position={
+            new ConstantPositionProperty(
+              new Cartesian3(5579250, -2065070, 2291810),
+              ReferenceFrame.INERTIAL,
+            )
+          }
+        >
+          <PointGraphics
+            pixelSize={10}
+            color={Color.BLUE}
+          />
+        </Entity>
+        {
+          /** Sensor cones */
+          orbitsState.reduce((result, orbit) => {
+            if (orbit.sensorConePos && orbit.position !== undefined) {
+              // TimeInterval below will throw error on stop on refresh if it is reset to null
+              // CSV results
+              result.push(
+                orbit.sensorConePos === undefined
+                  ? null
+                  : (
+                    <Entity
+                      key={orbit.name}
+                      position={orbit.sensorConePos}
+                      orientation={orbit.sensorOrientation}
+                      availability={
+                        new TimeIntervalCollection(
+                          [new TimeInterval({ start, stop })],
+                        )
+                      }
+                    >
+                      <CylinderGraphics
+                        bottomRadius={50000}
+                        topRadius={0}
+                        length={2500000}
+                        shadows={false}
+                        material={Color.fromAlpha(Color.ORANGE, 0.5)}
+                      />
+                    </Entity>
+                  ),
               );
             }
             return result;
@@ -988,7 +1041,11 @@ function CesiumGlobe({
                   name={orbit.name}
                   position={orbit.position}
                   point={pixelSize}
-                  availability={new TimeIntervalCollection([new TimeInterval({ start, stop })])}
+                  availability={
+                    new TimeIntervalCollection(
+                      [new TimeInterval({ start, stop })],
+                    )
+                  }
                 >
                   <PathGraphics
                     width={3}
