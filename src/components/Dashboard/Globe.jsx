@@ -3,13 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
   Viewer, Entity, Model, Globe, Clock, CameraFlyTo, PathGraphics, GeoJsonDataSource,
-  PolylineGraphics, PointGraphics, CylinderGraphics,
+  PolylineGraphics, PointGraphics, CylinderGraphics, LabelGraphics,
 } from 'resium';
 import {
   Cartesian3, Cartographic, ClockRange, Color, OpenStreetMapImageryProvider,
   JulianDate, PolylineArrowMaterialProperty, SampledPositionProperty,
   TimeInterval, TimeIntervalCollection, Transforms, ConstantPositionProperty,
-  ReferenceFrame,
+  ReferenceFrame, Cartesian2, LabelStyle, HorizontalOrigin,
 } from 'cesium';
 
 import {
@@ -63,6 +63,25 @@ function getPosFromSpherical(longitude, latitude, altitude) {
 
   return Transforms.northUpEastToFixedFrame(pos);
 }
+
+// Cheat way of doing colors for now
+const colorArray = [
+  Color.fromHsl(0, 1.0, 0.6, 0.5),
+  Color.fromHsl(0.08333, 1.0, 0.6, 0.5),
+  Color.fromHsl(0.15, 1.0, 0.6, 0.5),
+  Color.fromHsl(0.29444, 1.0, 0.6, 0.5),
+  Color.fromHsl(0.48888, 1.0, 0.6, 0.5),
+];
+/**
+ * Pick a color from linear scale of colors
+ * @param {int} i index of this sensor sat
+ * @param {int} len total number of sensor sats
+ */
+const getColorScale = (i, len) => {
+  // const hue = i/(len+4);
+  // return Color.fromHsl(hue, 1.0, 0.6, 0.5);
+  return colorArray[i];
+};
 
 /**
  * Displays a globe with the orbit and orbit history using Resium (Cesium).
@@ -281,8 +300,16 @@ function CesiumGlobe({
   useEffect(() => {
     if (simData !== null && simulationEnabled) {
       const loadCSV = async () => {
-        const [paths, attrPaths, sensorPaths, sensorOrientations] = await createPaths(simData);
+        const [
+          paths,
+          attrPaths,
+          sensorPaths,
+          sensorOrientations,
+          sensorLengths,
+        ] = await createPaths(simData);
         const tempOrbit = [...orbitsState];
+        const numSensors = sensorPaths.filter((s) => s !== undefined).length;
+        let colorIdx = 0;
         tempOrbit.forEach((o) => {
           const nodeIdx = simData.sats[o.nodeProcess];
           const oref = o;
@@ -290,7 +317,12 @@ function CesiumGlobe({
           oref.position = paths[nodeIdx];
           oref.attrPointPos = attrPaths[nodeIdx];
           oref.sensorConePos = sensorPaths[nodeIdx];
-          oref.sensorOrientation = sensorOrientations[nodeIdx];
+          if (oref.sensorConePos !== undefined) {
+            oref.sensorOrientation = sensorOrientations[nodeIdx];
+            oref.sensorLength = sensorLengths[nodeIdx];
+            oref.sensorColor = getColorScale(colorIdx, numSensors);
+            colorIdx += 1;
+          }
         });
         const startOrbit = JulianDate.fromDate(MJDtoJavaScriptDate(simData.start));
         const stopOrbit = JulianDate.fromDate(MJDtoJavaScriptDate(simData.stop));
@@ -794,6 +826,9 @@ function CesiumGlobe({
         {
           /** Add attractor points */
           orbitsState.reduce((result, orbit) => {
+            if (!showPath) {
+              return null;
+            }
             if (orbit.attrPointPos) {
               if (orbit.position.x !== undefined
                 && orbit.position.y !== undefined
@@ -921,7 +956,18 @@ function CesiumGlobe({
         >
           <PointGraphics
             pixelSize={10}
-            color={Color.BLUE}
+            color={Color.WHITE}
+          />
+          <LabelGraphics
+            text="Target"
+            font="28px monospace"
+            fillColor={Color.WHITE}
+            outlineColor={Color.BLACK}
+            outlineWidth={3}
+            pixelOffset={new Cartesian2(5, -15)}
+            style={LabelStyle.FILL_AND_OUTLINE}
+            scale={0.5}
+            horizontalOrigin={HorizontalOrigin.LEFT}
           />
         </Entity>
         {
@@ -945,11 +991,11 @@ function CesiumGlobe({
                       }
                     >
                       <CylinderGraphics
-                        bottomRadius={50000}
+                        bottomRadius={10000}
                         topRadius={0}
-                        length={2500000}
+                        length={orbit.sensorLength}
                         shadows={false}
-                        material={Color.fromAlpha(Color.ORANGE, 0.5)}
+                        material={orbit.sensorColor}
                       />
                     </Entity>
                   ),
@@ -1047,11 +1093,28 @@ function CesiumGlobe({
                     )
                   }
                 >
-                  <PathGraphics
-                    width={3}
-                    leadTime={600}
-                    trailTime={600}
-                    material={Color.CRIMSON}
+                  {
+                    showPath
+                      ? (
+                        <PathGraphics
+                          width={3}
+                          leadTime={600}
+                          trailTime={600}
+                          material={Color.CRIMSON}
+                        />
+                      )
+                      : null
+                  }
+                  <LabelGraphics
+                    text={orbit.name}
+                    font="28px monospace"
+                    fillColor={Color.WHITE}
+                    outlineColor={Color.BLACK}
+                    outlineWidth={3}
+                    pixelOffset={new Cartesian2(5, -15)}
+                    style={LabelStyle.FILL_AND_OUTLINE}
+                    scale={0.5}
+                    horizontalOrigin={HorizontalOrigin.LEFT}
                   />
                 </Entity>
               </span>

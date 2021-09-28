@@ -1,5 +1,6 @@
 import {
   Cartesian3,
+  HeadingPitchRoll,
   JulianDate,
   Quaternion,
   ReferenceFrame,
@@ -8,7 +9,6 @@ import {
   TimeInterval,
   Transforms,
 } from 'cesium';
-import HeadingPitchRoll from 'cesium/Source/Core/HeadingPitchRoll';
 import { MJDtoJavaScriptDate } from '../../../utility/time';
 
 // Return a new SampledPositionProperty to display
@@ -17,11 +17,12 @@ const createPaths = async (data) => {
   const attrPaths = [];
   const sensorPaths = [];
   const sensorOrientations = [];
-  const startOrbit = JulianDate.fromDate(MJDtoJavaScriptDate(data.start));
-  const stopOrbit = JulianDate.fromDate(MJDtoJavaScriptDate(data.stop));
-  const interval = new TimeInterval({ start: startOrbit, stop: stopOrbit });
+  const sensorLengths = [];
+  //const startOrbit = JulianDate.fromDate(MJDtoJavaScriptDate(data.start));
+  //const stopOrbit = JulianDate.fromDate(MJDtoJavaScriptDate(data.stop));
+  //const interval = new TimeInterval({ start: startOrbit, stop: stopOrbit });
   // Wait for ICRF data for time interval that coordinate conversions will take place in
-  await Transforms.preloadIcrfFixed(interval).then(() => {});
+  //await Transforms.preloadIcrfFixed(interval).then(() => {});
 
   // Iterate over each satelites' arrays
   data.data.forEach((satDataEntries) => {
@@ -29,6 +30,7 @@ const createPaths = async (data) => {
     const attrPath = new SampledPositionProperty(ReferenceFrame.INERTIAL);
     let sensorPath = new SampledPositionProperty(ReferenceFrame.INERTIAL);
     let sensorOrientation = new SampledProperty(Quaternion);
+    let sensorLength = new SampledProperty(Number);
     // Iterate over the array of values
     satDataEntries.forEach((entry) => {
       // Add time/position point to path
@@ -60,14 +62,20 @@ const createPaths = async (data) => {
       if (entry[data.nameIdx.w_att_target] === 1) {
         sensorPath = undefined;
         sensorOrientation = undefined;
+        sensorLength = undefined;
         return;
       }
       // Wouldn't want to attempt to addSample to an undefined
-      if (sensorPath === undefined || sensorOrientation === undefined) {
+      if (sensorPath === undefined) {
         return;
       }
       const senpos = Cartesian3.midpoint(pos, tarpos, new Cartesian3());
       sensorPath.addSample(date, senpos);
+
+      // Sensor length
+      const dist2tar = Cartesian3.distance(pos, tarpos);
+      sensorLength.addSample(date, dist2tar);//2500000);
+
       // Sensor attitude
       // Since everything in Cesium is in ECEF coordinates, define rotation matrix for ECI -> ECEF
       const ECIToECEF = Transforms.computeIcrfToFixedMatrix(date);
@@ -86,7 +94,7 @@ const createPaths = async (data) => {
       const worldXtarget = Quaternion.multiply(
         ECIToECEFquaternion,
         sensorQuaternion,
-        new Quaternion()
+        new Quaternion(),
       );
       // Apply body frame rotations
       const worldXtargetXbody = Quaternion.multiply(worldXtarget, nadirQ, new Quaternion());
@@ -97,12 +105,13 @@ const createPaths = async (data) => {
     attrPaths.push(attrPath);
     sensorPaths.push(sensorPath);
     sensorOrientations.push(sensorOrientation);
+    sensorLengths.push(sensorLength);
   });
 
   // Eslint will complain otherwise
   // const ret = data;
   // ret.paths = paths;
-  return [paths, attrPaths, sensorPaths, sensorOrientations];
+  return [paths, attrPaths, sensorPaths, sensorOrientations, sensorLengths];
 };
 
 export default createPaths;
