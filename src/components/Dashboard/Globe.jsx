@@ -303,6 +303,7 @@ function CesiumGlobe({
         const [
           paths,
           attrPaths,
+          tarPaths,
           sensorPaths,
           sensorOrientations,
           sensorLengths,
@@ -316,6 +317,7 @@ function CesiumGlobe({
           oref.live = false;
           oref.position = paths[nodeIdx];
           oref.attrPointPos = attrPaths[nodeIdx];
+          oref.tarPos = tarPaths[nodeIdx];
           oref.sensorConePos = sensorPaths[nodeIdx];
           if (oref.sensorConePos !== undefined) {
             oref.sensorOrientation = sensorOrientations[nodeIdx];
@@ -945,31 +947,38 @@ function CesiumGlobe({
             return result;
           }, [])
         }
-        <Entity
-          key="Targetlocation"
-          position={
-            new ConstantPositionProperty(
-              new Cartesian3(5579250, -2065070, 2291810),
-              ReferenceFrame.INERTIAL,
-            )
-          }
-        >
-          <PointGraphics
-            pixelSize={10}
-            color={Color.WHITE}
-          />
-          <LabelGraphics
-            text="Target"
-            font="28px monospace"
-            fillColor={Color.WHITE}
-            outlineColor={Color.BLACK}
-            outlineWidth={3}
-            pixelOffset={new Cartesian2(5, -15)}
-            style={LabelStyle.FILL_AND_OUTLINE}
-            scale={0.5}
-            horizontalOrigin={HorizontalOrigin.LEFT}
-          />
-        </Entity>
+        {
+          /** Target point */
+          orbitsState.reduce((result, orbit, i) => {
+            // Only show one target for now, in the future
+            // there may be multiple targets
+            if (i === 0) {
+              result.push(
+                <Entity
+                  key={orbit.name}
+                  position={orbit.tarPos}
+                >
+                  <PointGraphics
+                    pixelSize={10}
+                    color={Color.WHITE}
+                  />
+                  <LabelGraphics
+                    text="Target"
+                    font="28px monospace"
+                    fillColor={Color.WHITE}
+                    outlineColor={Color.BLACK}
+                    outlineWidth={3}
+                    pixelOffset={new Cartesian2(5, -15)}
+                    style={LabelStyle.FILL_AND_OUTLINE}
+                    scale={0.5}
+                    horizontalOrigin={HorizontalOrigin.LEFT}
+                  />
+                </Entity>
+              )
+            }
+            return result;
+          }, [])
+        }
         {
           /** Sensor cones */
           orbitsState.reduce((result, orbit) => {

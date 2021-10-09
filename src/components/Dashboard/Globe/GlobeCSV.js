@@ -15,6 +15,7 @@ import { MJDtoJavaScriptDate } from '../../../utility/time';
 const createPaths = async (data) => {
   const paths = [];
   const attrPaths = [];
+  const tarPaths = [];
   const sensorPaths = [];
   const sensorOrientations = [];
   const sensorLengths = [];
@@ -28,6 +29,7 @@ const createPaths = async (data) => {
   data.data.forEach((satDataEntries) => {
     const path = new SampledPositionProperty(ReferenceFrame.INERTIAL);
     const attrPath = new SampledPositionProperty(ReferenceFrame.INERTIAL);
+    const tarPath = new SampledPositionProperty(ReferenceFrame.INERTIAL);
     let sensorPath = new SampledPositionProperty(ReferenceFrame.INERTIAL);
     let sensorOrientation = new SampledProperty(Quaternion);
     let sensorLength = new SampledProperty(Number);
@@ -56,6 +58,7 @@ const createPaths = async (data) => {
       const tary = entry[data.nameIdx.y_target];
       const tarz = entry[data.nameIdx.z_target];
       const tarpos = Cartesian3.fromElements(tarx, tary, tarz);
+      tarPath.addSample(date, tarpos);
 
       // Sensor positional data
       // No rotation to target means no target, ignore
@@ -103,6 +106,7 @@ const createPaths = async (data) => {
     });
     paths.push(path);
     attrPaths.push(attrPath);
+    tarPaths.push(tarPath);
     sensorPaths.push(sensorPath);
     sensorOrientations.push(sensorOrientation);
     sensorLengths.push(sensorLength);
@@ -111,7 +115,7 @@ const createPaths = async (data) => {
   // Eslint will complain otherwise
   // const ret = data;
   // ret.paths = paths;
-  return [paths, attrPaths, sensorPaths, sensorOrientations, sensorLengths];
+  return [paths, attrPaths, tarPaths, sensorPaths, sensorOrientations, sensorLengths];
 };
 
 export default createPaths;
