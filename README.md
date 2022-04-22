@@ -1,4 +1,6 @@
-# COSMOS Web
+# COSMOS Web v1.0 (deprecated)
+
+New repository for COSMOS Web 2.0: https://github.com/hsfl/cosmos-web
 
 COSMOS Web - a web application to visualize telemetry data from a satellite. UI Repository.
 
